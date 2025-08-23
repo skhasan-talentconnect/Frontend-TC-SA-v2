@@ -2,7 +2,7 @@ import 'package:tc_sa/core/common/view_state_controller.dart';
 import 'package:tc_sa/core/network/app_failure.dart';
 import 'package:tc_sa/features/school/school_info/school_service.dart';
 
-class SchoolController extends ViewStateController {
+class SchoolViewModel extends ViewStateProvider {
   final SchoolService _schoolService = SchoolService();
 
   Future<Failure?> addSchools({

@@ -1,19 +1,24 @@
 import 'package:tc_sa/core/common/view_state_controller.dart';
 import 'package:tc_sa/core/network/app_failure.dart';
-import 'package:tc_sa/features/users/shortlist/shortlist_service.dart';
+import 'package:tc_sa/features/support/support_service.dart';
 
-class ShortlistController extends ViewStateController {
-  final ShortlistService _shortlistService = ShortlistService();
+class SupportViewModel extends ViewStateProvider {
+  final SupportService _supportService = SupportService();
 
-  Future<Failure?> addShortlist({
-    required String schoolId,
-    required String authId,
+  Future<Failure?> addSupport({
+    required String category,
+    required String title,
+    required String description,
+    required String studId,
   }) async {
     Failure? failure;
     setViewState(ViewState.busy);
-    final result = await _shortlistService.addShortlist(
-      authId: authId,
-      schoolId: schoolId,
+
+    final result = await _supportService.addSupport(
+      category: category,
+      title: title,
+      description: description,
+      studId: studId,
     );
 
     result.fold((exception) {
@@ -21,53 +26,29 @@ class ShortlistController extends ViewStateController {
     }, (res) {});
 
     setViewState(ViewState.complete);
-
     return failure;
   }
 
-  Future<Failure?> getShortlist({required String authId}) async {
+  Future<Failure?> getSupportByStudId({required String studId}) async {
     Failure? failure;
-
     setViewState(ViewState.busy);
 
-    final result = await _shortlistService.getShortlist(authId: authId);
+    final result = await _supportService.getSupportByStudId(studId: studId);
 
     result.fold((exception) {
       failure = APIFailure.fromException(exception: exception);
     }, (res) {});
 
     setViewState(ViewState.complete);
-
     return failure;
   }
 
-  Future<Failure?> getShortlistCount({required String authId}) async {
+  Future<Failure?> getSupportBySupportId({required String supportId}) async {
     Failure? failure;
-
     setViewState(ViewState.busy);
 
-    final result = await _shortlistService.getShortlistCount(authId: authId);
-
-    result.fold((exception) {
-      failure = APIFailure.fromException(exception: exception);
-    }, (res) {});
-
-    setViewState(ViewState.complete);
-
-    return failure;
-  }
-
-  Future<Failure?> removeShortlist({
-    required String authId,
-    required String schoolId,
-  }) async {
-    Failure? failure;
-
-    setViewState(ViewState.busy);
-
-    final result = await _shortlistService.removeShortlist(
-      authId: authId,
-      schoolId: schoolId,
+    final result = await _supportService.getSupportBySupportId(
+      supportId: supportId,
     );
 
     result.fold((exception) {
@@ -75,7 +56,20 @@ class ShortlistController extends ViewStateController {
     }, (res) {});
 
     setViewState(ViewState.complete);
+    return failure;
+  }
 
+  Future<Failure?> deleteSupport({required String supportId}) async {
+    Failure? failure;
+    setViewState(ViewState.busy);
+
+    final result = await _supportService.deleteSupport(supportId: supportId);
+
+    result.fold((exception) {
+      failure = APIFailure.fromException(exception: exception);
+    }, (res) {});
+
+    setViewState(ViewState.complete);
     return failure;
   }
 }
