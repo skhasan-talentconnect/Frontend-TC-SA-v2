@@ -1,0 +1,40 @@
+import 'package:dartz/dartz.dart';
+import 'package:tc_sa/core/network/index.dart'
+    show
+        NetworkService,
+        Request,
+        RequestMethod,
+        ResultFuture,
+        Endpoints,
+        APIException;
+import 'package:tc_sa/features/school/school_info/school_model.dart';
+
+class PredictorService {
+  final NetworkService _networkService = NetworkService();
+
+  ResultFuture<List<SchoolModel>?> predictSchools(
+    Map<String, dynamic> filters,
+  ) async {
+    Request r = Request(
+      method: RequestMethod.post,
+      endpoint: Endpoints.adminPredictSchools,
+      body: filters,
+    );
+
+    try {
+      final result = await _networkService.request(r);
+      final response = result.data as Map<String, dynamic>;
+
+      if (response.isNotEmpty) {
+        final List<dynamic> schoolsData = response['data'];
+        final List<SchoolModel> schools =
+            schoolsData.map((json) => SchoolModel.fromJson(json)).toList();
+
+        return Right(schools);
+      }
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+    return Right(null);
+  }
+}
