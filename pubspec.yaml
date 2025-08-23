@@ -37,7 +37,6 @@ dependencies:
   dio: ^5.8.0+1
   pretty_dio_logger: ^1.4.0
   dartz: ^0.10.1
-  device_preview: ^1.2.0
   firebase_auth: ^5.6.2
   firebase_core: ^3.15.1
   google_sign_in: ^7.1.1
@@ -58,6 +57,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  flutter_native_splash: ^2.4.6
+  device_preview: ^1.2.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

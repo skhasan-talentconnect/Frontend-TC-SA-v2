@@ -4,7 +4,7 @@ import 'package:tc_sa/core/index.dart';
 class Router {
   GoRouter router = GoRouter(
     routes: [
-      GoRoute(path: '/', name: RouteNames.splash,),
+      GoRoute(path: '/', name: RouteNames.splash),
       ShellRoute(
         routes: [
           GoRoute(path: '/home', name: RouteNames.home),

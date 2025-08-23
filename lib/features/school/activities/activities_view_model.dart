@@ -1,4 +1,4 @@
-import 'package:tc_sa/core/common/view_state_controller.dart';
+import 'package:tc_sa/core/common/view_state_provider.dart';
 import 'package:tc_sa/core/network/app_failure.dart';
 import 'package:tc_sa/features/school/activities/activities_service.dart';
 
