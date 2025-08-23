@@ -1,9 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tc_sa/core/extensions/index.dart';
-import 'package:tc_sa/features/auth/authentication/authentication_controller.dart';
+import 'package:tc_sa/features/auth/authentication/authentication_view_model.dart';
 
 class Review extends StatefulWidget {
   const Review({super.key});
@@ -15,7 +14,7 @@ class Review extends StatefulWidget {
 class _ReviewState extends State<Review> {
   bool isLoading = true;
 
-  final authController = Get.put(AuthenticationController());
+  final authController = AuthenticationViewModel();
 
   @override
   void initState() {

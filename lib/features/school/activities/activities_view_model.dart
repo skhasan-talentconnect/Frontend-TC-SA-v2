@@ -1,22 +1,20 @@
 import 'package:tc_sa/core/common/view_state_controller.dart';
 import 'package:tc_sa/core/network/app_failure.dart';
-import 'package:tc_sa/features/school/amenities/amenities_service.dart';
+import 'package:tc_sa/features/school/activities/activities_service.dart';
 
-class AmenitiesController extends ViewStateController {
-  final AmenitiesService _amenitiesService = AmenitiesService();
+class ActivitiesViewModel extends ViewStateProvider {
+  final ActivitiesService _activitiesService = ActivitiesService();
 
-  Future<Failure?> addAmenities({
+  Future<Failure?> addActivities({
     required String schoolId,
-    required List<String> predefinedAmenities,
-    List<String>? customAmenities,
+    required List<String> activities,
   }) async {
     Failure? failure;
     setViewState(ViewState.busy);
 
-    final result = await _amenitiesService.addAmenities(
+    final result = await _activitiesService.addActivities(
       schoolId: schoolId,
-      predefinedAmenities: predefinedAmenities,
-      customAmenities: customAmenities,
+      activities: activities,
     );
 
     result.fold((exception) {
@@ -27,18 +25,16 @@ class AmenitiesController extends ViewStateController {
     return failure;
   }
 
-  Future<Failure?> updateAmenities({
+  Future<Failure?> updateActivities({
     required String schoolId,
-    required List<String> predefinedAmenities,
-    List<String>? customAmenities,
+    required List<String> activities,
   }) async {
     Failure? failure;
     setViewState(ViewState.busy);
 
-    final result = await _amenitiesService.updateAmenities(
+    final result = await _activitiesService.updateActivities(
       schoolId: schoolId,
-      predefinedAmenities: predefinedAmenities,
-      customAmenities: customAmenities,
+      activities: activities,
     );
 
     result.fold((exception) {
@@ -49,11 +45,11 @@ class AmenitiesController extends ViewStateController {
     return failure;
   }
 
-  Future<Failure?> getAmenitiesBySchoolId({required String schoolId}) async {
+  Future<Failure?> getActivitiesBySchoolId({required String schoolId}) async {
     Failure? failure;
     setViewState(ViewState.busy);
 
-    final result = await _amenitiesService.getAmenitiesBySchoolId(
+    final result = await _activitiesService.getActivitiesBySchoolId(
       schoolId: schoolId,
     );
 

@@ -2,7 +2,7 @@ import 'package:tc_sa/core/common/view_state_controller.dart';
 import 'package:tc_sa/core/network/app_failure.dart';
 import 'package:tc_sa/features/filter/filter_service.dart';
 
-class FilterController extends ViewStateController {
+class FilterViewModel extends ViewStateProvider {
   final FilterService _filterService = FilterService();
 
   Future<Failure?> getSchoolsByFeeRange({required String feeRange}) async {

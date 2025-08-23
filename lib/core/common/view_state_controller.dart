@@ -1,17 +1,31 @@
-import 'package:get/get.dart';
+import 'package:flutter/cupertino.dart';
 
 enum ViewState { idle, busy, complete }
+//
+// class ViewStateController extends GetxController {
+//   final _viewState = ViewState.idle.obs;
+//
+//   ViewState get viewState => _viewState.value;
+//   bool get isLoading => _viewState.value == ViewState.busy;
+//
+//   void setViewState(ViewState state, {bool notify = true}) {
+//     _viewState.value = state;
+//     if (notify) {
+//       update();
+//     }
+//   }
+// }
 
-class ViewStateController extends GetxController {
-  final _viewState = ViewState.idle.obs;
+class ViewStateProvider extends ChangeNotifier {
+  ViewState _viewState = ViewState.complete;
+  ViewState get viewState => _viewState;
 
-  ViewState get viewState => _viewState.value;
-  bool get isLoading => _viewState.value == ViewState.busy;
+  bool get isLoading => _viewState == ViewState.busy;
 
   void setViewState(ViewState state, {bool notify = true}) {
-    _viewState.value = state;
+    _viewState = state;
     if (notify) {
-      update();
+      notifyListeners();
     }
   }
 }

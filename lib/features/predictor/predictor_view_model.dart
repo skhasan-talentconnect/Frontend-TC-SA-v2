@@ -2,7 +2,7 @@ import 'package:tc_sa/core/common/view_state_controller.dart';
 import 'package:tc_sa/core/network/app_failure.dart';
 import 'package:tc_sa/features/predictor/predictor_service.dart';
 
-class PrefController extends ViewStateController {
+class PrefViewModel extends ViewStateProvider {
   final PredictorService _predictorService = PredictorService();
 
   Future<Failure?> predictSchools({
