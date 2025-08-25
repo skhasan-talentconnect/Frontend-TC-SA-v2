@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:tc_sa/core/extensions/index.dart';
-import 'package:tc_sa/features/auth/authentication/authentication_view_model.dart';
+import 'package:tc_sa/common/index.dart' show SAppBar, SBottomBar;
+import 'package:tc_sa/common/widgets/school_card.dart';
 
 class Review extends StatefulWidget {
   const Review({super.key});
@@ -13,35 +13,36 @@ class Review extends StatefulWidget {
 
 class _ReviewState extends State<Review> {
   bool isLoading = true;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  final authController = AuthenticationViewModel();
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  List<String> strings = ['Home', 'Blogs', 'Services', 'Saved'];
+  int newIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            final failure = await authController.login(
-              email: 'skhasan2829+end3@gmail.com',
-              password: 'Test@1234',
-            );
-            failure?.showError(context);
+      key: _scaffoldKey,
+
+      appBar: SAppBar(
+        title: 'Raw Recruit',
+        leading: GestureDetector(
+          onTap: () {
+            _scaffoldKey.currentState?.openDrawer();
           },
-          child: Text(
-            'Login',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Colors.black,
-            ),
-          ),
+          child: Icon(Icons.menu),
         ),
+      ),
+
+      drawer: Drawer(),
+
+      body: Center(child: SchoolCard()),
+
+      bottomNavigationBar: SBottomBar(
+        onTap: (index) {
+          setState(() {
+            newIndex = index;
+          });
+        },
       ),
     );
   }
@@ -64,8 +65,7 @@ class _ReviewState extends State<Review> {
     }
 
     // Obtain the auth details from the request
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+    final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
     print(googleAuth.idToken);
   }

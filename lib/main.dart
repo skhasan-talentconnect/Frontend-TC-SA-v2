@@ -1,10 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:tc_sa/common/theme/s_colors.dart';
 import 'package:tc_sa/core/notifications/notification_service.dart';
 import 'package:tc_sa/core/services/shared_pref_helper.dart';
+import 'package:tc_sa/features/reviews/review.dart';
 import 'package:tc_sa/firebase_options.dart';
-
-import 'features/auth/authentication/authentication_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,8 +25,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: AuthenticationView(),
+      home: Review(),
       debugShowCheckedModeBanner: false,
+      theme: Theme.of(
+        context,
+      ).copyWith(scaffoldBackgroundColor: SColor.backgroundColor),
     );
   }
 }
