@@ -10,14 +10,18 @@ import 'package:tc_sa/core/network/index.dart'
         Endpoints,
         APIException;
 import 'package:tc_sa/features/auth/authentication/index.dart'
-    show AuthenticationModel;
+    show AuthModel, AuthDataSource;
 
-class AuthenticationService {
-  final NetworkService _networkService = NetworkService();
+class AuthDataSourceImpl implements AuthDataSource {
+  final _networkService = NetworkService();
 
   final String? deviceToken = SharedPrefHelper.getString('deviceToken');
 
-  ResultFuture<AuthenticationModel?> login({email, password}) async {
+  @override
+  ResultFuture<AuthModel?> login({
+    required String email,
+    required String password,
+  }) async {
     Request r = Request(
       method: RequestMethod.post,
       endpoint: Endpoints.authLogin,
@@ -29,7 +33,7 @@ class AuthenticationService {
       final response = result.data as Map<String, dynamic>;
 
       if (response.isNotEmpty) {
-        final authModel = AuthenticationModel.fromJson(response['data']);
+        final authModel = AuthModel.fromJson(response['data']);
 
         return Right(authModel);
       }
@@ -40,7 +44,11 @@ class AuthenticationService {
     return Right(null);
   }
 
-  ResultFuture<String?> register({email, password}) async {
+  @override
+  ResultFuture<String?> register({
+    required String email,
+    required String password,
+  }) async {
     Request r = Request(
       method: RequestMethod.post,
       endpoint: Endpoints.authRegister,
@@ -69,7 +77,8 @@ class AuthenticationService {
     return Right(null);
   }
 
-  ResultFuture<AuthenticationModel?> googleLogin({tokenId}) async {
+  @override
+  ResultFuture<AuthModel?> googleLogin({required String tokenId}) async {
     Request r = Request(
       method: RequestMethod.post,
       endpoint: Endpoints.authGoogle,
@@ -86,7 +95,7 @@ class AuthenticationService {
       final response = result.data as Map<String, dynamic>;
 
       if (response.isNotEmpty) {
-        final authModel = AuthenticationModel.fromJson(
+        final authModel = AuthModel.fromJson(
           response['data'] as Map<String, dynamic>,
         );
 
