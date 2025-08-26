@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
@@ -26,139 +27,153 @@ class _AuthViewState extends State<AuthView> {
     return ChangeNotifierProvider.value(
       value: authViewModel,
       child: Scaffold(
-        body: Consumer<AuthViewModel>(
-          builder: (vmContext, vm, _) {
-            if (vm.isLoading) {
-              return const Center(child: SLoadingIndicator());
-            }
+        body: SafeArea(
+          child: Consumer<AuthViewModel>(
+            builder: (vmContext, vm, _) {
+              if (vm.isLoading) {
+                return const Center(child: SLoadingIndicator());
+              }
 
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AuthHeader(isLogin: vm.isLogin),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12.0,
-                    vertical: 24,
-                  ),
+              return Center(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(bottom: 50),
                   child: Column(
-                    spacing: 16,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      STextField(
-                        controller: emailController,
-                        label: 'Email*',
-                        hint: 'Enter Email',
-                        prefixIcon: Icon(Icons.email_outlined),
+                      SizedBox(
+                        height: MediaQuery.sizeOf(context).height * 0.4,
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 20),
+                          color: Colors.black,
+                        ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        spacing: 6,
-                        children: [
-                          STextField.password(
-                            controller: passController,
-                            label: 'Password*',
-                            hint: 'Enter Password',
-                            prefixIcon: Icon(Icons.lock_outline),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ForgotPasswordView(),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              ' Forgot Password?',
-                              style: STextStyles.s14W400.copyWith(
-                                color: SColor.secTextColor,
-                              ),
+                      AuthHeader(isLogin: vm.isLogin),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0,
+                          vertical: 24,
+                        ),
+                        child: Column(
+                          spacing: 16,
+                          children: [
+                            STextField(
+                              controller: emailController,
+                              label: 'Email*',
+                              hint: 'Enter Email',
+                              prefixIcon: Icon(Icons.email_outlined),
                             ),
-                          ),
-                        ],
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              spacing: 6,
+                              children: [
+                                STextField.password(
+                                  controller: passController,
+                                  label: 'Password*',
+                                  hint: 'Enter Password',
+                                  prefixIcon: Icon(Icons.lock_outline),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    context.pushNamed(
+                                      RouteNames.forgetPassword,
+                                    );
+                                  },
+                                  child: Text(
+                                    ' Forgot Password?',
+                                    style: STextStyles.s14W400.copyWith(
+                                      color: SColor.secTextColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      AuthButton(
+                        isLogin: vm.isLogin,
+                        onPressed: () async {
+                          String email = emailController.text.trim();
+                          String pass = passController.text.trim();
+
+                          if (email.isEmpty) {
+                            Toasts.showInfoToast(
+                              context,
+                              message: 'Email is required.',
+                            );
+                          } else if (!Validator.validateEmail(email)) {
+                            Toasts.showErrorToast(
+                              context,
+                              message: 'Please enter valid email.',
+                            );
+                          } else if (pass.isEmpty) {
+                            Toasts.showInfoToast(
+                              context,
+                              message: 'Password is required.',
+                            );
+                          } else if (!Validator.validatePass(pass) &&
+                              !authViewModel.isLogin) {
+                            Toasts.showErrorToast(
+                              context,
+                              message:
+                                  'Password must contain lower & uppercase alphabets, digits & symbols.',
+                            );
+                          } else {
+                            Failure? failure = await authViewModel.authenticate(
+                              email: email,
+                              password: pass,
+                            );
+                            Toasts.showSuccessOrFailureToast(
+                              context,
+                              failure: failure,
+                            );
+                          }
+                        },
+                        onGooglePressed: () async {
+                          GoogleSignIn googleSignIn = GoogleSignIn.instance;
+
+                          await googleSignIn.initialize(
+                            serverClientId:
+                                '574038035729-6nlkp4a98fj3jdqkqlkub49asnskcnmh.apps.googleusercontent.com',
+                          );
+
+                          final GoogleSignInAccount? googleUser =
+                              await googleSignIn.authenticate();
+
+                          if (googleUser == null) {
+                            throw FirebaseAuthException(
+                              code: 'ERROR_ABORTED_BY_USER',
+                              message: 'Sign in aborted by user',
+                            );
+                          }
+
+                          // Obtain the auth details from the request
+                          final GoogleSignInAuthentication googleAuth =
+                              googleUser.authentication;
+
+                          Failure? failure = await authViewModel.googleLogin(
+                            tokenId: googleAuth.idToken ?? '',
+                          );
+
+                          Toasts.showSuccessOrFailureToast(
+                            context,
+                            failure: failure,
+                          );
+                        },
+                        move: (isLogin) {
+                          emailController.text = '';
+                          passController.text = '';
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          vm.isLogin = isLogin;
+                        },
                       ),
                     ],
                   ),
                 ),
-                AuthButton(
-                  isLogin: vm.isLogin,
-                  onPressed: () async {
-                    String email = emailController.text.trim();
-                    String pass = passController.text.trim();
-
-                    if (email.isEmpty) {
-                      Toasts.showInfoToast(
-                        context,
-                        message: 'Email is required.',
-                      );
-                    } else if (!Validator.validateEmail(email)) {
-                      Toasts.showErrorToast(
-                        context,
-                        message: 'Please enter valid email.',
-                      );
-                    } else if (pass.isEmpty) {
-                      Toasts.showInfoToast(
-                        context,
-                        message: 'Password is required.',
-                      );
-                    } else if (!Validator.validatePass(pass) &&
-                        !authViewModel.isLogin) {
-                      Toasts.showErrorToast(
-                        context,
-                        message:
-                            'Password must contain lower & uppercase alphabets, digits & symbols.',
-                      );
-                    } else {
-                      Failure? failure = await authViewModel.authenticate(
-                        email: email,
-                        password: pass,
-                      );
-                      Toasts.showSuccessOrFailureToast(
-                        context,
-                        failure: failure,
-                      );
-                    }
-                  },
-                  onGooglePressed: () async {
-                    GoogleSignIn googleSignIn = GoogleSignIn.instance;
-
-                    await googleSignIn.initialize(
-                      serverClientId:
-                          '574038035729-6nlkp4a98fj3jdqkqlkub49asnskcnmh.apps.googleusercontent.com',
-                    );
-
-                    final GoogleSignInAccount? googleUser =
-                        await googleSignIn.authenticate();
-
-                    if (googleUser == null) {
-                      throw FirebaseAuthException(
-                        code: 'ERROR_ABORTED_BY_USER',
-                        message: 'Sign in aborted by user',
-                      );
-                    }
-
-                    // Obtain the auth details from the request
-                    final GoogleSignInAuthentication googleAuth =
-                        googleUser.authentication;
-
-                    Failure? failure = await authViewModel.googleLogin(
-                      tokenId: googleAuth.idToken ?? '',
-                    );
-
-                    Toasts.showSuccessOrFailureToast(context, failure: failure);
-                  },
-                  move: (isLogin) {
-                    emailController.text = '';
-                    passController.text = '';
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    vm.isLogin = isLogin;
-                  },
-                ),
-              ],
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
