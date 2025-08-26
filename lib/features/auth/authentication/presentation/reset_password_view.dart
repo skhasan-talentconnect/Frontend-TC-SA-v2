@@ -57,22 +57,22 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                 if (oldPass.isEmpty ||
                     newPass.isEmpty ||
                     confirmNewPass.isEmpty) {
-                  Toast.showInfoToast(
+                  Toasts.showInfoToast(
                     context,
                     message: 'Kindly enter passwords to reset',
                   );
                 } else if ('' == '') {
-                  Toast.showErrorToast(
+                  Toasts.showErrorToast(
                     context,
                     message: 'Enter valid password',
                   );
                 } else if (newPass != confirmNewPass) {
-                  Toast.showInfoToast(
+                  Toasts.showInfoToast(
                     context,
                     message: 'Passwords doesn\'t match',
                   );
                 } else if (oldPass == newPass) {
-                  Toast.showInfoToast(
+                  Toasts.showInfoToast(
                     context,
                     message: 'New password can\'t be same as old password',
                   );
@@ -81,7 +81,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                     oldPass: oldPass,
                     newPass: newPass,
                   );
-                  failure?.showError(context);
+                  Toasts.showSuccessOrFailureToast(context, failure: failure);
                 }
               },
             ),

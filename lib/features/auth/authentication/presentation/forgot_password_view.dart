@@ -82,12 +82,12 @@ class _ForgotPasswordView extends State<ForgotPasswordView> {
                       String email = emailController.text.trim();
 
                       if (email.isEmpty) {
-                        Toast.showErrorToast(
+                        Toasts.showErrorToast(
                           context,
                           message: 'Kindly enter email.',
                         );
                       } else if (!Validator.validateEmail(email)) {
-                        Toast.showErrorToast(
+                        Toasts.showErrorToast(
                           context,
                           message: 'Please enter valid email.',
                         );
@@ -99,26 +99,29 @@ class _ForgotPasswordView extends State<ForgotPasswordView> {
                               newConfirmPassController.text.trim();
 
                           if (otp.isEmpty) {
-                            Toast.showErrorToast(context, message: 'Enter OTP');
+                            Toasts.showErrorToast(
+                              context,
+                              message: 'Enter OTP',
+                            );
                           } else if (otp.length != 6) {
-                            Toast.showErrorToast(
+                            Toasts.showErrorToast(
                               context,
                               message: 'Please enter valid OTP',
                             );
                           } else if (newPass.isEmpty ||
                               confirmNewPass.isEmpty) {
-                            Toast.showInfoToast(
+                            Toasts.showInfoToast(
                               context,
                               message: 'Kindly enter passwords to reset',
                             );
                           } else if (!Validator.validatePass(newPass)) {
-                            Toast.showErrorToast(
+                            Toasts.showErrorToast(
                               context,
                               message:
                                   'Password must contain lower & uppercase alphabets, digits & symbols.',
                             );
                           } else if (newPass != confirmNewPass) {
-                            Toast.showInfoToast(
+                            Toasts.showInfoToast(
                               context,
                               message: 'Passwords doesn\'t match',
                             );
@@ -130,13 +133,19 @@ class _ForgotPasswordView extends State<ForgotPasswordView> {
                                   password: confirmNewPass,
                                 );
 
-                            failure?.showError(context);
+                            Toasts.showSuccessOrFailureToast(
+                              context,
+                              failure: failure,
+                            );
                           }
                         } else {
                           final failure = await forgotPasswordViewModel
                               .forgetPasswordSendOtp(email: email);
 
-                          failure?.showError(context);
+                          Toasts.showSuccessOrFailureToast(
+                            context,
+                            failure: failure,
+                          );
                         }
                       }
                     },

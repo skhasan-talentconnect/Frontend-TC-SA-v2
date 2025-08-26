@@ -89,23 +89,23 @@ class _AuthViewState extends State<AuthView> {
                     String pass = passController.text.trim();
 
                     if (email.isEmpty) {
-                      Toast.showInfoToast(
+                      Toasts.showInfoToast(
                         context,
                         message: 'Email is required.',
                       );
                     } else if (!Validator.validateEmail(email)) {
-                      Toast.showErrorToast(
+                      Toasts.showErrorToast(
                         context,
                         message: 'Please enter valid email.',
                       );
                     } else if (pass.isEmpty) {
-                      Toast.showInfoToast(
+                      Toasts.showInfoToast(
                         context,
                         message: 'Password is required.',
                       );
                     } else if (!Validator.validatePass(pass) &&
                         !authViewModel.isLogin) {
-                      Toast.showErrorToast(
+                      Toasts.showErrorToast(
                         context,
                         message:
                             'Password must contain lower & uppercase alphabets, digits & symbols.',
@@ -115,7 +115,10 @@ class _AuthViewState extends State<AuthView> {
                         email: email,
                         password: pass,
                       );
-                      failure?.showError(context);
+                      Toasts.showSuccessOrFailureToast(
+                        context,
+                        failure: failure,
+                      );
                     }
                   },
                   onGooglePressed: () async {
@@ -144,7 +147,7 @@ class _AuthViewState extends State<AuthView> {
                       tokenId: googleAuth.idToken ?? '',
                     );
 
-                    failure?.showError(context);
+                    Toasts.showSuccessOrFailureToast(context, failure: failure);
                   },
                   move: (isLogin) {
                     emailController.text = '';
