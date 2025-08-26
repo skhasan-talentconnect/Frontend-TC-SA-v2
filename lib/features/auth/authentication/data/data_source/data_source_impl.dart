@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
+import 'package:tc_sa/core/extensions/dio_exception_ext.dart';
 import 'package:tc_sa/core/index.dart'
-    show SharedPrefHelper, AuthProvider, UserType;
+    show SharedPrefHelper, AuthProvider, UserType, UserTypeExt, AuthProviderExt;
 import 'package:tc_sa/core/network/index.dart'
     show
         NetworkService,
@@ -9,6 +11,7 @@ import 'package:tc_sa/core/network/index.dart'
         RequestMethod,
         Endpoints,
         APIException;
+import 'package:tc_sa/core/network/typedef.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart'
     show AuthModel, AuthDataSource;
 
@@ -38,7 +41,14 @@ class AuthDataSourceImpl implements AuthDataSource {
         return Right(authModel);
       }
     } catch (e) {
-      return Left(APIException.from(e));
+      print((e is DioException) ? e.getStatusCodeFromResponse() : 500);
+      return Left(
+        APIException(
+          message:
+              (e is DioException) ? e.getErrorFromResponse() : e.toString(),
+          statusCode: (e is DioException) ? e.getStatusCodeFromResponse() : 500,
+        ),
+      );
     }
 
     return Right(null);
@@ -56,8 +66,8 @@ class AuthDataSourceImpl implements AuthDataSource {
         "email": email,
         "password": password,
         "deviceToken": deviceToken,
-        "authProvider": AuthProvider.email,
-        "userType": UserType.student,
+        "authProvider": AuthProvider.email.label,
+        "userType": UserType.student.label,
       },
     );
 
@@ -101,6 +111,64 @@ class AuthDataSourceImpl implements AuthDataSource {
 
         return Right(authModel);
       }
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+
+    return Right(null);
+  }
+
+  @override
+  ResultVoid resetPassword({
+    required String oldPass,
+    required String newPass,
+  }) async {
+    Request r = Request(
+      method: RequestMethod.post,
+      endpoint: Endpoints.authResetPassword,
+      body: {"oldPassword": oldPass, "newPassword": newPass},
+    );
+
+    try {
+      await _networkService.request(r);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+
+    return Right(null);
+  }
+
+  @override
+  ResultVoid forgetPassSendOtp({required String email}) async {
+    Request r = Request(
+      method: RequestMethod.post,
+      endpoint: Endpoints.authForgotPasswordSendOtp,
+      body: {"email": email},
+    );
+
+    try {
+      await _networkService.request(r);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+
+    return Right(null);
+  }
+
+  @override
+  ResultVoid forgetPassVerifyOtp({
+    required String email,
+    required String otp,
+    required String password,
+  }) async {
+    Request r = Request(
+      method: RequestMethod.post,
+      endpoint: Endpoints.authForgotPasswordVerifyOtp,
+      body: {"email": email, "otp": otp, "newPassword": password},
+    );
+
+    try {
+      await _networkService.request(r);
     } catch (e) {
       return Left(APIException.from(e));
     }

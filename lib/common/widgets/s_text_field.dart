@@ -93,7 +93,7 @@ class _STextFieldState extends State<STextField> {
                   children: [
                     Text(
                       widget.label ?? '',
-                      style: STextStyles.s14W400.copyWith(
+                      style: STextStyles.s12W600.copyWith(
                         color: SColor.secTextColor,
                       ),
                     ),

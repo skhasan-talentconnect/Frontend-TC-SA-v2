@@ -31,7 +31,10 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
       titleSpacing: leading != null ? 0 : 24,
       title: Text(
         _isHome ? 'RawRecruit' : title ?? '',
-        style: STextStyles.s18W600.copyWith(color: SColor.secTextColor),
+        style:
+            _isHome
+                ? STextStyles.s18W600.copyWith(color: SColor.secTextColor)
+                : STextStyles.s14W600.copyWith(color: SColor.secTextColor),
       ),
       backgroundColor: backgroundColor ?? SColor.backgroundColor,
       bottom: PreferredSize(
@@ -42,59 +45,64 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
           height: 0.2,
         ),
       ),
-      actions:
-          actions ??
-          [
-            Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child:
-                  _isHome
-                      ? Row(
-                        spacing: 16,
-                        children: [
-                          Icon(Icons.search),
-                          Icon(Icons.notifications),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 16.0),
+          child:
+              _isHome
+                  ? Row(
+                    spacing: 16,
+                    children: [
+                      Icon(Icons.search),
+                      Icon(Icons.notifications),
+                      Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: SColor.secTextColor,
+                            width: 1,
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.person,
+                            size: 20,
+                            color: SColor.secTextColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                  : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children:
+                        actions ??
+                        [
                           Container(
-                            height: 30,
-                            width: 30,
+                            padding: EdgeInsets.symmetric(
+                              vertical: 6,
+                              horizontal: 12,
+                            ),
                             decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
                               border: Border.all(
                                 color: SColor.secTextColor,
-                                width: 1,
+                                width: 0.5,
                               ),
-                              shape: BoxShape.circle,
                             ),
-                            child: Center(
-                              child: Icon(
-                                Icons.person,
-                                size: 20,
+                            child: Text(
+                              'Login',
+                              style: STextStyles.s12W600.copyWith(
                                 color: SColor.secTextColor,
                               ),
                             ),
                           ),
                         ],
-                      )
-                      : Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 6,
-                          horizontal: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: SColor.secTextColor,
-                            width: 0.5,
-                          ),
-                        ),
-                        child: Text(
-                          'Login',
-                          style: STextStyles.s12W600.copyWith(
-                            color: SColor.secTextColor,
-                          ),
-                        ),
-                      ),
-            ),
-          ],
+                  ),
+        ),
+      ],
     );
   }
 
