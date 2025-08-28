@@ -1,5 +1,5 @@
 class Endpoints {
-  static const String baseUrl = 'http://localhost:5000/api/';
+  static const String baseUrl = 'https://backend-tc-sa-v2.onrender.com/api/';
 
   //Authentication Endpoints
   static const String authLogin = 'auth/login';
@@ -12,11 +12,10 @@ class Endpoints {
   static const String authGoogle = 'auth/google';
   static const String authVerifyEmail = 'auth/verify-email';
 
-
   //User Endpoints
   static const String usersPreferences = 'users/preferences';
-  static const String users='users';
-  static const String usersShortlist='users/shortlist';
+  static const String users = 'users';
+  static const String usersShortlist = 'users/shortlist';
   //School Endpoints
   static const String adminSchools = 'admin/schools';
 

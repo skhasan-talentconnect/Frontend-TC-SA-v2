@@ -120,6 +120,7 @@ class Toasts {
     bool popOnFailure = false,
     bool popOnSuccess = true,
     String? successMsg,
+    String? successTitle,
     VoidCallback? successCallback,
   }) {
     if (failure == null) {

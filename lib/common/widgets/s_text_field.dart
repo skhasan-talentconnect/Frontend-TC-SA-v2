@@ -10,6 +10,7 @@ class STextField extends StatefulWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.enable = true,
+    this.validator,
     super.key,
   }) : _isDropDown = false,
        _isPassword = false;
@@ -22,6 +23,7 @@ class STextField extends StatefulWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.enable = true,
+    this.validator,
     super.key,
   }) : _isDropDown = true,
        _isPassword = false;
@@ -34,6 +36,7 @@ class STextField extends StatefulWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.enable = true,
+    this.validator,
     super.key,
   }) : _isDropDown = false,
        _isPassword = true;
@@ -48,6 +51,7 @@ class STextField extends StatefulWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final List<String>? items;
+  final String? Function(String? val)? validator;
 
   @override
   State<STextField> createState() => _STextFieldState();
@@ -89,19 +93,20 @@ class _STextFieldState extends State<STextField> {
                   children: [
                     Text(
                       widget.label ?? '',
-                      style: STextStyles.s14W400.copyWith(
+                      style: STextStyles.s12W600.copyWith(
                         color: SColor.secTextColor,
                       ),
                     ),
                     ValueListenableBuilder(
                       valueListenable: _isVisible,
                       builder:
-                          (_, visible, __) => TextField(
+                          (_, visible, __) => TextFormField(
                             controller: widget.controller,
                             readOnly: widget._isDropDown,
                             enabled: widget.enable ?? true,
-                            obscureText: !visible,
+                            obscureText: widget._isPassword && !visible,
                             obscuringCharacter: '*',
+                            validator: widget.validator,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: widget.hint ?? '',

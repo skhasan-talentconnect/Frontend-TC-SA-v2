@@ -1,4 +1,8 @@
 export 's_app_bar.dart';
 export 's_bottom_bar.dart';
 export 's_button.dart';
+export 's_icon.dart';
+export 's_list_tile.dart';
+export 's_loading_indicator.dart';
 export 's_text_field.dart';
+export 'school_card.dart';

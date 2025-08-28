@@ -18,11 +18,6 @@ extension DioExceptionExt on DioException {
   }
 
   int getStatusCodeFromResponse() {
-    final map = getMapFromResponse();
-    if (map != null && map.containsKey('statusCode')) {
-      return map['statusCode'] as int? ?? 500;
-    }
-
-    return 500;
+    return response?.statusCode ?? 500;
   }
 }
