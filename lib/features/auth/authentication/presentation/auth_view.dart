@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
-import 'package:tc_sa/common/widgets/s_loading_indicator.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart';
 import 'package:tc_sa/features/auth/authentication/presentation/widgets/auth_header.dart';
@@ -127,6 +126,15 @@ class _AuthViewState extends State<AuthView> {
                             Toasts.showSuccessOrFailureToast(
                               context,
                               failure: failure,
+                              successMsg:
+                                  authViewModel.isLogin
+                                      ? 'Login Successfully'
+                                      : 'Register Successfully, Email verification link sent to your Email.',
+                              successCallback: () {
+                                if (authViewModel.isLogin) {
+                                  context.pushReplacementNamed(RouteNames.home);
+                                }
+                              },
                             );
                           }
                         },

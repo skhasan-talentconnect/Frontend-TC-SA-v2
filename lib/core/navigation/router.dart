@@ -11,6 +11,11 @@ class AppRouter {
         name: RouteNames.splash,
         builder: (context, state) => SplashView(),
       ),
+      GoRoute(
+        path: '/home',
+        name: RouteNames.home,
+        builder: (context, state) => HomeView(),
+      ),
       // ShellRoute(
       //   routes: [
       //     GoRoute(path: '/home', name: RouteNames.home),

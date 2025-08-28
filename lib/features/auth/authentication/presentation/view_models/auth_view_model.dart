@@ -1,5 +1,4 @@
-import 'package:tc_sa/core/common/index.dart' show ViewStateProvider, ViewState;
-import 'package:tc_sa/core/network/index.dart' show Failure, APIFailure;
+import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart'
     show AuthDataSourceImpl;
 
@@ -39,9 +38,14 @@ class AuthViewModel extends ViewStateProvider {
       password: password,
     );
 
-    result.fold((exception) {
-      failure = APIFailure.fromException(exception: exception);
-    }, (res) {});
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (res) {
+        getIt<AppStateProvider>().authModel = res;
+      },
+    );
 
     setViewState(ViewState.complete);
 

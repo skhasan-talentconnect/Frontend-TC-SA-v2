@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tc_sa/common/index.dart' show SColor, STextStyles;
+import 'package:tc_sa/common/widgets/s_icon.dart';
+import 'package:tc_sa/core/index.dart';
 
 class SAppBar extends StatelessWidget implements PreferredSizeWidget {
   const SAppBar({
@@ -53,23 +55,32 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ? Row(
                     spacing: 16,
                     children: [
-                      Icon(Icons.search),
-                      Icon(Icons.notifications),
-                      Container(
-                        height: 30,
-                        width: 30,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: SColor.secTextColor,
-                            width: 1,
+                      SIcon.navigator(
+                        path: RouteNames.search,
+                        icon: Icons.search,
+                      ),
+                      SIcon.navigator(
+                        path: RouteNames.notification,
+                        icon: Icons.notifications,
+                      ),
+                      SIcon.navigator(
+                        path: RouteNames.profile,
+                        image: Container(
+                          height: 30,
+                          width: 30,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: SColor.secTextColor,
+                              width: 1,
+                            ),
+                            shape: BoxShape.circle,
                           ),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Icon(
-                            Icons.person,
-                            size: 20,
-                            color: SColor.secTextColor,
+                          child: Center(
+                            child: Icon(
+                              Icons.person,
+                              size: 20,
+                              color: SColor.secTextColor,
+                            ),
                           ),
                         ),
                       ),

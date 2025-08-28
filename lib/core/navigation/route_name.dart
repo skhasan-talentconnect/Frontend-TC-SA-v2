@@ -22,6 +22,7 @@ class RouteNames {
   //features
   static const String compare = 'compare';
   static const String search = 'search';
+  static const String notification = 'notifications';
   static const String predictor = 'predictor';
   static const String aiPredictor = 'ai-predictor';
   static const String apply = 'apply';

@@ -10,6 +10,8 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await SharedPrefHelper.init();
   await NotificationService().init();
+  initServiceLocator();
+  await getIt.allReady();
 
   runApp(
     const MyApp(),
