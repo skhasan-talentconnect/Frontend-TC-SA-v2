@@ -1,9 +1,9 @@
 // search_page.dart
 import 'package:flutter/material.dart';
 import 'package:tc_sa/common/index.dart';
+import 'package:tc_sa/features/search/presentation/search_result_view.dart';
 import 'package:tc_sa/features/search/presentation/view_models/search_view_model.dart';
 import 'package:tc_sa/features/search/presentation/widgets/search_widgets.dart';
-
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -26,15 +26,10 @@ class _SearchPageState extends State<SearchPage> {
     'Tamil Nadu'
   ];
 
-  final List<String> streams = [
-    'Engineering',
-    'Management',
-    'Arts',
-    'Science',
-    'Law',
-    'Medical',
-    'Design',
-    'Humanities',
+  final List<String> boards = [
+    'CBSE', 'ICSE', 'CISCE', 'NIOS', 'SSC', 'IGCSE', 'IB', 'KVS', 'JNV', 
+    'DBSE', 'MSBSHSE', 'UPMSP', 'KSEEB', 'WBBSE', 'GSEB', 'RBSE', 'BSEB', 
+    'PSEB', 'BSE', 'SEBA', 'MPBSE', 'STATE', 'OTHER'
   ];
 
   // Mapping of states to their cities
@@ -64,6 +59,32 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {});
   }
 
+  void _handleSearch() {
+    if (searchCtrl.text.isNotEmpty || 
+        controller.selectedStates.isNotEmpty ||
+        controller.selectedCities.isNotEmpty ||
+        controller.selectedBoards.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SearchResultsPage(),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Please enter search criteria or select filters",
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.black,
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final filterSelectedColor = SColor.primaryColor;
@@ -77,17 +98,7 @@ class _SearchPageState extends State<SearchPage> {
             SearchTextField(
               controller: searchCtrl,
               cursorColor: filterSelectedColor,
-              onSearchPressed: () {
-                // Search functionality would go here
-              },
-            ),
-
-            SearchStreamSection(
-              title: "Search by Streams",
-              items: streams,
-              selectedItems: controller.selectedStreams,
-              onTap: controller.toggleStream,
-              selectedColor: filterSelectedColor,
+              onSearchPressed: _handleSearch,
             ),
 
             const SizedBox(height: 24),
@@ -127,6 +138,25 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
             if (controller.selectedStates.isNotEmpty) const SizedBox(height: 24),
+
+            // Display boards only after a city is selected
+            if (controller.selectedCities.isNotEmpty) 
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: SearchGridSection(
+                  title: "Search by Education Boards",
+                  items: boards,
+                  selectedItems: controller.selectedBoards,
+                  onTap: controller.toggleBoard,
+                  selectedColor: filterSelectedColor,
+                  isGreyBox: true,
+                ),
+              ),
+            if (controller.selectedCities.isNotEmpty) const SizedBox(height: 24),
           ],
         ),
       ),
