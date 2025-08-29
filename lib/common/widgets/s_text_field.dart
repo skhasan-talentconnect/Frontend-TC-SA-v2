@@ -91,12 +91,14 @@ class _STextFieldState extends State<STextField> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.label ?? '',
-                      style: STextStyles.s12W600.copyWith(
-                        color: SColor.secTextColor,
+                    if (widget.label != null) ...[
+                      Text(
+                        widget.label ?? '',
+                        style: STextStyles.s12W600.copyWith(
+                          color: SColor.secTextColor,
+                        ),
                       ),
-                    ),
+                    ],
                     ValueListenableBuilder(
                       valueListenable: _isVisible,
                       builder:
