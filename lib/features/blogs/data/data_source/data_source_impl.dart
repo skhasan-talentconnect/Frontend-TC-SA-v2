@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:dartz/dartz.dart';
 import 'package:tc_sa/core/network/index.dart'
     show NetworkService, ResultFuture, Request, RequestMethod, APIException, Endpoints;
-import 'package:tc_sa/features/blogs/blog_model.dart';
+import 'package:tc_sa/features/blogs/data/entities/blog_model.dart';
 
-class BlogService {
+class BlogDataSourceImpl {
   final NetworkService _networkService = NetworkService();
 
   ResultFuture<List<BlogModel>> getAllBlogs() async {

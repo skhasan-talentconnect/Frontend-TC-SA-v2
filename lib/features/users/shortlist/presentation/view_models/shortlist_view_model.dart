@@ -1,9 +1,10 @@
 import 'package:tc_sa/core/common/view_state_provider.dart';
 import 'package:tc_sa/core/network/app_failure.dart';
-import 'package:tc_sa/features/users/shortlist/shortlist_service.dart';
+import 'package:tc_sa/features/users/shortlist/data/data_source/data_source_impl.dart';
+
 
 class ShortlistViewModel extends ViewStateProvider {
-  final ShortlistService _shortlistService = ShortlistService();
+  final ShortlistDataSourceImpl _shortlistService = ShortlistDataSourceImpl();
 
   Future<Failure?> addShortlist({
     required String schoolId,

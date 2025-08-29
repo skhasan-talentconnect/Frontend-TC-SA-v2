@@ -9,7 +9,7 @@ import 'package:tc_sa/core/network/index.dart'
         APIException;
 import 'package:tc_sa/features/school/school_info/school_model.dart';
 
-class PredictorService {
+class PredictorDataSourceImpl {
   final NetworkService _networkService = NetworkService();
 
   ResultFuture<List<SchoolModel>?> predictSchools(

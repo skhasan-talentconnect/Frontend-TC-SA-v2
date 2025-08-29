@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tc_sa/features/blogs/blog_model.dart';
-import 'package:tc_sa/features/blogs/blogs_detail_view.dart';
-import 'package:tc_sa/features/predictor/predictor_view.dart';
+import 'package:tc_sa/common/index.dart';
+import 'package:tc_sa/features/blogs/data/entities/blog_model.dart';
+import 'package:tc_sa/features/blogs/presentation/blogs_detail_view.dart';
+
 
 class BlogPage extends StatelessWidget {
   const BlogPage({super.key});
@@ -34,7 +35,7 @@ class BlogPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -43,19 +44,17 @@ class BlogPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Page header section
                 Text(
                   'Blogs',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: STextStyles.s24W600,
                 ),
                 SizedBox(height: 8),
                 Text(
                   'Explore Latest Blogs',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  style: STextStyles.s16W400.copyWith(color: SColor.terTextColor),
                 ),
                 SizedBox(height: 16),
 
-                // Featured blog posts container
                 Container(
                   padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -64,17 +63,14 @@ class BlogPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Section title
+                     
                       Text(
                         'Featured blog posts',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:STextStyles.s20W600
                       ),
                       SizedBox(height: 16),
 
-                      // Blog cards list
+
                       ListView.builder(
                         itemCount: blogs.length,
                         itemBuilder: (context, index) {
@@ -128,21 +124,17 @@ class BlogCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Blog highlight section
+          
             Text(
               highlight,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ),
+              style:STextStyles.s16W600.copyWith(color: SColor.primaryColor)
             ),
             SizedBox(height: 12),
 
-            // Blog title section
+         
             Text(
               title,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: STextStyles.s20W600,
             ),
             SizedBox(height: 12),
 
@@ -155,7 +147,7 @@ class BlogCard extends StatelessWidget {
             ),
             SizedBox(height: 16),
 
-            // Read more button section
+       
             GestureDetector(
               onTap: () {
                 Navigator.push(

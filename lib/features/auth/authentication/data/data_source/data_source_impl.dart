@@ -15,7 +15,7 @@ import 'package:tc_sa/core/network/typedef.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart'
     show AuthModel, AuthDataSource;
 
-class AuthDataSourceImpl implements AuthDataSource {
+class AuthDataSourceImpl  implements AuthDataSource {
   final _networkService = NetworkService();
 
   final String? deviceToken = SharedPrefHelper.getString('deviceToken');
