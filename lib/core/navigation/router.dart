@@ -2,9 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart';
 import 'package:tc_sa/features/home/index.dart';
-import 'package:tc_sa/features/predictor/presentation/predictor_view.dart';
-import 'package:tc_sa/features/search/presentation/search_view.dart';
-import 'package:tc_sa/features/users/shortlist/presentation/shortlist_view.dart';
+import 'package:tc_sa/features/profile/presentation/add_edit_profile_view.dart';
 
 class AppRouter {
   GoRouter router = GoRouter(
@@ -12,12 +10,12 @@ class AppRouter {
       GoRoute(
         path: '/',
         name: RouteNames.splash,
-        builder: (context, state) => SplashView(),
+        builder: (context, state) => const SplashView(),
       ),
       GoRoute(
         path: '/home',
         name: RouteNames.home,
-        builder: (context, state) => SearchPage(),
+        builder: (context, state) => HomeView(),
       ),
       // ShellRoute(
       //   routes: [
@@ -41,6 +39,19 @@ class AppRouter {
         path: '/forget-password',
         name: RouteNames.forgetPassword,
         builder: (context, state) => ForgotPasswordView(),
+      ),
+      GoRoute(
+        path: '/profile',
+        name: RouteNames.profile,
+        builder: (context, state) => ForgotPasswordView(),
+      ),
+      GoRoute(
+        path: '/add-edit-profile',
+        name: RouteNames.addEditProfile,
+        builder: (context, state) {
+          final isEdit = state.extra as bool;
+          return AddEditProfileView(isEdit: isEdit);
+        },
       ),
     ],
   );

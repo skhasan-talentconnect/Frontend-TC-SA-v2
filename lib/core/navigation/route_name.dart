@@ -14,6 +14,7 @@ class RouteNames {
 
   //user
   static const String profile = 'profile';
+  static const String addEditProfile = 'add-edit-profile';
   static const String settings = 'settings';
 
   //school

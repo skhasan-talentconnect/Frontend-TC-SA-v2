@@ -168,45 +168,49 @@ class _STextFieldState extends State<STextField> {
               valueListenable: _isExpanded,
               builder: (context, value, child) {
                 return value
-                    ? Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        (widget.items ?? []).isNotEmpty
-                            ? Divider()
-                            : SizedBox.shrink(),
-                        ListView.builder(
-                          itemCount: widget.items?.length ?? 0,
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          itemBuilder: (context, index) {
-                            final item = widget.items?[index] ?? '';
-                            return GestureDetector(
-                              onTap: () {
-                                widget.controller.text = item;
-                                _isExpanded.value = false;
-                              },
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 4,
-                                    ),
-                                    child: Text(
-                                      item,
-                                      style: STextStyles.s16W400.copyWith(
-                                        color: SColor.secTextColor,
+                    ? Container(
+                      constraints: BoxConstraints(
+                        maxHeight: MediaQuery.sizeOf(context).height * 0.2,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if ((widget.items ?? []).isNotEmpty) ...[Divider()],
+                          Flexible(
+                            child: ListView.builder(
+                              itemCount: widget.items?.length ?? 0,
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              itemBuilder: (context, index) {
+                                final item = widget.items?[index] ?? '';
+                                return GestureDetector(
+                                  onTap: () {
+                                    widget.controller.text = item;
+                                    _isExpanded.value = false;
+                                  },
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 4,
+                                        ),
+                                        child: Text(
+                                          item,
+                                          style: STextStyles.s16W400.copyWith(
+                                            color: SColor.secTextColor,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     )
                     : SizedBox.shrink();
               },

@@ -7,7 +7,7 @@ part of 'auth_model.dart';
 // **************************************************************************
 
 _AuthModel _$AuthModelFromJson(Map<String, dynamic> json) => _AuthModel(
-  sId: json['sId'] as String?,
+  sId: json['_id'] as String?,
   email: json['email'] as String?,
   password: json['password'] as String?,
   isEmailVerified: json['isEmailVerified'] as bool?,
@@ -16,12 +16,12 @@ _AuthModel _$AuthModelFromJson(Map<String, dynamic> json) => _AuthModel(
   deviceToken: json['deviceToken'] as String?,
   createdAt: json['createdAt'] as String?,
   updatedAt: json['updatedAt'] as String?,
-  iV: (json['iV'] as num?)?.toInt(),
+  iV: (json['__v'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$AuthModelToJson(_AuthModel instance) =>
     <String, dynamic>{
-      'sId': instance.sId,
+      '_id': instance.sId,
       'email': instance.email,
       'password': instance.password,
       'isEmailVerified': instance.isEmailVerified,
@@ -30,5 +30,5 @@ Map<String, dynamic> _$AuthModelToJson(_AuthModel instance) =>
       'deviceToken': instance.deviceToken,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
-      'iV': instance.iV,
+      '__v': instance.iV,
     };
