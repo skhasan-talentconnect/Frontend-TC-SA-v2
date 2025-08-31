@@ -2,6 +2,9 @@ import 'package:go_router/go_router.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart';
 import 'package:tc_sa/features/home/index.dart';
+import 'package:tc_sa/features/predictor/presentation/predictor_view.dart';
+import 'package:tc_sa/features/search/presentation/search_view.dart';
+import 'package:tc_sa/features/users/shortlist/presentation/shortlist_view.dart';
 
 class AppRouter {
   GoRouter router = GoRouter(
@@ -14,7 +17,7 @@ class AppRouter {
       GoRoute(
         path: '/home',
         name: RouteNames.home,
-        builder: (context, state) => HomeView(),
+        builder: (context, state) => SearchPage(),
       ),
       // ShellRoute(
       //   routes: [

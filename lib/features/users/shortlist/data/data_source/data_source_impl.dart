@@ -9,7 +9,7 @@ import 'package:tc_sa/core/network/index.dart'
         Endpoints,
         APIException;
 
-class ShortlistService {
+class ShortlistDataSourceImpl {
   final NetworkService _networkService = NetworkService();
 
   final String? deviceToken = SharedPrefHelper.getString('deviceToken');

@@ -52,6 +52,12 @@ class STextStyles {
     fontFamily: fontFamily,
   );
 
+    static const s15W400 = TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w400,
+    fontFamily: fontFamily,
+  );
+
   static const s16W400 = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,
@@ -109,6 +115,24 @@ class STextStyles {
   static const s24W600 = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.w600,
+    fontFamily: fontFamily,
+  );
+
+  static const s26W600 = TextStyle(
+    fontSize: 26,
+    fontWeight: FontWeight.w600,
+    fontFamily: fontFamily,
+  );
+
+static const s28W800 = TextStyle(
+    fontSize: 28,
+    fontWeight: FontWeight.w800,
+    fontFamily: fontFamily,
+  );
+
+  static const s30W900 = TextStyle(
+    fontSize: 30,
+    fontWeight: FontWeight.w900,
     fontFamily: fontFamily,
   );
 

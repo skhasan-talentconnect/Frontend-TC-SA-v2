@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tc_sa/features/predictor/predictor_result_view.dart';
+import 'package:tc_sa/features/predictor/presentation/predictor_result_view.dart';
 import 'package:tc_sa/common/index.dart' show SColor, STextStyles, STextField, SButton;
 
 class PredictorPage extends StatefulWidget {
@@ -19,35 +19,27 @@ class _PredictorPageState extends State<PredictorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+   
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16),
+          //padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header section
-              const Text(
+              Text(
                 "Your Options. Your School.",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+                style:STextStyles.s18W600.copyWith(color: SColor.primaryColor)
               ),
               const SizedBox(height: 10),
               Text(
                 "School Predictor",
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.black,
-                ),
+                style:  STextStyles.s30W900.copyWith(color: SColor.primaryColor)
               ),
               const SizedBox(height: 12),
-              const Text(
+               Text(
                 "Discover the schools that matches the exact requirement for your kid.",
-                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15, color: Colors.black)
+                style: STextStyles.s15W400.copyWith(color: SColor.primaryColor)
               ),
               const SizedBox(height: 23),
 
@@ -116,11 +108,7 @@ class _PredictorPageState extends State<PredictorPage> {
               const SizedBox(height: 12),
               Text(
                 "Predictions are based on available data and may not reflect actual outcomes",
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Color(0xFF757575),
-                  height: 1,
-                ),
+                style: STextStyles.s10W400.copyWith(color: SColor.terTextColor),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -133,11 +121,7 @@ class _PredictorPageState extends State<PredictorPage> {
   Widget _buildLabel(String label) {
     return Text(
       label,
-      style: const TextStyle(
-        fontWeight: FontWeight.w500,
-        fontSize: 16,
-        color: Colors.black,
-      ),
+      style:STextStyles.s16W400.copyWith(color: SColor.primaryColor)
     );
   }
 }

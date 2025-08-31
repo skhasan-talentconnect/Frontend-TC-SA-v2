@@ -1,10 +1,11 @@
 import 'package:tc_sa/core/common/view_state_provider.dart';
 import 'package:tc_sa/core/network/app_failure.dart';
-import 'package:tc_sa/features/blogs/blog_service.dart';
-import 'package:tc_sa/features/blogs/blog_model.dart';
+
+import 'package:tc_sa/features/blogs/data/entities/blog_model.dart';
+import 'package:tc_sa/features/blogs/data/data_source/data_source_impl.dart';
 
 class BlogViewModel extends ViewStateProvider {
-  final BlogService _blogService = BlogService();
+  final BlogDataSourceImpl _blogService = BlogDataSourceImpl();
   List<BlogModel> _blogs = [];
 
   List<BlogModel> get blogs => _blogs;
