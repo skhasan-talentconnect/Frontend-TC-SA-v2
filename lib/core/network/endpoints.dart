@@ -17,8 +17,10 @@ class Endpoints {
   static const String usersPreferences = 'users/preferences';
   static const String users = 'users';
   static const String usersShortlist = 'users/shortlist';
+
   //School Endpoints
   static const String adminSchools = 'admin/schools';
+  static const String adminSchoolsStatus = 'admin/schools/status';
 
   //School Amenities
   static const String adminSchoolsAmenities = 'admin/schools/amenities';
@@ -38,6 +40,7 @@ class Endpoints {
 
   //predictor
   static const String adminPredictSchools = 'admin/predict-schools';
+  static const String adminSearch = 'admin/search';
 
   //Reviews Endpoints
   static const String reviews = 'reviews';

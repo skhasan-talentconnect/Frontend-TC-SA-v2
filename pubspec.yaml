@@ -44,6 +44,7 @@ dependencies:
   json_serializable: ^6.10.0
   get_it: ^8.2.0
   flutter_secure_storage: ^9.2.4
+  visibility_detector: ^0.4.0+2
 
 dev_dependencies:
   flutter_test:

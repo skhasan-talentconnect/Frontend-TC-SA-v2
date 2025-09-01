@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tc_sa/common/index.dart';
+import 'package:tc_sa/features/search/data/entities/search_query.dart';
 import 'package:tc_sa/features/search/presentation/view_models/search_view_model.dart';
 import 'package:tc_sa/features/search/presentation/widgets/search_widgets.dart';
 
@@ -86,7 +87,15 @@ class _SearchPageState extends State<SearchPage> {
         controller.selectedStates.isNotEmpty ||
         controller.selectedCities.isNotEmpty ||
         controller.selectedBoards.isNotEmpty) {
-      context.pushNamed(RouteNames.searchRes);
+      context.pushNamed(
+        RouteNames.searchRes,
+        extra: SearchQuery(
+          query: searchCtrl.text,
+          state: controller.selectedStates.toList(),
+          city: controller.selectedCities.toList(),
+          board: controller.selectedBoards.toList(),
+        ),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

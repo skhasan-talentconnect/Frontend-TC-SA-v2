@@ -82,11 +82,11 @@ class _SchoolListSectionState extends State<SchoolListSection> {
                       controller: scrollController,
                       scrollDirection: Axis.horizontal,
                       itemCount: widget.schools.length,
-                      separatorBuilder: (_, index) => const SizedBox(width: 8),
+                      separatorBuilder: (_, index) => const SizedBox(width: 12),
                       itemBuilder:
                           (_, index) => SchoolCard(
                             school: widget.schools[index],
-                            width: 0.75,
+                            width: 0.70,
                           ),
                     ),
                   ),

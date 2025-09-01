@@ -6,6 +6,7 @@ import 'package:tc_sa/features/home/index.dart';
 import 'package:tc_sa/features/predictor/index.dart';
 import 'package:tc_sa/features/profile/presentation/add_edit_profile_view.dart';
 import 'package:tc_sa/features/profile/presentation/profile_view.dart';
+import 'package:tc_sa/features/search/data/entities/search_query.dart';
 import 'package:tc_sa/features/search/presentation/search_result_view.dart';
 import 'package:tc_sa/features/search/presentation/search_view.dart';
 import 'package:tc_sa/features/users/shortlist/index.dart';
@@ -93,7 +94,8 @@ class AppRouter {
         path: '/search-res',
         name: RouteNames.searchRes,
         builder: (context, state) {
-          return SearchResultsPage();
+          final extras = state.extra as SearchQuery;
+          return SearchResultsPage(searchQuery: extras);
         },
       ),
       GoRoute(
