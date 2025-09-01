@@ -11,6 +11,7 @@ class STextField extends StatefulWidget {
     this.suffixIcon,
     this.enable = true,
     this.validator,
+    this.dividerHeight,
     super.key,
   }) : _isDropDown = false,
        _isPassword = false;
@@ -24,6 +25,7 @@ class STextField extends StatefulWidget {
     this.suffixIcon,
     this.enable = true,
     this.validator,
+    this.dividerHeight,
     super.key,
   }) : _isDropDown = true,
        _isPassword = false;
@@ -37,6 +39,7 @@ class STextField extends StatefulWidget {
     this.suffixIcon,
     this.enable = true,
     this.validator,
+    this.dividerHeight,
     super.key,
   }) : _isDropDown = false,
        _isPassword = true;
@@ -51,6 +54,7 @@ class STextField extends StatefulWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final List<String>? items;
+  final double? dividerHeight;
   final String? Function(String? val)? validator;
 
   @override
@@ -83,7 +87,11 @@ class _STextFieldState extends State<STextField> {
               widget.prefixIcon ?? SizedBox.shrink(),
               if (widget.prefixIcon != null) ...[
                 const SizedBox(width: 8),
-                Container(color: SColor.terTextColor, width: 1, height: 35),
+                Container(
+                  color: SColor.terTextColor,
+                  width: 1,
+                  height: widget.dividerHeight ?? 35,
+                ),
                 const SizedBox(width: 12),
               ],
               Expanded(

@@ -133,20 +133,24 @@ class _AuthViewState extends State<AuthView> {
                               failure: failure,
                               popOnSuccess: false,
                               successMsg:
-                                  authViewModel.isLogin
+                                  vm.isLogin
                                       ? 'Login Successfully'
                                       : 'Register Successfully, Email verification link sent to your Email.',
                               successCallback: () async {
-                                if (authViewModel.isLogin) {
+                                if (vm.isLogin) {
                                   await getIt<AppStateProvider>()
                                       .getUserDetails();
                                   if (getIt<AppStateProvider>().user != null) {
+                                    vm.isLogin = true;
+                                    emailController.text = '';
+                                    passController.text = '';
                                     context.pushReplacementNamed(
                                       RouteNames.home,
                                     );
                                   } else {
                                     context.pushReplacementNamed(
                                       RouteNames.addEditProfile,
+                                      extra: false,
                                     );
                                   }
                                 }

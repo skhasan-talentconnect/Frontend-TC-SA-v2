@@ -40,11 +40,11 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       backgroundColor: backgroundColor ?? SColor.backgroundColor,
       bottom: PreferredSize(
-        preferredSize: Size.fromHeight(0.2),
+        preferredSize: Size.fromHeight(0.25),
         child: Container(
-          color: SColor.secTextColor.withOpacity(0.2),
+          color: SColor.secTextColor.withOpacity(0.25),
           width: double.maxFinite,
-          height: 0.2,
+          height: 0.25,
         ),
       ),
       actions: [

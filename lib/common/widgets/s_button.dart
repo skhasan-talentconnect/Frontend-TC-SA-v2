@@ -7,6 +7,7 @@ class SButton extends StatelessWidget {
     this.backgroundColor,
     this.borderColor,
     this.max = false,
+    this.radius,
     required this.label,
     required this.onPressed,
     super.key,
@@ -17,6 +18,7 @@ class SButton extends StatelessWidget {
     this.backgroundColor,
     this.borderColor,
     this.max = false,
+    this.radius,
     required this.label,
     required this.onPressed,
     super.key,
@@ -24,6 +26,7 @@ class SButton extends StatelessWidget {
 
   final bool _isOutlined;
   final bool max;
+  final double? radius;
   final EdgeInsets? padding;
   final Color? backgroundColor;
   final Color? borderColor;
@@ -47,7 +50,7 @@ class SButton extends StatelessWidget {
                 backgroundColor ??
                 (_isOutlined ? SColor.backgroundColor : SColor.primaryColor),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(max ? 8 : 12),
+              borderRadius: BorderRadius.circular(max ? 8 : (radius ?? 12)),
               side:
                   _isOutlined
                       ? BorderSide(color: SColor.primaryColor)

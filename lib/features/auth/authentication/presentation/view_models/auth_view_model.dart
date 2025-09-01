@@ -65,14 +65,9 @@ class AuthViewModel extends ViewStateProvider {
       password: password,
     );
 
-    result.fold(
-      (exception) {
-        failure = APIFailure.fromException(exception: exception);
-      },
-      (res) {
-        isLogin = true;
-      },
-    );
+    result.fold((exception) {
+      failure = APIFailure.fromException(exception: exception);
+    }, (res) {});
 
     setViewState(ViewState.complete);
 

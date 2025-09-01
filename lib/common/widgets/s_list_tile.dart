@@ -39,24 +39,31 @@ class SListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      tileColor: SColor.backgroundColor,
-      leading: leading,
-      title:
-          label == null ? title : Text(label ?? '', style: STextStyles.s16W600),
-      subtitle:
-          subLabel == null
-              ? subtitle
-              : Text(subLabel ?? '', style: STextStyles.s16W400),
-      trailing: trailing,
-      onTap:
-          _isNavigator
-              ? () {
-                if (path != null && (path ?? "").isNotEmpty) {
-                  context.pushNamed(path ?? '');
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: SColor.secTextColor)),
+      ),
+      child: ListTile(
+        tileColor: SColor.backgroundColor,
+        leading: leading,
+        title:
+            label != null
+                ? Text(label ?? '', style: STextStyles.s16W600)
+                : title,
+        subtitle:
+            subLabel == null
+                ? subtitle
+                : Text(subLabel ?? '', style: STextStyles.s16W400),
+        trailing: trailing,
+        onTap:
+            _isNavigator
+                ? () {
+                  if (path != null && (path ?? "").isNotEmpty) {
+                    context.pushNamed(path ?? '');
+                  }
                 }
-              }
-              : onTap,
+                : onTap,
+      ),
     );
   }
 }
