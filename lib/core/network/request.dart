@@ -9,12 +9,14 @@ class Request {
     this.queryParams = const {},
     this.body,
     this.headers,
+    this.isSafeRoute = false,
   });
 
   final String endpoint;
   final Map<String, dynamic> queryParams;
   final Map<String, String>? headers;
   final dynamic body;
+  final bool isSafeRoute;
 
   final RequestMethod method;
 

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AuthModel {
 
- String? get sId; String? get email; String? get password; bool? get isEmailVerified; String? get userType; String? get authProvider; String? get deviceToken; String? get createdAt; String? get updatedAt; int? get iV;
+@JsonKey(name: '_id') String? get sId; String? get email; String? get password; bool? get isEmailVerified; String? get userType; String? get authProvider; String? get deviceToken; String? get createdAt; String? get updatedAt;@JsonKey(name: '__v') int? get iV;
 /// Create a copy of AuthModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $AuthModelCopyWith<$Res>  {
   factory $AuthModelCopyWith(AuthModel value, $Res Function(AuthModel) _then) = _$AuthModelCopyWithImpl;
 @useResult
 $Res call({
- String? sId, String? email, String? password, bool? isEmailVerified, String? userType, String? authProvider, String? deviceToken, String? createdAt, String? updatedAt, int? iV
+@JsonKey(name: '_id') String? sId, String? email, String? password, bool? isEmailVerified, String? userType, String? authProvider, String? deviceToken, String? createdAt, String? updatedAt,@JsonKey(name: '__v') int? iV
 });
 
 
@@ -162,7 +162,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? sId,  String? email,  String? password,  bool? isEmailVerified,  String? userType,  String? authProvider,  String? deviceToken,  String? createdAt,  String? updatedAt,  int? iV)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? sId,  String? email,  String? password,  bool? isEmailVerified,  String? userType,  String? authProvider,  String? deviceToken,  String? createdAt,  String? updatedAt, @JsonKey(name: '__v')  int? iV)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AuthModel() when $default != null:
 return $default(_that.sId,_that.email,_that.password,_that.isEmailVerified,_that.userType,_that.authProvider,_that.deviceToken,_that.createdAt,_that.updatedAt,_that.iV);case _:
@@ -183,7 +183,7 @@ return $default(_that.sId,_that.email,_that.password,_that.isEmailVerified,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? sId,  String? email,  String? password,  bool? isEmailVerified,  String? userType,  String? authProvider,  String? deviceToken,  String? createdAt,  String? updatedAt,  int? iV)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? sId,  String? email,  String? password,  bool? isEmailVerified,  String? userType,  String? authProvider,  String? deviceToken,  String? createdAt,  String? updatedAt, @JsonKey(name: '__v')  int? iV)  $default,) {final _that = this;
 switch (_that) {
 case _AuthModel():
 return $default(_that.sId,_that.email,_that.password,_that.isEmailVerified,_that.userType,_that.authProvider,_that.deviceToken,_that.createdAt,_that.updatedAt,_that.iV);case _:
@@ -203,7 +203,7 @@ return $default(_that.sId,_that.email,_that.password,_that.isEmailVerified,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? sId,  String? email,  String? password,  bool? isEmailVerified,  String? userType,  String? authProvider,  String? deviceToken,  String? createdAt,  String? updatedAt,  int? iV)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? sId,  String? email,  String? password,  bool? isEmailVerified,  String? userType,  String? authProvider,  String? deviceToken,  String? createdAt,  String? updatedAt, @JsonKey(name: '__v')  int? iV)?  $default,) {final _that = this;
 switch (_that) {
 case _AuthModel() when $default != null:
 return $default(_that.sId,_that.email,_that.password,_that.isEmailVerified,_that.userType,_that.authProvider,_that.deviceToken,_that.createdAt,_that.updatedAt,_that.iV);case _:
@@ -218,10 +218,10 @@ return $default(_that.sId,_that.email,_that.password,_that.isEmailVerified,_that
 @JsonSerializable()
 
 class _AuthModel implements AuthModel {
-  const _AuthModel({this.sId, this.email, this.password, this.isEmailVerified, this.userType, this.authProvider, this.deviceToken, this.createdAt, this.updatedAt, this.iV});
+  const _AuthModel({@JsonKey(name: '_id') this.sId, this.email, this.password, this.isEmailVerified, this.userType, this.authProvider, this.deviceToken, this.createdAt, this.updatedAt, @JsonKey(name: '__v') this.iV});
   factory _AuthModel.fromJson(Map<String, dynamic> json) => _$AuthModelFromJson(json);
 
-@override final  String? sId;
+@override@JsonKey(name: '_id') final  String? sId;
 @override final  String? email;
 @override final  String? password;
 @override final  bool? isEmailVerified;
@@ -230,7 +230,7 @@ class _AuthModel implements AuthModel {
 @override final  String? deviceToken;
 @override final  String? createdAt;
 @override final  String? updatedAt;
-@override final  int? iV;
+@override@JsonKey(name: '__v') final  int? iV;
 
 /// Create a copy of AuthModel
 /// with the given fields replaced by the non-null parameter values.
@@ -265,7 +265,7 @@ abstract mixin class _$AuthModelCopyWith<$Res> implements $AuthModelCopyWith<$Re
   factory _$AuthModelCopyWith(_AuthModel value, $Res Function(_AuthModel) _then) = __$AuthModelCopyWithImpl;
 @override @useResult
 $Res call({
- String? sId, String? email, String? password, bool? isEmailVerified, String? userType, String? authProvider, String? deviceToken, String? createdAt, String? updatedAt, int? iV
+@JsonKey(name: '_id') String? sId, String? email, String? password, bool? isEmailVerified, String? userType, String? authProvider, String? deviceToken, String? createdAt, String? updatedAt,@JsonKey(name: '__v') int? iV
 });
 
 

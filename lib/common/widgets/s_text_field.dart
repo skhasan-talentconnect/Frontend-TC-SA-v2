@@ -11,6 +11,7 @@ class STextField extends StatefulWidget {
     this.suffixIcon,
     this.enable = true,
     this.validator,
+    this.dividerHeight,
     super.key,
   }) : _isDropDown = false,
        _isPassword = false;
@@ -24,6 +25,7 @@ class STextField extends StatefulWidget {
     this.suffixIcon,
     this.enable = true,
     this.validator,
+    this.dividerHeight,
     super.key,
   }) : _isDropDown = true,
        _isPassword = false;
@@ -37,6 +39,7 @@ class STextField extends StatefulWidget {
     this.suffixIcon,
     this.enable = true,
     this.validator,
+    this.dividerHeight,
     super.key,
   }) : _isDropDown = false,
        _isPassword = true;
@@ -51,6 +54,7 @@ class STextField extends StatefulWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final List<String>? items;
+  final double? dividerHeight;
   final String? Function(String? val)? validator;
 
   @override
@@ -83,7 +87,11 @@ class _STextFieldState extends State<STextField> {
               widget.prefixIcon ?? SizedBox.shrink(),
               if (widget.prefixIcon != null) ...[
                 const SizedBox(width: 8),
-                Container(color: SColor.terTextColor, width: 1, height: 35),
+                Container(
+                  color: SColor.terTextColor,
+                  width: 1,
+                  height: widget.dividerHeight ?? 35,
+                ),
                 const SizedBox(width: 12),
               ],
               Expanded(
@@ -168,45 +176,49 @@ class _STextFieldState extends State<STextField> {
               valueListenable: _isExpanded,
               builder: (context, value, child) {
                 return value
-                    ? Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        (widget.items ?? []).isNotEmpty
-                            ? Divider()
-                            : SizedBox.shrink(),
-                        ListView.builder(
-                          itemCount: widget.items?.length ?? 0,
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          itemBuilder: (context, index) {
-                            final item = widget.items?[index] ?? '';
-                            return GestureDetector(
-                              onTap: () {
-                                widget.controller.text = item;
-                                _isExpanded.value = false;
-                              },
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 4,
-                                    ),
-                                    child: Text(
-                                      item,
-                                      style: STextStyles.s16W400.copyWith(
-                                        color: SColor.secTextColor,
+                    ? Container(
+                      constraints: BoxConstraints(
+                        maxHeight: MediaQuery.sizeOf(context).height * 0.2,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if ((widget.items ?? []).isNotEmpty) ...[Divider()],
+                          Flexible(
+                            child: ListView.builder(
+                              itemCount: widget.items?.length ?? 0,
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              itemBuilder: (context, index) {
+                                final item = widget.items?[index] ?? '';
+                                return GestureDetector(
+                                  onTap: () {
+                                    widget.controller.text = item;
+                                    _isExpanded.value = false;
+                                  },
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 4,
+                                        ),
+                                        child: Text(
+                                          item,
+                                          style: STextStyles.s16W400.copyWith(
+                                            color: SColor.secTextColor,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     )
                     : SizedBox.shrink();
               },

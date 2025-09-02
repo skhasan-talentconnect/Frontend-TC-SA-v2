@@ -2,6 +2,7 @@ class Endpoints {
   static const String baseUrl = 'https://backend-tc-sa-v2.onrender.com/api/';
 
   //Authentication Endpoints
+  static const String auth = 'auth';
   static const String authLogin = 'auth/login';
   static const String authRegister = 'auth/register';
   static const String authForgotPasswordSendOtp =
@@ -16,8 +17,10 @@ class Endpoints {
   static const String usersPreferences = 'users/preferences';
   static const String users = 'users';
   static const String usersShortlist = 'users/shortlist';
+
   //School Endpoints
   static const String adminSchools = 'admin/schools';
+  static const String adminSchoolsStatus = 'admin/schools/status';
 
   //School Amenities
   static const String adminSchoolsAmenities = 'admin/schools/amenities';
@@ -37,6 +40,8 @@ class Endpoints {
 
   //predictor
   static const String adminPredictSchools = 'admin/predict-schools';
+  static const String adminSearch = 'admin/search';
+  static const String notifications = 'notifications';
 
   //Reviews Endpoints
   static const String reviews = 'reviews';

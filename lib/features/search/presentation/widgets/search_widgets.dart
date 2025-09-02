@@ -2,7 +2,6 @@
 // import 'package:flutter/material.dart';
 // import 'package:tc_sa/common/index.dart';
 
-
 // class SearchGridSection extends StatelessWidget {
 //   final String title;
 //   final List<String> items;
@@ -178,7 +177,6 @@
 import 'package:flutter/material.dart';
 import 'package:tc_sa/common/index.dart';
 
-
 class SearchGridSection extends StatelessWidget {
   final String title;
   final List<String> items;
@@ -202,10 +200,7 @@ class SearchGridSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: STextStyles.s22W600,
-        ),
+        Text(title, style: STextStyles.s22W600),
         const SizedBox(height: 12),
         GridView.count(
           crossAxisCount: 3,
@@ -214,36 +209,39 @@ class SearchGridSection extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           childAspectRatio: 1.5,
-          children: items.map((item) {
-            final isSelected = selectedItems.contains(item);
-            return GestureDetector(
-              onTap: () => onTap(item),
-              child: Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: isSelected
-                      ? Border.all(
-                          color: selectedColor,
-                          width: 2,
-                        )
-                      : Border.all(color: Colors.grey.shade300),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                child: Center(
-                  child: Text(
-                    item,
-                    textAlign: TextAlign.center,
-                    style: STextStyles.s14W400.copyWith(
-                      color: SColor.primaryColor,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+          children:
+              items.map((item) {
+                final isSelected = selectedItems.contains(item);
+                return GestureDetector(
+                  onTap: () => onTap(item),
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border:
+                          isSelected
+                              ? Border.all(color: selectedColor, width: 2)
+                              : Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 8,
+                    ),
+                    child: Center(
+                      child: Text(
+                        item,
+                        textAlign: TextAlign.center,
+                        style: STextStyles.s14W400.copyWith(
+                          color: SColor.primaryColor,
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.w400,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            );
-          }).toList(),
+                );
+              }).toList(),
         ),
       ],
     );
@@ -282,10 +280,7 @@ class SearchTextField extends StatelessWidget {
                 shadowColor: MaterialStateProperty.all(Colors.transparent),
               ),
               onPressed: onSearchPressed,
-              child: Text(
-                "Search",
-                style: TextStyle(color: cursorColor),
-              ),
+              child: Text("Search", style: TextStyle(color: cursorColor)),
             ),
           ],
         ),
@@ -327,28 +322,29 @@ class SearchStreamSection extends StatelessWidget {
           child: Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: items.map((item) {
-              final isSelected = selectedItems.contains(item);
-              return GestureDetector(
-                onTap: () => onTap(item),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected ? selectedColor : Colors.transparent,
-                    border: Border.all(color: Colors.black),
-                  ),
-                  child: Text(
-                    item,
-                    style: STextStyles.s16W400.copyWith(
-                      color: isSelected ? Colors.white : Colors.black,
+            children:
+                items.map((item) {
+                  final isSelected = selectedItems.contains(item);
+                  return GestureDetector(
+                    onTap: () => onTap(item),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected ? selectedColor : Colors.transparent,
+                        border: Border.all(color: Colors.black),
+                      ),
+                      child: Text(
+                        item,
+                        style: STextStyles.s16W400.copyWith(
+                          color: isSelected ? Colors.white : Colors.black,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            }).toList(),
+                  );
+                }).toList(),
           ),
         ),
       ],

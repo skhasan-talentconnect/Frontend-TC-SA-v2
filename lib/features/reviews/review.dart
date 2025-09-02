@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:tc_sa/common/index.dart' show SAppBar, SBottomBar;
+import 'package:tc_sa/common/index.dart' show SAppBar;
 import 'package:tc_sa/features/auth/authentication/presentation/auth_view.dart';
 
 class Review extends StatefulWidget {
@@ -36,14 +36,6 @@ class _ReviewState extends State<Review> {
       drawer: Drawer(),
 
       body: AuthView(),
-
-      bottomNavigationBar: SBottomBar(
-        onTap: (index) {
-          setState(() {
-            newIndex = index;
-          });
-        },
-      ),
     );
   }
 

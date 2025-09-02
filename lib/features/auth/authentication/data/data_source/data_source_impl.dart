@@ -12,6 +12,7 @@ import 'package:tc_sa/core/network/index.dart'
         Endpoints,
         APIException;
 import 'package:tc_sa/core/network/typedef.dart';
+import 'package:tc_sa/core/services/secret_repo.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart'
     show AuthModel, AuthDataSource;
 
@@ -36,12 +37,13 @@ class AuthDataSourceImpl  implements AuthDataSource {
       final response = result.data as Map<String, dynamic>;
 
       if (response.isNotEmpty) {
-        final authModel = AuthModel.fromJson(response['data']);
-
+        final authModel = AuthModel.fromJson(response['data']['auth']);
+        await SecretRepo.setString('auth_token', response['data']['token']);
+        print(authModel.sId);
+        await SecretRepo.setString('auth_id', authModel.sId ?? '');
         return Right(authModel);
       }
     } catch (e) {
-      print((e is DioException) ? e.getStatusCodeFromResponse() : 500);
       return Left(
         APIException(
           message:
@@ -169,6 +171,29 @@ class AuthDataSourceImpl  implements AuthDataSource {
 
     try {
       await _networkService.request(r);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+
+    return Right(null);
+  }
+
+  @override
+  ResultFuture<AuthModel?> getAuth() async {
+    Request r = Request(
+      method: RequestMethod.get,
+      isSafeRoute: true,
+      endpoint: '${Endpoints.auth}/${await SecretRepo.getString('auth_id')}',
+    );
+
+    try {
+      final result = await _networkService.request(r);
+      final response = result.data as Map<String, dynamic>;
+
+      if (response.isNotEmpty) {
+        final authModel = AuthModel.fromJson(response['data']);
+        return Right(authModel);
+      }
     } catch (e) {
       return Left(APIException.from(e));
     }

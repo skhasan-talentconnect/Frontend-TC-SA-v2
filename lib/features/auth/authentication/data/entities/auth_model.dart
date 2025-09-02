@@ -6,7 +6,7 @@ part 'auth_model.g.dart';
 @freezed
 abstract class AuthModel with _$AuthModel {
   const factory AuthModel({
-    String? sId,
+    @JsonKey(name: '_id') String? sId,
     String? email,
     String? password,
     bool? isEmailVerified,
@@ -15,7 +15,7 @@ abstract class AuthModel with _$AuthModel {
     String? deviceToken,
     String? createdAt,
     String? updatedAt,
-    int? iV,
+    @JsonKey(name: '__v') int? iV,
   }) = _AuthModel;
 
   factory AuthModel.fromJson(Map<String, dynamic> json) =>

@@ -118,16 +118,20 @@ class Toasts {
     String? failureMsg,
     VoidCallback? failureCallback,
     bool popOnFailure = false,
+    bool hideFailure = false,
     bool popOnSuccess = true,
+    bool hideSuccess = false,
     String? successMsg,
     String? successTitle,
     VoidCallback? successCallback,
   }) {
     if (failure == null) {
-      Toasts.showSuccessToast(
-        context,
-        message: successMsg ?? 'Api Hit Successfully',
-      );
+      if (!hideSuccess) {
+        Toasts.showSuccessToast(
+          context,
+          message: successMsg ?? 'Api Hit Successfully',
+        );
+      }
 
       if (successCallback != null) {
         successCallback();
@@ -137,10 +141,12 @@ class Toasts {
         context.pop(true);
       }
     } else {
-      Toasts.showErrorToast(
-        context,
-        message: failureMsg ?? (failure.message ?? 'API hit Failed'),
-      );
+      if (!hideFailure) {
+        Toasts.showErrorToast(
+          context,
+          message: failureMsg ?? (failure.message ?? 'API hit Failed'),
+        );
+      }
 
       if (failureCallback != null) {
         failureCallback();

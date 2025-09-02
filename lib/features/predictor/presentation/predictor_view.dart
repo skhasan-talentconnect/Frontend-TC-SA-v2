@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tc_sa/features/predictor/presentation/predictor_result_view.dart';
-import 'package:tc_sa/common/index.dart' show SColor, STextStyles, STextField, SButton;
+import 'package:go_router/go_router.dart';
+import 'package:tc_sa/common/index.dart'
+    show SColor, STextStyles, STextField, SButton, SAppBar, SIcon;
+import 'package:tc_sa/core/index.dart';
 
 class PredictorPage extends StatefulWidget {
   const PredictorPage({super.key});
@@ -19,27 +21,37 @@ class _PredictorPageState extends State<PredictorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-   
+      appBar: SAppBar(
+        title: 'Predict Schools',
+        leading: SIcon(
+          icon: Icons.keyboard_arrow_left,
+          onTap: () {
+            context.pop();
+          },
+        ),
+      ),
+
       body: SafeArea(
         child: SingleChildScrollView(
-          //padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          //           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),ontal: 24.0, vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header section
               Text(
                 "Your Options. Your School.",
-                style:STextStyles.s18W600.copyWith(color: SColor.primaryColor)
+                style: STextStyles.s18W600.copyWith(color: SColor.primaryColor),
               ),
               const SizedBox(height: 10),
               Text(
                 "School Predictor",
-                style:  STextStyles.s30W900.copyWith(color: SColor.primaryColor)
+                style: STextStyles.s30W900.copyWith(color: SColor.primaryColor),
               ),
               const SizedBox(height: 12),
-               Text(
+              Text(
                 "Discover the schools that matches the exact requirement for your kid.",
-                style: STextStyles.s15W400.copyWith(color: SColor.primaryColor)
+                style: STextStyles.s15W400.copyWith(color: SColor.primaryColor),
               ),
               const SizedBox(height: 23),
 
@@ -52,7 +64,7 @@ class _PredictorPageState extends State<PredictorPage> {
                 label: "Fee Range",
                 hint: "Select fee range",
               ),
-              
+
               // Second dropdown field
               const SizedBox(height: 16),
               _buildLabel("Select your prefered board"),
@@ -85,25 +97,20 @@ class _PredictorPageState extends State<PredictorPage> {
                 label: "Specialities",
                 hint: "Select specialities",
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Button section - Using SButton instead of ElevatedButton
               Center(
                 child: SButton(
                   max: true,
                   label: "Get Schools",
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SchoolResultsPage()
-                      )
-                    );
+                    context.pushNamed(RouteNames.predictorResult);
                   },
                 ),
               ),
-              
+
               // Disclaimer section
               const SizedBox(height: 12),
               Text(
@@ -121,7 +128,7 @@ class _PredictorPageState extends State<PredictorPage> {
   Widget _buildLabel(String label) {
     return Text(
       label,
-      style:STextStyles.s16W400.copyWith(color: SColor.primaryColor)
+      style: STextStyles.s16W400.copyWith(color: SColor.primaryColor),
     );
   }
 }

@@ -21,11 +21,11 @@ extension NavItemExt on NavItem {
       case NavItem.home:
         return Icons.home;
       case NavItem.blog:
-        return Icons.settings;
+        return Icons.create;
       case NavItem.service:
         return Icons.miscellaneous_services;
       case NavItem.shortlist:
-        return Icons.save_alt;
+        return Icons.bookmark;
     }
   }
 
@@ -34,11 +34,11 @@ extension NavItemExt on NavItem {
       case NavItem.home:
         return Icons.home_outlined;
       case NavItem.blog:
-        return Icons.settings_outlined;
+        return Icons.create_outlined;
       case NavItem.service:
         return Icons.miscellaneous_services_outlined;
       case NavItem.shortlist:
-        return Icons.save_alt_outlined;
+        return Icons.bookmark_outline;
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -18,8 +19,12 @@ class AuthView extends StatefulWidget {
 class _AuthViewState extends State<AuthView> {
   AuthViewModel authViewModel = AuthViewModel();
 
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passController = TextEditingController();
+  final TextEditingController emailController = TextEditingController(
+    text: kDebugMode ? 'hasansk2803+enduser@gmail.com' : '',
+  );
+  final TextEditingController passController = TextEditingController(
+    text: kDebugMode ? 'Test@123' : '',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -126,13 +131,28 @@ class _AuthViewState extends State<AuthView> {
                             Toasts.showSuccessOrFailureToast(
                               context,
                               failure: failure,
+                              popOnSuccess: false,
                               successMsg:
-                                  authViewModel.isLogin
+                                  vm.isLogin
                                       ? 'Login Successfully'
                                       : 'Register Successfully, Email verification link sent to your Email.',
-                              successCallback: () {
-                                if (authViewModel.isLogin) {
-                                  context.pushReplacementNamed(RouteNames.home);
+                              successCallback: () async {
+                                if (vm.isLogin) {
+                                  await getIt<AppStateProvider>()
+                                      .getUserDetails();
+                                  if (getIt<AppStateProvider>().user != null) {
+                                    vm.isLogin = true;
+                                    emailController.text = '';
+                                    passController.text = '';
+                                    context.pushReplacementNamed(
+                                      RouteNames.home,
+                                    );
+                                  } else {
+                                    context.pushReplacementNamed(
+                                      RouteNames.addEditProfile,
+                                      extra: false,
+                                    );
+                                  }
                                 }
                               },
                             );

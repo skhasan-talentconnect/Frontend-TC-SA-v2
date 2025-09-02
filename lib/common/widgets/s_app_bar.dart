@@ -40,11 +40,11 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       backgroundColor: backgroundColor ?? SColor.backgroundColor,
       bottom: PreferredSize(
-        preferredSize: Size.fromHeight(0.2),
+        preferredSize: Size.fromHeight(0.25),
         child: Container(
-          color: SColor.secTextColor.withOpacity(0.2),
+          color: SColor.secTextColor.withOpacity(0.25),
           width: double.maxFinite,
-          height: 0.2,
+          height: 0.25,
         ),
       ),
       actions: [
@@ -91,25 +91,27 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
                     children:
                         actions ??
                         [
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 6,
-                              horizontal: 12,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: SColor.secTextColor,
-                                width: 0.5,
+                          if (getIt<AppStateProvider>().authModel == null) ...[
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 6,
+                                horizontal: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: SColor.secTextColor,
+                                  width: 0.5,
+                                ),
+                              ),
+                              child: Text(
+                                'Login',
+                                style: STextStyles.s12W600.copyWith(
+                                  color: SColor.secTextColor,
+                                ),
                               ),
                             ),
-                            child: Text(
-                              'Login',
-                              style: STextStyles.s12W600.copyWith(
-                                color: SColor.secTextColor,
-                              ),
-                            ),
-                          ),
+                          ],
                         ],
                   ),
         ),

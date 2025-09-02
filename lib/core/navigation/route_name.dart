@@ -14,6 +14,7 @@ class RouteNames {
 
   //user
   static const String profile = 'profile';
+  static const String addEditProfile = 'add-edit-profile';
   static const String settings = 'settings';
 
   //school
@@ -22,8 +23,10 @@ class RouteNames {
   //features
   static const String compare = 'compare';
   static const String search = 'search';
+  static const String searchRes = 'search-res';
   static const String notification = 'notifications';
   static const String predictor = 'predictor';
+  static const String predictorResult = 'predictor-result';
   static const String aiPredictor = 'ai-predictor';
   static const String apply = 'apply';
 }
