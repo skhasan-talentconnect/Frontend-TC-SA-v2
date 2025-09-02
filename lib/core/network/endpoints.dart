@@ -41,6 +41,7 @@ class Endpoints {
   //predictor
   static const String adminPredictSchools = 'admin/predict-schools';
   static const String adminSearch = 'admin/search';
+  static const String notifications = 'notifications';
 
   //Reviews Endpoints
   static const String reviews = 'reviews';

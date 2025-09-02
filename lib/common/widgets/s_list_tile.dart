@@ -12,6 +12,8 @@ class SListTile extends StatelessWidget {
     this.trailing,
     this.onTap,
     this.path,
+    this.border,
+    this.borderWidth,
     super.key,
   }) : _isNavigator = false;
 
@@ -23,6 +25,8 @@ class SListTile extends StatelessWidget {
     this.subLabel,
     this.trailing,
     this.onTap,
+    this.border,
+    this.borderWidth,
     required this.path,
     super.key,
   }) : _isNavigator = true;
@@ -34,6 +38,8 @@ class SListTile extends StatelessWidget {
   final String? label;
   final String? subLabel;
   final String? path;
+  final BoxBorder? border;
+  final double? borderWidth;
   final VoidCallback? onTap;
   final bool _isNavigator;
 
@@ -41,7 +47,14 @@ class SListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: SColor.secTextColor)),
+        border:
+            border ??
+            Border(
+              bottom: BorderSide(
+                color: SColor.secTextColor,
+                width: borderWidth ?? 0.5,
+              ),
+            ),
       ),
       child: ListTile(
         tileColor: SColor.backgroundColor,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
+import 'package:tc_sa/features/home/presentation/widgets/s_drawer.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({required this.navigationShell, super.key});
@@ -13,10 +14,13 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final failure = await getIt<AppStateProvider>().getUserDetails();
+      failure?.showError(context);
     });
     super.initState();
   }
@@ -24,7 +28,18 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SAppBar.home(),
+      key: _scaffoldKey,
+
+      appBar: SAppBar.home(
+        leading: SIcon(
+          icon: Icons.menu,
+          onTap: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
+      ),
+
+      drawer: SDrawer(),
 
       body: Padding(
         padding: EdgeInsets.only(right: 20, left: 20, top: 8, bottom: 0),
