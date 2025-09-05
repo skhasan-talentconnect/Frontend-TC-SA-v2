@@ -3,6 +3,7 @@ import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart';
 import 'package:tc_sa/features/blogs/index.dart';
 import 'package:tc_sa/features/home/index.dart';
+import 'package:tc_sa/features/notifications/presentation/notification_view.dart';
 import 'package:tc_sa/features/predictor/index.dart';
 import 'package:tc_sa/features/profile/presentation/add_edit_profile_view.dart';
 import 'package:tc_sa/features/profile/presentation/profile_view.dart';
@@ -110,6 +111,13 @@ class AppRouter {
         name: RouteNames.predictorResult,
         builder: (context, state) {
           return SchoolResultsPage();
+        },
+      ),
+      GoRoute(
+        path: '/notification',
+        name: RouteNames.notification,
+        builder: (context, state) {
+          return NotificationView();
         },
       ),
     ],

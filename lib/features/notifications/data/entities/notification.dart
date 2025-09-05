@@ -1,4 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:tc_sa/features/notifications/utils/convertors.dart';
+import 'package:tc_sa/features/notifications/utils/enums.dart';
 
 part 'notification.freezed.dart';
 part 'notification.g.dart';
@@ -11,9 +13,11 @@ abstract class Notification with _$Notification {
     String? title,
     String? body,
     String? path,
-    String? notificationType,
+    @NotificationTypeConverter() NotificationType? notificationType,
     @JsonKey(name: 'is_read') bool? isRead,
     Map<String, dynamic>? data,
+    String? createdAt,
+    String? updatedAt,
   }) = _Notification;
 
   factory Notification.fromJson(Map<String, dynamic> json) =>
