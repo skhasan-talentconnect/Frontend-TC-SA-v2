@@ -1,69 +1,81 @@
 import 'package:flutter/material.dart';
-import 'package:tc_sa/common/index.dart';
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:tc_sa/common/index.dart'; // STextStyles, SColor
+import 'package:tc_sa/core/common/view_state_provider.dart';
+import 'package:tc_sa/core/navigation/route_name.dart';
 import 'package:tc_sa/features/blogs/data/entities/blog_model.dart';
-import 'package:tc_sa/features/blogs/presentation/blogs_detail_view.dart';
+
+import 'package:tc_sa/features/blogs/presentation/view_models/blog_view_model.dart';
 
 class BlogPage extends StatelessWidget {
   const BlogPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Predefined blog data
-    List<BlogModel> blogs = [
-      BlogModel(
-        title: "The Future of Education Technology",
-        highlight: "Exploring how AI is transforming classrooms",
-        description:
-            "Artificial intelligence is revolutionizing the way we teach and learn. From personalized learning paths to automated grading systems, AI is making education more accessible and effective for students worldwide.",
-        contributor: ["Dr. Sarah Johnson", "Prof. Michael Chen"],
-        likes: 42,
-      ),
-      BlogModel(
-        title: "Sustainable Campus Initiatives",
-        highlight: "How universities are going green",
-        description:
-            "Colleges around the world are implementing innovative sustainability programs. Learn about solar power installations, zero-waste initiatives, and eco-friendly transportation options on modern campuses.",
-        contributor: ["Environmental Club"],
-        likes: 28,
-      ),
-      BlogModel(
-        title: "Mental Health Resources for Students",
-        highlight: "Supporting student wellbeing in challenging times",
-        description:
-            "Mental health is a critical aspect of student success. This article explores the various resources available to students and how institutions can better support mental wellbeing on campus.",
-        contributor: ["Dr. Emily Rodriguez", "Counseling Center Staff"],
-        likes: 56,
-      ),
-    ];
+    // Provide BlogViewModel here so descendants can watch/read it.
+    return ChangeNotifierProvider(
+      create: (_) => BlogViewModel()..getAllBlogs(),
+      child: const _BlogPageBody(),
+    );
+  }
+}
+
+class _BlogPageBody extends StatelessWidget {
+  const _BlogPageBody();
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.watch<BlogViewModel>();
+    final state = vm.viewState;
+    final blogs = vm.blogs;
 
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Blogs', style: STextStyles.s24W600),
-              SizedBox(height: 8),
-              Text(
-                'Explore Latest Blogs',
-                style: STextStyles.s16W400.copyWith(color: SColor.terTextColor),
-              ),
-              SizedBox(height: 16),
-              ListView.builder(
-                itemCount: blogs.length,
-                itemBuilder: (context, index) {
-                  return BlogCard(
-                    title: blogs[index].title ?? '',
-                    highlight: blogs[index].highlight ?? '',
-                    description: blogs[index].description ?? '',
-                    blog: blogs[index],
-                  );
-                },
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-              ),
-            ],
+        child: RefreshIndicator(
+          onRefresh: () => context.read<BlogViewModel>().getAllBlogs(),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(13),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Blogs', style: STextStyles.s24W600),
+                const SizedBox(height: 8),
+                Text(
+                  'Explore Latest Blogs',
+                  style: STextStyles.s16W400.copyWith(color: SColor.terTextColor),
+                ),
+                const SizedBox(height: 16),
+
+                if (state == ViewState.busy)
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 60),
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                else if (blogs.isEmpty)
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 60),
+                      child: Text(vm.message ?? 'No blogs available'),
+                    ),
+                  )
+                else
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: blogs.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      final b = blogs[index];
+                      return _BlogCard(blog: b);
+                    },
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -71,70 +83,55 @@ class BlogPage extends StatelessWidget {
   }
 }
 
-class BlogCard extends StatelessWidget {
-  final String title;
-  final String highlight;
-  final String description;
+class _BlogCard extends StatelessWidget {
+  const _BlogCard({required this.blog});
   final BlogModel blog;
-
-  const BlogCard({
-    super.key,
-    required this.title,
-    required this.highlight,
-    required this.description,
-    required this.blog,
-  });
 
   @override
   Widget build(BuildContext context) {
+    final title = blog.title ?? '';
+    final highlight = blog.highlight ?? '';
+    final description = blog.description ?? '';
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black, blurRadius: 1)],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2))],
         borderRadius: BorderRadius.circular(20),
       ),
-      margin: EdgeInsets.only(bottom: 16, right: 1, left: 1),
+      margin: const EdgeInsets.only(bottom: 4, right: 1, left: 1),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              highlight,
-              style: STextStyles.s16W600.copyWith(color: SColor.primaryColor),
-            ),
-            SizedBox(height: 12),
+            if (highlight.isNotEmpty)
+              Text(
+                highlight,
+                style: STextStyles.s16W600.copyWith(color: SColor.primaryColor),
+              ),
+            const SizedBox(height: 12),
 
             Text(title, style: STextStyles.s20W600),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
 
-            // Blog description section
             Text(
               description,
-              style: TextStyle(color: Colors.grey),
+              style: const TextStyle(color: Colors.grey),
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) => BlogPageDetail(
-                          title: blog.title ?? '',
-                          highlight: blog.highlight ?? '',
-                          description: blog.description ?? '',
-                          contributors: blog.contributor ?? [],
-                          likes: blog.likes ?? 0,
-                        ),
-                  ),
+                // GoRouter navigation with extra payload
+                context.pushNamed(
+                  RouteNames.blogResult,
+                  extra: blog,
                 );
               },
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Read more', style: TextStyle(color: Colors.black)),

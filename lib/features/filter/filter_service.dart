@@ -7,7 +7,7 @@ import 'package:tc_sa/core/network/index.dart'
         RequestMethod,
         Endpoints,
         APIException;
-import 'package:tc_sa/features/school/school_info/school_model.dart';
+import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
 
 class FilterService {
   final NetworkService _networkService = NetworkService();

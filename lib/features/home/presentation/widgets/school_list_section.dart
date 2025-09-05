@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tc_sa/common/index.dart';
+import 'package:tc_sa/core/navigation/route_name.dart';
+
 
 class SchoolListSection extends StatefulWidget {
   const SchoolListSection({
@@ -84,9 +87,12 @@ class _SchoolListSectionState extends State<SchoolListSection> {
                       itemCount: widget.schools.length,
                       separatorBuilder: (_, index) => const SizedBox(width: 12),
                       itemBuilder:
-                          (_, index) => SchoolCard(
-                            school: widget.schools[index],
-                            width: 0.70,
+                          (_, index) => GestureDetector(
+                           onTap: (){context.pushNamed(RouteNames.overview);},
+                            child: SchoolCard(
+                              school: widget.schools[index],
+                              width: 0.70,
+                            ),
                           ),
                     ),
                   ),

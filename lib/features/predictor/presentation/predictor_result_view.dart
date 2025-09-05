@@ -1,64 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tc_sa/common/index.dart';
+import 'package:tc_sa/core/navigation/route_name.dart';
+import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
 
 class SchoolResultsPage extends StatefulWidget {
-  const SchoolResultsPage({super.key});
+  const SchoolResultsPage({super.key, required this.predictedSchools});
+  final List<SchoolModel> predictedSchools;
 
   @override
   State<SchoolResultsPage> createState() => _SchoolResultPageState();
 }
 
 class _SchoolResultPageState extends State<SchoolResultsPage> {
-  final dummySchools = <SchoolCardModel>[
-    SchoolCardModel(
-      schoolId: "1",
-      ratings: 4,
-      name: "Green Valley High School",
-      feeRange: "25000 - 50",
-      location: "Mumbai, Maharashtra",
-      board: "CBSE",
-      genderType: "co-ed",
-      shifts: ["morning"],
-      schoolMode: "private",
-    ),
-    SchoolCardModel(
-      schoolId: "2",
-      ratings: 5,
-      name: "Sunrise International School",
-      feeRange: "1 Lakh - 2 Lakh",
-      location: "Delhi, Delhi",
-      board: "IB",
-      genderType: "co-ed",
-      shifts: ["morning", "afternoon"],
-      schoolMode: "convent",
-    ),
-    SchoolCardModel(
-      schoolId: "3",
-      ratings: 3,
-      name: "St. Mary’s Convent",
-      feeRange: "10000 - 25000",
-      location: "Pune, Maharashtra",
-      board: "ICSE",
-      genderType: "girl",
-      shifts: ["morning"],
-      schoolMode: "convent",
-    ),
-    SchoolCardModel(
-      schoolId: "4",
-      ratings: 2,
-      name: "Govt. Boys High School",
-      feeRange: "1000 - 10000",
-      location: "Lucknow, Uttar Pradesh",
-      board: "STATE",
-      genderType: "boy",
-      shifts: ["afternoon"],
-      schoolMode: "government",
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final predictedSchools = widget.predictedSchools;
+
     return Scaffold(
       appBar: SAppBar(
         title: 'Predicted Schools',
@@ -69,10 +27,9 @@ class _SchoolResultPageState extends State<SchoolResultsPage> {
           },
         ),
       ),
-
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -87,35 +44,57 @@ class _SchoolResultPageState extends State<SchoolResultsPage> {
               ),
               const SizedBox(height: 10),
               Text(
-                "Your personalized School recommendations based on your score.",
+                "Your personalized School recommendations based on your preferences.",
                 style: STextStyles.s14W400.copyWith(color: SColor.secTextColor),
               ),
               const SizedBox(height: 24),
 
-              // School cards list
-              ListView.separated(
-                itemBuilder: (context, index) {
-                  return SchoolCard(school: dummySchools[index]);
-                },
-                separatorBuilder:
-                    (context, index) => const SizedBox(height: 16),
-                itemCount: dummySchools.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-              ),
+              // Show results
+              if (predictedSchools.isEmpty)
+                Center(
+                  child: Text(
+                    "No schools found matching your criteria",
+                    style: STextStyles.s16W400.copyWith(color: SColor.secTextColor),
+                  ),
+                )
+              else
+                // School cards list
+                ListView.separated(
+                  itemBuilder: (context, index) {
+                    final school = predictedSchools[index];
+                    return SchoolCard(
+                      school: SchoolCardModel(
+                        schoolId: school.id,
+                   
+                        name: school.name ?? 'School Name',
+                        feeRange: school.feeRange ?? 'Not specified',
+                        location: '${school.city ?? ''}, ${school.state ?? ''}',
+                        board: school.board ?? 'Not specified',
+                        genderType: school.genderType ?? 'Not specified',
+                        shifts: school.shifts ?? [],
+                        schoolMode: school.schoolMode ?? 'Not specified',
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) => const SizedBox(height: 16),
+                  itemCount: predictedSchools.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                ),
+              
               const SizedBox(height: 28),
 
-              // Edit Preferences button at the bottom
+              // Edit Preferences button
               Center(
                 child: SizedBox(
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Handle edit preferences action
+                      context.pop(); // Go back to predictor page
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
+                      shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.zero,
                       ),
                     ),
