@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Notification {
 
-@JsonKey(name: '_id') String? get sId; String? get authId; String? get title; String? get body; String? get path; String? get notificationType;@JsonKey(name: 'is_read') bool? get isRead; Map<String, dynamic>? get data;
+@JsonKey(name: '_id') String? get sId; String? get authId; String? get title; String? get body; String? get path;@NotificationTypeConverter() NotificationType? get notificationType;@JsonKey(name: 'is_read') bool? get isRead; Map<String, dynamic>? get data; String? get createdAt; String? get updatedAt;
 /// Create a copy of Notification
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $NotificationCopyWith<Notification> get copyWith => _$NotificationCopyWithImpl<N
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Notification&&(identical(other.sId, sId) || other.sId == sId)&&(identical(other.authId, authId) || other.authId == authId)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.path, path) || other.path == path)&&(identical(other.notificationType, notificationType) || other.notificationType == notificationType)&&(identical(other.isRead, isRead) || other.isRead == isRead)&&const DeepCollectionEquality().equals(other.data, data));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Notification&&(identical(other.sId, sId) || other.sId == sId)&&(identical(other.authId, authId) || other.authId == authId)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.path, path) || other.path == path)&&(identical(other.notificationType, notificationType) || other.notificationType == notificationType)&&(identical(other.isRead, isRead) || other.isRead == isRead)&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,sId,authId,title,body,path,notificationType,isRead,const DeepCollectionEquality().hash(data));
+int get hashCode => Object.hash(runtimeType,sId,authId,title,body,path,notificationType,isRead,const DeepCollectionEquality().hash(data),createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'Notification(sId: $sId, authId: $authId, title: $title, body: $body, path: $path, notificationType: $notificationType, isRead: $isRead, data: $data)';
+  return 'Notification(sId: $sId, authId: $authId, title: $title, body: $body, path: $path, notificationType: $notificationType, isRead: $isRead, data: $data, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $NotificationCopyWith<$Res>  {
   factory $NotificationCopyWith(Notification value, $Res Function(Notification) _then) = _$NotificationCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? sId, String? authId, String? title, String? body, String? path, String? notificationType,@JsonKey(name: 'is_read') bool? isRead, Map<String, dynamic>? data
+@JsonKey(name: '_id') String? sId, String? authId, String? title, String? body, String? path,@NotificationTypeConverter() NotificationType? notificationType,@JsonKey(name: 'is_read') bool? isRead, Map<String, dynamic>? data, String? createdAt, String? updatedAt
 });
 
 
@@ -65,7 +65,7 @@ class _$NotificationCopyWithImpl<$Res>
 
 /// Create a copy of Notification
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? sId = freezed,Object? authId = freezed,Object? title = freezed,Object? body = freezed,Object? path = freezed,Object? notificationType = freezed,Object? isRead = freezed,Object? data = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? sId = freezed,Object? authId = freezed,Object? title = freezed,Object? body = freezed,Object? path = freezed,Object? notificationType = freezed,Object? isRead = freezed,Object? data = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 sId: freezed == sId ? _self.sId : sId // ignore: cast_nullable_to_non_nullable
 as String?,authId: freezed == authId ? _self.authId : authId // ignore: cast_nullable_to_non_nullable
@@ -73,9 +73,11 @@ as String?,title: freezed == title ? _self.title : title // ignore: cast_nullabl
 as String?,body: freezed == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
 as String?,path: freezed == path ? _self.path : path // ignore: cast_nullable_to_non_nullable
 as String?,notificationType: freezed == notificationType ? _self.notificationType : notificationType // ignore: cast_nullable_to_non_nullable
-as String?,isRead: freezed == isRead ? _self.isRead : isRead // ignore: cast_nullable_to_non_nullable
+as NotificationType?,isRead: freezed == isRead ? _self.isRead : isRead // ignore: cast_nullable_to_non_nullable
 as bool?,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
-as Map<String, dynamic>?,
+as Map<String, dynamic>?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -160,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? sId,  String? authId,  String? title,  String? body,  String? path,  String? notificationType, @JsonKey(name: 'is_read')  bool? isRead,  Map<String, dynamic>? data)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? sId,  String? authId,  String? title,  String? body,  String? path, @NotificationTypeConverter()  NotificationType? notificationType, @JsonKey(name: 'is_read')  bool? isRead,  Map<String, dynamic>? data,  String? createdAt,  String? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Notification() when $default != null:
-return $default(_that.sId,_that.authId,_that.title,_that.body,_that.path,_that.notificationType,_that.isRead,_that.data);case _:
+return $default(_that.sId,_that.authId,_that.title,_that.body,_that.path,_that.notificationType,_that.isRead,_that.data,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -181,10 +183,10 @@ return $default(_that.sId,_that.authId,_that.title,_that.body,_that.path,_that.n
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? sId,  String? authId,  String? title,  String? body,  String? path,  String? notificationType, @JsonKey(name: 'is_read')  bool? isRead,  Map<String, dynamic>? data)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? sId,  String? authId,  String? title,  String? body,  String? path, @NotificationTypeConverter()  NotificationType? notificationType, @JsonKey(name: 'is_read')  bool? isRead,  Map<String, dynamic>? data,  String? createdAt,  String? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Notification():
-return $default(_that.sId,_that.authId,_that.title,_that.body,_that.path,_that.notificationType,_that.isRead,_that.data);case _:
+return $default(_that.sId,_that.authId,_that.title,_that.body,_that.path,_that.notificationType,_that.isRead,_that.data,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +203,10 @@ return $default(_that.sId,_that.authId,_that.title,_that.body,_that.path,_that.n
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? sId,  String? authId,  String? title,  String? body,  String? path,  String? notificationType, @JsonKey(name: 'is_read')  bool? isRead,  Map<String, dynamic>? data)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? sId,  String? authId,  String? title,  String? body,  String? path, @NotificationTypeConverter()  NotificationType? notificationType, @JsonKey(name: 'is_read')  bool? isRead,  Map<String, dynamic>? data,  String? createdAt,  String? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Notification() when $default != null:
-return $default(_that.sId,_that.authId,_that.title,_that.body,_that.path,_that.notificationType,_that.isRead,_that.data);case _:
+return $default(_that.sId,_that.authId,_that.title,_that.body,_that.path,_that.notificationType,_that.isRead,_that.data,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -216,7 +218,7 @@ return $default(_that.sId,_that.authId,_that.title,_that.body,_that.path,_that.n
 @JsonSerializable()
 
 class _Notification implements Notification {
-  const _Notification({@JsonKey(name: '_id') this.sId, this.authId, this.title, this.body, this.path, this.notificationType, @JsonKey(name: 'is_read') this.isRead, final  Map<String, dynamic>? data}): _data = data;
+  const _Notification({@JsonKey(name: '_id') this.sId, this.authId, this.title, this.body, this.path, @NotificationTypeConverter() this.notificationType, @JsonKey(name: 'is_read') this.isRead, final  Map<String, dynamic>? data, this.createdAt, this.updatedAt}): _data = data;
   factory _Notification.fromJson(Map<String, dynamic> json) => _$NotificationFromJson(json);
 
 @override@JsonKey(name: '_id') final  String? sId;
@@ -224,7 +226,7 @@ class _Notification implements Notification {
 @override final  String? title;
 @override final  String? body;
 @override final  String? path;
-@override final  String? notificationType;
+@override@NotificationTypeConverter() final  NotificationType? notificationType;
 @override@JsonKey(name: 'is_read') final  bool? isRead;
  final  Map<String, dynamic>? _data;
 @override Map<String, dynamic>? get data {
@@ -235,6 +237,8 @@ class _Notification implements Notification {
   return EqualUnmodifiableMapView(value);
 }
 
+@override final  String? createdAt;
+@override final  String? updatedAt;
 
 /// Create a copy of Notification
 /// with the given fields replaced by the non-null parameter values.
@@ -249,16 +253,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Notification&&(identical(other.sId, sId) || other.sId == sId)&&(identical(other.authId, authId) || other.authId == authId)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.path, path) || other.path == path)&&(identical(other.notificationType, notificationType) || other.notificationType == notificationType)&&(identical(other.isRead, isRead) || other.isRead == isRead)&&const DeepCollectionEquality().equals(other._data, _data));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Notification&&(identical(other.sId, sId) || other.sId == sId)&&(identical(other.authId, authId) || other.authId == authId)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.path, path) || other.path == path)&&(identical(other.notificationType, notificationType) || other.notificationType == notificationType)&&(identical(other.isRead, isRead) || other.isRead == isRead)&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,sId,authId,title,body,path,notificationType,isRead,const DeepCollectionEquality().hash(_data));
+int get hashCode => Object.hash(runtimeType,sId,authId,title,body,path,notificationType,isRead,const DeepCollectionEquality().hash(_data),createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'Notification(sId: $sId, authId: $authId, title: $title, body: $body, path: $path, notificationType: $notificationType, isRead: $isRead, data: $data)';
+  return 'Notification(sId: $sId, authId: $authId, title: $title, body: $body, path: $path, notificationType: $notificationType, isRead: $isRead, data: $data, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -269,7 +273,7 @@ abstract mixin class _$NotificationCopyWith<$Res> implements $NotificationCopyWi
   factory _$NotificationCopyWith(_Notification value, $Res Function(_Notification) _then) = __$NotificationCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? sId, String? authId, String? title, String? body, String? path, String? notificationType,@JsonKey(name: 'is_read') bool? isRead, Map<String, dynamic>? data
+@JsonKey(name: '_id') String? sId, String? authId, String? title, String? body, String? path,@NotificationTypeConverter() NotificationType? notificationType,@JsonKey(name: 'is_read') bool? isRead, Map<String, dynamic>? data, String? createdAt, String? updatedAt
 });
 
 
@@ -286,7 +290,7 @@ class __$NotificationCopyWithImpl<$Res>
 
 /// Create a copy of Notification
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? sId = freezed,Object? authId = freezed,Object? title = freezed,Object? body = freezed,Object? path = freezed,Object? notificationType = freezed,Object? isRead = freezed,Object? data = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? sId = freezed,Object? authId = freezed,Object? title = freezed,Object? body = freezed,Object? path = freezed,Object? notificationType = freezed,Object? isRead = freezed,Object? data = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_Notification(
 sId: freezed == sId ? _self.sId : sId // ignore: cast_nullable_to_non_nullable
 as String?,authId: freezed == authId ? _self.authId : authId // ignore: cast_nullable_to_non_nullable
@@ -294,9 +298,11 @@ as String?,title: freezed == title ? _self.title : title // ignore: cast_nullabl
 as String?,body: freezed == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
 as String?,path: freezed == path ? _self.path : path // ignore: cast_nullable_to_non_nullable
 as String?,notificationType: freezed == notificationType ? _self.notificationType : notificationType // ignore: cast_nullable_to_non_nullable
-as String?,isRead: freezed == isRead ? _self.isRead : isRead // ignore: cast_nullable_to_non_nullable
+as NotificationType?,isRead: freezed == isRead ? _self.isRead : isRead // ignore: cast_nullable_to_non_nullable
 as bool?,data: freezed == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
-as Map<String, dynamic>?,
+as Map<String, dynamic>?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

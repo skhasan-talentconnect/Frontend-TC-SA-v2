@@ -1,13 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:tc_sa/core/network/index.dart'
-    show
-        NetworkService,
-        ResultFuture,
-        Request,
-        RequestMethod,
-        Endpoints,
-        APIException;
-import 'package:tc_sa/core/network/typedef.dart';
+import 'package:tc_sa/core/index.dart';
 
 import '../entities/notification.dart';
 import 'data_source.dart';
@@ -15,12 +7,12 @@ import 'data_source.dart';
 class NotificationDataSourceImpl implements NotificationDataSource {
   final _networkService = NetworkService();
   @override
-  ResultFuture<List<Notification>> getNotifications({
-    required String authId,
-  }) async {
+  ResultFuture<List<Notification>> getNotifications({required int page}) async {
     Request r = Request(
       method: RequestMethod.get,
-      endpoint: '${Endpoints.notifications}/$authId',
+      endpoint:
+          '${Endpoints.notifications}/${getIt<AppStateProvider>().authModel?.sId}',
+      queryParams: {'page': page.toString(), 'limit': '10'},
       isSafeRoute: true,
     );
 
@@ -30,7 +22,7 @@ class NotificationDataSourceImpl implements NotificationDataSource {
 
       if (response.isNotEmpty) {
         final list =
-            (response['data'] as List<dynamic>)
+            (response['data']['notifications'] as List<dynamic>)
                 .map((e) => Notification.fromJson(e))
                 .toList();
         return Right(list);
@@ -49,6 +41,7 @@ class NotificationDataSourceImpl implements NotificationDataSource {
     Request r = Request(
       method: RequestMethod.patch,
       endpoint: '${Endpoints.notifications}/$notificationId/read',
+      isSafeRoute: true,
     );
 
     try {
@@ -69,10 +62,12 @@ class NotificationDataSourceImpl implements NotificationDataSource {
   }
 
   @override
-  ResultVoid markAllNotificationsAsRead({required String authId}) async {
+  ResultVoid markAllNotificationsAsRead() async {
     Request r = Request(
       method: RequestMethod.patch,
-      endpoint: '${Endpoints.notifications}/$authId/read-all',
+      isSafeRoute: true,
+      endpoint:
+          '${Endpoints.notifications}/${getIt<AppStateProvider>().authModel?.sId}/read-all',
     );
 
     try {

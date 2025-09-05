@@ -3,7 +3,7 @@ import 'package:tc_sa/features/notifications/data/index.dart' show Notification;
 
 abstract class NotificationDataSource {
   /// Get all notifications for a user
-  ResultFuture<List<Notification>> getNotifications({required String authId});
+  ResultFuture<List<Notification>> getNotifications({required int page});
 
   /// Mark single notification as read
   ResultFuture<Notification?> markNotificationAsRead({
@@ -11,5 +11,5 @@ abstract class NotificationDataSource {
   });
 
   /// Mark all notifications as read for a user
-  ResultVoid markAllNotificationsAsRead({required String authId});
+  ResultVoid markAllNotificationsAsRead();
 }
