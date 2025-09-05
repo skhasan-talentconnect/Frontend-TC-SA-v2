@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:tc_sa/core/network/index.dart' show ResultFuture, APIException;
-import 'package:tc_sa/features/school/school_info/school_model.dart';
+import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
+
 
 abstract class PredictorDataSource {
   /// Predicts schools based on the provided filters

@@ -1,13 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:tc_sa/core/network/index.dart'
-    show
-        NetworkService,
-        Request,
-        RequestMethod,
-        ResultFuture,
-        Endpoints,
-        APIException;
-import 'package:tc_sa/features/school/school_info/school_model.dart';
+import 'package:tc_sa/core/network/endpoints.dart';
+import 'package:tc_sa/core/network/exceptions.dart';
+import 'package:tc_sa/core/network/network.dart';
+import 'package:tc_sa/core/network/request.dart';
+import 'package:tc_sa/core/network/typedef.dart';
+import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
+
 
 class PredictorDataSourceImpl {
   final NetworkService _networkService = NetworkService();

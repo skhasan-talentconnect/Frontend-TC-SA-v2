@@ -27,6 +27,7 @@ class Endpoints {
 
   //School Activities
   static const String adminSchoolsActivities = 'admin/schools/activities';
+  static const String adminSchoolsAlumnus= 'admin/alumnus';
 
   static const String adminBlogs = 'admin/blogs';
 

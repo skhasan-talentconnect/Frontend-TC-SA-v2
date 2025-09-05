@@ -1,0 +1,529 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:tc_sa/common/models/school_card_model.dart';
+import 'package:tc_sa/common/widgets/s_app_bar.dart';
+import 'package:tc_sa/common/widgets/s_icon.dart';
+import 'package:tc_sa/core/navigation/route_name.dart';
+import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
+import 'package:tc_sa/features/detailPages/overview/presentation/widgets/info_chip_widget.dart';
+import 'package:tc_sa/features/detailPages/overview/presentation/widgets/quick_highlight_widget.dart';
+import 'package:tc_sa/features/detailPages/overview/presentation/widgets/recruiter_chip_widget.dart';
+import 'package:tc_sa/features/detailPages/overview/presentation/view_models/overview_view_model.dart';
+import 'package:tc_sa/core/common/view_state_provider.dart';
+
+class SchoolDetailView extends StatefulWidget {
+  const SchoolDetailView({super.key, required this.schoolId});
+  final String schoolId;
+
+  @override
+  State<SchoolDetailView> createState() => _SchoolDetailViewState();
+}
+
+class _SchoolDetailViewState extends State<SchoolDetailView>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  final List<String> _tabs = [
+    "Overview",
+    "Amenities",
+    "Activities",
+    "Aluminis",
+    "Reviews",
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController.addListener(_handleTabSelection);
+  }
+
+  void _handleTabSelection() {
+    if (_tabController.indexIsChanging) {
+      switch (_tabController.index) {
+        case 1:
+          final vm = context.read<OverviewViewModel>();
+
+          final name = vm.school?.name ?? 'School';
+          context.pushNamed(
+            RouteNames.amenity,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+        case 2:
+          context.pushNamed(RouteNames.activity, extra: widget.schoolId);
+          break;
+        case 3:
+          final ovm = context.read<OverviewViewModel>();
+          context.pushNamed(
+            RouteNames.alumini,
+            extra: {
+              'schoolId': widget.schoolId,
+              'schoolName': ovm.school?.name ?? 'School',
+            },
+          );
+          break;
+        case 4:
+          context.pushNamed(RouteNames.review);
+          break;
+        default:
+      }
+      if (_tabController.index != 0) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _tabController.index = 0;
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _tabController.removeListener(_handleTabSelection);
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.watch<OverviewViewModel>();
+    final state = vm.viewState;
+    final school = vm.school;
+
+    final size = MediaQuery.of(context).size;
+    final isSmall = size.width < 600;
+    final isMed = size.width >= 600 && size.width < 900;
+    final bannerHeight =
+        isSmall
+            ? 150.0
+            : isMed
+            ? 180.0
+            : 200.0;
+    final titleFont =
+        isSmall
+            ? 20.0
+            : isMed
+            ? 24.0
+            : 26.0;
+    final infoFont =
+        isSmall
+            ? 16.0
+            : isMed
+            ? 18.0
+            : 20.0;
+    final tabFont =
+        isSmall
+            ? 14.0
+            : isMed
+            ? 16.0
+            : 18.0;
+    final pad =
+        isSmall
+            ? 6.0
+            : isMed
+            ? 8.0
+            : 10.0;
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: SAppBar(
+        leading: SIcon(
+          icon: Icons.keyboard_arrow_left,
+          onTap: () => Navigator.of(context).pop(),
+        ),
+        title: school?.name ?? "School",
+      ),
+      body: Builder(
+        builder: (_) {
+          if (state == ViewState.busy) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (school == null) {
+            return Center(child: Text(vm.message ?? "No data found"));
+          }
+
+          final location = [
+            school.city,
+            school.state,
+          ].where((e) => (e ?? '').isNotEmpty).join(", ");
+
+          return Column(
+            children: [
+              // Header (fixed)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Banner
+                  Container(
+                    height: bannerHeight,
+                    width: double.infinity,
+                    color: Colors.blue[100],
+                    child: const Center(
+                      child: Icon(Icons.school, size: 80, color: Colors.blue),
+                    ),
+                  ),
+                  // Title + location + buttons
+                  Padding(
+                    padding: EdgeInsets.all(pad),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          school.name ?? "-",
+                          style: TextStyle(
+                            fontSize: titleFont,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 3),
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on, size: 18),
+                            const SizedBox(width: 3),
+                            Text(
+                              location.isEmpty ? "-" : location,
+                              style: TextStyle(
+                                fontSize: infoFont,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  
+                                 final schoolCardModel = SchoolCardModel(
+  schoolId: school.id?.toString() ?? widget.schoolId,
+  
+  name: school.name ?? 'Not available',
+  feeRange: school.feeRange ?? 'Not available',
+  location: '${school.city ?? ''}, ${school.state ?? ''}',
+  board: school.board ?? 'Not available',
+  genderType: school.genderType ?? 'Not available',
+  shifts: school.shifts ?? [],
+  schoolMode: school.schoolMode ?? 'Not available',
+);
+
+context.pushNamed(RouteNames.compareWith, extra: schoolCardModel);
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  side: const BorderSide(color: Colors.green),
+                                ),
+                                child: Text(
+                                  "Compare",
+                                  style: TextStyle(
+                                    fontSize: infoFont,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  side: const BorderSide(color: Colors.blue),
+                                ),
+                                child: Text(
+                                  "Apply",
+                                  style: TextStyle(
+                                    fontSize: infoFont,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Chips
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: pad, vertical: 6),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InfoChip(
+                          topText: school.rank ?? "-",
+                          bottomText: "IIRF Rank",
+                          fontSize: infoFont,
+                          isSmallScreen: isSmall,
+                        ),
+                        InfoChip(
+                          topText: school.board ?? "-",
+                          bottomText: "Board",
+                          fontSize: infoFont,
+                          isSmallScreen: isSmall,
+                        ),
+                        InfoChip(
+                          topText:
+                              (school.createdAt ?? "").split("T").first.isEmpty
+                                  ? "-"
+                                  : (school.createdAt ?? "").split("T").first,
+                          bottomText: "Since",
+                          fontSize: infoFont,
+                          isSmallScreen: isSmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  // Tabs
+                  Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: Colors.grey, width: 0.4),
+                        bottom: BorderSide(color: Colors.grey, width: 0.4),
+                      ),
+                    ),
+                    child: TabBar(
+                      isScrollable: true,
+                      controller: _tabController,
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Colors.black,
+                      indicator: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: tabFont,
+                      ),
+                      unselectedLabelStyle: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: tabFont,
+                      ),
+                      tabs: _tabs.map((tab) => Tab(text: tab)).toList(),
+                    ),
+                  ),
+                ],
+              ),
+
+              // Overview tab content
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children:
+                      _tabs.map((tab) {
+                        if (tab == "Overview") {
+                          return _OverviewTab(school: school);
+                        }
+                        return Center(
+                          child: Text(
+                            "Tap on '$tab' tab to view details",
+                            style: TextStyle(fontSize: infoFont),
+                          ),
+                        );
+                      }).toList(),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _OverviewTab extends StatelessWidget {
+  const _OverviewTab({required this.school});
+  final SchoolModel school;
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isSmall = size.width < 600;
+    final isMed = size.width >= 600 && size.width < 900;
+    final cross =
+        isSmall
+            ? 2
+            : isMed
+            ? 3
+            : 4;
+    final infoFont =
+        isSmall
+            ? 16.0
+            : isMed
+            ? 18.0
+            : 20.0;
+    final pad =
+        isSmall
+            ? 8.0
+            : isMed
+            ? 12.0
+            : 16.0;
+
+    final feeHi = (school.feeRange ?? "")
+        .split(RegExp(r'[-–]'))
+        .last
+        .trim()
+        .replaceAll(RegExp(r'[^\d]'), '');
+    final feeAvg =
+        (school.feeRange ?? "")
+            .split(RegExp(r'[-–]'))
+            .map((s) => s.replaceAll(RegExp(r'[^\d]'), ''))
+            .toList();
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(pad),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Quick Highlights
+          Text(
+            "Quick Highlights",
+            style: TextStyle(
+              fontSize: infoFont + 4,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          GridView.count(
+            crossAxisCount: cross,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 1.5,
+            children: [
+              QuickHighlights(
+                title: "School Mode",
+                value: school.schoolMode ?? "-",
+              ),
+              QuickHighlights(
+                title: "Gender Allowed",
+                value: school.genderType ?? "-",
+              ),
+              QuickHighlights(
+                title: "Transport",
+                value: (school.transportAvailable ?? "-"),
+              ),
+              QuickHighlights(
+                title: "Medium",
+                value: (school.languageMedium?.join(", ") ?? "-"),
+              ),
+              QuickHighlights(
+                title: "Shifts",
+                value: (school.shifts?.join(", ") ?? "-"),
+              ),
+              QuickHighlights(
+                title: "Type",
+                value: (school.tags?.join(", ") ?? (school.description ?? "-")),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          const Divider(),
+          const SizedBox(height: 20),
+
+          // Fee Range
+          Text(
+            "Fee Range",
+            style: TextStyle(
+              fontSize: infoFont + 4,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Highest Fee",
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: infoFont,
+                ),
+              ),
+              Text(
+                feeHi.isEmpty ? (school.feeRange ?? "-") : feeHi,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: infoFont - 2,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Average Fee",
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: infoFont,
+                ),
+              ),
+              Text(
+                school.feeRange ?? "-",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: infoFont - 2,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 20),
+          const Divider(),
+          const SizedBox(height: 20),
+
+          // Top Amenities (using tags/specialist as placeholders if amenities not present)
+          Text(
+            "Top Amenities",
+            style: TextStyle(
+              fontSize: infoFont + 4,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children:
+                (school.tags?.isNotEmpty == true
+                        ? school.tags!
+                        : (school.specialist?.isNotEmpty == true
+                            ? school.specialist!
+                            : const [
+                              "E-Library",
+                              "Science Lab",
+                              "Computer Lab",
+                            ]))
+                    .map((e) => RecruiterChip(label: e, isSmallScreen: isSmall))
+                    .toList(),
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+}
