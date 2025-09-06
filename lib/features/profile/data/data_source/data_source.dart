@@ -14,5 +14,15 @@ abstract class ProfileDataSource {
     required String dateOfBirth,
   });
 
+  ResultFuture<User?> updateProfile({
+    required String name,
+    required String email,
+    required String phone,
+    required String state,
+    required String city,
+    required String gender,
+    required String dateOfBirth,
+  });
+
   ResultFuture<UserPref?> getUserPreferences();
 }

@@ -109,4 +109,48 @@ class ProfileDataSourceImpl implements ProfileDataSource {
 
     return Right(null);
   }
+
+  @override
+  ResultFuture<User?> updateProfile({
+    required String name,
+    required String email,
+    required String phone,
+    required String state,
+    required String city,
+    required String gender,
+    required String dateOfBirth,
+  }) async {
+    final authId = await SecretRepo.getString('auth_id');
+    Request r = Request(
+      method: RequestMethod.put,
+      isSafeRoute: true,
+      endpoint: "${Endpoints.users}/$authId",
+      body: {
+        'authId': authId,
+        'name': name,
+        'email': email,
+        'contactNo': phone,
+        'state': state,
+        'city': city,
+        'gender': gender.toLowerCase(),
+        'dateOfBirth': dateOfBirth,
+        'userType': UserType.student.label,
+      },
+    );
+
+    try {
+      final result = await _networkService.request(r);
+      final response = result.data as Map<String, dynamic>;
+
+      if (response.isNotEmpty) {
+        final user = User.fromJson(response['data']['student']);
+
+        return Right(user);
+      }
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+
+    return Right(null);
+  }
 }

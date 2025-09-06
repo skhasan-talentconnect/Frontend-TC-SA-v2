@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart';
@@ -22,7 +23,16 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SAppBar(title: 'Reset Password', actions: []),
+      appBar: SAppBar(
+        leading: SIcon(
+          icon: Icons.keyboard_arrow_left,
+          onTap: () {
+            context.pop();
+          },
+        ),
+        title: 'Reset Password',
+        actions: [],
+      ),
 
       body: Padding(
         padding: const EdgeInsets.all(16),

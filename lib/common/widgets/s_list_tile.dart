@@ -14,6 +14,9 @@ class SListTile extends StatelessWidget {
     this.path,
     this.border,
     this.borderWidth,
+    this.noBorder = false,
+    this.isDense = false,
+    this.contentPadding,
     super.key,
   }) : _isNavigator = false;
 
@@ -28,6 +31,9 @@ class SListTile extends StatelessWidget {
     this.border,
     this.borderWidth,
     required this.path,
+    this.noBorder = true,
+    this.isDense = false,
+    this.contentPadding,
     super.key,
   }) : _isNavigator = true;
 
@@ -41,6 +47,9 @@ class SListTile extends StatelessWidget {
   final BoxBorder? border;
   final double? borderWidth;
   final VoidCallback? onTap;
+  final bool noBorder;
+  final bool isDense;
+  final EdgeInsets? contentPadding;
   final bool _isNavigator;
 
   @override
@@ -48,17 +57,21 @@ class SListTile extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border:
-            border ??
-            Border(
-              bottom: BorderSide(
-                color: SColor.secTextColor,
-                width: borderWidth ?? 0.5,
-              ),
-            ),
+            noBorder
+                ? null
+                : border ??
+                    Border(
+                      bottom: BorderSide(
+                        color: SColor.secTextColor,
+                        width: borderWidth ?? 0.5,
+                      ),
+                    ),
       ),
       child: ListTile(
+        dense: isDense,
         tileColor: SColor.backgroundColor,
         leading: leading,
+        contentPadding: contentPadding,
         title:
             label != null
                 ? Text(label ?? '', style: STextStyles.s16W600)

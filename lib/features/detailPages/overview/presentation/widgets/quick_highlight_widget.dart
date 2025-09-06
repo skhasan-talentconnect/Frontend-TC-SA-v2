@@ -4,11 +4,7 @@ class QuickHighlights extends StatelessWidget {
   final String title;
   final String value;
 
-  const QuickHighlights({
-    super.key,
-    required this.title,
-    required this.value,
-  });
+  const QuickHighlights({super.key, required this.title, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +31,7 @@ class QuickHighlights extends StatelessWidget {
             child: Text(
               title,
               style: TextStyle(
-                fontSize: isSmallScreen ? 10.0 : 12.0,
+                fontSize: isSmallScreen ? 14.0 : 16.0,
                 color: Colors.black,
                 fontWeight: FontWeight.w500,
               ),

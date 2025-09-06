@@ -7,7 +7,7 @@ import 'package:tc_sa/features/home/presentation/widgets/s_drawer.dart';
 class HomeView extends StatefulWidget {
   const HomeView({required this.navigationShell, super.key});
 
-  final StatefulNavigationShell navigationShell;
+  final Widget navigationShell;
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -25,8 +25,18 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
   }
 
+  int _calculateIndex(BuildContext context) {
+    final location = GoRouterState.of(context).uri.toString();
+
+    if (location.startsWith('/blogs')) return 1;
+    if (location.startsWith('/services')) return 2;
+    if (location.startsWith('/shortlist')) return 3;
+    return 0; // default = home
+  }
+
   @override
   Widget build(BuildContext context) {
+    final currentIndex = _calculateIndex(context);
     return Scaffold(
       key: _scaffoldKey,
 
@@ -47,7 +57,7 @@ class _HomeViewState extends State<HomeView> {
       ),
 
       bottomNavigationBar: SBottomBar(
-        currentIndex: widget.navigationShell.currentIndex,
+        currentIndex: currentIndex,
         onTap: (index) {
           switch (index) {
             case 0:

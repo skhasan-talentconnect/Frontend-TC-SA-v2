@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
-import 'package:tc_sa/common/widgets/s_loading_indicator.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart';
 
@@ -27,7 +27,16 @@ class _ForgotPasswordView extends State<ForgotPasswordView> {
     return ChangeNotifierProvider.value(
       value: forgotPasswordViewModel,
       child: Scaffold(
-        appBar: SAppBar(title: 'Forget Password', actions: []),
+        appBar: SAppBar(
+          leading: SIcon(
+            icon: Icons.keyboard_arrow_left,
+            onTap: () {
+              context.pop();
+            },
+          ),
+          title: 'Forget Password',
+          actions: [],
+        ),
 
         body: Consumer<ForgotPasswordViewModel>(
           builder: (_, forgotPasswordViewModel, __) {
@@ -136,6 +145,8 @@ class _ForgotPasswordView extends State<ForgotPasswordView> {
                             Toasts.showSuccessOrFailureToast(
                               context,
                               failure: failure,
+                              successMsg:
+                                  'Password reset successfully, Kindly Login.',
                             );
                           }
                         } else {
@@ -145,6 +156,11 @@ class _ForgotPasswordView extends State<ForgotPasswordView> {
                           Toasts.showSuccessOrFailureToast(
                             context,
                             failure: failure,
+                            successMsg: 'OTP sent successfully',
+                            popOnSuccess: false,
+                            successCallback: () {
+                              forgotPasswordViewModel.isVerified = true;
+                            },
                           );
                         }
                       }

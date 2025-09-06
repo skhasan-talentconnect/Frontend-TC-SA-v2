@@ -4,5 +4,6 @@ export 's_button.dart';
 export 's_icon.dart';
 export 's_list_tile.dart';
 export 's_loading_indicator.dart';
+export 's_text.dart';
 export 's_text_field.dart';
 export 'school_card.dart';
