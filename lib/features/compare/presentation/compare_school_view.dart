@@ -1,154 +1,133 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
+import 'package:tc_sa/core/extensions/failure_ext.dart';
+import 'package:tc_sa/features/compare/presentation/view_models/compare_view_model.dart';
+import 'package:tc_sa/features/compare/presentation/widgets/compare_widgets.dart';
 
-class CompareSchools extends StatelessWidget {
-  final SchoolCardModel firstSchool;
-  final SchoolCardModel secondSchool;
-  const CompareSchools({super.key, required this.firstSchool, required this.secondSchool});
+class CompareSchools extends StatefulWidget {
+  const CompareSchools({
+    required this.schoolId1,
+    required this.schoolId2,
+    super.key,
+  });
+
+  final String schoolId1;
+  final String schoolId2;
+
+  @override
+  State<CompareSchools> createState() => _CompareSchoolsState();
+}
+
+class _CompareSchoolsState extends State<CompareSchools> {
+  final CompareViewModel compareViewModel = CompareViewModel();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final failure = await compareViewModel.compareSchools(
+        schoolId1: widget.schoolId1,
+        schoolId2: widget.schoolId2,
+      );
+      failure?.showError(context);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    return ChangeNotifierProvider.value(
+      value: compareViewModel,
+      child: Scaffold(
         backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(icon: const Icon(Icons.arrow_back, color: Colors.black), onPressed: () => Navigator.pop(context)),
-        title: const Text('School Comparison', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600)),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Compare. Decide. Succeed!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
-            const SizedBox(height: 8),
-            Text('Compare Schools', style: TextStyle(fontWeight: FontWeight.bold, color: SColor.primaryColor, fontSize: 33)),
-            const SizedBox(height: 4),
-            const Text('Side-by-side comparison to find your best fit.', style: TextStyle(fontSize: 15, color: Colors.black87)),
-            const SizedBox(height: 20),
-            
-            // Simplified school cards - just image and name
-            Row(
-              children: [
-                Expanded(child: _buildSimpleSchoolCard(firstSchool)),
-                const SizedBox(width: 10),
-                Expanded(child: _buildSimpleSchoolCard(secondSchool)),
-              ],
-            ),
-            
-            const SizedBox(height: 20),
-            _comparisonRow('School Name', [firstSchool.name ?? 'Not available', secondSchool.name ?? 'Not available']),
-            _comparisonRow('Board', [firstSchool.board ?? 'Not available', secondSchool.board ?? 'Not available']),
-            _comparisonRow('Fee Range', [firstSchool.feeRange ?? 'Not available', secondSchool.feeRange ?? 'Not available']),
-            _comparisonRow('Location', [firstSchool.location ?? 'Not available', secondSchool.location ?? 'Not available']),
-            _comparisonRow('Gender', [firstSchool.genderType ?? 'Not available', secondSchool.genderType ?? 'Not available']),
-            _comparisonRow('School Type', [firstSchool.schoolMode ?? 'Not available', secondSchool.schoolMode ?? 'Not available']),
-            _ratingsComparison('Ratings', firstSchool.ratings ?? 0, secondSchool.ratings ?? 0),
-          ],
+        appBar: SAppBar(
+          leading: SIcon(
+            icon: Icons.keyboard_arrow_left,
+            onTap: () => context.pop(),
+          ),
+          title: 'School Comparison',
         ),
-      ),
-    );
-  }
 
-  Widget _buildSimpleSchoolCard(SchoolCardModel school) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          // School image placeholder
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: Colors.blue[100],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(Icons.school, size: 40, color: Colors.blue),
-          ),
-          const SizedBox(height: 8),
-          // School name
-          Text(
-            school.name ?? 'School Name',
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
-  }
-  
-  Widget _comparisonRow(String label, List<String> values) {
-    return Column(
-      children: [
-        const SizedBox(height: 16),
-        Text(label, style: TextStyle(fontWeight: FontWeight.bold, color: SColor.primaryColor, fontSize: 16)),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(child: _comparisonCell(values[0])),
-            const SizedBox(width: 10),
-            Expanded(child: _comparisonCell(values[1])),
-          ],
+        body: Consumer<CompareViewModel>(
+          builder: (vmContext, vm, _) {
+            if (vm.isLoading) {
+              return const Center(child: SLoadingIndicator());
+            }
+
+            if (vm.school1 == null && vm.school2 == null) {
+              return const Center(
+                child: Text("No comparison data. Please select schools again."),
+              );
+            }
+
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CompareSchoolsWidgets.headerBlock(),
+
+                  CompareSchoolsWidgets.sectionTitle('Compare Schools'),
+                  const SizedBox(height: 4),
+                  CompareSchoolsWidgets.sectionSubtitle(
+                    'Side-by-side comparison to find your best fit.',
+                  ),
+                  const SizedBox(height: 20),
+
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: CompareSchoolsWidgets.simpleCard(
+                            CompareSchoolsWidgets.fmtStr(vm.school1?.name),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: CompareSchoolsWidgets.simpleCard(
+                            CompareSchoolsWidgets.fmtStr(vm.school2?.name),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  CompareSchoolsWidgets.dataRow('Board', [
+                    CompareSchoolsWidgets.fmtStr(vm.school1?.board),
+                    CompareSchoolsWidgets.fmtStr(vm.school2?.board),
+                  ]),
+                  CompareSchoolsWidgets.dataRow('Fee Range', [
+                    CompareSchoolsWidgets.fmtStr(vm.school1?.feeRange),
+                    CompareSchoolsWidgets.fmtStr(vm.school2?.feeRange),
+                  ]),
+                  CompareSchoolsWidgets.dataRow('School Mode', [
+                    CompareSchoolsWidgets.fmtStr(vm.school1?.schoolMode),
+                    CompareSchoolsWidgets.fmtStr(vm.school2?.schoolMode),
+                  ]),
+                  CompareSchoolsWidgets.dataRow('Shifts', [
+                    CompareSchoolsWidgets.fmtJoin(vm.school1?.shifts),
+                    CompareSchoolsWidgets.fmtJoin(vm.school2?.shifts),
+                  ]),
+                  CompareSchoolsWidgets.dataRow('Top Amenities', [
+                    CompareSchoolsWidgets.fmtJoin(
+                      vm.school1?.predefinedAmenities,
+                    ),
+                    CompareSchoolsWidgets.fmtJoin(
+                      vm.school2?.predefinedAmenities,
+                    ),
+                  ]),
+                  CompareSchoolsWidgets.dataRow('Activities', [
+                    CompareSchoolsWidgets.fmtJoin(vm.school1?.activities),
+                    CompareSchoolsWidgets.fmtJoin(vm.school2?.activities),
+                  ]),
+                ],
+              ),
+            );
+          },
         ),
-      ],
-    );
-  }
-
-  Widget _comparisonCell(String text) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(border: Border.all(color: SColor.primaryColor)),
-      child: Text(text, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w500)),
-    );
-  }
-  
-  Widget _ratingsComparison(String label, int firstRating, int secondRating) {
-    return Column(
-      children: [
-        const SizedBox(height: 16),
-        Text(label, style: TextStyle(fontWeight: FontWeight.bold, color: SColor.primaryColor, fontSize: 16)),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(child: _ratingCell(firstRating)),
-            const SizedBox(width: 10),
-            Expanded(child: _ratingCell(secondRating)),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _ratingCell(int rating) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(border: Border.all(color: SColor.primaryColor)),
-      child: Column(
-        children: [
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: List.generate(5, (index) => 
-            Icon(index < rating ? Icons.star : Icons.star_outline, color: SColor.primaryColor, size: 20))
-          ),
-          const SizedBox(height: 4),
-          Text('$rating/5', style: const TextStyle(fontWeight: FontWeight.w500)),
-        ],
       ),
     );
   }

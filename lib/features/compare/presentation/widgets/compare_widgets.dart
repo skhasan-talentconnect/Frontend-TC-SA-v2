@@ -1,246 +1,113 @@
 import 'package:flutter/material.dart';
+import 'package:tc_sa/common/index.dart';
 
-class ReviewsWidgets {
-  static Widget buildStarRating(double rating, {double iconSize = 20}) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(5, (index) {
-        if (rating >= index + 1) {
-          return Icon(Icons.star, color: Colors.amber, size: iconSize);
-        } else if (rating > index) {
-          return Icon(Icons.star_half, color: Colors.amber, size: iconSize);
-        } else {
-          return Icon(
-            Icons.star_border,
-            color: Colors.amber,
-            size: iconSize,
-          );
-        }
-      }),
-    );
-  }
+class CompareSchoolsWidgets {
+  const CompareSchoolsWidgets._();
 
-  static Widget buildRatingBar(String label, int percent) {
-    return Row(
-      children: [
+  static Widget headerBlock() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
         Text(
-          label,
-          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(width: 6),
-        Expanded(
-          child: Stack(
-            children: [
-              Container(
-                height: 8,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-              FractionallySizedBox(
-                widthFactor: percent / 100,
-                child: Container(
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 8),
-        Text(
-          "$percent%",
-          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          'Compare. Decide. Succeed!',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
         ),
       ],
     );
   }
 
-  static Widget buildReviewItem(
-    String name,
-    String role,
-    String review,
-    double rating,
-    String date,
-    int likes,
-    int comments,
-  ) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
+  static Widget sectionTitle(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: SColor.primaryColor,
+        fontSize: 33,
+      ),
+    );
+  }
+
+  static Widget sectionSubtitle(String text) {
+    return Text(
+      text,
+      style: const TextStyle(fontSize: 15, color: Colors.black87),
+    );
+  }
+
+  static Widget simpleCard(String name) => Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.2),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            color: Colors.blue[100],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Icon(Icons.school, size: 40, color: Colors.blue),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          name,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    ),
+  );
+
+  static Widget dataRow(String label, List<String> values) => Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      const SizedBox(height: 16),
+      Text(
+        label,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: SColor.primaryColor,
+          fontSize: 16,
+        ),
+      ),
+      const SizedBox(height: 8),
+      Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.grey,
-            child: Icon(
-              Icons.person,
-              size: 36,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                      ),
-                    ),
-                    Text(
-                      date,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-                buildStarRating(rating, iconSize: 18),
-                Text(
-                  role,
-                  style: const TextStyle(
-                    color: Color(0xFF42A5F5),
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  review,
-                  style: const TextStyle(color: Colors.black, fontSize: 16),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.thumb_up, size: 20),
-                      onPressed: () {},
-                    ),
-                    Text("$likes"),
-                    const SizedBox(width: 16),
-                    IconButton(
-                      icon: const Icon(Icons.comment, size: 20),
-                      onPressed: () {},
-                    ),
-                    Text("$comments"),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          Expanded(child: cell(values[0])),
+          const SizedBox(width: 10),
+          Expanded(child: cell(values[1])),
         ],
       ),
-    );
-  }
+    ],
+  );
 
-  static void showReviewDialog(BuildContext context) {
-    final TextEditingController reviewController = TextEditingController();
-    int selectedRating = 0;
+  static Widget cell(String text) => Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(border: Border.all(color: SColor.primaryColor)),
+    child: Text(
+      text,
+      textAlign: TextAlign.center,
+      style: const TextStyle(fontWeight: FontWeight.w500),
+    ),
+  );
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom + 16,
-            left: 20,
-            right: 20,
-            top: 20,
-          ),
-          child: StatefulBuilder(
-            builder: (context, setModalState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    "Write a Review",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: reviewController,
-                    cursorColor: Colors.blue,
-                    maxLines: 4,
-                    decoration: const InputDecoration(
-                      hintText: "Write your thoughts here...",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.blue,
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(5, (index) {
-                      return IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        onPressed: () {
-                          setModalState(() {
-                            selectedRating = index + 1;
-                          });
-                        },
-                        icon: Icon(
-                          index < selectedRating
-                              ? Icons.star
-                              : Icons.star_border,
-                          color: Colors.amber,
-                          size: 35,
-                        ),
-                      );
-                    }),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Review submitted successfully!"),
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                      child: const Text("Submit"),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
+  static String fmtStr(dynamic v) =>
+      (v == null || (v is String && v.trim().isEmpty)) ? '-' : '$v';
+
+  static String fmtJoin(dynamic v) =>
+      (v is List && v.isNotEmpty) ? v.join(', ') : '-';
 }

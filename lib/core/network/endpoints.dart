@@ -30,6 +30,7 @@ class Endpoints {
   static const String adminSchoolsAlumnus= 'admin/alumnus';
 
   static const String adminBlogs = 'admin/blogs';
+  static const String adminCompare='admin/compare';
 
   //Support Page
   static const String adminSupport = 'admin/support';
@@ -43,6 +44,7 @@ class Endpoints {
   static const String adminPredictSchools = 'admin/predict-schools';
   static const String adminSearch = 'admin/search';
   static const String notifications = 'notifications';
+
 
   //Reviews Endpoints
   static const String reviews = 'reviews';

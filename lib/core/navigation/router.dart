@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tc_sa/common/models/school_card_model.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart';
 import 'package:tc_sa/features/blogs/index.dart';
@@ -274,23 +273,26 @@ class AppRouter {
         builder: (context, state) => ReviewsView(),
       ),
 
-      // ✅ Compare
-      GoRoute(
-        path: '/compare',
-        name: RouteNames.compare,
-        builder: (context, state) {
-          final args = state.extra as Map<String, dynamic>;
-          return CompareSchools(
-            firstSchool: args['firstSchool'] as SchoolCardModel,
-            secondSchool: args['secondSchool'] as SchoolCardModel,
-          );
-        },
-      ),
       GoRoute(
         path: '/compare-with',
         name: RouteNames.compareWith,
         builder: (context, state) {
-          return CompareWith(school: state.extra as SchoolCardModel);
+          final schoolDetails = state.extra as Map<String, String>;
+          return CompareWith(
+            schoolId: schoolDetails['id'] ?? '',
+            schoolName: schoolDetails['name'] ?? '',
+          );
+        },
+      ),
+      GoRoute(
+        path: '/compare',
+        name: RouteNames.compare,
+        builder: (context, state) {
+          final schoolIds = state.extra as Map<String, String>;
+          return CompareSchools(
+            schoolId1: schoolIds['school1'] ?? '',
+            schoolId2: schoolIds['school2'] ?? '',
+          );
         },
       ),
       // ✅ Blogs

@@ -9,7 +9,7 @@ class Request {
     this.queryParams = const {},
     this.body,
     this.headers,
-    this.isSafeRoute = false,
+    this.isSafeRoute = false, 
   });
 
   final String endpoint;
