@@ -30,7 +30,7 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       leading: leading,
-      titleSpacing: leading != null ? 0 : 24,
+      titleSpacing: leading != null ? -10 : 24,
       title: Text(
         _isHome ? 'RawRecruit' : title ?? '',
         style:

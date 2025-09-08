@@ -21,6 +21,30 @@ class AppStateProvider extends ViewStateProvider {
     notifyListeners();
   }
 
+  UserPref? _userPref;
+  UserPref? get userPref => _userPref;
+  set userPref(UserPref? user) {
+    _userPref = user;
+    notifyListeners();
+  }
+
+  List<SchoolCardModel> _shortlistSchools = [];
+  List<SchoolCardModel> get shortlistSchools => _shortlistSchools;
+  set shortlistSchools(List<SchoolCardModel> values) {
+    _shortlistSchools = values;
+    notifyListeners();
+  }
+
+  bool isSaved(String? schoolId) {
+    for (SchoolCardModel school in shortlistSchools) {
+      if (school.schoolId == schoolId) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   Future<Failure?> getAuthDetails() async {
     setViewState(ViewState.busy);
 
@@ -53,6 +77,26 @@ class AppStateProvider extends ViewStateProvider {
       },
       (res) {
         user = res;
+      },
+    );
+
+    setViewState(ViewState.complete);
+
+    return failure;
+  }
+
+  Future<Failure?> getUserPrefDetails() async {
+    setViewState(ViewState.busy);
+
+    Failure? failure;
+    final result = await getIt<ProfileDataSourceImpl>().getUserPreferences();
+
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (res) {
+        userPref = res;
       },
     );
 

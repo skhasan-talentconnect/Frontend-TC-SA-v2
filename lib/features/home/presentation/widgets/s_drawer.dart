@@ -79,7 +79,7 @@ class _SDrawerState extends State<SDrawer> {
                           color: SColor.primaryColor,
                         ),
                         child: Text(
-                          '${getIt<AppStateProvider>().user?.shortlistedSchools?.length ?? 0}',
+                          '${getIt<AppStateProvider>().shortlistSchools.length}',
                           style: STextStyles.s12W600.copyWith(
                             color: SColor.textColor,
                           ),

@@ -17,10 +17,7 @@ class InfoChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isSmallScreen ? 5.0 : 8.0,
-        vertical: isSmallScreen ? 4.0 : 6.0,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300),
         borderRadius: BorderRadius.circular(6),
@@ -30,17 +27,9 @@ class InfoChip extends StatelessWidget {
         children: [
           Text(
             topText,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: fontSize,
-            ),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize),
           ),
-          Text(
-            bottomText,
-            style: TextStyle(
-              fontSize: fontSize * 0.85,
-            ),
-          ),
+          Text(bottomText, style: TextStyle(fontSize: fontSize * 0.85)),
         ],
       ),
     );

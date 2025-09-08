@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart'; // STextStyles, SColor
 import 'package:tc_sa/core/common/view_state_provider.dart';
 import 'package:tc_sa/core/navigation/route_name.dart';
 import 'package:tc_sa/features/blogs/data/entities/blog_model.dart';
-
 import 'package:tc_sa/features/blogs/presentation/view_models/blog_view_model.dart';
 
 class BlogPage extends StatelessWidget {
@@ -37,7 +35,7 @@ class _BlogPageBody extends StatelessWidget {
           onRefresh: () => context.read<BlogViewModel>().getAllBlogs(),
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(13),
+            // padding: const EdgeInsets.all(13),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -45,7 +43,9 @@ class _BlogPageBody extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   'Explore Latest Blogs',
-                  style: STextStyles.s16W400.copyWith(color: SColor.terTextColor),
+                  style: STextStyles.s16W400.copyWith(
+                    color: SColor.terTextColor,
+                  ),
                 ),
                 const SizedBox(height: 16),
 
@@ -96,10 +96,17 @@ class _BlogCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2))],
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 2,
+            spreadRadius: 1,
+            offset: Offset(0, 2),
+          ),
+        ],
         borderRadius: BorderRadius.circular(20),
       ),
-      margin: const EdgeInsets.only(bottom: 4, right: 1, left: 1),
+      margin: const EdgeInsets.only(bottom: 4, right: 2, left: 2),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -126,10 +133,7 @@ class _BlogCard extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 // GoRouter navigation with extra payload
-                context.pushNamed(
-                  RouteNames.blogResult,
-                  extra: blog,
-                );
+                context.pushNamed(RouteNames.blogResult, extra: blog);
               },
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

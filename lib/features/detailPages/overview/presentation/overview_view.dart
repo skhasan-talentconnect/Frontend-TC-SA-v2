@@ -4,13 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:tc_sa/common/models/school_card_model.dart';
 import 'package:tc_sa/common/widgets/s_app_bar.dart';
 import 'package:tc_sa/common/widgets/s_icon.dart';
+import 'package:tc_sa/core/common/view_state_provider.dart';
 import 'package:tc_sa/core/navigation/route_name.dart';
 import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
+import 'package:tc_sa/features/detailPages/overview/presentation/view_models/overview_view_model.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/info_chip_widget.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/quick_highlight_widget.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/recruiter_chip_widget.dart';
-import 'package:tc_sa/features/detailPages/overview/presentation/view_models/overview_view_model.dart';
-import 'package:tc_sa/core/common/view_state_provider.dart';
 
 class SchoolDetailView extends StatefulWidget {
   const SchoolDetailView({super.key, required this.schoolId});
@@ -197,20 +197,28 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                             Expanded(
                               child: OutlinedButton(
                                 onPressed: () {
-                                  
-                                 final schoolCardModel = SchoolCardModel(
-  schoolId: school.id?.toString() ?? widget.schoolId,
-  
-  name: school.name ?? 'Not available',
-  feeRange: school.feeRange ?? 'Not available',
-  location: '${school.city ?? ''}, ${school.state ?? ''}',
-  board: school.board ?? 'Not available',
-  genderType: school.genderType ?? 'Not available',
-  shifts: school.shifts ?? [],
-  schoolMode: school.schoolMode ?? 'Not available',
-);
+                                  final schoolCardModel = SchoolCardModel(
+                                    schoolId:
+                                        school.id?.toString() ??
+                                        widget.schoolId,
 
-context.pushNamed(RouteNames.compareWith, extra: schoolCardModel);
+                                    name: school.name ?? 'Not available',
+                                    feeRange:
+                                        school.feeRange ?? 'Not available',
+                                    location:
+                                        '${school.city ?? ''}, ${school.state ?? ''}',
+                                    board: school.board ?? 'Not available',
+                                    genderType:
+                                        school.genderType ?? 'Not available',
+                                    shifts: school.shifts ?? [],
+                                    schoolMode:
+                                        school.schoolMode ?? 'Not available',
+                                  );
+
+                                  context.pushNamed(
+                                    RouteNames.compareWith,
+                                    extra: schoolCardModel,
+                                  );
                                 },
                                 style: OutlinedButton.styleFrom(
                                   backgroundColor: Colors.green,
@@ -235,9 +243,7 @@ context.pushNamed(RouteNames.compareWith, extra: schoolCardModel);
                             const SizedBox(width: 8),
                             Expanded(
                               child: OutlinedButton(
-                                onPressed: () {
-                                  
-                                },
+                                onPressed: () {},
                                 style: OutlinedButton.styleFrom(
                                   backgroundColor: Colors.blue,
                                   padding: const EdgeInsets.symmetric(
@@ -267,7 +273,8 @@ context.pushNamed(RouteNames.compareWith, extra: schoolCardModel);
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: pad, vertical: 6),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      spacing: 16,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         InfoChip(
                           topText: school.rank ?? "-",
@@ -304,9 +311,11 @@ context.pushNamed(RouteNames.compareWith, extra: schoolCardModel);
                     ),
                     child: TabBar(
                       isScrollable: true,
+                      tabAlignment: TabAlignment.start,
                       controller: _tabController,
                       labelColor: Colors.white,
                       unselectedLabelColor: Colors.black,
+                      padding: EdgeInsets.symmetric(horizontal: 8),
                       indicator: BoxDecoration(
                         color: Colors.black,
                         borderRadius: BorderRadius.circular(6),

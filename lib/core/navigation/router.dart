@@ -22,6 +22,7 @@ import 'package:tc_sa/features/home/index.dart';
 import 'package:tc_sa/features/notifications/presentation/notification_view.dart';
 import 'package:tc_sa/features/predictor/index.dart';
 import 'package:tc_sa/features/predictor/presentation/view_models/predictor_view_model.dart';
+import 'package:tc_sa/features/preferences/presentation/pref_view.dart';
 import 'package:tc_sa/features/profile/presentation/add_edit_profile_view.dart';
 import 'package:tc_sa/features/profile/presentation/profile_view.dart';
 import 'package:tc_sa/features/search/data/entities/search_query.dart';
@@ -39,50 +40,79 @@ class AppRouter {
         builder: (context, state) => const SplashView(),
       ),
 
-      // ✅ Main shell (no provider wrapping needed)
-      StatefulShellRoute.indexedStack(
+      ShellRoute(
         builder: (context, state, navigationShell) {
           return HomeView(navigationShell: navigationShell);
         },
-        branches: [
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/home',
-                name: RouteNames.home,
-                builder: (context, state) => SchoolsView(),
-              ),
-            ],
+        routes: [
+          GoRoute(
+            path: '/home',
+            name: RouteNames.home,
+            builder: (context, state) => SchoolsView(),
           ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/blogs',
-                name: RouteNames.blogs,
-                builder: (context, state) => BlogPage(),
-              ),
-            ],
+          GoRoute(
+            path: '/blogs',
+            name: RouteNames.blogs,
+            builder: (context, state) => BlogPage(),
           ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/services',
-                name: RouteNames.services,
-                builder: (context, state) => SearchPage(),
-              ),
-            ],
+          GoRoute(
+            path: '/services',
+            name: RouteNames.services,
+            builder: (context, state) => PredictorPage(),
           ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/shortlist',
-                name: RouteNames.shortlist,
-                builder: (context, state) => const ShortlistedSchoolsPage(),
-              ),
-            ],
+          GoRoute(
+            path: '/shortlist',
+            name: RouteNames.shortlist,
+            builder: (context, state) => ShortlistedSchoolsPage(),
           ),
         ],
       ),
+
+      // StatefulShellRoute.indexedStack(
+      //   builder: (context, state, navigationShell) {
+      //     return HomeView(navigationShell: navigationShell);
+      //   },
+      //   branches: [
+      //     StatefulShellBranch(
+      //       routes: [
+      //         GoRoute(
+      //           path: '/home',
+      //           name: RouteNames.home,
+      //           builder: (context, state) => SchoolsView(),
+      //         ),
+      //       ],
+      //     ),
+      //     StatefulShellBranch(
+      //       routes: [
+      //         GoRoute(
+      //           path: '/blogs',
+      //           name: RouteNames.blogs,
+      //           builder: (context, state) => BlogPage(),
+      //         ),
+      //       ],
+      //     ),
+      //     StatefulShellBranch(
+      //       routes: [
+      //         GoRoute(
+      //           path: '/services',
+      //           name: RouteNames.services,
+      //           builder: (context, state) => SearchPage(),
+      //         ),
+      //       ],
+      //     ),
+      //     StatefulShellBranch(
+      //       routes: [
+      //         GoRoute(
+      //           path: '/shortlist',
+      //           name: RouteNames.shortlist,
+      //           builder:
+      //               (context, state) =>
+      //               ShortlistedSchoolsPage(key: UniqueKey()),
+      //         ),
+      //       ],
+      //     ),
+      //   ],
+      // ),
 
       // ✅ Auth routes
       GoRoute(
@@ -113,8 +143,26 @@ class AppRouter {
           return AddEditProfileView(isEdit: isEdit);
         },
       ),
+      GoRoute(
+        path: '/preferences',
+        name: RouteNames.preferences,
+        builder: (context, state) => PrefView(),
+      ),
+      GoRoute(
+        path: '/add-edit-preferences',
+        name: RouteNames.addEditPreferences,
+        builder: (context, state) {
+          final isEdit = state.extra as bool;
+          return AddEditProfileView(isEdit: isEdit);
+        },
+      ),
 
-      // ✅ Search Results
+      GoRoute(
+        path: '/search',
+        name: RouteNames.search,
+        builder: (context, state) => SearchPage(),
+      ),
+
       GoRoute(
         path: '/search-res',
         name: RouteNames.searchRes,
@@ -123,28 +171,27 @@ class AppRouter {
           return SearchResultsPage(searchQuery: extras);
         },
       ),
-
       // ✅ Predictor
       GoRoute(
-  path: '/predictor',
-  name: RouteNames.predictor,
-  pageBuilder: (context, state) {
-    return MaterialPage(
-      child: ChangeNotifierProvider(
-        create: (context) => PrefViewModel(),
-        child: const PredictorPage(),
+        path: '/predictor',
+        name: RouteNames.predictor,
+        pageBuilder: (context, state) {
+          return MaterialPage(
+            child: ChangeNotifierProvider(
+              create: (context) => PrefViewModel(),
+              child: const PredictorPage(),
+            ),
+          );
+        },
       ),
-    );
-  },
-),
-     GoRoute(
-  path: '/predictor-result',
-  name: RouteNames.predictorResult,
-  builder: (context, state) {
-    final predictedSchools = state.extra as List<SchoolModel>? ?? [];
-    return SchoolResultsPage(predictedSchools: predictedSchools);
-  },
-),
+      GoRoute(
+        path: '/predictor-result',
+        name: RouteNames.predictorResult,
+        builder: (context, state) {
+          final predictedSchools = state.extra as List<SchoolModel>? ?? [];
+          return SchoolResultsPage(predictedSchools: predictedSchools);
+        },
+      ),
       // ✅ School details
       GoRoute(
         path: '/overview',
@@ -161,8 +208,9 @@ class AppRouter {
         path: '/alumini',
         name: RouteNames.alumini,
         builder: (context, state) {
-          final args = (state.extra ?? const <String, dynamic>{})
-              as Map<String, dynamic>;
+          final args =
+              (state.extra ?? const <String, dynamic>{})
+                  as Map<String, dynamic>;
           final schoolId = args['schoolId'] as String?;
           final schoolName = args['schoolName'] as String?;
 
@@ -173,8 +221,8 @@ class AppRouter {
           }
 
           return ChangeNotifierProvider(
-            create: (_) =>
-                AlumniViewModel()..getAlumniBySchool(schoolId: schoolId),
+            create:
+                (_) => AlumniViewModel()..getAlumniBySchool(schoolId: schoolId),
             child: AlumniView(schoolId: schoolId, schoolName: schoolName),
           );
         },
@@ -185,8 +233,10 @@ class AppRouter {
         builder: (context, state) {
           final schoolId = state.extra as String;
           return ChangeNotifierProvider(
-            create: (_) =>
-                ActivitiesViewModel()..getActivitiesBySchoolId(schoolId: schoolId),
+            create:
+                (_) =>
+                    ActivitiesViewModel()
+                      ..getActivitiesBySchoolId(schoolId: schoolId),
             child: ActivityView(schoolId: schoolId),
           );
         },
@@ -195,8 +245,9 @@ class AppRouter {
         path: '/amenity',
         name: RouteNames.amenity,
         builder: (context, state) {
-          final args = (state.extra ?? const <String, dynamic>{})
-              as Map<String, dynamic>;
+          final args =
+              (state.extra ?? const <String, dynamic>{})
+                  as Map<String, dynamic>;
           final schoolId = args['schoolId'] as String?;
           final schoolName = (args['schoolName'] as String?) ?? 'School';
 
@@ -207,12 +258,11 @@ class AppRouter {
           }
 
           return ChangeNotifierProvider(
-            create: (_) =>
-                AmenitiesViewModel()..getAmenitiesBySchoolId(schoolId: schoolId),
-            child: AmenitiesView(
-              schoolId: schoolId,
-              schoolName: schoolName,
-            ),
+            create:
+                (_) =>
+                    AmenitiesViewModel()
+                      ..getAmenitiesBySchoolId(schoolId: schoolId),
+            child: AmenitiesView(schoolId: schoolId, schoolName: schoolName),
           );
         },
       ),
@@ -225,24 +275,24 @@ class AppRouter {
       ),
 
       // ✅ Compare
-   GoRoute(
-  path: '/compare',
-  name: RouteNames.compare,
-  builder: (context, state) {
-    final args = state.extra as Map<String, dynamic>;
-    return CompareSchools(
-      firstSchool: args['firstSchool'] as SchoolCardModel,
-      secondSchool: args['secondSchool'] as SchoolCardModel,
-    );
-  },
-),
-GoRoute(
-  path: '/compare-with',
-  name: RouteNames.compareWith,
-  builder: (context, state) {
-    return CompareWith(school: state.extra as SchoolCardModel);
-  },
-),
+      GoRoute(
+        path: '/compare',
+        name: RouteNames.compare,
+        builder: (context, state) {
+          final args = state.extra as Map<String, dynamic>;
+          return CompareSchools(
+            firstSchool: args['firstSchool'] as SchoolCardModel,
+            secondSchool: args['secondSchool'] as SchoolCardModel,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/compare-with',
+        name: RouteNames.compareWith,
+        builder: (context, state) {
+          return CompareWith(school: state.extra as SchoolCardModel);
+        },
+      ),
       // ✅ Blogs
       GoRoute(
         path: '/blog-result',

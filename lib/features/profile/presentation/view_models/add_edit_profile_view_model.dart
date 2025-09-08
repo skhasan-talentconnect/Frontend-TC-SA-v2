@@ -49,4 +49,41 @@ class AddEditProfileViewModel extends ViewStateProvider {
 
     return failure;
   }
+
+  Future<Failure?> updateProfile({
+    required String name,
+    required String email,
+    required String phone,
+    required String state,
+    required String city,
+    required String gender,
+    required String dateOfBirth,
+  }) async {
+    setViewState(ViewState.busy);
+
+    Failure? failure;
+
+    final result = await profileDataSourceImpl.updateProfile(
+      name: name,
+      email: email,
+      phone: phone,
+      state: state,
+      city: city,
+      gender: gender,
+      dateOfBirth: dateOfBirth,
+    );
+
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (result) {
+        getIt<AppStateProvider>().user = result;
+      },
+    );
+
+    setViewState(ViewState.complete);
+
+    return failure;
+  }
 }

@@ -116,8 +116,17 @@ class _SearchPageState extends State<SearchPage> {
     final filterSelectedColor = SColor.primaryColor;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      appBar: SAppBar(
+        leading: SIcon(
+          icon: Icons.keyboard_arrow_left,
+          onTap: () {
+            context.pop();
+          },
+        ),
+        title: 'Search',
+      ),
       body: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 16),
         children: [
           SearchTextField(
             controller: searchCtrl,

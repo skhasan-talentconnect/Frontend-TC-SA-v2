@@ -32,4 +32,23 @@ extension StringExt on String {
       }
     }
   }
+
+  DateTime get toDate {
+    DateTime date = DateTime.parse(this);
+    return date;
+  }
+
+  String get toDDMMYYYY {
+    DateTime date = toDate;
+    return DateFormat('dd/MM/yyyy').format(date);
+  }
+
+  String get toCapitalise {
+    final String string = this;
+    final newString = string.replaceFirst(
+      string[0] ?? '',
+      (string[0] ?? '').toUpperCase(),
+    );
+    return newString;
+  }
 }

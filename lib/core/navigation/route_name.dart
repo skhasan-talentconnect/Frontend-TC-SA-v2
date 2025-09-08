@@ -12,24 +12,26 @@ class RouteNames {
   static const String services = 'services';
   static const String shortlist = 'shortlist';
 
-  static const String blogResult='blog-result';
+  static const String blogResult = 'blog-result';
 
   //user
   static const String profile = 'profile';
   static const String addEditProfile = 'add-edit-profile';
+  static const String preferences = 'preferences';
+  static const String addEditPreferences = 'add-edit-preferences';
   static const String settings = 'settings';
 
   //school
   static const String school = 'school';
-  static const String overview='overview';
-  static const String amenity='amenity';
-  static const String alumini='alumini';
-  static const String activity='activity';
-  static const String review='review';
+  static const String overview = 'overview';
+  static const String amenity = 'amenity';
+  static const String alumini = 'alumini';
+  static const String activity = 'activity';
+  static const String review = 'review';
 
   //features
   static const String compare = 'compare';
-  static const String compareWith='compare-with';
+  static const String compareWith = 'compare-with';
   static const String search = 'search';
   static const String searchRes = 'search-res';
   static const String notification = 'notifications';

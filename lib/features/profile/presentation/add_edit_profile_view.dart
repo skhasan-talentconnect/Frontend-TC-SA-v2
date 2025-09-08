@@ -33,7 +33,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     text: appStateProvider.user?.gender ?? '',
   );
   late final dateOfBirthController = TextEditingController(
-    text: appStateProvider.user?.dateOfBirth ?? '',
+    text: appStateProvider.user?.dateOfBirth?.toDDMMYYYY ?? '',
   );
   late final stateController = TextEditingController(
     text: appStateProvider.user?.state ?? '',
@@ -52,7 +52,18 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     return ChangeNotifierProvider.value(
       value: addEditProfileViewModel,
       child: Scaffold(
-        appBar: widget.isEdit ? SAppBar(title: 'Edit Profile') : null,
+        appBar:
+            widget.isEdit
+                ? SAppBar(
+                  leading: SIcon(
+                    icon: Icons.keyboard_arrow_left,
+                    onTap: () {
+                      context.pop();
+                    },
+                  ),
+                  title: 'Edit Profile',
+                )
+                : null,
 
         body: SafeArea(
           child: Selector<AddEditProfileViewModel, bool>(
@@ -227,22 +238,35 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                           'Kindly fill all the required field.',
                                     );
                                   } else {
-                                    final failure =
-                                        await addEditProfileViewModel
-                                            .addProfile(
-                                              name: name,
-                                              email: email,
-                                              phone: phone,
-                                              state: state,
-                                              city: city,
-                                              gender: gender,
-                                              dateOfBirth: dateOfBirth,
-                                            );
+                                    final failure;
+                                    if (widget.isEdit) {
+                                      failure = await addEditProfileViewModel
+                                          .updateProfile(
+                                            name: name,
+                                            email: email,
+                                            phone: phone,
+                                            state: state,
+                                            city: city,
+                                            gender: gender,
+                                            dateOfBirth: dateOfBirth,
+                                          );
+                                    } else {
+                                      failure = await addEditProfileViewModel
+                                          .addProfile(
+                                            name: name,
+                                            email: email,
+                                            phone: phone,
+                                            state: state,
+                                            city: city,
+                                            gender: gender,
+                                            dateOfBirth: dateOfBirth,
+                                          );
+                                    }
                                     Toasts.showSuccessOrFailureToast(
                                       context,
                                       failure: failure,
                                       successMsg:
-                                          'Profile Register Successfully',
+                                          'Profile ${widget.isEdit ? "Updated" : 'Register'} Successfully',
                                       successCallback: () {
                                         if (widget.isEdit) {
                                           context.pop();
