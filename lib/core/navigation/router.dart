@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/core/index.dart';
+import 'package:tc_sa/core/navigation/not_found_view.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart';
 import 'package:tc_sa/features/blogs/index.dart';
 import 'package:tc_sa/features/compare/presentation/compare_school_view.dart';
@@ -196,7 +197,10 @@ class AppRouter {
         path: '/overview',
         name: RouteNames.overview,
         builder: (context, state) {
-          final schoolId = state.extra as String;
+          final schoolId = state.extra as String?;
+          if (schoolId == null) {
+            return NotFoundView(isSchool: true);
+          }
           return ChangeNotifierProvider(
             create: (_) => OverviewViewModel()..getSchoolsById(id: schoolId),
             child: SchoolDetailView(schoolId: schoolId),
@@ -312,5 +316,6 @@ class AppRouter {
         },
       ),
     ],
+    errorBuilder: (_, __) => NotFoundView(),
   );
 }
