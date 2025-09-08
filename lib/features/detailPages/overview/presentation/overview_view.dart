@@ -201,10 +201,8 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                                     extra: {
                                       'id':
                                           school.id?.toString() ??
-                                          widget.schoolId, // required for API
-                                      'name':
-                                          school.name ??
-                                          'School', // optional: just for UI preview
+                                          widget.schoolId,
+                                      'name': school.name ?? 'School',
                                     },
                                   );
                                 },

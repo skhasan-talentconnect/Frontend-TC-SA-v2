@@ -1,13 +1,10 @@
-// features/compare/presentation/view_models/compare_view_model.dart
-import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/common/index.dart';
+import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/compare/data/data_source/data_source_impl.dart';
+import 'package:tc_sa/features/compare/data/entities/school_compare_model.dart';
 
 class CompareViewModel extends ViewStateProvider {
-  final CompareDataSourceImpl _dataSource;
-
-  CompareViewModel({CompareDataSourceImpl? dataSource})
-    : _dataSource = dataSource ?? CompareDataSourceImpl();
+  final CompareDataSourceImpl _dataSource = CompareDataSourceImpl();
 
   // optional: hold base school locally (for preview on CompareWith)
   SchoolCardModel? _baseSchool;
@@ -17,11 +14,11 @@ class CompareViewModel extends ViewStateProvider {
     notifyListeners();
   }
 
-  Map<String, dynamic>? _school1;
-  Map<String, dynamic>? _school2;
+  SchoolCompareModel? _school1;
+  SchoolCompareModel? _school2;
 
-  Map<String, dynamic>? get school1 => _school1;
-  Map<String, dynamic>? get school2 => _school2;
+  SchoolCompareModel? get school1 => _school1;
+  SchoolCompareModel? get school2 => _school2;
 
   Future<Failure?> compareSchools({
     required String schoolId1,
@@ -38,20 +35,19 @@ class CompareViewModel extends ViewStateProvider {
     result.fold((ex) => failure = APIFailure.fromException(exception: ex), (
       res,
     ) {
-      _school1 = res['school1'] as Map<String, dynamic>?;
-      _school2 = res['school2'] as Map<String, dynamic>?;
-      notifyListeners();
+      _school1 = res?['school1'];
+      _school2 = res?['school2'];
     });
 
     setViewState(ViewState.complete);
     return failure;
   }
 
-  void clear() {
-    _school1 = null;
-    _school2 = null;
-    _baseSchool = null;
-    setViewState(ViewState.idle);
-    notifyListeners();
-  }
+  // void clear() {
+  //   _school1 = null;
+  //   _school2 = null;
+  //   _baseSchool = null;
+  //   setViewState(ViewState.idle);
+  //   notifyListeners();
+  // }
 }
