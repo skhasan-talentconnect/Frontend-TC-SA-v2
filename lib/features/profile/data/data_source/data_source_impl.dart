@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:tc_sa/common/models/index.dart' show UserPref, User;
-import 'package:tc_sa/core/common/app_state_provider.dart';
+import 'package:tc_sa/common/models/index.dart' show User;
 import 'package:tc_sa/core/index.dart'
     show
         getIt,
@@ -34,31 +33,6 @@ class ProfileDataSourceImpl implements ProfileDataSource {
         final user = User.fromJson(response['data']);
 
         return Right(user);
-      }
-    } catch (e) {
-      return Left(APIException.from(e));
-    }
-
-    return Right(null);
-  }
-
-  @override
-  ResultFuture<UserPref?> getUserPreferences() async {
-    Request r = Request(
-      method: RequestMethod.get,
-      endpoint:
-          "${Endpoints.usersPreferences}/${getIt<AppStateProvider>().user?.sId}",
-      isSafeRoute: true,
-    );
-
-    try {
-      final result = await _networkService.request(r);
-      final response = result.data as Map<String, dynamic>;
-
-      if (response.isNotEmpty) {
-        final userPref = UserPref.fromJson(response['data']);
-
-        return Right(userPref);
       }
     } catch (e) {
       return Left(APIException.from(e));

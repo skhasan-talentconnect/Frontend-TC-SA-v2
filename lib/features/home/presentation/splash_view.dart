@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tc_sa/common/theme/s_colors.dart';
@@ -43,19 +45,21 @@ class _SplashViewState extends State<SplashView> {
       try {
         await appStateProvider.getUserDetails();
         await appStateProvider.getAuthDetails();
-        if (appStateProvider.user != null &&
-            appStateProvider.authModel != null) {
+        await appStateProvider.getUserPrefDetails();
+        if (appStateProvider.isProfileComplete) {
           next = RouteNames.home;
-        } else if (appStateProvider.user == null &&
-            appStateProvider.authModel != null) {
+        } else if (appStateProvider.isProfileRemaining) {
           next = RouteNames.addEditProfile;
+        } else if (appStateProvider.isPrefRemaining) {
+          next = RouteNames.preferences;
         } else {
-          print('Removing token from else');
+          log(
+            'ProfileComplete: ${appStateProvider.isProfileComplete}\nProfileRemaining: ${appStateProvider.isProfileRemaining}\nPrefRemaining: ${appStateProvider.isPrefRemaining}\nAuthComplete: ${appStateProvider.isAuthComplete}\n',
+          );
           await SecretRepo.remove('auth_token');
           next = RouteNames.loginRegister;
         }
       } catch (e) {
-        print('Removing token from catch');
         await SecretRepo.remove('auth_token');
         next = RouteNames.loginRegister;
       }

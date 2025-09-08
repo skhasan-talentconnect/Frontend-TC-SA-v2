@@ -20,10 +20,10 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
           ?.map((e) => e as String)
           .toList(),
   userType: json['userType'] as String?,
-  sId: json['sId'] as String?,
+  sId: json['_id'] as String?,
   createdAt: json['createdAt'] as String?,
   updatedAt: json['updatedAt'] as String?,
-  iV: (json['iV'] as num?)?.toInt(),
+  iV: (json['__v'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
@@ -37,8 +37,8 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   'city': instance.city,
   'shortlistedSchools': instance.shortlistedSchools,
   'userType': instance.userType,
-  'sId': instance.sId,
+  '_id': instance.sId,
   'createdAt': instance.createdAt,
   'updatedAt': instance.updatedAt,
-  'iV': instance.iV,
+  '__v': instance.iV,
 };

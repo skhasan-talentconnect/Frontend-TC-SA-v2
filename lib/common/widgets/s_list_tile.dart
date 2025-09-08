@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tc_sa/common/index.dart';
+import 'package:tc_sa/core/navigation/index.dart';
 
 class SListTile extends StatelessWidget {
   const SListTile({
@@ -85,7 +86,10 @@ class SListTile extends StatelessWidget {
             _isNavigator
                 ? () {
                   if (path != null && (path ?? "").isNotEmpty) {
-                    context.pushNamed(path ?? '');
+                    context.pushNamed(
+                      path ?? '',
+                      extra: path == RouteNames.preferences,
+                    );
                   }
                 }
                 : onTap,

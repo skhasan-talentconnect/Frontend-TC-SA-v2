@@ -146,7 +146,10 @@ class AppRouter {
       GoRoute(
         path: '/preferences',
         name: RouteNames.preferences,
-        builder: (context, state) => PrefView(),
+        builder: (context, state) {
+          final isEdit = state.extra as bool;
+          return PrefView(isEdit: isEdit);
+        },
       ),
       GoRoute(
         path: '/add-edit-preferences',
