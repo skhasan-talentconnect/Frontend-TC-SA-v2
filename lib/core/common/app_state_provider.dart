@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/auth/authentication/data/data_source/data_source_impl.dart';
 import 'package:tc_sa/features/auth/authentication/data/entities/auth_model.dart';
+import 'package:tc_sa/features/preferences/data/data_source/data_source_impl.dart';
 import 'package:tc_sa/features/profile/data/data_source/data_source_impl.dart';
 
 class AppStateProvider extends ViewStateProvider {
@@ -34,6 +37,16 @@ class AppStateProvider extends ViewStateProvider {
     _shortlistSchools = values;
     notifyListeners();
   }
+
+  bool get isProfileComplete =>
+      user != null && authModel != null && userPref != null;
+
+  bool get isAuthComplete => authModel != null;
+
+  bool get isProfileRemaining => user == null && authModel != null;
+
+  bool get isPrefRemaining =>
+      user != null && authModel != null && userPref == null;
 
   bool isSaved(String? schoolId) {
     for (SchoolCardModel school in shortlistSchools) {
@@ -76,6 +89,7 @@ class AppStateProvider extends ViewStateProvider {
         failure = APIFailure.fromException(exception: exception);
       },
       (res) {
+        log(res?.toJson().toString() ?? '');
         user = res;
       },
     );
@@ -89,7 +103,7 @@ class AppStateProvider extends ViewStateProvider {
     setViewState(ViewState.busy);
 
     Failure? failure;
-    final result = await getIt<ProfileDataSourceImpl>().getUserPreferences();
+    final result = await getIt<PrefDataSourceImpl>().getPreferences();
 
     result.fold(
       (exception) {

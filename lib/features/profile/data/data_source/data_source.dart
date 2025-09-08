@@ -23,6 +23,4 @@ abstract class ProfileDataSource {
     required String gender,
     required String dateOfBirth,
   });
-
-  ResultFuture<UserPref?> getUserPreferences();
 }

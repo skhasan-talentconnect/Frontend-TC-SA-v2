@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$User {
 
- String? get authId; String? get email; String? get contactNo; String? get dateOfBirth; String? get name; String? get gender; String? get state; String? get city; List<String>? get shortlistedSchools; String? get userType; String? get sId; String? get createdAt; String? get updatedAt; int? get iV;
+ String? get authId; String? get email; String? get contactNo; String? get dateOfBirth; String? get name; String? get gender; String? get state; String? get city; List<String>? get shortlistedSchools; String? get userType;@JsonKey(name: '_id') String? get sId; String? get createdAt; String? get updatedAt;@JsonKey(name: '__v') int? get iV;
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $UserCopyWith<$Res>  {
   factory $UserCopyWith(User value, $Res Function(User) _then) = _$UserCopyWithImpl;
 @useResult
 $Res call({
- String? authId, String? email, String? contactNo, String? dateOfBirth, String? name, String? gender, String? state, String? city, List<String>? shortlistedSchools, String? userType, String? sId, String? createdAt, String? updatedAt, int? iV
+ String? authId, String? email, String? contactNo, String? dateOfBirth, String? name, String? gender, String? state, String? city, List<String>? shortlistedSchools, String? userType,@JsonKey(name: '_id') String? sId, String? createdAt, String? updatedAt,@JsonKey(name: '__v') int? iV
 });
 
 
@@ -166,7 +166,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? authId,  String? email,  String? contactNo,  String? dateOfBirth,  String? name,  String? gender,  String? state,  String? city,  List<String>? shortlistedSchools,  String? userType,  String? sId,  String? createdAt,  String? updatedAt,  int? iV)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? authId,  String? email,  String? contactNo,  String? dateOfBirth,  String? name,  String? gender,  String? state,  String? city,  List<String>? shortlistedSchools,  String? userType, @JsonKey(name: '_id')  String? sId,  String? createdAt,  String? updatedAt, @JsonKey(name: '__v')  int? iV)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
 return $default(_that.authId,_that.email,_that.contactNo,_that.dateOfBirth,_that.name,_that.gender,_that.state,_that.city,_that.shortlistedSchools,_that.userType,_that.sId,_that.createdAt,_that.updatedAt,_that.iV);case _:
@@ -187,7 +187,7 @@ return $default(_that.authId,_that.email,_that.contactNo,_that.dateOfBirth,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? authId,  String? email,  String? contactNo,  String? dateOfBirth,  String? name,  String? gender,  String? state,  String? city,  List<String>? shortlistedSchools,  String? userType,  String? sId,  String? createdAt,  String? updatedAt,  int? iV)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? authId,  String? email,  String? contactNo,  String? dateOfBirth,  String? name,  String? gender,  String? state,  String? city,  List<String>? shortlistedSchools,  String? userType, @JsonKey(name: '_id')  String? sId,  String? createdAt,  String? updatedAt, @JsonKey(name: '__v')  int? iV)  $default,) {final _that = this;
 switch (_that) {
 case _User():
 return $default(_that.authId,_that.email,_that.contactNo,_that.dateOfBirth,_that.name,_that.gender,_that.state,_that.city,_that.shortlistedSchools,_that.userType,_that.sId,_that.createdAt,_that.updatedAt,_that.iV);case _:
@@ -207,7 +207,7 @@ return $default(_that.authId,_that.email,_that.contactNo,_that.dateOfBirth,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? authId,  String? email,  String? contactNo,  String? dateOfBirth,  String? name,  String? gender,  String? state,  String? city,  List<String>? shortlistedSchools,  String? userType,  String? sId,  String? createdAt,  String? updatedAt,  int? iV)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? authId,  String? email,  String? contactNo,  String? dateOfBirth,  String? name,  String? gender,  String? state,  String? city,  List<String>? shortlistedSchools,  String? userType, @JsonKey(name: '_id')  String? sId,  String? createdAt,  String? updatedAt, @JsonKey(name: '__v')  int? iV)?  $default,) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
 return $default(_that.authId,_that.email,_that.contactNo,_that.dateOfBirth,_that.name,_that.gender,_that.state,_that.city,_that.shortlistedSchools,_that.userType,_that.sId,_that.createdAt,_that.updatedAt,_that.iV);case _:
@@ -222,7 +222,7 @@ return $default(_that.authId,_that.email,_that.contactNo,_that.dateOfBirth,_that
 @JsonSerializable()
 
 class _User implements User {
-  const _User({this.authId, this.email, this.contactNo, this.dateOfBirth, this.name, this.gender, this.state, this.city, final  List<String>? shortlistedSchools, this.userType, this.sId, this.createdAt, this.updatedAt, this.iV}): _shortlistedSchools = shortlistedSchools;
+  const _User({this.authId, this.email, this.contactNo, this.dateOfBirth, this.name, this.gender, this.state, this.city, final  List<String>? shortlistedSchools, this.userType, @JsonKey(name: '_id') this.sId, this.createdAt, this.updatedAt, @JsonKey(name: '__v') this.iV}): _shortlistedSchools = shortlistedSchools;
   factory _User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
 @override final  String? authId;
@@ -243,10 +243,10 @@ class _User implements User {
 }
 
 @override final  String? userType;
-@override final  String? sId;
+@override@JsonKey(name: '_id') final  String? sId;
 @override final  String? createdAt;
 @override final  String? updatedAt;
-@override final  int? iV;
+@override@JsonKey(name: '__v') final  int? iV;
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
@@ -281,7 +281,7 @@ abstract mixin class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$UserCopyWith(_User value, $Res Function(_User) _then) = __$UserCopyWithImpl;
 @override @useResult
 $Res call({
- String? authId, String? email, String? contactNo, String? dateOfBirth, String? name, String? gender, String? state, String? city, List<String>? shortlistedSchools, String? userType, String? sId, String? createdAt, String? updatedAt, int? iV
+ String? authId, String? email, String? contactNo, String? dateOfBirth, String? name, String? gender, String? state, String? city, List<String>? shortlistedSchools, String? userType,@JsonKey(name: '_id') String? sId, String? createdAt, String? updatedAt,@JsonKey(name: '__v') int? iV
 });
 
 

@@ -16,10 +16,10 @@ abstract class User with _$User {
     String? city,
     List<String>? shortlistedSchools,
     String? userType,
-    String? sId,
+    @JsonKey(name: '_id') String? sId,
     String? createdAt,
     String? updatedAt,
-    int? iV,
+    @JsonKey(name: '__v') int? iV,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

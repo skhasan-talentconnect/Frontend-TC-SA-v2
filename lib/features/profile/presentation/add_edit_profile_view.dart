@@ -267,13 +267,22 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                       failure: failure,
                                       successMsg:
                                           'Profile ${widget.isEdit ? "Updated" : 'Register'} Successfully',
+                                      popOnSuccess: false,
                                       successCallback: () {
                                         if (widget.isEdit) {
                                           context.pop();
                                         } else {
-                                          context.pushReplacementNamed(
-                                            RouteNames.home,
-                                          );
+                                          if (appStateProvider
+                                              .isPrefRemaining) {
+                                            context.pushReplacementNamed(
+                                              RouteNames.preferences,
+                                              extra: false,
+                                            );
+                                          } else {
+                                            context.pushReplacementNamed(
+                                              RouteNames.home,
+                                            );
+                                          }
                                         }
                                       },
                                     );
