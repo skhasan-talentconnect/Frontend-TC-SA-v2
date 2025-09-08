@@ -1,0 +1,57 @@
+// features/compare/presentation/view_models/compare_view_model.dart
+import 'package:tc_sa/core/index.dart';
+import 'package:tc_sa/common/index.dart';
+import 'package:tc_sa/features/compare/data/data_source/data_source_impl.dart';
+
+class CompareViewModel extends ViewStateProvider {
+  final CompareDataSourceImpl _dataSource;
+
+  CompareViewModel({CompareDataSourceImpl? dataSource})
+    : _dataSource = dataSource ?? CompareDataSourceImpl();
+
+  // optional: hold base school locally (for preview on CompareWith)
+  SchoolCardModel? _baseSchool;
+  SchoolCardModel? get baseSchool => _baseSchool;
+  void setBaseSchool(SchoolCardModel s) {
+    _baseSchool = s;
+    notifyListeners();
+  }
+
+  Map<String, dynamic>? _school1;
+  Map<String, dynamic>? _school2;
+
+  Map<String, dynamic>? get school1 => _school1;
+  Map<String, dynamic>? get school2 => _school2;
+
+  Future<Failure?> compareSchools({
+    required String schoolId1,
+    required String schoolId2,
+  }) async {
+    setViewState(ViewState.busy);
+    Failure? failure;
+
+    final result = await _dataSource.compareSchools(
+      schoolId1: schoolId1,
+      schoolId2: schoolId2,
+    );
+
+    result.fold((ex) => failure = APIFailure.fromException(exception: ex), (
+      res,
+    ) {
+      _school1 = res['school1'] as Map<String, dynamic>?;
+      _school2 = res['school2'] as Map<String, dynamic>?;
+      notifyListeners();
+    });
+
+    setViewState(ViewState.complete);
+    return failure;
+  }
+
+  void clear() {
+    _school1 = null;
+    _school2 = null;
+    _baseSchool = null;
+    setViewState(ViewState.idle);
+    notifyListeners();
+  }
+}

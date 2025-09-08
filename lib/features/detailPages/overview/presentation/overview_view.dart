@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tc_sa/common/models/school_card_model.dart';
 import 'package:tc_sa/common/widgets/s_app_bar.dart';
 import 'package:tc_sa/common/widgets/s_icon.dart';
 import 'package:tc_sa/core/common/view_state_provider.dart';
@@ -197,27 +196,16 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                             Expanded(
                               child: OutlinedButton(
                                 onPressed: () {
-                                  final schoolCardModel = SchoolCardModel(
-                                    schoolId:
-                                        school.id?.toString() ??
-                                        widget.schoolId,
-
-                                    name: school.name ?? 'Not available',
-                                    feeRange:
-                                        school.feeRange ?? 'Not available',
-                                    location:
-                                        '${school.city ?? ''}, ${school.state ?? ''}',
-                                    board: school.board ?? 'Not available',
-                                    genderType:
-                                        school.genderType ?? 'Not available',
-                                    shifts: school.shifts ?? [],
-                                    schoolMode:
-                                        school.schoolMode ?? 'Not available',
-                                  );
-
                                   context.pushNamed(
                                     RouteNames.compareWith,
-                                    extra: schoolCardModel,
+                                    extra: {
+                                      'id':
+                                          school.id?.toString() ??
+                                          widget.schoolId, // required for API
+                                      'name':
+                                          school.name ??
+                                          'School', // optional: just for UI preview
+                                    },
                                   );
                                 },
                                 style: OutlinedButton.styleFrom(

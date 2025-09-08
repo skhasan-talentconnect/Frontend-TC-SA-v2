@@ -275,24 +275,18 @@ class AppRouter {
       ),
 
       // ✅ Compare
-      GoRoute(
-        path: '/compare',
-        name: RouteNames.compare,
-        builder: (context, state) {
-          final args = state.extra as Map<String, dynamic>;
-          return CompareSchools(
-            firstSchool: args['firstSchool'] as SchoolCardModel,
-            secondSchool: args['secondSchool'] as SchoolCardModel,
-          );
-        },
-      ),
-      GoRoute(
-        path: '/compare-with',
-        name: RouteNames.compareWith,
-        builder: (context, state) {
-          return CompareWith(school: state.extra as SchoolCardModel);
-        },
-      ),
+ GoRoute(
+      path: '/compare-with',
+      name: RouteNames.compareWith,
+      builder: (context, state) => const CompareWith(),
+    ),
+
+    // Compare: you push with extra: {'school1': Map<String,dynamic>?, 'school2': Map<String,dynamic>?}
+    GoRoute(
+      path: '/compare',
+      name: RouteNames.compare,
+      builder: (context, state) => const CompareSchools(),
+    ),
       // ✅ Blogs
       GoRoute(
         path: '/blog-result',
@@ -312,3 +306,4 @@ class AppRouter {
     ],
   );
 }
+/*
