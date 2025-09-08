@@ -15,8 +15,11 @@ class $AssetsAnimationsGen {
   /// File path: assets/animations/.gitkeep
   String get aGitkeep => 'assets/animations/.gitkeep';
 
+  /// File path: assets/animations/no_found_page.json
+  String get noFoundPage => 'assets/animations/no_found_page.json';
+
   /// List of all assets
-  List<String> get values => [aGitkeep];
+  List<String> get values => [aGitkeep, noFoundPage];
 }
 
 class $AssetsIconsGen {
