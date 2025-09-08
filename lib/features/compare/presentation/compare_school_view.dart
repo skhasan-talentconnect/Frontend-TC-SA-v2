@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
-import 'package:tc_sa/core/extensions/failure_ext.dart';
 import 'package:tc_sa/features/compare/presentation/view_models/compare_view_model.dart';
 import 'package:tc_sa/features/compare/presentation/widgets/compare_widgets.dart';
 
