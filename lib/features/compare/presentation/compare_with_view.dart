@@ -25,6 +25,7 @@ class _CompareWithState extends State<CompareWith> {
 
   bool showShortlistedOnly = false;
   String searchText = '';
+  bool _isComparing = false; // Track if comparison is in progress
 
   @override
   void initState() {
@@ -55,6 +56,7 @@ class _CompareWithState extends State<CompareWith> {
               )
               .toList();
     }
+
     return list;
   }
 

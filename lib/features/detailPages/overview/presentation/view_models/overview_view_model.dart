@@ -9,6 +9,10 @@ class OverviewViewModel extends ViewStateProvider {
   // STATE
   SchoolModel? _school;
   SchoolModel? get school => _school;
+  set school(SchoolModel? val) {
+    _school = val;
+    notifyListeners();
+  }
 
   List<SchoolModel> _schoolsByStatus = [];
   List<SchoolModel> get schoolsByStatus => _schoolsByStatus;
@@ -22,16 +26,23 @@ class OverviewViewModel extends ViewStateProvider {
     Failure? failure;
     setViewState(ViewState.busy);
 
+    print('<-----> HIT ${_school?.toJson()}');
+
     final result = await _service.getSchoolById(id: id);
 
-    result.fold((exception) {
-      failure = APIFailure.fromException(exception: exception);
-      _message = failure?.message;
-      _school = null;
-    }, (res) {
-      _school = res;
-      _message = null;
-    });
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+        _message = failure?.message;
+        school = null;
+      },
+      (res) {
+        print('<-----> HIT ${_school?.toJson()}');
+        school = res;
+        print('<-----> After HIT ${_school?.toJson()}');
+        _message = null;
+      },
+    );
 
     setViewState(ViewState.complete);
     notifyListeners();
@@ -44,14 +55,17 @@ class OverviewViewModel extends ViewStateProvider {
 
     final result = await _service.getSchoolsByStatus(status: status);
 
-    result.fold((exception) {
-      failure = APIFailure.fromException(exception: exception);
-      _message = failure?.message;
-      _schoolsByStatus = [];
-    }, (res) {
-      _schoolsByStatus = res ?? [];
-      _message = null;
-    });
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+        _message = failure?.message;
+        _schoolsByStatus = [];
+      },
+      (res) {
+        _schoolsByStatus = res ?? [];
+        _message = null;
+      },
+    );
 
     setViewState(ViewState.complete);
     notifyListeners();
@@ -102,13 +116,16 @@ class OverviewViewModel extends ViewStateProvider {
       status: status,
     );
 
-    result.fold((exception) {
-      failure = APIFailure.fromException(exception: exception);
-      _message = failure?.message;
-    }, (res) {
-      _school = res; // optional: return created school
-      _message = null;
-    });
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+        _message = failure?.message;
+      },
+      (res) {
+        _school = res; // optional: return created school
+        _message = null;
+      },
+    );
 
     setViewState(ViewState.complete);
     notifyListeners();
@@ -161,13 +178,16 @@ class OverviewViewModel extends ViewStateProvider {
       status: status,
     );
 
-    result.fold((exception) {
-      failure = APIFailure.fromException(exception: exception);
-      _message = failure?.message;
-    }, (res) {
-      _school = res; // keep local state in sync
-      _message = null;
-    });
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+        _message = failure?.message;
+      },
+      (res) {
+        _school = res; // keep local state in sync
+        _message = null;
+      },
+    );
 
     setViewState(ViewState.complete);
     notifyListeners();
@@ -180,13 +200,16 @@ class OverviewViewModel extends ViewStateProvider {
 
     final result = await _service.deleteSchool(id: id);
 
-    result.fold((exception) {
-      failure = APIFailure.fromException(exception: exception);
-      _message = failure?.message;
-    }, (res) {
-      _message = res; // optional: “deleted successfully”
-      if (_school?.id == id) _school = null;
-    });
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+        _message = failure?.message;
+      },
+      (res) {
+        _message = res; // optional: “deleted successfully”
+        if (_school?.id == id) _school = null;
+      },
+    );
 
     setViewState(ViewState.complete);
     notifyListeners();

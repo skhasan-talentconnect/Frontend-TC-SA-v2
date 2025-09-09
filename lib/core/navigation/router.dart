@@ -8,17 +8,15 @@ import 'package:tc_sa/features/application/forms/index.dart';
 import 'package:tc_sa/features/application/forms/presentation/form_details_view.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart';
 import 'package:tc_sa/features/blogs/index.dart';
+import 'package:tc_sa/features/chatbot/presentation/chatbot_view.dart';
 import 'package:tc_sa/features/compare/presentation/compare_school_view.dart';
 import 'package:tc_sa/features/compare/presentation/compare_with_view.dart';
 import 'package:tc_sa/features/detailPages/activities/presentation/activities_view.dart';
-import 'package:tc_sa/features/detailPages/activities/presentation/view_models/activities_view_model.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/alumini_view.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/view_models/alumini_view_model.dart';
 import 'package:tc_sa/features/detailPages/amenity/presentation/amenity_view.dart';
-import 'package:tc_sa/features/detailPages/amenity/presentation/view_models/amenity_view_model.dart';
 import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/overview_view.dart';
-import 'package:tc_sa/features/detailPages/overview/presentation/view_models/overview_view_model.dart';
 import 'package:tc_sa/features/detailPages/reviews/presentation/reviews_view.dart';
 import 'package:tc_sa/features/home/index.dart';
 import 'package:tc_sa/features/notifications/presentation/notification_view.dart';
@@ -176,6 +174,7 @@ class AppRouter {
           return SearchResultsPage(searchQuery: extras);
         },
       ),
+
       // ✅ Predictor
       GoRoute(
         path: '/predictor',
@@ -206,10 +205,8 @@ class AppRouter {
           if (schoolId == null) {
             return NotFoundView(isSchool: true);
           }
-          return ChangeNotifierProvider(
-            create: (_) => OverviewViewModel()..getSchoolsById(id: schoolId),
-            child: SchoolDetailView(schoolId: schoolId),
-          );
+          print('<------>ID: $schoolId');
+          return SchoolDetailView(schoolId: schoolId);
         },
       ),
       GoRoute(
@@ -238,41 +235,12 @@ class AppRouter {
       GoRoute(
         path: '/activity',
         name: RouteNames.activity,
-        builder: (context, state) {
-          final schoolId = state.extra as String;
-          return ChangeNotifierProvider(
-            create:
-                (_) =>
-                    ActivitiesViewModel()
-                      ..getActivitiesBySchoolId(schoolId: schoolId),
-            child: ActivityView(schoolId: schoolId),
-          );
-        },
+        builder: (context, state) => const ActivityView(),
       ),
       GoRoute(
         path: '/amenity',
         name: RouteNames.amenity,
-        builder: (context, state) {
-          final args =
-              (state.extra ?? const <String, dynamic>{})
-                  as Map<String, dynamic>;
-          final schoolId = args['schoolId'] as String?;
-          final schoolName = (args['schoolName'] as String?) ?? 'School';
-
-          if (schoolId == null) {
-            return const Scaffold(
-              body: Center(child: Text('Missing school context')),
-            );
-          }
-
-          return ChangeNotifierProvider(
-            create:
-                (_) =>
-                    AmenitiesViewModel()
-                      ..getAmenitiesBySchoolId(schoolId: schoolId),
-            child: AmenitiesView(schoolId: schoolId, schoolName: schoolName),
-          );
-        },
+        builder: (context, state) => const AmenitiesView(),
       ),
 
       // ✅ Reviews
@@ -314,6 +282,12 @@ class AppRouter {
         },
       ),
       GoRoute(
+        path: '/chatbot',
+        name: RouteNames.chatbot,
+        builder: (context, state) => const ChatbotView(),
+      ),
+
+      GoRoute(
         path: '/notification',
         name: RouteNames.notification,
         builder: (context, state) {
@@ -337,3 +311,7 @@ class AppRouter {
     errorBuilder: (_, __) => NotFoundView(),
   );
 }
+
+/*
+
+*/

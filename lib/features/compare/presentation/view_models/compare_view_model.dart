@@ -42,12 +42,4 @@ class CompareViewModel extends ViewStateProvider {
     setViewState(ViewState.complete);
     return failure;
   }
-
-  // void clear() {
-  //   _school1 = null;
-  //   _school2 = null;
-  //   _baseSchool = null;
-  //   setViewState(ViewState.idle);
-  //   notifyListeners();
-  // }
 }
