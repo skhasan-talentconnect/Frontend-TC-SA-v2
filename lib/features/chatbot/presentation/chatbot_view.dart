@@ -263,11 +263,8 @@ class _ChatbotViewState extends State<ChatbotView> {
                           ),
                           const Spacer(),
                           if (vm.resolvingCards)
-                            const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: SLoadingIndicator(size: 20),
-                            ),
+                            SLoadingIndicator(size: 20),
+                            
                         ],
                       ),
                       const SizedBox(height: 12),
