@@ -43,6 +43,11 @@ extension StringExt on String {
     return DateFormat('dd/MM/yyyy').format(date);
   }
 
+  String get toEEEEDDMMMYYYY {
+    DateTime date = toDate;
+    return DateFormat('EEEE, dd MMM yyyy').format(date);
+  }
+
   String get toCapitalise {
     final String string = this;
     final newString = string.replaceFirst(

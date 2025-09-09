@@ -39,4 +39,8 @@ class RouteNames {
   static const String predictorResult = 'predictor-result';
   static const String aiPredictor = 'ai-predictor';
   static const String apply = 'apply';
+
+  //applications
+  static const String myForms = 'my-forms';
+  static const String formDetails = 'form-details';
 }

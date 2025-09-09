@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tc_sa/common/widgets/s_app_bar.dart';
-import 'package:tc_sa/common/widgets/s_icon.dart';
-import 'package:tc_sa/core/common/view_state_provider.dart';
-import 'package:tc_sa/core/navigation/route_name.dart';
+import 'package:tc_sa/common/index.dart';
+import 'package:tc_sa/core/index.dart';
+import 'package:tc_sa/features/application/forms/presentation/view_models/my_form_view_model.dart';
 import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/view_models/overview_view_model.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/info_chip_widget.dart';
@@ -29,6 +28,8 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
     "Aluminis",
     "Reviews",
   ];
+
+  final MyFormViewModel myFormViewModel = MyFormViewModel();
 
   @override
   void initState() {
@@ -228,25 +229,45 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                             ),
                             const SizedBox(width: 8),
                             Expanded(
-                              child: OutlinedButton(
-                                onPressed: () {},
-                                style: OutlinedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 14,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  side: const BorderSide(color: Colors.blue),
-                                ),
-                                child: Text(
-                                  "Apply",
-                                  style: TextStyle(
-                                    fontSize: infoFont,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              child: ChangeNotifierProvider.value(
+                                value: myFormViewModel,
+                                child: Selector<MyFormViewModel, bool>(
+                                  selector: (_, vm) => vm.isLoading,
+                                  builder:
+                                      (_, isLoading, __) =>
+                                          isLoading
+                                              ? Center(
+                                                child: SLoadingIndicator(
+                                                  color: Colors.blue,
+                                                ),
+                                              )
+                                              : SButton(
+                                                onPressed: () async {
+                                                  final failure =
+                                                      await myFormViewModel
+                                                          .submitForm(
+                                                            applicationId: '',
+                                                            schoolId:
+                                                                widget.schoolId,
+                                                          );
+                                                  failure?.showError(context);
+                                                },
+                                                backgroundColor: Colors.blue,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 14,
+                                                    ),
+                                                label: '',
+                                                max: true,
+                                                text: Text(
+                                                  "Apply",
+                                                  style: TextStyle(
+                                                    fontSize: infoFont,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
                                 ),
                               ),
                             ),

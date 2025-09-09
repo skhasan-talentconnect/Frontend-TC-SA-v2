@@ -6,6 +6,11 @@ import 'package:tc_sa/features/profile/data/entities/index.dart';
 class ProfileViewModel extends ViewStateProvider {
   final List<ProfileTileModel> _routes = [
     ProfileTileModel(
+      path: RouteNames.myForms,
+      name: 'My Applications',
+      icon: Icon(Icons.assignment),
+    ),
+    ProfileTileModel(
       path: RouteNames.preferences,
       name: 'Edit Preferences',
       icon: Icon(Icons.edit),

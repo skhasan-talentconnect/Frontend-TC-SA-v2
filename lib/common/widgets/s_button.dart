@@ -7,6 +7,7 @@ class SButton extends StatelessWidget {
     this.backgroundColor,
     this.borderColor,
     this.max = false,
+    this.text,
     this.radius,
     required this.label,
     required this.onPressed,
@@ -18,6 +19,7 @@ class SButton extends StatelessWidget {
     this.backgroundColor,
     this.borderColor,
     this.max = false,
+    this.text,
     this.radius,
     required this.label,
     required this.onPressed,
@@ -31,6 +33,7 @@ class SButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? borderColor;
   final String label;
+  final Widget? text;
   final VoidCallback? onPressed;
 
   @override
@@ -57,13 +60,15 @@ class SButton extends StatelessWidget {
                       : BorderSide.none,
             ),
           ),
-          child: Text(
-            label,
-            style: STextStyles.s18W600.copyWith(
-              color: _isOutlined ? SColor.primaryColor : SColor.textColor,
-              letterSpacing: 2,
-            ),
-          ),
+          child:
+              text ??
+              Text(
+                label,
+                style: STextStyles.s18W600.copyWith(
+                  color: _isOutlined ? SColor.primaryColor : SColor.textColor,
+                  letterSpacing: 2,
+                ),
+              ),
         ),
       ],
     );

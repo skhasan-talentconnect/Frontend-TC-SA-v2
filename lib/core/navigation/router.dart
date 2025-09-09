@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/core/navigation/not_found_view.dart';
+import 'package:tc_sa/features/application/forms/index.dart';
+import 'package:tc_sa/features/application/forms/presentation/form_details_view.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart';
 import 'package:tc_sa/features/blogs/index.dart';
 import 'package:tc_sa/features/compare/presentation/compare_school_view.dart';
@@ -316,6 +318,19 @@ class AppRouter {
         name: RouteNames.notification,
         builder: (context, state) {
           return NotificationView();
+        },
+      ),
+      GoRoute(
+        path: '/my-forms',
+        name: RouteNames.myForms,
+        builder: (context, state) => MyFormViews(),
+      ),
+      GoRoute(
+        path: '/form-details',
+        name: RouteNames.formDetails,
+        builder: (context, state) {
+          final formId = state.extra as String;
+          return FormDetailsView(formId: formId);
         },
       ),
     ],

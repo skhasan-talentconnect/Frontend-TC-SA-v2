@@ -27,10 +27,10 @@ class Endpoints {
 
   //School Activities
   static const String adminSchoolsActivities = 'admin/schools/activities';
-  static const String adminSchoolsAlumnus= 'admin/alumnus';
+  static const String adminSchoolsAlumnus = 'admin/alumnus';
 
   static const String adminBlogs = 'admin/blogs';
-  static const String adminCompare='admin/compare';
+  static const String adminCompare = 'admin/compare';
 
   //Support Page
   static const String adminSupport = 'admin/support';
@@ -45,10 +45,14 @@ class Endpoints {
   static const String adminSearch = 'admin/search';
   static const String notifications = 'notifications';
 
-
   //Reviews Endpoints
   static const String reviews = 'reviews';
   static const String reviewsAdmin = 'reviews/admin';
   static const String reviewsUsers = 'reviews/users';
   static const String reviewsLike = 'reviews/like';
+
+  //Applications
+  static const String formStudent = 'form/student';
+  static const String formTrack = 'form/track';
+  static const String form = 'form';
 }
