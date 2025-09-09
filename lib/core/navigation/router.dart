@@ -239,30 +239,6 @@ class AppRouter {
       GoRoute(
         path: '/activity',
         name: RouteNames.activity,
-        builder: (context, state) => ActivityView(),
-      ),
-      GoRoute(
-        path: '/amenity',
-        name: RouteNames.amenity,
-        builder: (context, state) {
-          // final args =
-          //     (state.extra ?? const <String, dynamic>{})
-          //         as Map<String, dynamic>;
-          // final schoolId = args['schoolId'] as String?;
-          // final schoolName = (args['schoolName'] as String?) ?? 'School';
-          //
-          // if (schoolId == null) {
-          //   return const Scaffold(
-          //     body: Center(child: Text('Missing school context')),
-          //   );
-          // }
-
-          return AmenitiesView();
-        },
-      ),
-      GoRoute(
-        path: '/activity',
-        name: RouteNames.activity,
         builder: (context, state) => const ActivityView(),
       ),
       GoRoute(
