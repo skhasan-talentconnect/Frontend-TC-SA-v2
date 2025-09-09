@@ -30,8 +30,6 @@ import 'package:tc_sa/features/search/presentation/search_result_view.dart';
 import 'package:tc_sa/features/search/presentation/search_view.dart';
 import 'package:tc_sa/features/users/shortlist/index.dart';
 
-import '../../features/detailPages/overview/presentation/view_models/overview_view_model.dart';
-
 class AppRouter {
   GoRouter router = GoRouter(
     routes: [
@@ -207,10 +205,8 @@ class AppRouter {
           if (schoolId == null) {
             return NotFoundView(isSchool: true);
           }
-          return ChangeNotifierProvider(
-            create: (_) => OverviewViewModel()..getSchoolsById(id: schoolId),
-            child: SchoolDetailView(schoolId: schoolId),
-          );
+          print('<------>ID: $schoolId');
+          return SchoolDetailView(schoolId: schoolId);
         },
       ),
       GoRoute(

@@ -39,6 +39,10 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
     _vm = OverviewViewModel();
     _tabController = TabController(length: _tabs.length, vsync: this);
     _tabController.addListener(_handleTabSelection);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final failure = await _vm.getSchoolsById(id: widget.schoolId);
+      failure?.showError(context);
+    });
   }
 
   void _handleTabSelection() {
