@@ -4,10 +4,6 @@ import 'package:tc_sa/features/compare/data/data_source/data_source_impl.dart';
 import 'package:tc_sa/features/compare/data/entities/school_compare_model.dart';
 
 class CompareViewModel extends ViewStateProvider {
-  final CompareDataSourceImpl _dataSource;
-
-  CompareViewModel({CompareDataSourceImpl? dataSource})
-    : _dataSource = dataSource ?? CompareDataSourceImpl();
   final CompareDataSourceImpl _dataSource = CompareDataSourceImpl();
 
   // optional: hold base school locally (for preview on CompareWith)

@@ -30,6 +30,8 @@ import 'package:tc_sa/features/search/presentation/search_result_view.dart';
 import 'package:tc_sa/features/search/presentation/search_view.dart';
 import 'package:tc_sa/features/users/shortlist/index.dart';
 
+import '../../features/detailPages/overview/presentation/view_models/overview_view_model.dart';
+
 class AppRouter {
   GoRouter router = GoRouter(
     routes: [
@@ -237,40 +239,25 @@ class AppRouter {
       GoRoute(
         path: '/activity',
         name: RouteNames.activity,
-        builder: (context, state) {
-          final schoolId = state.extra as String;
-          return ChangeNotifierProvider(
-            create:
-                (_) =>
-                    ActivitiesViewModel()
-                      ..getActivitiesBySchoolId(schoolId: schoolId),
-            child: ActivityView(schoolId: schoolId),
-          );
-        },
+        builder: (context, state) => ActivityView(),
       ),
       GoRoute(
         path: '/amenity',
         name: RouteNames.amenity,
         builder: (context, state) {
-          final args =
-              (state.extra ?? const <String, dynamic>{})
-                  as Map<String, dynamic>;
-          final schoolId = args['schoolId'] as String?;
-          final schoolName = (args['schoolName'] as String?) ?? 'School';
+          // final args =
+          //     (state.extra ?? const <String, dynamic>{})
+          //         as Map<String, dynamic>;
+          // final schoolId = args['schoolId'] as String?;
+          // final schoolName = (args['schoolName'] as String?) ?? 'School';
+          //
+          // if (schoolId == null) {
+          //   return const Scaffold(
+          //     body: Center(child: Text('Missing school context')),
+          //   );
+          // }
 
-          if (schoolId == null) {
-            return const Scaffold(
-              body: Center(child: Text('Missing school context')),
-            );
-          }
-
-          return ChangeNotifierProvider(
-            create:
-                (_) =>
-                    AmenitiesViewModel()
-                      ..getAmenitiesBySchoolId(schoolId: schoolId),
-            child: AmenitiesView(schoolId: schoolId, schoolName: schoolName),
-          );
+          return AmenitiesView();
         },
       ),
       GoRoute(

@@ -57,7 +57,7 @@ class _CompareWithState extends State<CompareWith> {
               .toList();
     }
 
-    return schools;
+    return list;
   }
 
   @override

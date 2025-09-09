@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
-import 'package:tc_sa/common/index.dart';
-import 'package:tc_sa/common/widgets/s_app_bar.dart';
-import 'package:tc_sa/common/widgets/s_icon.dart';
-import 'package:tc_sa/core/common/view_state_provider.dart';
-import 'package:tc_sa/core/navigation/route_name.dart';
-
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/application/forms/presentation/view_models/my_form_view_model.dart';
@@ -29,9 +22,6 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
   late final OverviewViewModel _vm;
-
-  late String _resolvedSchoolId;
-  bool _resolved = false;
 
   final List<String> _tabs = const [
     "Overview",
@@ -69,7 +59,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
             RouteNames.alumini,
             extra: {
               'schoolId': widget.schoolId,
-              'schoolName': ovm.school?.name ?? 'School',
+              'schoolName': _vm.school?.name ?? 'School',
             },
           );
           break;
@@ -112,252 +102,277 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
           final tabFont = isSmall ? 14.0 : (isMed ? 16.0 : 18.0);
           final pad = isSmall ? 6.0 : (isMed ? 8.0 : 10.0);
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: SAppBar(
-        leading: SIcon(
-          icon: Icons.keyboard_arrow_left,
-          onTap: () => context.pop(),
-        ),
-        title: school?.name ?? "School",
-      ),
-      body: Builder(
-        builder: (_) {
-          if (state == ViewState.busy) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (school == null) {
-            return Center(child: Text(vm.message ?? "No data found"));
-          }
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: SAppBar(
+              leading: SIcon(
+                icon: Icons.keyboard_arrow_left,
+                onTap: () => context.pop(),
+              ),
+              title: school?.name ?? "School",
+            ),
+            body: Builder(
+              builder: (_) {
+                if (state == ViewState.busy) {
+                  return const Center(child: SLoadingIndicator());
+                }
+                if (school == null) {
+                  return Center(child: Text(vm.message ?? "No data found"));
+                }
 
-          final location = [
-            school.city,
-            school.state,
-          ].where((e) => (e ?? '').isNotEmpty).join(", ");
+                final location = [
+                  school.city,
+                  school.state,
+                ].where((e) => (e ?? '').isNotEmpty).join(", ");
 
-          return Column(
-            children: [
-              // Header (fixed)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Banner
-                  Container(
-                    height: bannerHeight,
-                    width: double.infinity,
-                    color: Colors.blue[100],
-                    child: const Center(
-                      child: Icon(Icons.school, size: 80, color: Colors.blue),
-                    ),
-                  ),
-                  // Title + location + buttons
-                  Padding(
-                    padding: EdgeInsets.all(pad),
-                    child: Column(
+                return Column(
+                  children: [
+                    // Header (fixed)
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          school.name ?? "-",
-                          style: TextStyle(
-                            fontSize: titleFont,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                        // Banner
+                        Container(
+                          height: bannerHeight,
+                          width: double.infinity,
+                          color: Colors.blue[100],
+                          child: const Center(
+                            child: Icon(
+                              Icons.school,
+                              size: 80,
+                              color: Colors.blue,
+                            ),
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 3),
-                        Row(
-                          children: [
-                            const Icon(Icons.location_on, size: 18),
-                            const SizedBox(width: 3),
-                            Text(
-                              location.isEmpty ? "-" : location,
-                              style: TextStyle(
-                                fontSize: infoFont,
-                                color: Colors.blue,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: OutlinedButton(
-                                onPressed: () {
-                                  context.pushNamed(
-                                    RouteNames.compareWith,
-                                    extra: {
-                                      'id':
-                                          school.id?.toString() ??
-                                          widget.schoolId,
-                                      'name': school.name ?? 'School',
-                                    },
-                                  );
-                                },
-                                style: OutlinedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 14,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  side: const BorderSide(color: Colors.green),
+                        // Title + location + buttons
+                        Padding(
+                          padding: EdgeInsets.all(pad),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                school.name ?? "-",
+                                style: TextStyle(
+                                  fontSize: titleFont,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
                                 ),
-                                child: Text(
-                                  "Compare",
-                                  style: TextStyle(
-                                    fontSize: infoFont,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: ChangeNotifierProvider.value(
-                                value: myFormViewModel,
-                                child: Selector<MyFormViewModel, bool>(
-                                  selector: (_, vm) => vm.isLoading,
-                                  builder:
-                                      (_, isLoading, __) =>
-                                          isLoading
-                                              ? Center(
-                                                child: SLoadingIndicator(
-                                                  color: Colors.blue,
-                                                ),
-                                              )
-                                              : SButton(
-                                                onPressed: () async {
-                                                  final failure =
-                                                      await myFormViewModel
-                                                          .submitForm(
-                                                            applicationId: '',
-                                                            schoolId:
-                                                                widget.schoolId,
-                                                          );
-                                                  failure?.showError(context);
-                                                },
-                                                backgroundColor: Colors.blue,
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      vertical: 14,
+                              const SizedBox(height: 3),
+                              Row(
+                                children: [
+                                  const Icon(Icons.location_on, size: 18),
+                                  const SizedBox(width: 3),
+                                  Text(
+                                    location.isEmpty ? "-" : location,
+                                    style: TextStyle(
+                                      fontSize: infoFont,
+                                      color: Colors.blue,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      onPressed: () {
+                                        context.pushNamed(
+                                          RouteNames.compareWith,
+                                          extra: {
+                                            'id':
+                                                school.id?.toString() ??
+                                                widget.schoolId,
+                                            'name': school.name ?? 'School',
+                                          },
+                                        );
+                                      },
+                                      style: OutlinedButton.styleFrom(
+                                        backgroundColor: Colors.green,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 14,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                        side: const BorderSide(
+                                          color: Colors.green,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "Compare",
+                                        style: TextStyle(
+                                          fontSize: infoFont,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: ChangeNotifierProvider.value(
+                                      value: myFormViewModel,
+                                      child: Selector<MyFormViewModel, bool>(
+                                        selector: (_, vm) => vm.isLoading,
+                                        builder:
+                                            (_, isLoading, __) =>
+                                                isLoading
+                                                    ? Center(
+                                                      child: SLoadingIndicator(
+                                                        color: Colors.blue,
+                                                      ),
+                                                    )
+                                                    : SButton(
+                                                      onPressed: () async {
+                                                        final failure =
+                                                            await myFormViewModel
+                                                                .submitForm(
+                                                                  applicationId:
+                                                                      '',
+                                                                  schoolId:
+                                                                      widget
+                                                                          .schoolId,
+                                                                );
+                                                        failure?.showError(
+                                                          context,
+                                                        );
+                                                      },
+                                                      backgroundColor:
+                                                          Colors.blue,
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            vertical: 14,
+                                                          ),
+                                                      label: '',
+                                                      max: true,
+                                                      text: Text(
+                                                        "Apply",
+                                                        style: TextStyle(
+                                                          fontSize: infoFont,
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
                                                     ),
-                                                label: '',
-                                                max: true,
-                                                text: Text(
-                                                  "Apply",
-                                                  style: TextStyle(
-                                                    fontSize: infoFont,
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Chips
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: pad,
+                            vertical: 6,
+                          ),
+                          child: Row(
+                            spacing: 8,
+                            children: [
+                              Expanded(
+                                child: InfoChip(
+                                  topText: school.rank ?? "-",
+                                  bottomText: "IIRF Rank",
+                                  fontSize: infoFont,
+                                  isSmallScreen: isSmall,
                                 ),
                               ),
+                              Expanded(
+                                child: InfoChip(
+                                  topText: school.board ?? "-",
+                                  bottomText: "Board",
+                                  fontSize: infoFont,
+                                  isSmallScreen: isSmall,
+                                ),
+                              ),
+                              Expanded(
+                                child: InfoChip(
+                                  topText:
+                                      (school.createdAt ?? "")
+                                              .split("T")
+                                              .first
+                                              .isEmpty
+                                          ? "-"
+                                          : (school.createdAt ?? "")
+                                              .split("T")
+                                              .first,
+                                  bottomText: "Since",
+                                  fontSize: infoFont,
+                                  isSmallScreen: isSmall,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        // Tabs
+                        Container(
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              top: BorderSide(color: Colors.grey, width: 0.4),
+                              bottom: BorderSide(
+                                color: Colors.grey,
+                                width: 0.4,
+                              ),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Chips
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: pad, vertical: 6),
-                    child: Row(
-                      spacing: 8,
-                      children: [
-                        Expanded(
-                          child: InfoChip(
-                            topText: school.rank ?? "-",
-                            bottomText: "IIRF Rank",
-                            fontSize: infoFont,
-                            isSmallScreen: isSmall,
                           ),
-                        ),
-                        Expanded(
-                          child: InfoChip(
-                            topText: school.board ?? "-",
-                            bottomText: "Board",
-                            fontSize: infoFont,
-                            isSmallScreen: isSmall,
-                          ),
-                        ),
-                        Expanded(
-                          child: InfoChip(
-                            topText:
-                                (school.createdAt ?? "")
-                                        .split("T")
-                                        .first
-                                        .isEmpty
-                                    ? "-"
-                                    : (school.createdAt ?? "").split("T").first,
-                            bottomText: "Since",
-                            fontSize: infoFont,
-                            isSmallScreen: isSmall,
+                          child: TabBar(
+                            isScrollable: true,
+                            tabAlignment: TabAlignment.start,
+                            controller: _tabController,
+                            labelColor: Colors.white,
+                            unselectedLabelColor: Colors.black,
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            indicator: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: tabFont,
+                            ),
+                            unselectedLabelStyle: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: tabFont,
+                            ),
+                            tabs: _tabs.map((tab) => Tab(text: tab)).toList(),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 15),
-                  // Tabs
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        top: BorderSide(color: Colors.grey, width: 0.4),
-                        bottom: BorderSide(color: Colors.grey, width: 0.4),
-                      ),
-                    ),
-                    child: TabBar(
-                      isScrollable: true,
-                      tabAlignment: TabAlignment.start,
-                      controller: _tabController,
-                      labelColor: Colors.white,
-                      unselectedLabelColor: Colors.black,
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      indicator: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: tabFont,
-                      ),
-                      unselectedLabelStyle: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: tabFont,
-                      ),
-                      tabs: _tabs.map((tab) => Tab(text: tab)).toList(),
-                    ),
-                  ),
-                ],
-              ),
 
-              // Overview tab content
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children:
-                      _tabs.map((tab) {
-                        if (tab == "Overview") {
-                          return _OverviewTab(school: school);
-                        }
-                        return Center(
-                          child: Text(
-                            "Tap on '$tab' tab to view details",
-                            style: TextStyle(fontSize: infoFont),
-                          ),
-                        );
-                      }).toList(),
-                ),
-              ),
-            ],
+                    // Overview tab content
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children:
+                            _tabs.map((tab) {
+                              if (tab == "Overview") {
+                                return _OverviewTab(school: school);
+                              }
+                              return Center(
+                                child: Text(
+                                  "Tap on '$tab' tab to view details",
+                                  style: TextStyle(fontSize: infoFont),
+                                ),
+                              );
+                            }).toList(),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
           );
         },
       ),
