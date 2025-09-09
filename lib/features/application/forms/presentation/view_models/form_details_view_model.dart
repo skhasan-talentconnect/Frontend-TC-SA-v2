@@ -1,0 +1,34 @@
+import 'package:tc_sa/core/index.dart';
+import 'package:tc_sa/features/application/forms/data/data_source/form_data_source_impl.dart';
+import 'package:tc_sa/features/application/forms/data/entities/form.dart';
+
+class FormDetailsViewModel extends ViewStateProvider {
+  FormDataSourceImpl formDataSourceImpl = getIt<FormDataSourceImpl>();
+
+  Form? _form;
+  Form? get form => _form;
+  set form(Form? val) {
+    _form = val;
+    notifyListeners();
+  }
+
+  Future<Failure?> getFormById({required String formId}) async {
+    Failure? failure;
+
+    setViewState(ViewState.busy);
+
+    final result = await formDataSourceImpl.getFormById(formId: formId);
+
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (res) {
+        form = res;
+      },
+    );
+
+    setViewState(ViewState.complete);
+    return failure;
+  }
+}
