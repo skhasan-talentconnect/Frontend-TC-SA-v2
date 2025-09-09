@@ -13,6 +13,7 @@ class RouteNames {
   static const String shortlist = 'shortlist';
 
   static const String blogResult = 'blog-result';
+  static const String chatbot = 'chatbot';
 
   //user
   static const String profile = 'profile';

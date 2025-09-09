@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
+import 'package:tc_sa/common/index.dart';
+import 'package:tc_sa/common/widgets/s_app_bar.dart';
+import 'package:tc_sa/common/widgets/s_icon.dart';
+import 'package:tc_sa/core/common/view_state_provider.dart';
+import 'package:tc_sa/core/navigation/route_name.dart';
+
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/application/forms/presentation/view_models/my_form_view_model.dart';
@@ -20,8 +27,13 @@ class SchoolDetailView extends StatefulWidget {
 
 class _SchoolDetailViewState extends State<SchoolDetailView>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  final List<String> _tabs = [
+  late final TabController _tabController;
+  late final OverviewViewModel _vm;
+
+  late String _resolvedSchoolId;
+  bool _resolved = false;
+
+  final List<String> _tabs = const [
     "Overview",
     "Amenities",
     "Activities",
@@ -34,6 +46,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
   @override
   void initState() {
     super.initState();
+    _vm = OverviewViewModel();
     _tabController = TabController(length: _tabs.length, vsync: this);
     _tabController.addListener(_handleTabSelection);
   }
@@ -42,9 +55,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
     if (_tabController.indexIsChanging) {
       switch (_tabController.index) {
         case 1:
-          final vm = context.read<OverviewViewModel>();
-
-          final name = vm.school?.name ?? 'School';
+          final name = _vm.school?.name ?? 'School';
           context.pushNamed(
             RouteNames.amenity,
             extra: {'schoolId': widget.schoolId, 'schoolName': name},
@@ -54,7 +65,6 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
           context.pushNamed(RouteNames.activity, extra: widget.schoolId);
           break;
         case 3:
-          final ovm = context.read<OverviewViewModel>();
           context.pushNamed(
             RouteNames.alumini,
             extra: {
@@ -80,48 +90,27 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
   void dispose() {
     _tabController.removeListener(_handleTabSelection);
     _tabController.dispose();
+    _vm.dispose(); // because we use .value below
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<OverviewViewModel>();
-    final state = vm.viewState;
-    final school = vm.school;
+    return ChangeNotifierProvider.value(
+      value: _vm,
+      child: Consumer<OverviewViewModel>(
+        builder: (_, vm, __) {
+          final state = vm.viewState;
+          final school = vm.school;
 
-    final size = MediaQuery.of(context).size;
-    final isSmall = size.width < 600;
-    final isMed = size.width >= 600 && size.width < 900;
-    final bannerHeight =
-        isSmall
-            ? 150.0
-            : isMed
-            ? 180.0
-            : 200.0;
-    final titleFont =
-        isSmall
-            ? 20.0
-            : isMed
-            ? 24.0
-            : 26.0;
-    final infoFont =
-        isSmall
-            ? 16.0
-            : isMed
-            ? 18.0
-            : 20.0;
-    final tabFont =
-        isSmall
-            ? 14.0
-            : isMed
-            ? 16.0
-            : 18.0;
-    final pad =
-        isSmall
-            ? 6.0
-            : isMed
-            ? 8.0
-            : 10.0;
+          final size = MediaQuery.of(context).size;
+          final isSmall = size.width < 600;
+          final isMed = size.width >= 600 && size.width < 900;
+          final bannerHeight = isSmall ? 150.0 : (isMed ? 180.0 : 200.0);
+          final titleFont = isSmall ? 20.0 : (isMed ? 24.0 : 26.0);
+          final infoFont = isSmall ? 16.0 : (isMed ? 18.0 : 20.0);
+          final tabFont = isSmall ? 14.0 : (isMed ? 16.0 : 18.0);
+          final pad = isSmall ? 6.0 : (isMed ? 8.0 : 10.0);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -385,35 +374,15 @@ class _OverviewTab extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final isSmall = size.width < 600;
     final isMed = size.width >= 600 && size.width < 900;
-    final cross =
-        isSmall
-            ? 2
-            : isMed
-            ? 3
-            : 4;
-    final infoFont =
-        isSmall
-            ? 16.0
-            : isMed
-            ? 18.0
-            : 20.0;
-    final pad =
-        isSmall
-            ? 8.0
-            : isMed
-            ? 12.0
-            : 16.0;
+    final cross = isSmall ? 2 : (isMed ? 3 : 4);
+    final infoFont = isSmall ? 16.0 : (isMed ? 18.0 : 20.0);
+    final pad = isSmall ? 8.0 : (isMed ? 12.0 : 16.0);
 
     final feeHi = (school.feeRange ?? "")
         .split(RegExp(r'[-–]'))
         .last
         .trim()
         .replaceAll(RegExp(r'[^\d]'), '');
-    final feeAvg =
-        (school.feeRange ?? "")
-            .split(RegExp(r'[-–]'))
-            .map((s) => s.replaceAll(RegExp(r'[^\d]'), ''))
-            .toList();
 
     return SingleChildScrollView(
       padding: EdgeInsets.all(pad),

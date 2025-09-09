@@ -8,17 +8,15 @@ import 'package:tc_sa/features/application/forms/index.dart';
 import 'package:tc_sa/features/application/forms/presentation/form_details_view.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart';
 import 'package:tc_sa/features/blogs/index.dart';
+import 'package:tc_sa/features/chatbot/presentation/chatbot_view.dart';
 import 'package:tc_sa/features/compare/presentation/compare_school_view.dart';
 import 'package:tc_sa/features/compare/presentation/compare_with_view.dart';
 import 'package:tc_sa/features/detailPages/activities/presentation/activities_view.dart';
-import 'package:tc_sa/features/detailPages/activities/presentation/view_models/activities_view_model.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/alumini_view.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/view_models/alumini_view_model.dart';
 import 'package:tc_sa/features/detailPages/amenity/presentation/amenity_view.dart';
-import 'package:tc_sa/features/detailPages/amenity/presentation/view_models/amenity_view_model.dart';
 import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/overview_view.dart';
-import 'package:tc_sa/features/detailPages/overview/presentation/view_models/overview_view_model.dart';
 import 'package:tc_sa/features/detailPages/reviews/presentation/reviews_view.dart';
 import 'package:tc_sa/features/home/index.dart';
 import 'package:tc_sa/features/notifications/presentation/notification_view.dart';
@@ -176,6 +174,7 @@ class AppRouter {
           return SearchResultsPage(searchQuery: extras);
         },
       ),
+
       // ✅ Predictor
       GoRoute(
         path: '/predictor',
@@ -274,6 +273,16 @@ class AppRouter {
           );
         },
       ),
+      GoRoute(
+        path: '/activity',
+        name: RouteNames.activity,
+        builder: (context, state) => const ActivityView(),
+      ),
+      GoRoute(
+        path: '/amenity',
+        name: RouteNames.amenity,
+        builder: (context, state) => const AmenitiesView(),
+      ),
 
       // ✅ Reviews
       GoRoute(
@@ -314,6 +323,12 @@ class AppRouter {
         },
       ),
       GoRoute(
+        path: '/chatbot',
+        name: RouteNames.chatbot,
+        builder: (context, state) => const ChatbotView(),
+      ),
+
+      GoRoute(
         path: '/notification',
         name: RouteNames.notification,
         builder: (context, state) {
@@ -337,3 +352,7 @@ class AppRouter {
     errorBuilder: (_, __) => NotFoundView(),
   );
 }
+
+/*
+
+*/

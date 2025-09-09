@@ -1,0 +1,75 @@
+import 'package:dartz/dartz.dart';
+import 'package:tc_sa/core/index.dart';
+import 'package:tc_sa/features/chatbot/data/data_source/data_source.dart';
+import 'package:tc_sa/features/chatbot/data/entities/chatbot_question_model.dart';
+
+import 'package:tc_sa/features/chatbot/data/entities/filter_id_model.dart';
+
+
+class ChatbotDataSourceImpl implements ChatbotDataSource {
+  final _networkService = getIt<NetworkService>();
+  String get _base => Endpoints.chatbotBase;
+
+  @override
+  ResultFuture<List<ChatbotQuestion>> getQuestions() async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: '$_base/questions',
+    );
+    try {
+      final result = await _networkService.request(request);
+      final list = result.data?['data'] as List<dynamic>? ?? const [];
+      return Right(list
+          .map((e) => ChatbotQuestion.fromJson(e as Map<String, dynamic>))
+          .toList());
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
+
+  @override
+  ResultFuture<List<ChatbotQuestion>> getQuestionsByCategory(String category) async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: '$_base/questions/category/$category',
+    );
+    try {
+      final result = await _networkService.request(request);
+      final list = result.data?['data'] as List<dynamic>? ?? const [];
+      return Right(list
+          .map((e) => ChatbotQuestion.fromJson(e as Map<String, dynamic>))
+          .toList());
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
+
+  @override
+  ResultFuture<FilterIdsResult> filterByQuestion(int questionId) async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: '$_base/filter/question/$questionId',
+    );
+    try {
+      final result = await _networkService.request(request);
+      return Right(FilterIdsResult.fromJson(result.data as Map<String, dynamic>));
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
+
+  @override
+  ResultFuture<FilterIdsResult> filterWithMultipleCriteria(Map<String, dynamic> filters) async {
+    final request = Request(
+      method: RequestMethod.post,
+      endpoint: '$_base/filter',
+      body: filters,
+    );
+    try {
+      final result = await _networkService.request(request);
+      return Right(FilterIdsResult.fromJson(result.data as Map<String, dynamic>));
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
+}
