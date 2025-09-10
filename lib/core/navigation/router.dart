@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/core/navigation/not_found_view.dart';
+import 'package:tc_sa/features/application/applications/presentation/application_view.dart';
 import 'package:tc_sa/features/application/forms/index.dart';
 import 'package:tc_sa/features/application/forms/presentation/form_details_view.dart';
+import 'package:tc_sa/features/application/pdfModule/presentation/pdf_view.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart';
 import 'package:tc_sa/features/blogs/index.dart';
 import 'package:tc_sa/features/chatbot/presentation/chatbot_view.dart';
@@ -297,7 +299,8 @@ class AppRouter {
       GoRoute(
         path: '/my-forms',
         name: RouteNames.myForms,
-        builder: (context, state) => MyFormViews(),
+       // builder: (context, state) => MyFormViews(),
+       builder: (context, state) => const ApplicationFormView(),
       ),
       GoRoute(
         path: '/form-details',
@@ -307,6 +310,17 @@ class AppRouter {
           return FormDetailsView(formId: formId);
         },
       ),
+      GoRoute(
+  path: '/addApplication',
+  name: RouteNames.addApplication,
+  builder: (context, state) => const ApplicationFormView(),
+),
+GoRoute(
+  path: '/application-pdf',
+  name: RouteNames.applicationPdf,
+  builder: (context, state) => const StudentPdfScreen(),
+),
+
     ],
     errorBuilder: (_, __) => NotFoundView(),
   );

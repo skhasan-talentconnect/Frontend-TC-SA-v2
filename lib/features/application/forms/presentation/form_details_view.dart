@@ -98,7 +98,7 @@ class _FormDetailsViewState extends State<FormDetailsView> {
                                     Text(
                                       formDetailsViewModel
                                               .form
-                                              ?.school
+                                             
                                               ?.createdAt
                                               ?.toEEEEDDMMMYYYY ??
                                           'Tue, 09th Sept 2025',

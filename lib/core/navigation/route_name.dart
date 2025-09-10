@@ -44,4 +44,6 @@ class RouteNames {
   //applications
   static const String myForms = 'my-forms';
   static const String formDetails = 'form-details';
+static const String applicationPdf='applicationPdf';
+  static const String addApplication='addApplication';
 }
