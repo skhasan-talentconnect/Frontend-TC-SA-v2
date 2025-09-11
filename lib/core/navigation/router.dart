@@ -300,7 +300,7 @@ class AppRouter {
         path: '/my-forms',
         name: RouteNames.myForms,
        // builder: (context, state) => MyFormViews(),
-       builder: (context, state) => const ApplicationFormView(),
+       builder: (context, state) => const MyFormViews(),
       ),
       GoRoute(
         path: '/form-details',
