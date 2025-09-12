@@ -10,6 +10,11 @@ class ProfileViewModel extends ViewStateProvider {
       name: 'My Applications',
       icon: Icon(Icons.assignment),
     ),
+     ProfileTileModel(
+      path: RouteNames.registerSchool,
+      name: 'Register Your School',
+      icon: Icon(Icons.book)
+    ),
     ProfileTileModel(
       path: RouteNames.preferences,
       name: 'Edit Preferences',

@@ -80,7 +80,8 @@ class _AuthViewState extends State<AuthView> {
                                 GestureDetector(
                                   onTap: () {
                                     context.pushNamed(
-                                      RouteNames.forgetPassword,
+                                      //RouteNames.forgetPassword,
+                                      RouteNames.addNumber
                                     );
                                   },
                                   child: Text(

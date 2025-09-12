@@ -443,10 +443,10 @@ final List<Sibling> siblingList = _siblings
                                   _speciallyAbledTypeCtrl),
                             _input("Nationality", _nationalityCtrl, req: true),
                             _input("Religion", _religionCtrl, req: true),
-                            _input("Caste", _casteCtrl, req: true),
+                            _input("Caste", _casteCtrl),
                             _input("Subcaste (optional)", _subcasteCtrl),
                             _input("Aadhar No", _aadharCtrl, req: true),
-                            _input("Blood Group", _bloodGroupCtrl, req: true),
+                            _input("Blood Group", _bloodGroupCtrl),
                             _input("Allergic To (optional)", _allergicToCtrl),
                             _input("Interest", _interestCtrl, req: true),
 

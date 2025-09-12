@@ -39,6 +39,7 @@ dependencies:
   permission_handler: ^11.3.1
   provider: ^6.1.5+1
   stylish_bottom_bar: ^1.1.1
+  url_launcher: ^6.3.0
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
   freezed: ^3.2.0
