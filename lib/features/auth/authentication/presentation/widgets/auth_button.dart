@@ -7,12 +7,13 @@ class AuthButton extends StatelessWidget {
     required this.move,
     required this.onPressed,
     required this.onGooglePressed,
-    super.key,
+    super.key, required this.OnMobilePressed,
   });
 
   final bool isLogin;
   final VoidCallback onPressed;
   final VoidCallback onGooglePressed;
+  final VoidCallback OnMobilePressed;
   final void Function(bool isLogin) move;
 
   @override
@@ -28,11 +29,18 @@ class AuthButton extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 12),
             onPressed: onPressed,
           ),
+          
           SButton.outlined(
             label: '${isLogin ? 'Sign in' : 'Sign up'} with Google',
             max: true,
             padding: EdgeInsets.symmetric(vertical: 12),
             onPressed: onGooglePressed,
+          ),
+           SButton.outlined(
+            label: '${isLogin ? 'Sign in with Mobile Number' : 'Sign up'}',
+            max: true,
+            padding: EdgeInsets.symmetric(vertical: 12),
+            onPressed: OnMobilePressed,
           ),
           InkWell(
             splashFactory: NoSplash.splashFactory,

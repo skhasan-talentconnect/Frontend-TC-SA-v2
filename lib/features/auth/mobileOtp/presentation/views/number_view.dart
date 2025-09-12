@@ -42,9 +42,11 @@ class _AddPhoneViewState extends State<AddPhoneView> {
         builder: (_, v, __) {
           final busy = v.viewState == ViewState.busy;
           return Scaffold(
-            appBar: const SAppBar(
+            appBar:  SAppBar(
               title: 'Register via Mobile',
-              leading: SIcon(icon: Icons.arrow_back),
+              actions: [],
+             leading: SIcon(icon: Icons.keyboard_arrow_left,
+          onTap: () => Navigator.of(context).pop())
             ),
             body: Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),

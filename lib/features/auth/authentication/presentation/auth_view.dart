@@ -80,8 +80,8 @@ class _AuthViewState extends State<AuthView> {
                                 GestureDetector(
                                   onTap: () {
                                     context.pushNamed(
-                                      //RouteNames.forgetPassword,
-                                      RouteNames.addNumber
+                                      RouteNames.forgetPassword,
+                                  
                                     );
                                   },
                                   child: Text(
@@ -158,6 +158,9 @@ class _AuthViewState extends State<AuthView> {
                               },
                             );
                           }
+                        },
+                        OnMobilePressed:() {
+                          context.pushNamed(RouteNames.addNumber);
                         },
                         onGooglePressed: () async {
                           GoogleSignIn googleSignIn = GoogleSignIn.instance;
