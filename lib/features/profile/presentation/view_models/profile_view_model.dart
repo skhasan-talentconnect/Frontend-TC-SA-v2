@@ -20,6 +20,7 @@ class ProfileViewModel extends ViewStateProvider {
       name: 'Reset Password',
       icon: Icon(Icons.lock_reset),
     ),
+    ProfileTileModel(path:RouteNames.addApplication,name: 'Fill Application Form', icon: Icon(Icons.assignment)),
     ProfileTileModel(name: 'Contact Us', icon: Icon(Icons.phone)),
     ProfileTileModel(name: 'Support', icon: Icon(Icons.support_agent)),
     ProfileTileModel(name: 'Logout', icon: Icon(Icons.logout)),

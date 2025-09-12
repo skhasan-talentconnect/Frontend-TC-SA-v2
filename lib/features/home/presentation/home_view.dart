@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/home/presentation/widgets/s_drawer.dart';
-
+import 'package:go_router/go_router.dart';
 class HomeView extends StatefulWidget {
   const HomeView({required this.navigationShell, super.key});
 
@@ -47,9 +47,17 @@ class _HomeViewState extends State<HomeView> {
             _scaffoldKey.currentState?.openDrawer();
           },
         ),
+
       ),
 
       drawer: SDrawer(),
+ floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.pushNamed(RouteNames.chatbot);
+        },
+        child: Icon(Icons.android_outlined), 
+        backgroundColor: Colors.lightBlueAccent, 
+      ),
 
       body: Padding(
         padding: EdgeInsets.only(right: 20, left: 20, top: 8, bottom: 0),

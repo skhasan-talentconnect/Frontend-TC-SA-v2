@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart'
-    show SColor, STextStyles, STextField, SButton;
+    show SColor, STextStyles, STextField, SButton, SAppBar, SIcon;
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/predictor/presentation/view_models/predictor_view_model.dart';
 
@@ -27,18 +27,18 @@ class _PredictorPageState extends State<PredictorPage> {
     return ChangeNotifierProvider.value(
       value: viewModel,
       child: Scaffold(
-        // appBar: SAppBar(
-        //   title: 'Predict Schools',
-        //   leading: SIcon(
-        //     icon: Icons.keyboard_arrow_left,
-        //     onTap: () {
-        //       context.pop();
-        //     },
-        //   ),
-        // ),
+        appBar: SAppBar(
+          title: 'Predict Schools',
+          leading: SIcon(
+            icon: Icons.keyboard_arrow_left,
+            onTap: () {
+              context.pop();
+            },
+          ),
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
-            // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
