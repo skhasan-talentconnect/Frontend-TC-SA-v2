@@ -1,9 +1,9 @@
 // lib/features/auth/otp/presentation/pages/add_phone_view.dart
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tc_sa/common/index.dart' show SAppBar, SIcon, STextStyles, SColor;
-
+import 'package:provider/provider.dart';
+import 'package:tc_sa/common/index.dart'
+    show SAppBar, SIcon, STextStyles, SColor;
 import 'package:tc_sa/core/index.dart' show RouteNames, ViewState;
 import 'package:tc_sa/features/auth/mobileOtp/presentation/view_model/otp_view_model.dart';
 
@@ -42,11 +42,13 @@ class _AddPhoneViewState extends State<AddPhoneView> {
         builder: (_, v, __) {
           final busy = v.viewState == ViewState.busy;
           return Scaffold(
-            appBar:  SAppBar(
+            appBar: SAppBar(
               title: 'Register via Mobile',
               actions: [],
-             leading: SIcon(icon: Icons.keyboard_arrow_left,
-          onTap: () => Navigator.of(context).pop())
+              leading: SIcon(
+                icon: Icons.keyboard_arrow_left,
+                onTap: () => Navigator.of(context).pop(),
+              ),
             ),
             body: Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
@@ -56,7 +58,9 @@ class _AddPhoneViewState extends State<AddPhoneView> {
                   children: [
                     Text(
                       'Enter your mobile number to receive an OTP.',
-                      style: STextStyles.s14W400.copyWith(color: SColor.secTextColor),
+                      style: STextStyles.s14W400.copyWith(
+                        color: SColor.secTextColor,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
@@ -71,7 +75,8 @@ class _AddPhoneViewState extends State<AddPhoneView> {
                         final t = (v ?? '').trim();
                         if (t.isEmpty) return 'Required';
                         // basic check; tweak as you need
-                        if (!RegExp(r'^\+?\d{10,15}$').hasMatch(t)) return 'Invalid phone';
+                        if (!RegExp(r'^\+?\d{10,15}$').hasMatch(t))
+                          return 'Invalid phone';
                         return null;
                       },
                     ),
@@ -83,9 +88,14 @@ class _AddPhoneViewState extends State<AddPhoneView> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: SColor.primaryColor,
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
-                        child: const Text('Send OTP'),
+                        child: const Text(
+                          'Send OTP',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                   ],

@@ -1,11 +1,11 @@
 // lib/features/auth/otp/presentation/pages/verify_otp_view.dart
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tc_sa/common/index.dart' show SAppBar, SIcon, STextStyles, SColor;
+import 'package:provider/provider.dart';
+import 'package:tc_sa/common/index.dart'
+    show SAppBar, SIcon, STextStyles, SColor;
 import 'package:tc_sa/core/index.dart' show RouteNames, ViewState;
 import 'package:tc_sa/features/auth/mobileOtp/presentation/view_model/otp_view_model.dart';
-
 
 class VerifyOtpView extends StatefulWidget {
   final String phone; // passed as extra from AddPhoneView
@@ -29,15 +29,15 @@ class _VerifyOtpViewState extends State<VerifyOtpView> {
 
   Future<void> _verify() async {
     if (!_formKey.currentState!.validate()) return;
- final err = await _vm.verifyOtp(
-  phone: widget.phone,
-  otp: _otpCtrl.text.trim(),
-  context: context,
-);
+    final err = await _vm.verifyOtp(
+      phone: widget.phone,
+      otp: _otpCtrl.text.trim(),
+      context: context,
+    );
 
-if (err.isRight() && mounted) {
-  context.pushNamed(RouteNames.addEditPreferences,extra: false);
-}
+    if (err.isRight() && mounted) {
+      context.pushNamed(RouteNames.addEditPreferences, extra: false);
+    }
   }
 
   @override
@@ -48,11 +48,13 @@ if (err.isRight() && mounted) {
         builder: (_, v, __) {
           final busy = v.viewState == ViewState.busy;
           return Scaffold(
-            appBar:  SAppBar(
+            appBar: SAppBar(
               title: 'Verify OTP',
               actions: [],
-             leading: SIcon(icon: Icons.keyboard_arrow_left,
-          onTap: () => Navigator.of(context).pop())
+              leading: SIcon(
+                icon: Icons.keyboard_arrow_left,
+                onTap: () => Navigator.of(context).pop(),
+              ),
             ),
             body: Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
@@ -62,7 +64,9 @@ if (err.isRight() && mounted) {
                   children: [
                     Text(
                       'Enter the 6-digit OTP sent to ${widget.phone}.',
-                      style: STextStyles.s14W400.copyWith(color: SColor.secTextColor),
+                      style: STextStyles.s14W400.copyWith(
+                        color: SColor.secTextColor,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
@@ -76,7 +80,8 @@ if (err.isRight() && mounted) {
                       validator: (v) {
                         final t = (v ?? '').trim();
                         if (t.isEmpty) return 'Required';
-                        if (!RegExp(r'^\d{4,8}$').hasMatch(t)) return 'Invalid OTP';
+                        if (!RegExp(r'^\d{4,8}$').hasMatch(t))
+                          return 'Invalid OTP';
                         return null;
                       },
                     ),
@@ -88,9 +93,14 @@ if (err.isRight() && mounted) {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: SColor.primaryColor,
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
-                        child: const Text('Verify'),
+                        child: const Text(
+                          'Verify',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                   ],
