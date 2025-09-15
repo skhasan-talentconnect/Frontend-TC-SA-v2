@@ -9,6 +9,8 @@ import 'package:tc_sa/features/application/forms/index.dart';
 import 'package:tc_sa/features/application/forms/presentation/form_details_view.dart';
 import 'package:tc_sa/features/application/pdfModule/presentation/pdf_view.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart';
+import 'package:tc_sa/features/auth/mobileOtp/presentation/views/number_view.dart';
+import 'package:tc_sa/features/auth/mobileOtp/presentation/views/otp_view.dart';
 import 'package:tc_sa/features/blogs/index.dart';
 import 'package:tc_sa/features/chatbot/presentation/chatbot_view.dart';
 import 'package:tc_sa/features/compare/presentation/compare_school_view.dart';
@@ -27,6 +29,7 @@ import 'package:tc_sa/features/predictor/presentation/view_models/predictor_view
 import 'package:tc_sa/features/preferences/presentation/pref_view.dart';
 import 'package:tc_sa/features/profile/presentation/add_edit_profile_view.dart';
 import 'package:tc_sa/features/profile/presentation/profile_view.dart';
+import 'package:tc_sa/features/registerSchool/register_school_view.dart';
 import 'package:tc_sa/features/search/data/entities/search_query.dart';
 import 'package:tc_sa/features/search/presentation/search_result_view.dart';
 import 'package:tc_sa/features/search/presentation/search_view.dart';
@@ -319,6 +322,21 @@ GoRoute(
   path: '/application-pdf',
   name: RouteNames.applicationPdf,
   builder: (context, state) => const StudentPdfScreen(),
+),
+GoRoute(
+  path :'/registerSchool',
+  name : RouteNames.registerSchool,
+  builder : (context,state)=> const SchoolRegistrationInfoPage(),
+),
+GoRoute(
+  name: RouteNames.addNumber,
+  path: '/register/number',
+  builder: (context,state) => const AddPhoneView()
+),
+GoRoute(
+  name: RouteNames.addOtp,
+  path: '/register/otp',
+  builder: (context,state) =>VerifyOtpView(phone: state.extra as String)
 ),
 
     ],

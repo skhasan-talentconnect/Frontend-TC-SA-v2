@@ -134,9 +134,15 @@ class _ProfileViewState extends State<ProfileView> {
                               noBorder: true,
                               onTap: () async {
                                 if (route.name != "Logout") {
-                                  Toasts.showInfoToast(context, message: 'Still in development');
+                                  Toasts.showInfoToast(
+                                    context,
+                                    message: 'Still in development',
+                                  );
                                 } else {
                                   await SecretRepo.remove('auth_token');
+                                  getIt<AppStateProvider>().authModel = null;
+                                  getIt<AppStateProvider>().user = null;
+                                  getIt<AppStateProvider>().userPref = null;
                                   context.goNamed(RouteNames.loginRegister);
                                 }
                               },

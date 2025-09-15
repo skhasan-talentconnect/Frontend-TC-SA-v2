@@ -13,6 +13,9 @@ class Endpoints {
   static const String authGoogle = 'auth/google';
   static const String authVerifyEmail = 'auth/verify-email';
 
+  static const String authSendOtp   = 'otp/send-otp';
+  static const String authVerifyOtp = 'otp/verify-otp';
+
   //User Endpoints
   static const String usersPreferences = 'users/preferences';
   static const String users = 'users';

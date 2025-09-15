@@ -39,6 +39,7 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
                 : STextStyles.s14W600.copyWith(color: SColor.secTextColor),
       ),
       backgroundColor: backgroundColor ?? SColor.backgroundColor,
+      scrolledUnderElevation: 0,
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(0.25),
         child: Container(

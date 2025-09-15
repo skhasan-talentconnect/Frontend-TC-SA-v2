@@ -110,7 +110,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                       controller: emailController,
                                       label: 'Email*',
                                       hint: 'Enter email',
-                                      enable: widget.isEdit,
+                                      enable: getIt<AppStateProvider>().authModel?.email!=Null,
                                       prefixIcon: Icon(Icons.email),
                                     ),
                                     STextField(

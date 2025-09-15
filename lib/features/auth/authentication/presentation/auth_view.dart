@@ -81,6 +81,7 @@ class _AuthViewState extends State<AuthView> {
                                   onTap: () {
                                     context.pushNamed(
                                       RouteNames.forgetPassword,
+                                  
                                     );
                                   },
                                   child: Text(
@@ -157,6 +158,9 @@ class _AuthViewState extends State<AuthView> {
                               },
                             );
                           }
+                        },
+                        OnMobilePressed:() {
+                          context.pushNamed(RouteNames.addNumber);
                         },
                         onGooglePressed: () async {
                           GoogleSignIn googleSignIn = GoogleSignIn.instance;
