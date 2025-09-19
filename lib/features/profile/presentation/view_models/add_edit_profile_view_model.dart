@@ -20,6 +20,7 @@ class AddEditProfileViewModel extends ViewStateProvider {
     required String state,
     required String city,
     required String gender,
+    required String area,
     required String dateOfBirth,
   }) async {
     setViewState(ViewState.busy);
@@ -31,6 +32,7 @@ class AddEditProfileViewModel extends ViewStateProvider {
       email: email,
       phone: phone,
       state: state,
+      area: area,
       city: city,
       gender: gender,
       dateOfBirth: dateOfBirth,
@@ -55,6 +57,7 @@ class AddEditProfileViewModel extends ViewStateProvider {
     required String email,
     required String phone,
     required String state,
+    required String area,
     required String city,
     required String gender,
     required String dateOfBirth,
@@ -69,6 +72,7 @@ class AddEditProfileViewModel extends ViewStateProvider {
       phone: phone,
       state: state,
       city: city,
+      area: area,
       gender: gender,
       dateOfBirth: dateOfBirth,
     );

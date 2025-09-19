@@ -9,6 +9,7 @@ import 'package:tc_sa/features/detailPages/overview/presentation/view_models/ove
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/info_chip_widget.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/quick_highlight_widget.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/recruiter_chip_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SchoolDetailView extends StatefulWidget {
   const SchoolDetailView({super.key, required this.schoolId});
@@ -169,11 +170,41 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                                 children: [
                                   const Icon(Icons.location_on, size: 18),
                                   const SizedBox(width: 3),
-                                  Text(
-                                    location.isEmpty ? "-" : location,
-                                    style: TextStyle(
-                                      fontSize: infoFont,
-                                      color: Colors.blue,
+                                  GestureDetector(
+                                    onTap: () async {
+                                      if (location.isNotEmpty) {
+                                        final query = Uri.encodeComponent(
+                                          location,
+                                        );
+                                        final url = Uri.parse(
+                                          "https://www.google.com/maps/search/?api=1&query=$query",
+                                        );
+
+                                        if (!await launchUrl(
+                                          url,
+                                          mode: LaunchMode.externalApplication,
+                                        )) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                "Could not open Maps",
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      }
+                                    },
+                                    child: Text(
+                                      location.isEmpty ? "-" : location,
+                                      style: TextStyle(
+                                        fontSize: infoFont,
+                                        color: Colors.blue,
+                                        decoration:
+                                            TextDecoration
+                                                .underline, // makes it look clickable
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -331,6 +362,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                           ),
                           child: TabBar(
                             isScrollable: true,
+            
                             tabAlignment: TabAlignment.start,
                             controller: _tabController,
                             labelColor: Colors.white,
@@ -359,6 +391,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                     Expanded(
                       child: TabBarView(
                         controller: _tabController,
+                            physics: const NeverScrollableScrollPhysics(),
                         children:
                             _tabs.map((tab) {
                               if (tab == "Overview") {

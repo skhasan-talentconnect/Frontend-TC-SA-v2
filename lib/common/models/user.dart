@@ -14,6 +14,7 @@ abstract class User with _$User {
     String? gender,
     String? state,
     String? city,
+    String? area,
     List<String>? shortlistedSchools,
     String? userType,
     @JsonKey(name: '_id') String? sId,

@@ -11,6 +11,7 @@ class STextField extends StatefulWidget {
     this.suffixIcon,
     this.enable = true,
     this.validator,
+    this.onChanged,
     this.dividerHeight,
     super.key,
   }) : _isDropDown = false,
@@ -25,6 +26,7 @@ class STextField extends StatefulWidget {
     this.suffixIcon,
     this.enable = true,
     this.validator,
+    this.onChanged,
     this.dividerHeight,
     super.key,
   }) : _isDropDown = true,
@@ -39,6 +41,7 @@ class STextField extends StatefulWidget {
     this.suffixIcon,
     this.enable = true,
     this.validator,
+    this.onChanged,
     this.dividerHeight,
     super.key,
   }) : _isDropDown = false,
@@ -56,6 +59,7 @@ class STextField extends StatefulWidget {
   final List<String>? items;
   final double? dividerHeight;
   final String? Function(String? val)? validator;
+  final void Function(String? val)? onChanged;
 
   @override
   State<STextField> createState() => _STextFieldState();
@@ -116,6 +120,7 @@ class _STextFieldState extends State<STextField> {
                             enabled: widget.enable ?? true,
                             obscureText: widget._isPassword && !visible,
                             obscuringCharacter: '*',
+
                             validator: widget.validator,
                             decoration: InputDecoration(
                               border: InputBorder.none,
@@ -137,6 +142,12 @@ class _STextFieldState extends State<STextField> {
                   ? GestureDetector(
                     onTap: () {
                       if (widget.enable ?? true) {
+                        final hasItems = (widget.items ?? []).isNotEmpty;
+                        if (!hasItems) {
+                          _isExpanded.value = false;
+                          return;
+                        }
+
                         _isExpanded.value = !_isExpanded.value;
                       }
                     },
@@ -194,9 +205,18 @@ class _STextFieldState extends State<STextField> {
                                 final item = widget.items?[index] ?? '';
                                 return GestureDetector(
                                   onTap: () {
+                                    // update controller first
                                     widget.controller.text = item;
+
+                                    // then call onChanged with the new value
+                                    if (widget.onChanged != null) {
+                                      widget.onChanged!(item);
+                                    }
+
+                                    // finally close the dropdown
                                     _isExpanded.value = false;
                                   },
+
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [

@@ -11,6 +11,7 @@ abstract class ProfileDataSource {
     required String state,
     required String city,
     required String gender,
+    required String area,
     required String dateOfBirth,
   });
 
@@ -20,6 +21,7 @@ abstract class ProfileDataSource {
     required String phone,
     required String state,
     required String city,
+    required String area,
     required String gender,
     required String dateOfBirth,
   });

@@ -44,10 +44,13 @@ class ChatbotDataSourceImpl implements ChatbotDataSource {
 
   // Updated method to include the `useAI` flag.
   @override
-  ResultFuture<FilterIdsResult> filterByQuestion(int questionId, bool useAI) async {
+  ResultFuture<FilterIdsResult> filterByQuestion({required int questionId,required bool useAI, bool? useArea, bool? useCity}) async {
+    final area=(useArea ?? false) ? "&area=${getIt<AppStateProvider>().user?.area}" : '';
+     final city=(useCity ?? false) ? "&city=${getIt<AppStateProvider>().user?.city}" : '';
+   final requestUrl= '$_base/filter/question/$questionId?useAI=$useAI$area$city';
     final request = Request(
       method: RequestMethod.get,
-      endpoint: '$_base/filter/question/$questionId?useAI=$useAI',
+      endpoint: requestUrl,
     );
     try {
       final result = await _networkService.request(request);
