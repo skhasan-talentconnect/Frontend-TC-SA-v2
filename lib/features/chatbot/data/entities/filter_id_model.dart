@@ -1,24 +1,43 @@
+// features/chatbot/data/entities/filter_id_model.dart
+
 class FilterIdsResult {
   final int count;
-  final List<String> schoolIds;
+  final List<String> schoolIds; // From DB filter
+  final List<String> recommendedSchools; // From AI filter
+  final String? aiResponse;
 
   FilterIdsResult({
     required this.count,
     required this.schoolIds,
+    required this.recommendedSchools,
+    this.aiResponse,
   });
 
   factory FilterIdsResult.fromJson(Map<String, dynamic> json) {
+    // The count field is not always present in the AI response, so default to 0.
+    final int count = (json['count'] ?? 0) as int;
+
+    // Use a null-aware operator `??` to provide a default empty list if the key is missing.
+    final List<String> schoolIds = (json['schoolIds'] as List<dynamic>?)
+            ?.map((e) => e?.toString() ?? '')
+            .where((s) => s.isNotEmpty)
+            .toList() ??
+        [];
+
+    final List<String> recommendedSchools =
+        (json['recommendedSchools'] as List<dynamic>?)
+                ?.map((e) => e?.toString() ?? '')
+                .where((s) => s.isNotEmpty)
+                .toList() ??
+            [];
+
+    final String? aiResponse = json['aiResponse'] as String?;
+
     return FilterIdsResult(
-      count: (json['count'] ?? 0) is int ? json['count'] : int.tryParse('${json['count']}') ?? 0,
-      schoolIds: (json['schoolIds'] as List<dynamic>? ?? const [])
-          .map((e) => e?.toString() ?? '')
-          .where((s) => s.isNotEmpty)
-          .toList(),
+      count: count,
+      schoolIds: schoolIds,
+      recommendedSchools: recommendedSchools,
+      aiResponse: aiResponse,
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    'count': count,
-    'schoolIds': schoolIds,
-  };
 }

@@ -2,9 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/chatbot/data/data_source/data_source.dart';
 import 'package:tc_sa/features/chatbot/data/entities/chatbot_question_model.dart';
-
 import 'package:tc_sa/features/chatbot/data/entities/filter_id_model.dart';
-
 
 class ChatbotDataSourceImpl implements ChatbotDataSource {
   final _networkService = getIt<NetworkService>();
@@ -44,11 +42,12 @@ class ChatbotDataSourceImpl implements ChatbotDataSource {
     }
   }
 
+  // Updated method to include the `useAI` flag.
   @override
-  ResultFuture<FilterIdsResult> filterByQuestion(int questionId) async {
+  ResultFuture<FilterIdsResult> filterByQuestion(int questionId, bool useAI) async {
     final request = Request(
       method: RequestMethod.get,
-      endpoint: '$_base/filter/question/$questionId',
+      endpoint: '$_base/filter/question/$questionId?useAI=$useAI',
     );
     try {
       final result = await _networkService.request(request);
@@ -59,10 +58,10 @@ class ChatbotDataSourceImpl implements ChatbotDataSource {
   }
 
   @override
-  ResultFuture<FilterIdsResult> filterWithMultipleCriteria(Map<String, dynamic> filters) async {
+  ResultFuture<FilterIdsResult> filterWithMultipleCriteria(Map<String, dynamic> filters, bool useAI) async {
     final request = Request(
       method: RequestMethod.post,
-      endpoint: '$_base/filter',
+      endpoint: '$_base/filter?useAI=$useAI',
       body: filters,
     );
     try {
