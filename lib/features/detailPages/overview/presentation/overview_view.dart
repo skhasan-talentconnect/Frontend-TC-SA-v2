@@ -177,7 +177,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                                           location,
                                         );
                                         final url = Uri.parse(
-                                          "https://www.google.com/maps/search/?api=1&query=$query",
+                                          "https://www.google.com/maps/search/?api=1&query=${school.name?.split(' ').join('+')}+$query",
                                         );
 
                                         if (!await launchUrl(
@@ -362,7 +362,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                           ),
                           child: TabBar(
                             isScrollable: true,
-            
+
                             tabAlignment: TabAlignment.start,
                             controller: _tabController,
                             labelColor: Colors.white,
@@ -391,7 +391,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                     Expanded(
                       child: TabBarView(
                         controller: _tabController,
-                            physics: const NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         children:
                             _tabs.map((tab) {
                               if (tab == "Overview") {

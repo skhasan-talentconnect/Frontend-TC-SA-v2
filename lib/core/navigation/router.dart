@@ -19,7 +19,6 @@ import 'package:tc_sa/features/detailPages/activities/presentation/activities_vi
 import 'package:tc_sa/features/detailPages/alumini/presentation/alumini_view.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/view_models/alumini_view_model.dart';
 import 'package:tc_sa/features/detailPages/amenity/presentation/amenity_view.dart';
-import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/overview_view.dart';
 import 'package:tc_sa/features/detailPages/reviews/presentation/reviews_view.dart';
 import 'package:tc_sa/features/home/index.dart';
@@ -63,7 +62,7 @@ class AppRouter {
           GoRoute(
             path: '/services',
             name: RouteNames.services,
-            builder: (context, state) => PredictorPage(),
+            builder: (context, state) => SchoolResultsPage(),
           ),
           GoRoute(
             path: '/shortlist',
@@ -193,14 +192,14 @@ class AppRouter {
           );
         },
       ),
-      GoRoute(
-        path: '/predictor-result',
-        name: RouteNames.predictorResult,
-        builder: (context, state) {
-          final predictedSchools = state.extra as List<SchoolModel>? ?? [];
-          return SchoolResultsPage(predictedSchools: predictedSchools);
-        },
-      ),
+      // GoRoute(
+      //   path: '/predictor-result',
+      //   name: RouteNames.predictorResult,
+      //   builder: (context, state) {
+      //     final predictedSchools = state.extra as List<SchoolModel>? ?? [];
+      //     return SchoolResultsPage(predictedSchools: predictedSchools);
+      //   },
+      // ),
       // ✅ School details
       GoRoute(
         path: '/overview',
@@ -302,8 +301,8 @@ class AppRouter {
       GoRoute(
         path: '/my-forms',
         name: RouteNames.myForms,
-       // builder: (context, state) => MyFormViews(),
-       builder: (context, state) => const MyFormViews(),
+        // builder: (context, state) => MyFormViews(),
+        builder: (context, state) => const MyFormViews(),
       ),
       GoRoute(
         path: '/form-details',
@@ -314,31 +313,31 @@ class AppRouter {
         },
       ),
       GoRoute(
-  path: '/addApplication',
-  name: RouteNames.addApplication,
-  builder: (context, state) => const ApplicationFormView(),
-),
-GoRoute(
-  path: '/application-pdf',
-  name: RouteNames.applicationPdf,
-  builder: (context, state) => const StudentPdfScreen(),
-),
-GoRoute(
-  path :'/registerSchool',
-  name : RouteNames.registerSchool,
-  builder : (context,state)=> const SchoolRegistrationInfoPage(),
-),
-GoRoute(
-  name: RouteNames.addNumber,
-  path: '/register/number',
-  builder: (context,state) => const AddPhoneView()
-),
-GoRoute(
-  name: RouteNames.addOtp,
-  path: '/register/otp',
-  builder: (context,state) =>VerifyOtpView(phone: state.extra as String)
-),
-
+        path: '/addApplication',
+        name: RouteNames.addApplication,
+        builder: (context, state) => const ApplicationFormView(),
+      ),
+      GoRoute(
+        path: '/application-pdf',
+        name: RouteNames.applicationPdf,
+        builder: (context, state) => const StudentPdfScreen(),
+      ),
+      GoRoute(
+        path: '/registerSchool',
+        name: RouteNames.registerSchool,
+        builder: (context, state) => const SchoolRegistrationInfoPage(),
+      ),
+      GoRoute(
+        name: RouteNames.addNumber,
+        path: '/register/number',
+        builder: (context, state) => const AddPhoneView(),
+      ),
+      GoRoute(
+        name: RouteNames.addOtp,
+        path: '/register/otp',
+        builder:
+            (context, state) => VerifyOtpView(phone: state.extra as String),
+      ),
     ],
     errorBuilder: (_, __) => NotFoundView(),
   );
