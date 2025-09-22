@@ -57,7 +57,7 @@ class ChatbotViewModel extends ViewStateProvider {
 
     // Call 1: Get DB results (`useAI=false`)
     final dbResultFuture = questionId != null
-        ? _ds.filterByQuestion(questionId, false)
+        ? _ds.filterByQuestion(questionId:questionId,useAI: false,useCity:questionId==31,useArea:questionId==30)
         : _ds.filterWithMultipleCriteria(filters!, false);
 
     final dbResult = await dbResultFuture;
@@ -73,7 +73,7 @@ class ChatbotViewModel extends ViewStateProvider {
 
     // Call 2: Get AI results (`useAI=true`)
     final aiResultFuture = questionId != null
-        ? _ds.filterByQuestion(questionId, true)
+        ? _ds.filterByQuestion(questionId :questionId,useAI : true,useCity:questionId==31,useArea:questionId==30)
         : _ds.filterWithMultipleCriteria(filters!, true);
 
     final aiResult = await aiResultFuture;

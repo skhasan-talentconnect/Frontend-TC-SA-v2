@@ -48,6 +48,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
     required String phone,
     required String state,
     required String city,
+    required String area,
     required String gender,
     required String dateOfBirth,
   }) async {
@@ -61,6 +62,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
         'email': email,
         'contactNo': phone,
         'state': state,
+        "area": area,
         'city': city,
         'gender': gender.toLowerCase(),
         'dateOfBirth': dateOfBirth,
@@ -91,6 +93,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
     required String phone,
     required String state,
     required String city,
+    required String area,
     required String gender,
     required String dateOfBirth,
   }) async {
@@ -106,6 +109,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
         'contactNo': phone,
         'state': state,
         'city': city,
+        'area': area,
         'gender': gender.toLowerCase(),
         'dateOfBirth': dateOfBirth,
         'userType': UserType.student.label,

@@ -10,6 +10,7 @@ abstract class SchoolCardModel with _$SchoolCardModel {
     int? ratings,
     String? name,
     String? feeRange,
+    String? area,
     String? location,
     String? board,
     String? genderType,

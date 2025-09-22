@@ -15,6 +15,7 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
   gender: json['gender'] as String?,
   state: json['state'] as String?,
   city: json['city'] as String?,
+  area: json['area'] as String?,
   shortlistedSchools:
       (json['shortlistedSchools'] as List<dynamic>?)
           ?.map((e) => e as String)
@@ -35,6 +36,7 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   'gender': instance.gender,
   'state': instance.state,
   'city': instance.city,
+  'area': instance.area,
   'shortlistedSchools': instance.shortlistedSchools,
   'userType': instance.userType,
   '_id': instance.sId,

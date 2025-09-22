@@ -19,7 +19,7 @@ class SearchDataSourceImpl implements SearchDataSource {
       queryParams: {
         if (query != null) 'search': query.query,
         if (query?.state != null) 'state': query?.state,
-        if (query?.city != null) 'city': query?.city,
+        if (query?.city != null) 'cities': query?.city,
         if (query?.board != null) 'board': query?.board,
         'limit': "10",
         'page': page.toString(),

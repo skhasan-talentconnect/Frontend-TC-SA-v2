@@ -115,6 +115,8 @@ class _ChatbotViewState extends State<ChatbotView> {
             _SectionDef(title: 'Schools with type:', field: 'schoolMode', icon: Icons.school_outlined),
             _SectionDef(title: 'Schools with gender:', field: 'genderType', icon: Icons.people_outline),
             _SectionDef(title: 'Schools with transport:', field: 'transportAvailable', icon: Icons.directions_bus_outlined),
+             _SectionDef(title: 'Schools in my area inly', field: 'area', icon: Icons.location_city),
+              _SectionDef(title: 'Schools in my city only', field: 'city', icon: Icons.location_city),
             _SectionDef(title: 'Schools with rank:', field: 'rank', icon: Icons.emoji_events_outlined),
           ];
 
