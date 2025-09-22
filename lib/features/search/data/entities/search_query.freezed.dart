@@ -15,7 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SearchQuery {
 
- String? get query; List<String>? get state; List<String>? get city; List<String>? get board;
+ String? get query; List<String>? get state; List<String>? get city; List<String>? get board; List<String>? get genderType;// ✅ NEW
+ List<String>? get schoolMode;// ✅ NEW
+ List<String>? get feeRange;
 /// Create a copy of SearchQuery
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +30,16 @@ $SearchQueryCopyWith<SearchQuery> get copyWith => _$SearchQueryCopyWithImpl<Sear
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchQuery&&(identical(other.query, query) || other.query == query)&&const DeepCollectionEquality().equals(other.state, state)&&const DeepCollectionEquality().equals(other.city, city)&&const DeepCollectionEquality().equals(other.board, board));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchQuery&&(identical(other.query, query) || other.query == query)&&const DeepCollectionEquality().equals(other.state, state)&&const DeepCollectionEquality().equals(other.city, city)&&const DeepCollectionEquality().equals(other.board, board)&&const DeepCollectionEquality().equals(other.genderType, genderType)&&const DeepCollectionEquality().equals(other.schoolMode, schoolMode)&&const DeepCollectionEquality().equals(other.feeRange, feeRange));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,query,const DeepCollectionEquality().hash(state),const DeepCollectionEquality().hash(city),const DeepCollectionEquality().hash(board));
+int get hashCode => Object.hash(runtimeType,query,const DeepCollectionEquality().hash(state),const DeepCollectionEquality().hash(city),const DeepCollectionEquality().hash(board),const DeepCollectionEquality().hash(genderType),const DeepCollectionEquality().hash(schoolMode),const DeepCollectionEquality().hash(feeRange));
 
 @override
 String toString() {
-  return 'SearchQuery(query: $query, state: $state, city: $city, board: $board)';
+  return 'SearchQuery(query: $query, state: $state, city: $city, board: $board, genderType: $genderType, schoolMode: $schoolMode, feeRange: $feeRange)';
 }
 
 
@@ -48,7 +50,7 @@ abstract mixin class $SearchQueryCopyWith<$Res>  {
   factory $SearchQueryCopyWith(SearchQuery value, $Res Function(SearchQuery) _then) = _$SearchQueryCopyWithImpl;
 @useResult
 $Res call({
- String? query, List<String>? state, List<String>? city, List<String>? board
+ String? query, List<String>? state, List<String>? city, List<String>? board, List<String>? genderType, List<String>? schoolMode, List<String>? feeRange
 });
 
 
@@ -65,12 +67,15 @@ class _$SearchQueryCopyWithImpl<$Res>
 
 /// Create a copy of SearchQuery
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? query = freezed,Object? state = freezed,Object? city = freezed,Object? board = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? query = freezed,Object? state = freezed,Object? city = freezed,Object? board = freezed,Object? genderType = freezed,Object? schoolMode = freezed,Object? feeRange = freezed,}) {
   return _then(_self.copyWith(
 query: freezed == query ? _self.query : query // ignore: cast_nullable_to_non_nullable
 as String?,state: freezed == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
 as List<String>?,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
 as List<String>?,board: freezed == board ? _self.board : board // ignore: cast_nullable_to_non_nullable
+as List<String>?,genderType: freezed == genderType ? _self.genderType : genderType // ignore: cast_nullable_to_non_nullable
+as List<String>?,schoolMode: freezed == schoolMode ? _self.schoolMode : schoolMode // ignore: cast_nullable_to_non_nullable
+as List<String>?,feeRange: freezed == feeRange ? _self.feeRange : feeRange // ignore: cast_nullable_to_non_nullable
 as List<String>?,
   ));
 }
@@ -156,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? query,  List<String>? state,  List<String>? city,  List<String>? board)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? query,  List<String>? state,  List<String>? city,  List<String>? board,  List<String>? genderType,  List<String>? schoolMode,  List<String>? feeRange)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SearchQuery() when $default != null:
-return $default(_that.query,_that.state,_that.city,_that.board);case _:
+return $default(_that.query,_that.state,_that.city,_that.board,_that.genderType,_that.schoolMode,_that.feeRange);case _:
   return orElse();
 
 }
@@ -177,10 +182,10 @@ return $default(_that.query,_that.state,_that.city,_that.board);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? query,  List<String>? state,  List<String>? city,  List<String>? board)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? query,  List<String>? state,  List<String>? city,  List<String>? board,  List<String>? genderType,  List<String>? schoolMode,  List<String>? feeRange)  $default,) {final _that = this;
 switch (_that) {
 case _SearchQuery():
-return $default(_that.query,_that.state,_that.city,_that.board);case _:
+return $default(_that.query,_that.state,_that.city,_that.board,_that.genderType,_that.schoolMode,_that.feeRange);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +202,10 @@ return $default(_that.query,_that.state,_that.city,_that.board);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? query,  List<String>? state,  List<String>? city,  List<String>? board)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? query,  List<String>? state,  List<String>? city,  List<String>? board,  List<String>? genderType,  List<String>? schoolMode,  List<String>? feeRange)?  $default,) {final _that = this;
 switch (_that) {
 case _SearchQuery() when $default != null:
-return $default(_that.query,_that.state,_that.city,_that.board);case _:
+return $default(_that.query,_that.state,_that.city,_that.board,_that.genderType,_that.schoolMode,_that.feeRange);case _:
   return null;
 
 }
@@ -212,7 +217,7 @@ return $default(_that.query,_that.state,_that.city,_that.board);case _:
 @JsonSerializable()
 
 class _SearchQuery implements SearchQuery {
-  const _SearchQuery({this.query, final  List<String>? state, final  List<String>? city, final  List<String>? board}): _state = state,_city = city,_board = board;
+  const _SearchQuery({this.query, final  List<String>? state, final  List<String>? city, final  List<String>? board, final  List<String>? genderType, final  List<String>? schoolMode, final  List<String>? feeRange}): _state = state,_city = city,_board = board,_genderType = genderType,_schoolMode = schoolMode,_feeRange = feeRange;
   factory _SearchQuery.fromJson(Map<String, dynamic> json) => _$SearchQueryFromJson(json);
 
 @override final  String? query;
@@ -243,6 +248,37 @@ class _SearchQuery implements SearchQuery {
   return EqualUnmodifiableListView(value);
 }
 
+ final  List<String>? _genderType;
+@override List<String>? get genderType {
+  final value = _genderType;
+  if (value == null) return null;
+  if (_genderType is EqualUnmodifiableListView) return _genderType;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+// ✅ NEW
+ final  List<String>? _schoolMode;
+// ✅ NEW
+@override List<String>? get schoolMode {
+  final value = _schoolMode;
+  if (value == null) return null;
+  if (_schoolMode is EqualUnmodifiableListView) return _schoolMode;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+// ✅ NEW
+ final  List<String>? _feeRange;
+// ✅ NEW
+@override List<String>? get feeRange {
+  final value = _feeRange;
+  if (value == null) return null;
+  if (_feeRange is EqualUnmodifiableListView) return _feeRange;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of SearchQuery
 /// with the given fields replaced by the non-null parameter values.
@@ -257,16 +293,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchQuery&&(identical(other.query, query) || other.query == query)&&const DeepCollectionEquality().equals(other._state, _state)&&const DeepCollectionEquality().equals(other._city, _city)&&const DeepCollectionEquality().equals(other._board, _board));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchQuery&&(identical(other.query, query) || other.query == query)&&const DeepCollectionEquality().equals(other._state, _state)&&const DeepCollectionEquality().equals(other._city, _city)&&const DeepCollectionEquality().equals(other._board, _board)&&const DeepCollectionEquality().equals(other._genderType, _genderType)&&const DeepCollectionEquality().equals(other._schoolMode, _schoolMode)&&const DeepCollectionEquality().equals(other._feeRange, _feeRange));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,query,const DeepCollectionEquality().hash(_state),const DeepCollectionEquality().hash(_city),const DeepCollectionEquality().hash(_board));
+int get hashCode => Object.hash(runtimeType,query,const DeepCollectionEquality().hash(_state),const DeepCollectionEquality().hash(_city),const DeepCollectionEquality().hash(_board),const DeepCollectionEquality().hash(_genderType),const DeepCollectionEquality().hash(_schoolMode),const DeepCollectionEquality().hash(_feeRange));
 
 @override
 String toString() {
-  return 'SearchQuery(query: $query, state: $state, city: $city, board: $board)';
+  return 'SearchQuery(query: $query, state: $state, city: $city, board: $board, genderType: $genderType, schoolMode: $schoolMode, feeRange: $feeRange)';
 }
 
 
@@ -277,7 +313,7 @@ abstract mixin class _$SearchQueryCopyWith<$Res> implements $SearchQueryCopyWith
   factory _$SearchQueryCopyWith(_SearchQuery value, $Res Function(_SearchQuery) _then) = __$SearchQueryCopyWithImpl;
 @override @useResult
 $Res call({
- String? query, List<String>? state, List<String>? city, List<String>? board
+ String? query, List<String>? state, List<String>? city, List<String>? board, List<String>? genderType, List<String>? schoolMode, List<String>? feeRange
 });
 
 
@@ -294,12 +330,15 @@ class __$SearchQueryCopyWithImpl<$Res>
 
 /// Create a copy of SearchQuery
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? query = freezed,Object? state = freezed,Object? city = freezed,Object? board = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? query = freezed,Object? state = freezed,Object? city = freezed,Object? board = freezed,Object? genderType = freezed,Object? schoolMode = freezed,Object? feeRange = freezed,}) {
   return _then(_SearchQuery(
 query: freezed == query ? _self.query : query // ignore: cast_nullable_to_non_nullable
 as String?,state: freezed == state ? _self._state : state // ignore: cast_nullable_to_non_nullable
 as List<String>?,city: freezed == city ? _self._city : city // ignore: cast_nullable_to_non_nullable
 as List<String>?,board: freezed == board ? _self._board : board // ignore: cast_nullable_to_non_nullable
+as List<String>?,genderType: freezed == genderType ? _self._genderType : genderType // ignore: cast_nullable_to_non_nullable
+as List<String>?,schoolMode: freezed == schoolMode ? _self._schoolMode : schoolMode // ignore: cast_nullable_to_non_nullable
+as List<String>?,feeRange: freezed == feeRange ? _self._feeRange : feeRange // ignore: cast_nullable_to_non_nullable
 as List<String>?,
   ));
 }
