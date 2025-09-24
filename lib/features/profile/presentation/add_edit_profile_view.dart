@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
+import 'package:tc_sa/features/profile/presentation/location_fetching.dart';
+import 'package:tc_sa/features/profile/presentation/location_utils.dart';
 import 'package:tc_sa/features/profile/presentation/view_models/add_edit_profile_view_model.dart';
+
 
 class AddEditProfileView extends StatefulWidget {
   const AddEditProfileView({required this.isEdit, super.key});
@@ -44,66 +48,6 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     text: appStateProvider.user?.area ?? '',
   );
 
-  // --- maps ---
-  final Map<String, List<String>> stateCities = {
-    'Maharashtra': ['Mumbai', 'Pune', 'Nagpur', 'Nashik', 'Thane', 'Aurangabad', 'Kolhapur', 'Amravati'],
-    'Gujarat': ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot'],
-    'Rajasthan': ['Jaipur', 'Jodhpur', 'Udaipur'],
-    'Punjab': ['Chandigarh', 'Ludhiana', 'Amritsar'],
-    'Haryana': ['Gurugram', 'Faridabad', 'Panipat'],
-    'Karnataka': ['Bengaluru', 'Mysore', 'Mangalore'],
-    'Tamil Nadu': ['Chennai', 'Coimbatore', 'Madurai'],
-    'Uttar Pradesh': ['Lucknow', 'Kanpur', 'Varanasi'],
-  };
-
-  final Map<String, List<String>> cityAreas = {
-    // Maharashtra
-    'Mumbai': ['Bandra', 'Mahim', 'South Bombay', 'Andheri', 'Juhu', 'Powai'],
-    'Pune': ['Kothrud', 'Shivaji Nagar', 'Viman Nagar', 'Kalyani Nagar', 'Hinjewadi'],
-    'Nagpur': ['Sitabuldi', 'Dharampeth', 'Civil Lines'],
-    'Nashik': ['CIDCO', 'Satpur', 'Dwarka'],
-    'Thane': ['Wagle Estate', 'Ghodbunder', 'Majiwada'],
-    'Aurangabad': ['CIDCO', 'Waluj', 'Shendra'],
-    'Kolhapur': ['Shivaji Nagar', 'Udyamnagar', 'Shivajiwadi'],
-    'Amravati': ['Mangoan', 'Bhadaj', 'Shivaji Chowk'],
-
-    // Gujarat
-    'Ahmedabad': ['Navrangpura', 'Satellite', 'Prahlad Nagar', 'Maninagar'],
-    'Surat': ['Udhna', 'Varachha', 'Adajan'],
-    'Vadodara': ['Alkapuri', 'Manjalpur', 'Gotri'],
-    'Rajkot': ['Rajpath', 'Kalavad Road', 'Rander'],
-
-    // Rajasthan
-    'Jaipur': ['C Scheme', 'Malviya Nagar', 'Vaishali Nagar'],
-    'Jodhpur': ['Sardar Market', 'Ratanada', 'Sojati Gate'],
-    'Udaipur': ['Hiran Magri', 'Bapu Bazaar', 'City Palace Area'],
-
-    // Punjab
-    'Chandigarh': ['Sector 17', 'Sector 22', 'Sector 9'],
-    'Ludhiana': ['Model Town', 'Ferozepur Road', 'Industrial Area'],
-    'Amritsar': ['Hall Bazaar', 'Ranjit Avenue', 'Wagah Road'],
-
-    // Haryana
-    'Gurugram': ['DLF Phase 1', 'Sohna Road', 'Cyber City'],
-    'Faridabad': ['Sector 15', 'Ballabhgarh', 'NIT Faridabad'],
-    'Panipat': ['Karnal Road', 'Karnal Bypass', 'Civil Lines'],
-
-    // Karnataka
-    'Bengaluru': ['Koramangala', 'Indiranagar', 'Whitefield', 'Jayanagar'],
-    'Mysore': ['Gokulam', 'Hebbal', 'Vijayanagar'],
-    'Mangalore': ['Bajpe', 'Kadri', 'Balmatta'],
-
-    // Tamil Nadu
-    'Chennai': ['Adyar', 'T. Nagar', 'Velachery', 'Anna Nagar'],
-    'Coimbatore': ['RS Puram', 'Saibaba Colony', 'Gandhipuram'],
-    'Madurai': ['Tirupparankundram', 'Anna Nagar', 'K.K. Nagar'],
-
-    // Uttar Pradesh
-    'Lucknow': ['Hazratganj', 'Indira Nagar', 'Gomti Nagar'],
-    'Kanpur': ['Kalyanpur', 'Swaroop Nagar', 'Civil Lines'],
-    'Varanasi': ['Bhelupur', 'Sigra', 'Kashi Vishwanath Area'],
-  };
-
   // ----- simple state variables -----
   List<String> cityItems = [];
   List<String> areaItems = [];
@@ -111,6 +55,90 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   String? selectedState;
   String? selectedCity;
   String? selectedArea;
+
+static const List<String> defaultAreas = [
+  "Main Area",
+  "Central",
+  "Station Road",
+  "Market"
+];
+Future<void> _fetchFromGoogleLocation() async {
+  try {
+    // 1. Request location permission
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Toasts.showErrorToast(context, message: "Location services are disabled.");
+      return;
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Toasts.showErrorToast(context, message: "Location permission denied.");
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      Toasts.showErrorToast(context,
+          message:
+              "Location permission permanently denied. Enable it from settings.");
+      return;
+    }
+
+    // 2. Fetch state and city using your LocationUtils
+    final place = await LocationUtils.getCurrentPlace();
+
+    print("Fetched place: $place"); // Debug
+
+    if (place == null ||
+        (place['state'] == null && place['city'] == null)) {
+      Toasts.showErrorToast(context,
+          message: "Could not detect state or city from Google.");
+      return;
+    }
+
+    final fetchedState = place['state'] ?? '';
+    final fetchedCity = place['city'] ?? '';
+    final fetchedArea = place['area'] ?? '';
+
+    setState(() {
+      stateController.text = fetchedState;
+      selectedState = fetchedState;
+      cityItems = StateCityAreaUtils.getCities(fetchedState);
+
+      if (cityItems.contains(fetchedCity)) {
+        cityController.text = fetchedCity;
+        selectedCity = fetchedCity;
+        areaItems = StateCityAreaUtils.getAreas(fetchedCity);
+      } else if (cityItems.isNotEmpty) {
+        cityController.text = cityItems.first;
+        selectedCity = cityItems.first;
+        areaItems = StateCityAreaUtils.getAreas(cityItems.first);
+      }
+
+      if (areaItems.isNotEmpty) {
+        if (areaItems.contains(fetchedArea)) {
+          areaController.text = fetchedArea;
+          selectedArea = fetchedArea;
+        } else {
+          areaController.text = areaItems.first;
+          selectedArea = areaItems.first;
+        }
+      } else {
+        areaItems = defaultAreas;
+        areaController.text = defaultAreas.first;
+        selectedArea = defaultAreas.first;
+      }
+    });
+
+    Toasts.showSuccessToast(context, message: "Location fetched successfully.");
+  } catch (e) {
+    Toasts.showErrorToast(context, message: "Error fetching location: $e");
+  }
+}
+
 
   @override
   void initState() {
@@ -121,11 +149,11 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     selectedCity = cityController.text.isNotEmpty ? cityController.text.trim() : null;
     selectedArea = areaController.text.isNotEmpty ? areaController.text.trim() : null;
 
-    if (selectedState != null && stateCities.containsKey(selectedState)) {
-      cityItems = List.from(stateCities[selectedState!]!);
+    if (selectedState != null) {
+      cityItems = StateCityAreaUtils.getCities(selectedState!);
     }
-    if (selectedCity != null && cityAreas.containsKey(selectedCity)) {
-      areaItems = List.from(cityAreas[selectedCity!]!);
+    if (selectedCity != null) {
+      areaItems = StateCityAreaUtils.getAreas(selectedCity!);
     }
   }
 
@@ -187,7 +215,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                 label: 'Email*',
                                 hint: 'Enter email',
                                 enable:
-                                    getIt<AppStateProvider>().authModel?.email != Null,
+                                    getIt<AppStateProvider>().authModel?.email != null,
                                 prefixIcon: Icon(Icons.email),
                               ),
                               STextField(
@@ -229,12 +257,8 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                 hint: 'Select',
                                 prefixIcon: Icon(Icons.male),
                               ),
-
-                              // --------------------
-                              // STATE dropdown
-                              // --------------------
                               STextField.dropdown(
-                                items: stateCities.keys.toList(),
+                                items: StateCityAreaUtils.states,
                                 controller: stateController,
                                 label: 'State*',
                                 hint: 'Select',
@@ -245,12 +269,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                   setState(() {
                                     selectedState = key;
                                     stateController.text = key;
-
-                                    // load cities for the selected state
-                                    cityItems =
-                                        stateCities[key] != null ? List.from(stateCities[key]!) : [];
-
-                                    // reset city & area
+                                    cityItems = StateCityAreaUtils.getCities(key);
                                     selectedCity = null;
                                     cityController.text = '';
                                     areaItems = [];
@@ -259,10 +278,6 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                   });
                                 },
                               ),
-
-                              // --------------------
-                              // CITY dropdown
-                              // --------------------
                               STextField.dropdown(
                                 items: cityItems,
                                 controller: cityController,
@@ -276,20 +291,12 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                   setState(() {
                                     selectedCity = key;
                                     cityController.text = key;
-
-                                    // load areas for the chosen city
-                                    areaItems = cityAreas[key] != null ? List.from(cityAreas[key]!) : [];
-
-                                    // reset area
+                                    areaItems = StateCityAreaUtils.getAreas(key);
                                     selectedArea = null;
                                     areaController.text = '';
                                   });
                                 },
                               ),
-
-                              // --------------------
-                              // AREA dropdown
-                              // --------------------
                               STextField.dropdown(
                                 items: areaItems.isNotEmpty ? areaItems : ['Other'],
                                 controller: areaController,
@@ -306,11 +313,14 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                   });
                                 },
                               ),
+
+                              SButton(
+  label: "Fetch from Google Location",
+  onPressed: _fetchFromGoogleLocation,
+),
                             ],
                           ),
                         ),
-
-                        // Submit button
                         SButton(
                           label: 'Submit',
                           onPressed: () async {
@@ -367,7 +377,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                               context,
                               failure: failure,
                               successMsg:
-                                  'Profile ${widget.isEdit ? "Updated" : 'Register'} Successfully',
+                                  'Profile ${widget.isEdit ? "Updated" : 'Registered'} Successfully',
                               popOnSuccess: false,
                               successCallback: () {
                                 if (widget.isEdit) {
