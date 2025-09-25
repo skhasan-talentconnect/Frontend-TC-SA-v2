@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum NavItem { home, blog, service, shortlist }
+enum NavItem { home, blog, preferences, shortlist, myForms }
 
 extension NavItemExt on NavItem {
   String get label {
@@ -9,10 +9,12 @@ extension NavItemExt on NavItem {
         return 'Home';
       case NavItem.blog:
         return 'Blogs';
-      case NavItem.service:
-        return 'Services';
+      case NavItem.preferences:
+        return 'Edit Preferences';
       case NavItem.shortlist:
         return 'Saved';
+      case NavItem.myForms:
+        return 'Applications';
     }
   }
 
@@ -21,11 +23,13 @@ extension NavItemExt on NavItem {
       case NavItem.home:
         return Icons.home;
       case NavItem.blog:
-        return Icons.create;
-      case NavItem.service:
-        return Icons.miscellaneous_services;
+        return Icons.assessment;
+      case NavItem.preferences:
+        return Icons.edit;
       case NavItem.shortlist:
         return Icons.bookmark;
+      case NavItem.myForms:
+        return Icons.assignment;
     }
   }
 
@@ -34,11 +38,13 @@ extension NavItemExt on NavItem {
       case NavItem.home:
         return Icons.home_outlined;
       case NavItem.blog:
-        return Icons.create_outlined;
-      case NavItem.service:
-        return Icons.miscellaneous_services_outlined;
+        return Icons.assessment_outlined;
+      case NavItem.preferences:
+        return Icons.edit_outlined;
       case NavItem.shortlist:
         return Icons.bookmark_outline;
+      case NavItem.myForms:
+        return Icons.assignment_outlined;
     }
   }
 }

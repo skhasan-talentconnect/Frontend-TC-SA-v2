@@ -32,8 +32,7 @@ class SchoolViewModel extends ViewStateProvider {
     Failure? failure;
 
     final result = await _schoolDataSource.getSchools(
-      ///TODO: Change the static board value to user's preferred board
-      filters: {'board': 'SSC'},
+      filters: {'board': getIt<AppStateProvider>().userPref?.boards},
     );
     result.fold(
       (exception) {

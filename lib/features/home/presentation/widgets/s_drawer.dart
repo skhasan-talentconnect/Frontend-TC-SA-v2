@@ -86,7 +86,11 @@ class _SDrawerState extends State<SDrawer> {
                         ),
                       ),
                       onTap: () {
-                        navigateTo(RouteNames.shortlist);
+                        if (getIt<AppStateProvider>().isGuest) {
+                          Toasts.showInfoToast(context, message: 'Please Login');
+                        } else {
+                          navigateTo(RouteNames.shortlist);
+                        }
                       },
                     ),
                     SListTile(

@@ -14,7 +14,7 @@ class NotificationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: (notification.isRead ?? false) ? onTap : null,
       child: Container(
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(

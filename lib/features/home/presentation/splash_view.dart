@@ -16,7 +16,7 @@ class SplashView extends StatefulWidget {
 }
 
 class _SplashViewState extends State<SplashView> {
-  String next = RouteNames.loginRegister; // default
+  String next = RouteNames.landing; // default
   final ValueNotifier<bool> isLoading = ValueNotifier(false);
 
   bool _minTimePassed = false;
@@ -57,11 +57,11 @@ class _SplashViewState extends State<SplashView> {
             'ProfileComplete: ${appStateProvider.isProfileComplete}\nProfileRemaining: ${appStateProvider.isProfileRemaining}\nPrefRemaining: ${appStateProvider.isPrefRemaining}\nAuthComplete: ${appStateProvider.isAuthComplete}\n',
           );
           await SecretRepo.remove('auth_token');
-          next = RouteNames.loginRegister;
+          next = RouteNames.landing;
         }
       } catch (e) {
         await SecretRepo.remove('auth_token');
-        next = RouteNames.loginRegister;
+        next = RouteNames.landing;
       }
     }
 

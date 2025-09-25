@@ -66,7 +66,7 @@ class NotificationViewModel extends ViewStateProvider {
     if (notify) {
       _page = 1;
       isMoreNotifications = false;
-      notifications = [];
+      _notifications = [];
     }
 
     final result = await notificationDataSource.getNotifications(page: page);
@@ -106,8 +106,7 @@ class NotificationViewModel extends ViewStateProvider {
         failure = APIFailure.fromException(exception: exception);
       },
       (res) async {
-        _notifications = [];
-        failure = await getNotifications(notify: true);
+        await getNotifications(notify: true);
       },
     );
 
@@ -128,8 +127,7 @@ class NotificationViewModel extends ViewStateProvider {
         failure = APIFailure.fromException(exception: exception);
       },
       (res) async {
-        _notifications = [];
-        failure = await getNotifications(notify: true);
+        await getNotifications(notify: true);
       },
     );
 

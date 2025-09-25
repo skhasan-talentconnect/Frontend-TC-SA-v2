@@ -1,5 +1,6 @@
 class RouteNames {
   static const String splash = 'splash';
+  static const String landing = 'landing';
 
   //Authentication
   static const String loginRegister = 'register-login';
@@ -44,10 +45,10 @@ class RouteNames {
   //applications
   static const String myForms = 'my-forms';
   static const String formDetails = 'form-details';
-static const String applicationPdf='applicationPdf';
-  static const String addApplication='addApplication';
+  static const String applicationPdf = 'applicationPdf';
+  static const String addApplication = 'addApplication';
 
-  static const String registerSchool='registerSchool';
-  static const String addNumber='addNumber';
-    static const String addOtp='addOtp';
+  static const String registerSchool = 'registerSchool';
+  static const String addNumber = 'addNumber';
+  static const String addOtp = 'addOtp';
 }

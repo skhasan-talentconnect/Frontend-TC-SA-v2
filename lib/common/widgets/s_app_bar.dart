@@ -53,46 +53,66 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.only(right: 16.0),
           child:
               _isHome
-                  ? Row(
-                    spacing: 16,
-                    children: [
-                      SIcon.navigator(
-                        path: RouteNames.search,
-                        icon: Icons.search,
-                      ),
-                      SIcon.navigator(
-                        path: RouteNames.notification,
-                        icon: Icons.notifications,
-                      ),
-                      SIcon.navigator(
-                        path: RouteNames.profile,
-                        image: Container(
-                          height: 30,
-                          width: 30,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: SColor.secTextColor,
-                              width: 1,
-                            ),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Icon(
-                              Icons.person,
-                              size: 20,
-                              color: SColor.secTextColor,
-                            ),
+                  ? getIt<AppStateProvider>().isGuest
+                      ? Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 6,
+                          horizontal: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: SColor.secTextColor,
+                            width: 0.5,
                           ),
                         ),
-                      ),
-                    ],
-                  )
+                        child: Text(
+                          'Login',
+                          style: STextStyles.s12W600.copyWith(
+                            color: SColor.secTextColor,
+                          ),
+                        ),
+                      )
+                      : Row(
+                        spacing: 16,
+                        children: [
+                          SIcon.navigator(
+                            path: RouteNames.search,
+                            icon: Icons.search,
+                          ),
+                          SIcon.navigator(
+                            path: RouteNames.notification,
+                            icon: Icons.notifications,
+                          ),
+                          SIcon.navigator(
+                            path: RouteNames.profile,
+                            image: Container(
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: SColor.secTextColor,
+                                  width: 1,
+                                ),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.person,
+                                  size: 20,
+                                  color: SColor.secTextColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
                   : Column(
                     mainAxisSize: MainAxisSize.min,
                     children:
                         actions ??
                         [
-                          if (getIt<AppStateProvider>().authModel == null) ...[
+                          if (getIt<AppStateProvider>().isGuest) ...[
                             Container(
                               padding: EdgeInsets.symmetric(
                                 vertical: 6,

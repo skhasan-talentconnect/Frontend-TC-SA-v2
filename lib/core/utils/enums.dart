@@ -15,6 +15,21 @@ extension UserTypeExt on UserType {
         return 'guest';
     }
   }
+
+  static UserType fromValue(String value) {
+    switch (value) {
+      case 'student':
+        return UserType.student;
+      case 'parent':
+        return UserType.parent;
+      case 'school':
+        return UserType.school;
+      case 'guest':
+        return UserType.guest;
+      default:
+        return UserType.guest;
+    }
+  }
 }
 
 extension AuthProviderExt on AuthProvider {

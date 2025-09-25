@@ -143,7 +143,7 @@ class _ProfileViewState extends State<ProfileView> {
                                   getIt<AppStateProvider>().authModel = null;
                                   getIt<AppStateProvider>().user = null;
                                   getIt<AppStateProvider>().userPref = null;
-                                  context.goNamed(RouteNames.loginRegister);
+                                  context.goNamed(RouteNames.landing);
                                 }
                               },
                             );
