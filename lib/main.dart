@@ -1,4 +1,6 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tc_sa/common/theme/s_colors.dart';
 import 'package:tc_sa/core/notifications/notification_service.dart';
@@ -17,10 +19,17 @@ Future<void> main() async {
   initServiceLocator();
   await getIt.allReady();
 
-  runApp(
-    const MyApp(),
-    //DevicePreview(builder: (context) => MyApp()),
-  );
+  if (kIsWeb) {
+    runApp(
+      //const MyApp(),
+      DevicePreview(builder: (context) => MyApp()),
+    );
+  } else {
+    runApp(
+      const MyApp(),
+      //DevicePreview(builder: (context) => MyApp()),
+    );
+  }
 }
 
 final router = AppRouter().router;
