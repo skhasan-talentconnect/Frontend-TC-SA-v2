@@ -10,6 +10,9 @@ abstract class SearchQuery with _$SearchQuery {
     List<String>? state,
     List<String>? city,
     List<String>? board,
+     List<String>? genderType,   // ✅ NEW
+    List<String>? schoolMode,   // ✅ NEW
+   List<String>?  feeRange,      
   }) = _SearchQuery;
 
   factory SearchQuery.fromJson(Map<String, Object?> json) =>
