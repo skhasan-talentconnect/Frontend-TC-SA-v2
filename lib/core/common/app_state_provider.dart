@@ -38,6 +38,8 @@ class AppStateProvider extends ViewStateProvider {
     notifyListeners();
   }
 
+  bool get isGuest => user?.userType == UserType.guest;
+
   bool get isProfileComplete =>
       user != null && authModel != null && userPref != null;
 

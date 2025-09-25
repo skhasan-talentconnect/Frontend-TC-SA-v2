@@ -40,17 +40,9 @@ class _AuthViewState extends State<AuthView> {
 
               return Center(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(bottom: 50),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: MediaQuery.sizeOf(context).height * 0.4,
-                        child: Container(
-                          margin: EdgeInsets.only(bottom: 20),
-                          color: Colors.black,
-                        ),
-                      ),
                       AuthHeader(isLogin: vm.isLogin),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -81,7 +73,6 @@ class _AuthViewState extends State<AuthView> {
                                   onTap: () {
                                     context.pushNamed(
                                       RouteNames.forgetPassword,
-                                  
                                     );
                                   },
                                   child: Text(
@@ -159,7 +150,7 @@ class _AuthViewState extends State<AuthView> {
                             );
                           }
                         },
-                        OnMobilePressed:() {
+                        OnMobilePressed: () {
                           context.pushNamed(RouteNames.addNumber);
                         },
                         onGooglePressed: () async {

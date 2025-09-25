@@ -20,7 +20,10 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
       (json['shortlistedSchools'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-  userType: json['userType'] as String?,
+  userType: _$JsonConverterFromJson<String, UserType>(
+    json['userType'],
+    const UserTypeConverter().fromJson,
+  ),
   sId: json['_id'] as String?,
   createdAt: json['createdAt'] as String?,
   updatedAt: json['updatedAt'] as String?,
@@ -38,9 +41,22 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   'city': instance.city,
   'area': instance.area,
   'shortlistedSchools': instance.shortlistedSchools,
-  'userType': instance.userType,
+  'userType': _$JsonConverterToJson<String, UserType>(
+    instance.userType,
+    const UserTypeConverter().toJson,
+  ),
   '_id': instance.sId,
   'createdAt': instance.createdAt,
   'updatedAt': instance.updatedAt,
   '__v': instance.iV,
 };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) => json == null ? null : fromJson(json as Json);
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) => value == null ? null : toJson(value);

@@ -7,7 +7,6 @@ import 'package:tc_sa/features/application/pdfModule/data/data_source/pdf_data_s
 import 'package:tc_sa/features/auth/authentication/data/data_source/data_source_impl.dart';
 import 'package:tc_sa/features/auth/mobileOtp/data/data_source/data_source_impl.dart';
 import 'package:tc_sa/features/auth/mobileOtp/presentation/view_model/otp_view_model.dart';
-
 import 'package:tc_sa/features/preferences/data/data_source/data_source_impl.dart';
 import 'package:tc_sa/features/profile/data/data_source/data_source_impl.dart';
 import 'package:tc_sa/features/users/shortlist/index.dart';
@@ -22,13 +21,11 @@ void initServiceLocator() {
     ..registerFactory<PrefDataSourceImpl>(PrefDataSourceImpl.new)
     ..registerFactory<AuthDataSourceImpl>(AuthDataSourceImpl.new)
     ..registerFactory<OtpDataSourceImpl>(OtpDataSourceImpl.new)
-..registerFactory<OtpViewModel>(OtpViewModel.new)
+    ..registerFactory<OtpViewModel>(OtpViewModel.new)
     ..registerFactory<ShortlistDataSourceImpl>(ShortlistDataSourceImpl.new)
     ..registerFactory<FormDataSourceImpl>(FormDataSourceImpl.new)
     ..registerFactory<MyFormViewModel>(MyFormViewModel.new)
     ..registerFactory<ShortlistViewModel>(ShortlistViewModel.new)
     ..registerFactory<StudentPdfDataSourceImpl>(StudentPdfDataSourceImpl.new)
-   
     ..registerFactory<ApplicationDataSourceImpl>(ApplicationDataSourceImpl.new);
-
 }

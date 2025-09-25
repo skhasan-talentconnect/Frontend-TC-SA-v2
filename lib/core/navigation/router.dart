@@ -22,6 +22,7 @@ import 'package:tc_sa/features/detailPages/amenity/presentation/amenity_view.dar
 import 'package:tc_sa/features/detailPages/overview/presentation/overview_view.dart';
 import 'package:tc_sa/features/detailPages/reviews/presentation/reviews_view.dart';
 import 'package:tc_sa/features/home/index.dart';
+import 'package:tc_sa/features/home/presentation/landing_page.dart';
 import 'package:tc_sa/features/notifications/presentation/notification_view.dart';
 import 'package:tc_sa/features/predictor/index.dart';
 import 'package:tc_sa/features/predictor/presentation/view_models/predictor_view_model.dart';
@@ -60,64 +61,31 @@ class AppRouter {
             builder: (context, state) => BlogPage(),
           ),
           GoRoute(
-            path: '/services',
-            name: RouteNames.services,
-            builder: (context, state) => SchoolResultsPage(),
+            path: '/preferences',
+            name: RouteNames.preferences,
+            builder: (context, state) {
+              final isEdit = state.extra as bool;
+              return PrefView(isEdit: isEdit);
+            },
           ),
           GoRoute(
             path: '/shortlist',
             name: RouteNames.shortlist,
             builder: (context, state) => ShortlistedSchoolsPage(),
           ),
+          GoRoute(
+            path: '/my-forms',
+            name: RouteNames.myForms,
+            // builder: (context, state) => MyFormViews(),
+            builder: (context, state) => const MyFormViews(),
+          ),
         ],
       ),
-
-      // StatefulShellRoute.indexedStack(
-      //   builder: (context, state, navigationShell) {
-      //     return HomeView(navigationShell: navigationShell);
-      //   },
-      //   branches: [
-      //     StatefulShellBranch(
-      //       routes: [
-      //         GoRoute(
-      //           path: '/home',
-      //           name: RouteNames.home,
-      //           builder: (context, state) => SchoolsView(),
-      //         ),
-      //       ],
-      //     ),
-      //     StatefulShellBranch(
-      //       routes: [
-      //         GoRoute(
-      //           path: '/blogs',
-      //           name: RouteNames.blogs,
-      //           builder: (context, state) => BlogPage(),
-      //         ),
-      //       ],
-      //     ),
-      //     StatefulShellBranch(
-      //       routes: [
-      //         GoRoute(
-      //           path: '/services',
-      //           name: RouteNames.services,
-      //           builder: (context, state) => SearchPage(),
-      //         ),
-      //       ],
-      //     ),
-      //     StatefulShellBranch(
-      //       routes: [
-      //         GoRoute(
-      //           path: '/shortlist',
-      //           name: RouteNames.shortlist,
-      //           builder:
-      //               (context, state) =>
-      //               ShortlistedSchoolsPage(key: UniqueKey()),
-      //         ),
-      //       ],
-      //     ),
-      //   ],
-      // ),
-
+      GoRoute(
+        path: '/landing',
+        name: RouteNames.landing,
+        builder: (context, state) => LandingPage(),
+      ),
       // ✅ Auth routes
       GoRoute(
         path: '/login-register',
@@ -148,22 +116,13 @@ class AppRouter {
         },
       ),
       GoRoute(
-        path: '/preferences',
-        name: RouteNames.preferences,
+        path: '/add-edit-preferences',
+        name: RouteNames.addEditPreferences,
         builder: (context, state) {
           final isEdit = state.extra as bool;
           return PrefView(isEdit: isEdit);
         },
       ),
-      GoRoute(
-        path: '/add-edit-preferences',
-        name: RouteNames.addEditPreferences,
-        builder: (context, state) {
-          final isEdit = state.extra as bool;
-          return AddEditProfileView(isEdit: isEdit);
-        },
-      ),
-
       GoRoute(
         path: '/search',
         name: RouteNames.search,
@@ -191,6 +150,11 @@ class AppRouter {
             ),
           );
         },
+      ),
+      GoRoute(
+        path: '/services',
+        name: RouteNames.services,
+        builder: (context, state) => SchoolResultsPage(),
       ),
       // GoRoute(
       //   path: '/predictor-result',
@@ -297,12 +261,6 @@ class AppRouter {
         builder: (context, state) {
           return NotificationView();
         },
-      ),
-      GoRoute(
-        path: '/my-forms',
-        name: RouteNames.myForms,
-        // builder: (context, state) => MyFormViews(),
-        builder: (context, state) => const MyFormViews(),
       ),
       GoRoute(
         path: '/form-details',

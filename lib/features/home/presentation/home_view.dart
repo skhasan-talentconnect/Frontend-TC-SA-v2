@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/home/presentation/widgets/s_drawer.dart';
-import 'package:go_router/go_router.dart';
+
 class HomeView extends StatefulWidget {
   const HomeView({required this.navigationShell, super.key});
 
@@ -15,12 +15,17 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final appStateProvider = getIt<AppStateProvider>();
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final failure = await getIt<AppStateProvider>().getUserDetails();
-      failure?.showError(context);
+      print(appStateProvider.isGuest);
+      print(appStateProvider.user?.toJson());
+      if (!appStateProvider.isGuest) {
+        final failure = await appStateProvider.getUserDetails();
+        failure?.showError(context);
+      }
     });
     super.initState();
   }
@@ -29,9 +34,10 @@ class _HomeViewState extends State<HomeView> {
     final location = GoRouterState.of(context).uri.toString();
 
     if (location.startsWith('/blogs')) return 1;
-    if (location.startsWith('/services')) return 2;
+    if (location.startsWith('/preferences')) return 2;
     if (location.startsWith('/shortlist')) return 3;
-    return 0; // default = home
+    if (location.startsWith('/my-forms')) return 4;
+    return 0;
   }
 
   @override
@@ -47,16 +53,15 @@ class _HomeViewState extends State<HomeView> {
             _scaffoldKey.currentState?.openDrawer();
           },
         ),
-
       ),
 
       drawer: SDrawer(),
- floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.pushNamed(RouteNames.chatbot);
         },
-        child: Icon(Icons.android_outlined), 
-        backgroundColor: Colors.lightBlueAccent, 
+        backgroundColor: Colors.lightBlueAccent,
+        child: Icon(Icons.android_outlined),
       ),
 
       body: Padding(
@@ -75,10 +80,24 @@ class _HomeViewState extends State<HomeView> {
               context.goNamed(RouteNames.blogs);
               break;
             case 2:
-              context.goNamed(RouteNames.services);
+              context.goNamed(
+                RouteNames.preferences,
+                extra: appStateProvider.userPref != null,
+              );
               break;
             case 3:
-              context.goNamed(RouteNames.shortlist);
+              if (appStateProvider.isGuest) {
+                Toasts.showInfoToast(context, message: 'Please Login first');
+              } else {
+                context.goNamed(RouteNames.shortlist);
+              }
+              break;
+            case 4:
+              if (appStateProvider.isGuest) {
+                Toasts.showInfoToast(context, message: 'Please Login first');
+              } else {
+                context.goNamed(RouteNames.myForms);
+              }
               break;
           }
         },

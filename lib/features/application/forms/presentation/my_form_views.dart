@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart' hide Form;
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/extensions/failure_ext.dart';
@@ -30,16 +29,6 @@ class _MyFormViewsState extends State<MyFormViews> {
     return ChangeNotifierProvider.value(
       value: myFormViewModel,
       child: Scaffold(
-        appBar: SAppBar(
-          leading: SIcon(
-            icon: Icons.keyboard_arrow_left,
-            onTap: () {
-              context.pop(context);
-            },
-          ),
-          title: 'Applied Forms',
-        ),
-
         body: Selector<MyFormViewModel, bool>(
           selector: (_, vm) => vm.isLoading,
           builder:
@@ -47,12 +36,27 @@ class _MyFormViewsState extends State<MyFormViews> {
                   isLoading
                       ? Center(child: SLoadingIndicator())
                       : SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 16,
-                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 2),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          spacing: 20,
                           children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: 8,
+                              children: [
+                                SizedBox.shrink(),
+                                Text(
+                                  'Applied Forms',
+                                  style: STextStyles.s20W600,
+                                ),
+                                Text(
+                                  'All the applied forms.',
+                                  style: STextStyles.s16W400,
+                                ),
+                              ],
+                            ),
                             ListView.separated(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,

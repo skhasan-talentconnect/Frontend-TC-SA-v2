@@ -29,53 +29,6 @@ class _SchoolsViewState extends State<SchoolsView> {
     super.initState();
   }
 
-  final dummySchools = <SchoolCardModel>[
-    SchoolCardModel(
-      schoolId: "1",
-      ratings: 4,
-      name: "Green Valley High School",
-      feeRange: "25000 - 50",
-      location: "Mumbai, Maharashtra",
-      board: "CBSE",
-      genderType: "co-ed",
-      shifts: ["morning"],
-      schoolMode: "private",
-    ),
-    SchoolCardModel(
-      schoolId: "2",
-      ratings: 5,
-      name: "Sunrise International School",
-      feeRange: "1 Lakh - 2 Lakh",
-      location: "Delhi, Delhi",
-      board: "IB",
-      genderType: "co-ed",
-      shifts: ["morning", "afternoon"],
-      schoolMode: "convent",
-    ),
-    SchoolCardModel(
-      schoolId: "3",
-      ratings: 3,
-      name: "St. Mary’s Convent",
-      feeRange: "10000 - 25000",
-      location: "Pune, Maharashtra",
-      board: "ICSE",
-      genderType: "girl",
-      shifts: ["morning"],
-      schoolMode: "convent",
-    ),
-    SchoolCardModel(
-      schoolId: "4",
-      ratings: 2,
-      name: "Govt. Boys High School",
-      feeRange: "1000 - 10000",
-      location: "Lucknow, Uttar Pradesh",
-      board: "STATE",
-      genderType: "boy",
-      shifts: ["afternoon"],
-      schoolMode: "government",
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(

@@ -102,7 +102,7 @@ class _NotificationViewState extends State<NotificationView> {
                 failure?.showError(context);
               },
               child: ListView.separated(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                 itemCount: vm.notifications.length,
                 separatorBuilder: (_, __) => SizedBox(height: 8),
                 itemBuilder:
