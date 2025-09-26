@@ -43,11 +43,13 @@ class _SchoolCardState extends State<SchoolCard> {
         child: Align(
           alignment: Alignment.centerLeft,
           child: Container(
+            clipBehavior: Clip.antiAliasWithSaveLayer,
             width: size.width * widget.width,
             height: 420,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.grey,
               border: Border.all(color: SColor.primaryColor),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Stack(
               children: [
@@ -57,8 +59,8 @@ class _SchoolCardState extends State<SchoolCard> {
                   children: [
                     Container(
                       height: 200,
+                      clipBehavior: Clip.none,
                       width: double.infinity,
-                      decoration: BoxDecoration(color: Colors.grey),
                       child: Icon(
                         Icons.image,
                         color: Colors.grey.shade700,
@@ -66,12 +68,19 @@ class _SchoolCardState extends State<SchoolCard> {
                       ),
                     ),
                     Expanded(
-                      child: Padding(
+                      child: Container(
                         padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(8),
+                            bottomLeft: Radius.circular(8),
+                          ),
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
+                            Flexible(
                               child: Text(
                                 widget.school.name ?? 'College Name',
                                 style: STextStyles.s18W600.copyWith(
@@ -81,17 +90,56 @@ class _SchoolCardState extends State<SchoolCard> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 10),
                             Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: 4,
                               children: [
-                                for (int i = 0; i < 5; i++)
-                                  Icon(
-                                    i < (widget.school.ratings ?? 0)
-                                        ? Icons.star
-                                        : Icons.star_outline,
-                                    color: SColor.primaryColor,
-                                    size: 16,
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
                                   ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: Colors.red.shade100,
+                                  ),
+                                  child: Text(
+                                    widget.school.board ?? '',
+                                    style: STextStyles.s10W600,
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: Colors.green.shade100,
+                                  ),
+                                  child: Text(
+                                    widget.school.schoolMode?.toCapitalise ??
+                                        '',
+                                    style: STextStyles.s10W600,
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: Colors.orange.shade100,
+                                  ),
+                                  child: Text(
+                                    widget.school.genderType?.toCapitalise ??
+                                        '',
+                                    style: STextStyles.s10W600,
+                                  ),
+                                ),
                               ],
                             ),
                             const SizedBox(height: 12),
@@ -108,14 +156,15 @@ class _SchoolCardState extends State<SchoolCard> {
                                     spacing: 4,
                                     children: [
                                       Text(
-                                        'Boards Offered',
+                                        'Fee Range',
                                         style: STextStyles.s14W400.copyWith(
                                           color: SColor.secTextColor,
                                           overflow: TextOverflow.visible,
                                         ),
                                       ),
                                       Text(
-                                        widget.school.board ?? '-',
+                                        widget.school.feeRange?.toCardFess ??
+                                            '-',
                                         style: STextStyles.s14W600.copyWith(
                                           color: SColor.secTextColor,
                                           overflow: TextOverflow.visible,
@@ -132,14 +181,16 @@ class _SchoolCardState extends State<SchoolCard> {
                                     spacing: 4,
                                     children: [
                                       Text(
-                                        'Fee Range',
+                                        'Ratings',
                                         style: STextStyles.s14W400.copyWith(
                                           color: SColor.secTextColor,
                                           overflow: TextOverflow.visible,
                                         ),
                                       ),
                                       Text(
-                                        widget.school.feeRange ?? '-',
+                                        widget.school.ratings != null
+                                            ? '${widget.school.ratings} / 5'
+                                            : '-',
                                         style: STextStyles.s14W600.copyWith(
                                           color: SColor.secTextColor,
                                           overflow: TextOverflow.visible,
@@ -150,7 +201,55 @@ class _SchoolCardState extends State<SchoolCard> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 10),
+                            Row(
+                              spacing: 4,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(width: 0.5),
+                                  ),
+                                  child: Text(
+                                    widget.school.amenities?[0] ?? '',
+                                    style: STextStyles.s10W600,
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(width: 0.5),
+                                  ),
+                                  child: Text(
+                                    widget.school.amenities?[1] ?? '',
+                                    style: STextStyles.s10W600,
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(width: 0.5),
+                                  ),
+                                  child: Text(
+                                    widget.school.amenities?[2] ?? '',
+                                    style: STextStyles.s10W600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,

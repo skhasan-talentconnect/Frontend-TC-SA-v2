@@ -17,7 +17,10 @@ class NavigatorCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(border: Border.all(color: SColor.borderColor)),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.orange.shade700),
+        color: Colors.yellow.shade100,
+      ),
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,7 +32,12 @@ class NavigatorCard extends StatelessWidget {
             softWrap: true,
           ),
           const SizedBox(height: 20),
-          SButton(label: buttonText, onPressed: onPressed, radius: 0),
+          SButton(
+            label: buttonText,
+            onPressed: onPressed,
+            radius: 0,
+            backgroundColor: Colors.yellow.shade700,
+          ),
         ],
       ),
     );
