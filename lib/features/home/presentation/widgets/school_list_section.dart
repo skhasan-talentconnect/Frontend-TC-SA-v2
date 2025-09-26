@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/navigation/route_name.dart';
 
-
 class SchoolListSection extends StatefulWidget {
   const SchoolListSection({
     required this.title,
@@ -28,57 +27,16 @@ class _SchoolListSectionState extends State<SchoolListSection> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 6),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.blue.shade50,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 16,
                 children: [
                   Text(widget.title, style: STextStyles.s20W600),
-
-                  // // Filters
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 8),
-                  //   child: Container(
-                  //     height: 50,
-                  //     child: ListView.builder(
-                  //       itemBuilder: (context, index) {
-                  //         final isAll = index == 0;
-                  //         final filterTitle =
-                  //             isAll ? 'All' : profile.interestedStreams[index - 1];
-                  //
-                  //         return Row(
-                  //           mainAxisSize: MainAxisSize.min,
-                  //           children: [
-                  //             Filter(
-                  //               title: filterTitle,
-                  //               section: title,
-                  //               onStreamSelected: (stream) {
-                  //                 setState(() {
-                  //                   if (stream == 'All') {
-                  //                     selectedStreamsBySection.remove(title);
-                  //                   } else {
-                  //                     selectedStreamsBySection[title] = stream;
-                  //                   }
-                  //                 });
-                  //               },
-                  //             ),
-                  //             const SizedBox(width: 8),
-                  //           ],
-                  //         );
-                  //       },
-                  //       itemCount: profile.interestedStreams.length + 1,
-                  //       shrinkWrap: true,
-                  //       scrollDirection: Axis.horizontal,
-                  //     ),
-                  //   ),
-                  // ),
-                  //
-                  // const SizedBox(height: 10),
-
-                  // Cards
                   SizedBox(
                     height: 420,
                     child: ListView.separated(
@@ -88,7 +46,9 @@ class _SchoolListSectionState extends State<SchoolListSection> {
                       separatorBuilder: (_, index) => const SizedBox(width: 12),
                       itemBuilder:
                           (_, index) => GestureDetector(
-                           onTap: (){context.pushNamed(RouteNames.overview);},
+                            onTap: () {
+                              context.pushNamed(RouteNames.overview);
+                            },
                             child: SchoolCard(
                               school: widget.schools[index],
                               width: 0.70,

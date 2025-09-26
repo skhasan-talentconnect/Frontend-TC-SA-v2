@@ -56,16 +56,17 @@ class _HomeViewState extends State<HomeView> {
       ),
 
       drawer: SDrawer(),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.pushNamed(RouteNames.chatbot);
         },
-        backgroundColor: Colors.lightBlueAccent,
-        child: Icon(Icons.android_outlined),
+        backgroundColor: Colors.orange.shade300,
+        child: Icon(Icons.chat, color: Colors.black),
       ),
 
       body: Padding(
-        padding: EdgeInsets.only(right: 20, left: 20, top: 8, bottom: 0),
+        padding: EdgeInsets.only(right: 16, left: 16, top: 8, bottom: 0),
         child: widget.navigationShell,
       ),
 

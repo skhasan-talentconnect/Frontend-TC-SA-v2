@@ -56,4 +56,30 @@ extension StringExt on String {
     );
     return newString;
   }
+
+  String get toCardFess {
+    final String string = this;
+    switch (string) {
+      case "1000 - 10000":
+        return '1K - 10K';
+      case "10000 - 25000":
+        return '10K - 25K';
+      case "25000 - 50000":
+        return '25K - 50K';
+      case "50000 - 75000":
+        return '50K - 75K';
+      case "75000 - 100000":
+        return '75K - 1L';
+      case "1 Lakh - 2 Lakh":
+        return '1L - 2L';
+      case "2 Lakh - 3 Lakh":
+        return '2L - 3L';
+      case "3 Lakh - 4 Lakh":
+        return '3L - 4L';
+      case "4 Lakh - 5 Lakh":
+        return '4L - 5L';
+      default:
+        return '5L+ ';
+    }
+  }
 }
