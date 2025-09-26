@@ -24,6 +24,82 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
   late final TabController _tabController;
   late final OverviewViewModel _vm;
 
+int calculateMatchPercentage({
+  required SchoolModel school,
+  required UserPref userPref,
+}) {
+  int totalCriteria = 6; // state, city, board, schoolType, schoolMode, specialist/interest
+  int matched = 0;
+
+  // 1. State
+  if (userPref.state != null &&
+      userPref.state!.isNotEmpty &&
+      school.state != null &&
+      school.state!.isNotEmpty) {
+    if (userPref.state!.toLowerCase() == school.state!.toLowerCase()) {
+      matched++;
+    }
+  }
+
+  // 2. City
+  if (userPref.city != null &&
+      userPref.city!.isNotEmpty &&
+      school.city != null &&
+      school.city!.isNotEmpty) {
+    if (userPref.city!.toLowerCase() == school.city!.toLowerCase()) {
+      matched++;
+    }
+  }
+
+  // 3. Board
+  if (userPref.boards != null &&
+      userPref.boards!.isNotEmpty &&
+      school.board != null &&
+      school.board!.isNotEmpty) {
+    if (userPref.boards!.toLowerCase() == school.board!.toLowerCase()) {
+      matched++;
+    }
+  }
+
+  // 4. School Type (UserPref) vs School Tags (SchoolModel)
+  if (userPref.schoolType != null &&
+      userPref.schoolType!.isNotEmpty &&
+      school.tags != null &&
+      school.tags!.isNotEmpty) {
+    if (school.tags!
+        .map((e) => e.toLowerCase())
+        .contains(userPref.schoolType!.toLowerCase())) {
+      matched++;
+    }
+  }
+
+  // 5. School Mode / Shift
+  if (userPref.shift != null &&
+      userPref.shift!.isNotEmpty &&
+      school.shifts != null &&
+      school.shifts!.isNotEmpty) {
+    if (school.shifts!
+        .map((e) => e.toLowerCase())
+        .contains(userPref.shift!.toLowerCase())) {
+      matched++;
+    }
+  }
+
+  // 6. Specialist vs Interest
+  if (userPref.interests != null &&
+      userPref.interests!.isNotEmpty &&
+      school.specialist != null &&
+      school.specialist!.isNotEmpty) {
+    if (school.specialist!
+        .map((e) => e.toLowerCase())
+        .contains(userPref.interests!.toLowerCase())) {
+      matched++;
+    }
+  }
+
+  return ((matched / totalCriteria) * 100).round();
+}
+
   final List<String> _tabs = const [
     "Overview",
     "Amenities",
@@ -313,22 +389,24 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                           child: Row(
                             spacing: 8,
                             children: [
-                              Expanded(
-                                child: InfoChip(
-                                  topText: school.rank ?? "-",
-                                  bottomText: "IIRF Rank",
-                                  fontSize: infoFont,
-                                  isSmallScreen: isSmall,
-                                ),
-                              ),
-                              Expanded(
-                                child: InfoChip(
-                                  topText: school.board ?? "-",
-                                  bottomText: "Board",
-                                  fontSize: infoFont,
-                                  isSmallScreen: isSmall,
-                                ),
-                              ),
+                             Expanded(
+  child: Builder(builder: (_) {
+    final userPref = getIt<AppStateProvider>().userPref;
+    int matchPercentage = 0;
+    if (userPref != null) {
+      matchPercentage = calculateMatchPercentage(
+        school: school,
+        userPref: userPref,
+      );
+    }
+    return InfoChip(
+      topText: "$matchPercentage%",
+      bottomText: "Match %",
+      fontSize: infoFont,
+      isSmallScreen: isSmall,
+    );
+  }),
+),
                               Expanded(
                                 child: InfoChip(
                                   topText:
