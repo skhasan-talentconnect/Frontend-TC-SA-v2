@@ -37,15 +37,15 @@ class _SchoolResultPageState extends State<SchoolResultsPage> {
     return ChangeNotifierProvider.value(
       value: prefViewModel,
       child: Scaffold(
-        // appBar: SAppBar(
-        //   title: 'Predicted Schools',
-        //   leading: SIcon(
-        //     icon: Icons.keyboard_arrow_left,
-        //     onTap: () {
-        //       context.pop();
-        //     },
-        //   ),
-        // ),
+        appBar: SAppBar(
+          title: 'Predicted Schools',
+          leading: SIcon(
+            icon: Icons.keyboard_arrow_left,
+            onTap: () {
+              context.pop();
+            },
+          ),
+        ),
         body: SafeArea(
           child: Consumer<PrefViewModel>(
             builder:
@@ -53,10 +53,10 @@ class _SchoolResultPageState extends State<SchoolResultsPage> {
                     vm.isLoading
                         ? Center(child: SLoadingIndicator())
                         : SingleChildScrollView(
-                          // padding: const EdgeInsets.symmetric(
-                          //   horizontal: 20,
-                          //   vertical: 12,
-                          // ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 12,
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -97,25 +97,7 @@ class _SchoolResultPageState extends State<SchoolResultsPage> {
                                 ListView.separated(
                                   itemBuilder: (context, index) {
                                     final school = vm.predictedSchools[index];
-                                    return SchoolCard(
-                                      school: SchoolCardModel(
-                                        schoolId: school.id,
-
-                                        name: school.name ?? 'School Name',
-                                        feeRange:
-                                            school.feeRange ?? 'Not specified',
-                                        location:
-                                            '${school.city ?? ''}, ${school.state ?? ''}',
-                                        board: school.board ?? 'Not specified',
-                                        genderType:
-                                            school.genderType ??
-                                            'Not specified',
-                                        shifts: school.shifts ?? [],
-                                        schoolMode:
-                                            school.schoolMode ??
-                                            'Not specified',
-                                      ),
-                                    );
+                                    return SchoolCard(school: school);
                                   },
                                   separatorBuilder:
                                       (context, index) =>

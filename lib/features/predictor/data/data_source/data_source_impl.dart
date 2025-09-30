@@ -1,16 +1,15 @@
 import 'package:dartz/dartz.dart';
+import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/network/endpoints.dart';
 import 'package:tc_sa/core/network/exceptions.dart';
 import 'package:tc_sa/core/network/network.dart';
 import 'package:tc_sa/core/network/request.dart';
 import 'package:tc_sa/core/network/typedef.dart';
-import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
-
 
 class PredictorDataSourceImpl {
   final NetworkService _networkService = NetworkService();
 
-  ResultFuture<List<SchoolModel>?> predictSchools(
+  ResultFuture<List<SchoolCardModel>?> predictSchools(
     Map<String, dynamic> filters,
   ) async {
     Request r = Request(
@@ -25,8 +24,8 @@ class PredictorDataSourceImpl {
 
       if (response.isNotEmpty) {
         final List<dynamic> schoolsData = response['data'];
-        final List<SchoolModel> schools =
-            schoolsData.map((json) => SchoolModel.fromJson(json)).toList();
+        final List<SchoolCardModel> schools =
+            schoolsData.map((json) => SchoolCardModel.fromJson(json)).toList();
 
         return Right(schools);
       }
