@@ -43,6 +43,11 @@ extension StringExt on String {
     return DateFormat('dd/MM/yyyy').format(date);
   }
 
+  String get toYYYYY {
+    DateTime date = toDate;
+    return DateFormat('yyyy').format(date);
+  }
+
   String get toEEEEDDMMMYYYY {
     DateTime date = toDate;
     return DateFormat('EEEE, dd MMM yyyy').format(date);

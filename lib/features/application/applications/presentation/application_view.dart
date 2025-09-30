@@ -2,10 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
 import 'package:tc_sa/common/index.dart'
     show SAppBar, SIcon, SColor, STextStyles, SLoadingIndicator;
-import 'package:tc_sa/core/index.dart' show getIt, AppStateProvider, ViewState, RouteNames;
+import 'package:tc_sa/core/index.dart' show getIt, AppStateProvider, RouteNames;
 import 'package:tc_sa/features/application/applications/data/entities/applications_model.dart';
 import 'package:tc_sa/features/application/applications/presentation/view_models/application_view_model.dart';
 
@@ -19,7 +18,7 @@ class ApplicationFormView extends StatefulWidget {
 class _ApplicationFormViewState extends State<ApplicationFormView> {
   final _vm = ApplicationViewModel();
   final _formKey = GlobalKey<FormState>();
-bool _checkingExisting = true; // NEW
+  bool _checkingExisting = true; // NEW
 
   @override
   void initState() {
@@ -234,18 +233,26 @@ bool _checkingExisting = true; // NEW
     int? fatherAge = int.tryParse(_fatherAgeCtrl.text.trim());
     int? motherAge = int.tryParse(_motherAgeCtrl.text.trim());
 
-  // Siblings to model objects
-final List<Sibling> siblingList = _siblings
-    .map((s) => Sibling(
-          name: s.name.text.trim().isEmpty ? null : s.name.text.trim(),
-          age: int.tryParse(s.age.text.trim()),
-          sex: s.sex.text.trim().isEmpty ? null : s.sex.text.trim(),
-          nameOfInstitute: s.institute.text.trim().isEmpty ? null : s.institute.text.trim(),
-          className: s.className.text.trim().isEmpty ? null : s.className.text.trim(),
-        ))
-    .where((sib) => (sib.name ?? '').isNotEmpty)
-    .toList();
-
+    // Siblings to model objects
+    final List<Sibling> siblingList =
+        _siblings
+            .map(
+              (s) => Sibling(
+                name: s.name.text.trim().isEmpty ? null : s.name.text.trim(),
+                age: int.tryParse(s.age.text.trim()),
+                sex: s.sex.text.trim().isEmpty ? null : s.sex.text.trim(),
+                nameOfInstitute:
+                    s.institute.text.trim().isEmpty
+                        ? null
+                        : s.institute.text.trim(),
+                className:
+                    s.className.text.trim().isEmpty
+                        ? null
+                        : s.className.text.trim(),
+              ),
+            )
+            .where((sib) => (sib.name ?? '').isNotEmpty)
+            .toList();
 
     final payload = StudentApplication(
       studId: studId,
@@ -255,13 +262,15 @@ final List<Sibling> siblingList = _siblings
       dob: dob,
       gender: _gender,
       motherTongue: _motherTongueCtrl.text.trim(),
-      placeOfBirth: _placeOfBirthCtrl.text.trim().isEmpty
-          ? null
-          : _placeOfBirthCtrl.text.trim(),
+      placeOfBirth:
+          _placeOfBirthCtrl.text.trim().isEmpty
+              ? null
+              : _placeOfBirthCtrl.text.trim(),
       speciallyAbled: _speciallyAbled,
-      speciallyAbledType: _speciallyAbledTypeCtrl.text.trim().isEmpty
-          ? null
-          : _speciallyAbledTypeCtrl.text.trim(),
+      speciallyAbledType:
+          _speciallyAbledTypeCtrl.text.trim().isEmpty
+              ? null
+              : _speciallyAbledTypeCtrl.text.trim(),
       nationality: _nationalityCtrl.text.trim(),
       religion: _religionCtrl.text.trim(),
       caste: _casteCtrl.text.trim(),
@@ -269,24 +278,29 @@ final List<Sibling> siblingList = _siblings
           _subcasteCtrl.text.trim().isEmpty ? null : _subcasteCtrl.text.trim(),
       aadharNo: _aadharCtrl.text.trim(),
       bloodGroup: _bloodGroupCtrl.text.trim(),
-      allergicTo: _allergicToCtrl.text.trim().isEmpty
-          ? null
-          : _allergicToCtrl.text.trim(),
+      allergicTo:
+          _allergicToCtrl.text.trim().isEmpty
+              ? null
+              : _allergicToCtrl.text.trim(),
       interest: _interestCtrl.text.trim(),
 
       // last school
-      lastSchoolName: _lastSchoolNameCtrl.text.trim().isEmpty
-          ? null
-          : _lastSchoolNameCtrl.text.trim(),
-      classCompleted: _classCompletedCtrl.text.trim().isEmpty
-          ? null
-          : _classCompletedCtrl.text.trim(),
-      lastAcademicYear: _lastAcademicYearCtrl.text.trim().isEmpty
-          ? null
-          : _lastAcademicYearCtrl.text.trim(),
-      reasonForLeaving: _reasonForLeavingCtrl.text.trim().isEmpty
-          ? null
-          : _reasonForLeavingCtrl.text.trim(),
+      lastSchoolName:
+          _lastSchoolNameCtrl.text.trim().isEmpty
+              ? null
+              : _lastSchoolNameCtrl.text.trim(),
+      classCompleted:
+          _classCompletedCtrl.text.trim().isEmpty
+              ? null
+              : _classCompletedCtrl.text.trim(),
+      lastAcademicYear:
+          _lastAcademicYearCtrl.text.trim().isEmpty
+              ? null
+              : _lastAcademicYearCtrl.text.trim(),
+      reasonForLeaving:
+          _reasonForLeavingCtrl.text.trim().isEmpty
+              ? null
+              : _reasonForLeavingCtrl.text.trim(),
       board: _lastBoard,
 
       // father
@@ -311,49 +325,55 @@ final List<Sibling> siblingList = _siblings
 
       // relationship & guardian
       relationshipStatus: _relationshipStatus,
-      guardianName: _needsGuardian()
-          ? (_guardianNameCtrl.text.trim().isEmpty
-              ? null
-              : _guardianNameCtrl.text.trim())
-          : null,
-      guardianContactNo: _needsGuardian()
-          ? (_guardianContactNoCtrl.text.trim().isEmpty
-              ? null
-              : _guardianContactNoCtrl.text.trim())
-          : null,
-      guardianRelationToStudent: _needsGuardian()
-          ? (_guardianRelationCtrl.text.trim().isEmpty
-              ? null
-              : _guardianRelationCtrl.text.trim())
-          : null,
-      guardianQualification: _needsGuardian()
-          ? (_guardianQualificationCtrl.text.trim().isEmpty
-              ? null
-              : _guardianQualificationCtrl.text.trim())
-          : null,
-      guardianProfession: _needsGuardian()
-          ? (_guardianProfessionCtrl.text.trim().isEmpty
-              ? null
-              : _guardianProfessionCtrl.text.trim())
-          : null,
-      guardianEmail: _needsGuardian()
-          ? (_guardianEmailCtrl.text.trim().isEmpty
-              ? null
-              : _guardianEmailCtrl.text.trim())
-          : null,
-      guardianAadharNo: _needsGuardian()
-          ? (_guardianAadharNoCtrl.text.trim().isEmpty
-              ? null
-              : _guardianAadharNoCtrl.text.trim())
-          : null,
+      guardianName:
+          _needsGuardian()
+              ? (_guardianNameCtrl.text.trim().isEmpty
+                  ? null
+                  : _guardianNameCtrl.text.trim())
+              : null,
+      guardianContactNo:
+          _needsGuardian()
+              ? (_guardianContactNoCtrl.text.trim().isEmpty
+                  ? null
+                  : _guardianContactNoCtrl.text.trim())
+              : null,
+      guardianRelationToStudent:
+          _needsGuardian()
+              ? (_guardianRelationCtrl.text.trim().isEmpty
+                  ? null
+                  : _guardianRelationCtrl.text.trim())
+              : null,
+      guardianQualification:
+          _needsGuardian()
+              ? (_guardianQualificationCtrl.text.trim().isEmpty
+                  ? null
+                  : _guardianQualificationCtrl.text.trim())
+              : null,
+      guardianProfession:
+          _needsGuardian()
+              ? (_guardianProfessionCtrl.text.trim().isEmpty
+                  ? null
+                  : _guardianProfessionCtrl.text.trim())
+              : null,
+      guardianEmail:
+          _needsGuardian()
+              ? (_guardianEmailCtrl.text.trim().isEmpty
+                  ? null
+                  : _guardianEmailCtrl.text.trim())
+              : null,
+      guardianAadharNo:
+          _needsGuardian()
+              ? (_guardianAadharNoCtrl.text.trim().isEmpty
+                  ? null
+                  : _guardianAadharNoCtrl.text.trim())
+              : null,
 
       // addresses
       presentAddress: _presentAddressCtrl.text.trim(),
       permanentAddress: _permanentAddressCtrl.text.trim(),
 
       // siblings
-   siblings: siblingList,
-
+      siblings: siblingList,
 
       // other
       homeLanguage: _homeLanguageCtrl.text.trim(),
@@ -385,231 +405,332 @@ final List<Sibling> siblingList = _siblings
       value: _vm,
       child: Consumer<ApplicationViewModel>(
         builder: (_, vm, __) {
-          final busy = vm.viewState == ViewState.busy;
-
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: SAppBar(
-                title: "Application Form",
-                leading: SIcon(icon: Icons.keyboard_arrow_left,
-          onTap: () => Navigator.of(context).pop())),
-            body: _checkingExisting
-    ? const Center(child: SLoadingIndicator())
-    : (vm.application != null)
-        ? _AlreadyFilledMessage() // <— show this instead of the form
-        : SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-              child: Form(
-                key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // ---------------- Student ----------------
-                            Text("Student Details",
-                                style: STextStyles.s18W600
-                                    .copyWith(color: SColor.secTextColor)),
-                            const SizedBox(height: 8),
-                            _input("Full Name", _nameCtrl, req: true),
-                            _input("Location", _locationCtrl, req: true),
-                            _dateInput("DOB (yyyy-MM-dd)", _dobCtrl,
-                                onPick: _pickDob, req: true),
-                            _dropdown<String>(
-                              label: "Gender",
-                              value: _gender,
-                              items: const ["Male", "Female", "Other"],
-                              onChanged: (v) => setState(() => _gender = v),
-                            ),
-                            _input("Mother Tongue", _motherTongueCtrl),
-                            _input("Place of Birth (optional)",
-                                _placeOfBirthCtrl),
-                            // Specially abled switch + type
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: Row(
+              title: "Application Form",
+              leading: SIcon(
+                icon: Icons.keyboard_arrow_left,
+                onTap: () => context.pop(),
+              ),
+            ),
+
+            body:
+                _checkingExisting
+                    ? const Center(child: SLoadingIndicator())
+                    : (vm.application != null)
+                    ? _AlreadyFilledMessage() // <— show this instead of the form
+                    : SafeArea(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // ---------------- Student ----------------
+                              Text(
+                                "Student Details",
+                                style: STextStyles.s18W600.copyWith(
+                                  color: SColor.secTextColor,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              _input("Full Name", _nameCtrl, req: true),
+                              _input("Location", _locationCtrl, req: true),
+                              _dateInput(
+                                "DOB (yyyy-MM-dd)",
+                                _dobCtrl,
+                                onPick: _pickDob,
+                                req: true,
+                              ),
+                              _dropdown<String>(
+                                label: "Gender",
+                                value: _gender,
+                                items: const ["Male", "Female", "Other"],
+                                onChanged: (v) => setState(() => _gender = v),
+                              ),
+                              _input("Mother Tongue", _motherTongueCtrl),
+                              _input(
+                                "Place of Birth (optional)",
+                                _placeOfBirthCtrl,
+                              ),
+                              // Specially abled switch + type
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: Row(
+                                  children: [
+                                    Switch(
+                                      value: _speciallyAbled,
+                                      onChanged:
+                                          (v) => setState(
+                                            () => _speciallyAbled = v,
+                                          ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Text("Specially Abled"),
+                                  ],
+                                ),
+                              ),
+                              if (_speciallyAbled)
+                                _input(
+                                  "Disability Type (optional)",
+                                  _speciallyAbledTypeCtrl,
+                                ),
+                              _input(
+                                "Nationality",
+                                _nationalityCtrl,
+                                req: true,
+                              ),
+                              _input("Religion", _religionCtrl, req: true),
+                              _input("Caste", _casteCtrl),
+                              _input("Subcaste (optional)", _subcasteCtrl),
+                              _input("Aadhar No", _aadharCtrl, req: true),
+                              _input("Blood Group", _bloodGroupCtrl),
+                              _input("Allergic To (optional)", _allergicToCtrl),
+                              _input("Interest", _interestCtrl, req: true),
+
+                              const SizedBox(height: 16),
+                              // ---------------- Last School ----------------
+                              Text(
+                                "Last School / Play School (if attended)",
+                                style: STextStyles.s18W600.copyWith(
+                                  color: SColor.secTextColor,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              _input(
+                                "School Name (optional)",
+                                _lastSchoolNameCtrl,
+                              ),
+                              _input(
+                                "Class Completed (optional)",
+                                _classCompletedCtrl,
+                              ),
+                              _input(
+                                "Last Academic Year (optional)",
+                                _lastAcademicYearCtrl,
+                              ),
+                              _input(
+                                "Reason For Leaving (optional)",
+                                _reasonForLeavingCtrl,
+                              ),
+                              _dropdown<String>(
+                                label: "Board (optional)",
+                                value: _lastBoard,
+                                items: const ["CBSE", "ICSE", "STATE", "OTHER"],
+                                onChanged:
+                                    (v) => setState(() => _lastBoard = v),
+                              ),
+
+                              const SizedBox(height: 16),
+                              // ---------------- Father ----------------
+                              Text(
+                                "Father Details",
+                                style: STextStyles.s18W600.copyWith(
+                                  color: SColor.secTextColor,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              _input("Name", _fatherNameCtrl, req: true),
+                              _input(
+                                "Age",
+                                _fatherAgeCtrl,
+                                keyboard: TextInputType.number,
+                              ),
+                              _input("Qualification", _fatherQualCtrl),
+                              _input("Profession", _fatherProfCtrl),
+                              _input("Annual Income", _fatherIncomeCtrl),
+                              _input(
+                                "Phone No",
+                                _fatherPhoneCtrl,
+                                keyboard: TextInputType.phone,
+                              ),
+                              _input("Aadhar No", _fatherAadharCtrl),
+                              _input(
+                                "Email",
+                                _fatherEmailCtrl,
+                                keyboard: TextInputType.emailAddress,
+                              ),
+
+                              const SizedBox(height: 16),
+                              // ---------------- Mother ----------------
+                              Text(
+                                "Mother Details",
+                                style: STextStyles.s18W600.copyWith(
+                                  color: SColor.secTextColor,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              _input("Name", _motherNameCtrl, req: true),
+                              _input(
+                                "Age",
+                                _motherAgeCtrl,
+                                keyboard: TextInputType.number,
+                              ),
+                              _input("Qualification", _motherQualCtrl),
+                              _input("Profession", _motherProfCtrl),
+                              _input("Annual Income", _motherIncomeCtrl),
+                              _input(
+                                "Phone No",
+                                _motherPhoneCtrl,
+                                keyboard: TextInputType.phone,
+                              ),
+                              _input("Aadhar No", _motherAadharCtrl),
+                              _input(
+                                "Email",
+                                _motherEmailCtrl,
+                                keyboard: TextInputType.emailAddress,
+                              ),
+
+                              const SizedBox(height: 16),
+                              // ---------------- Relationship & Guardian ----------------
+                              Text(
+                                "Family & Address",
+                                style: STextStyles.s18W600.copyWith(
+                                  color: SColor.secTextColor,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              _dropdown<String>(
+                                label: "Relationship Status",
+                                value: _relationshipStatus,
+                                items: const [
+                                  "Married",
+                                  "Divorced",
+                                  "Single Mother",
+                                  "Single Father",
+                                  "Widowed",
+                                  "Other",
+                                ],
+                                onChanged:
+                                    (v) =>
+                                        setState(() => _relationshipStatus = v),
+                              ),
+                              if (_needsGuardian()) ...[
+                                _input(
+                                  "Guardian Name (optional)",
+                                  _guardianNameCtrl,
+                                ),
+                                _input(
+                                  "Guardian Contact No (optional)",
+                                  _guardianContactNoCtrl,
+                                  keyboard: TextInputType.phone,
+                                ),
+                                _input(
+                                  "Relation To Student (optional)",
+                                  _guardianRelationCtrl,
+                                ),
+                                _input(
+                                  "Guardian Qualification (optional)",
+                                  _guardianQualificationCtrl,
+                                ),
+                                _input(
+                                  "Guardian Profession (optional)",
+                                  _guardianProfessionCtrl,
+                                ),
+                                _input(
+                                  "Guardian Email (optional)",
+                                  _guardianEmailCtrl,
+                                  keyboard: TextInputType.emailAddress,
+                                ),
+                                _input(
+                                  "Guardian Aadhar No (optional)",
+                                  _guardianAadharNoCtrl,
+                                ),
+                              ],
+                              _input(
+                                "Present Address",
+                                _presentAddressCtrl,
+                                req: true,
+                                maxLines: 2,
+                              ),
+                              _input(
+                                "Permanent Address",
+                                _permanentAddressCtrl,
+                                req: true,
+                                maxLines: 2,
+                              ),
+
+                              const SizedBox(height: 16),
+                              // ---------------- Siblings ----------------
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Switch(
-                                    value: _speciallyAbled,
-                                    onChanged: (v) =>
-                                        setState(() => _speciallyAbled = v),
+                                  Text(
+                                    "Siblings",
+                                    style: STextStyles.s18W600.copyWith(
+                                      color: SColor.secTextColor,
+                                    ),
                                   ),
-                                  const SizedBox(width: 8),
-                                  const Text("Specially Abled"),
+                                  TextButton.icon(
+                                    onPressed: _addSibling,
+                                    icon: const Icon(Icons.add),
+                                    label: const Text("Add"),
+                                  ),
                                 ],
                               ),
-                            ),
-                            if (_speciallyAbled)
-                              _input("Disability Type (optional)",
-                                  _speciallyAbledTypeCtrl),
-                            _input("Nationality", _nationalityCtrl, req: true),
-                            _input("Religion", _religionCtrl, req: true),
-                            _input("Caste", _casteCtrl),
-                            _input("Subcaste (optional)", _subcasteCtrl),
-                            _input("Aadhar No", _aadharCtrl, req: true),
-                            _input("Blood Group", _bloodGroupCtrl),
-                            _input("Allergic To (optional)", _allergicToCtrl),
-                            _input("Interest", _interestCtrl, req: true),
+                              if (_siblings.isEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: Text(
+                                    "No siblings added.",
+                                    style: STextStyles.s12W400.copyWith(
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ),
+                              for (int i = 0; i < _siblings.length; i++)
+                                _siblingCard(i, _siblings[i]),
 
-                            const SizedBox(height: 16),
-                            // ---------------- Last School ----------------
-                            Text("Last School / Play School (if attended)",
-                                style: STextStyles.s18W600
-                                    .copyWith(color: SColor.secTextColor)),
-                            const SizedBox(height: 8),
-                            _input("School Name (optional)",
-                                _lastSchoolNameCtrl),
-                            _input("Class Completed (optional)",
-                                _classCompletedCtrl),
-                            _input("Last Academic Year (optional)",
-                                _lastAcademicYearCtrl),
-                            _input("Reason For Leaving (optional)",
-                                _reasonForLeavingCtrl),
-                            _dropdown<String>(
-                              label: "Board (optional)",
-                              value: _lastBoard,
-                              items: const ["CBSE", "ICSE", "STATE", "OTHER"],
-                              onChanged: (v) => setState(() => _lastBoard = v),
-                            ),
+                              const SizedBox(height: 16),
+                              // ---------------- Other ----------------
+                              Text(
+                                "Other Info",
+                                style: STextStyles.s18W600.copyWith(
+                                  color: SColor.secTextColor,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              _input(
+                                "Home Language",
+                                _homeLanguageCtrl,
+                                req: true,
+                              ),
+                              _input(
+                                "Yearly Budget",
+                                _yearlyBudgetCtrl,
+                                req: true,
+                              ),
 
-                            const SizedBox(height: 16),
-                            // ---------------- Father ----------------
-                            Text("Father Details",
-                                style: STextStyles.s18W600
-                                    .copyWith(color: SColor.secTextColor)),
-                            const SizedBox(height: 8),
-                            _input("Name", _fatherNameCtrl, req: true),
-                            _input("Age", _fatherAgeCtrl,
-                                keyboard: TextInputType.number),
-                            _input("Qualification", _fatherQualCtrl),
-                            _input("Profession", _fatherProfCtrl),
-                            _input("Annual Income", _fatherIncomeCtrl),
-                            _input("Phone No", _fatherPhoneCtrl,
-                                keyboard: TextInputType.phone),
-                            _input("Aadhar No", _fatherAadharCtrl),
-                            _input("Email", _fatherEmailCtrl,
-                                keyboard: TextInputType.emailAddress),
-
-                            const SizedBox(height: 16),
-                            // ---------------- Mother ----------------
-                            Text("Mother Details",
-                                style: STextStyles.s18W600
-                                    .copyWith(color: SColor.secTextColor)),
-                            const SizedBox(height: 8),
-                            _input("Name", _motherNameCtrl, req: true),
-                            _input("Age", _motherAgeCtrl,
-                                keyboard: TextInputType.number),
-                            _input("Qualification", _motherQualCtrl),
-                            _input("Profession", _motherProfCtrl),
-                            _input("Annual Income", _motherIncomeCtrl),
-                            _input("Phone No", _motherPhoneCtrl,
-                                keyboard: TextInputType.phone),
-                            _input("Aadhar No", _motherAadharCtrl),
-                            _input("Email", _motherEmailCtrl,
-                                keyboard: TextInputType.emailAddress),
-
-                            const SizedBox(height: 16),
-                            // ---------------- Relationship & Guardian ----------------
-                            Text("Family & Address",
-                                style: STextStyles.s18W600
-                                    .copyWith(color: SColor.secTextColor)),
-                            const SizedBox(height: 8),
-                            _dropdown<String>(
-                              label: "Relationship Status",
-                              value: _relationshipStatus,
-                              items: const [
-                                "Married",
-                                "Divorced",
-                                "Single Mother",
-                                "Single Father",
-                                "Widowed",
-                                "Other"
-                              ],
-                              onChanged: (v) =>
-                                  setState(() => _relationshipStatus = v),
-                            ),
-                            if (_needsGuardian()) ...[
-                              _input("Guardian Name (optional)",
-                                  _guardianNameCtrl),
-                              _input("Guardian Contact No (optional)",
-                                  _guardianContactNoCtrl,
-                                  keyboard: TextInputType.phone),
-                              _input("Relation To Student (optional)",
-                                  _guardianRelationCtrl),
-                              _input("Guardian Qualification (optional)",
-                                  _guardianQualificationCtrl),
-                              _input("Guardian Profession (optional)",
-                                  _guardianProfessionCtrl),
-                              _input("Guardian Email (optional)",
-                                  _guardianEmailCtrl,
-                                  keyboard: TextInputType.emailAddress),
-                              _input("Guardian Aadhar No (optional)",
-                                  _guardianAadharNoCtrl),
+                              const SizedBox(height: 24),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: _submit,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: SColor.primaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 14,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    "Submit Application",
+                                    style: STextStyles.s16W600.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
-                            _input("Present Address", _presentAddressCtrl,
-                                req: true, maxLines: 2),
-                            _input("Permanent Address", _permanentAddressCtrl,
-                                req: true, maxLines: 2),
-
-                            const SizedBox(height: 16),
-                            // ---------------- Siblings ----------------
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Siblings",
-                                    style: STextStyles.s18W600
-                                        .copyWith(color: SColor.secTextColor)),
-                                TextButton.icon(
-                                  onPressed: _addSibling,
-                                  icon: const Icon(Icons.add),
-                                  label: const Text("Add"),
-                                ),
-                              ],
-                            ),
-                            if (_siblings.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
-                                child: Text(
-                                  "No siblings added.",
-                                  style: STextStyles.s12W400
-                                      .copyWith(color: Colors.black54),
-                                ),
-                              ),
-                            for (int i = 0; i < _siblings.length; i++)
-                              _siblingCard(i, _siblings[i]),
-
-                            const SizedBox(height: 16),
-                            // ---------------- Other ----------------
-                            Text("Other Info",
-                                style: STextStyles.s18W600
-                                    .copyWith(color: SColor.secTextColor)),
-                            const SizedBox(height: 8),
-                            _input("Home Language", _homeLanguageCtrl,
-                                req: true),
-                            _input("Yearly Budget", _yearlyBudgetCtrl,
-                                req: true),
-
-                            const SizedBox(height: 24),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: _submit,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: SColor.primaryColor,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 14),
-                                ),
-                                child: Text("Submit Application",
-                                    style: STextStyles.s16W600
-                                        .copyWith(color: Colors.white)),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
           );
         },
       ),
@@ -629,26 +750,20 @@ final List<Sibling> siblingList = _siblings
       child: Column(
         children: [
           _input("Name", s.name, req: false),
-         Row(
-  children: [
-    Expanded(
-      child: _input(
-        "Age",
-        s.age,
-        keyboard: TextInputType.number,
-        req: false,
-      ),
-    ),
-    const SizedBox(width: 12),
-    Expanded(
-      child: _input(
-        "Sex",
-        s.sex,
-        req: false,
-      ),
-    ),
-  ],
-),
+          Row(
+            children: [
+              Expanded(
+                child: _input(
+                  "Age",
+                  s.age,
+                  keyboard: TextInputType.number,
+                  req: false,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: _input("Sex", s.sex, req: false)),
+            ],
+          ),
 
           _input("Institute Name", s.institute, req: false),
           _input("Class", s.className, req: false),
@@ -688,8 +803,10 @@ final List<Sibling> siblingList = _siblings
           labelText: label,
           border: const OutlineInputBorder(),
           isDense: true,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 10,
+          ),
         ),
       ),
     );
@@ -714,12 +831,16 @@ final List<Sibling> siblingList = _siblings
         },
         decoration: InputDecoration(
           labelText: label,
-          suffixIcon:
-              IconButton(icon: const Icon(Icons.calendar_today), onPressed: onPick),
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.calendar_today),
+            onPressed: onPick,
+          ),
           border: const OutlineInputBorder(),
           isDense: true,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 10,
+          ),
         ),
       ),
     );
@@ -738,26 +859,32 @@ final List<Sibling> siblingList = _siblings
           labelText: label,
           border: const OutlineInputBorder(),
           isDense: true,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 4,
+          ),
         ),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<T>(
             value: value,
             isExpanded: true,
-            items: items
-                .map((e) => DropdownMenuItem<T>(
-                    value: e, child: Text(e.toString())))
-                .toList(),
+            items:
+                items
+                    .map(
+                      (e) => DropdownMenuItem<T>(
+                        value: e,
+                        child: Text(e.toString()),
+                      ),
+                    )
+                    .toList(),
             onChanged: onChanged,
           ),
         ),
       ),
     );
-
   }
-  
 }
+
 class _AlreadyFilledMessage extends StatelessWidget {
   const _AlreadyFilledMessage();
 
@@ -806,12 +933,22 @@ class _AlreadyFilledMessage extends StatelessWidget {
             const SizedBox(height: 12),
 
             // New View PDF button
+            // SButton.outlined(
+            //   label: 'View PDF',
+            //   text: Text("View PDF"),
+            //   onPressed: () => context.pushNamed(RouteNames.applicationPdf),
+            // ),
             SizedBox(
               width: 180,
               child: OutlinedButton.icon(
                 onPressed: () => context.pushNamed(RouteNames.applicationPdf),
-                icon: const Icon(Icons.picture_as_pdf),
-                label: const Text("View PDF"),
+                icon: Icon(Icons.picture_as_pdf, color: Colors.black),
+                label: Text(
+                  "View PDF",
+                  style: STextStyles.s14W600.copyWith(
+                    color: SColor.secTextColor,
+                  ),
+                ),
               ),
             ),
           ],
@@ -820,7 +957,6 @@ class _AlreadyFilledMessage extends StatelessWidget {
     );
   }
 }
-
 
 class _SiblingField {
   final name = TextEditingController();

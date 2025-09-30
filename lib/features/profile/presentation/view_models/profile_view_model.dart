@@ -6,26 +6,20 @@ import 'package:tc_sa/features/profile/data/entities/index.dart';
 class ProfileViewModel extends ViewStateProvider {
   final List<ProfileTileModel> _routes = [
     ProfileTileModel(
-      path: RouteNames.myForms,
-      name: 'My Applications',
-      icon: Icon(Icons.assignment),
-    ),
-     ProfileTileModel(
       path: RouteNames.registerSchool,
       name: 'Register Your School',
-      icon: Icon(Icons.book)
-    ),
-    ProfileTileModel(
-      path: RouteNames.preferences,
-      name: 'Edit Preferences',
-      icon: Icon(Icons.edit),
+      icon: Icon(Icons.book),
     ),
     ProfileTileModel(
       path: RouteNames.resetPassword,
       name: 'Reset Password',
       icon: Icon(Icons.lock_reset),
     ),
-    ProfileTileModel(path:RouteNames.addApplication,name: 'Fill Application Form', icon: Icon(Icons.assignment)),
+    ProfileTileModel(
+      path: RouteNames.addApplication,
+      name: 'Fill Application Form',
+      icon: Icon(Icons.assignment),
+    ),
     ProfileTileModel(name: 'Contact Us', icon: Icon(Icons.phone)),
     ProfileTileModel(name: 'Support', icon: Icon(Icons.support_agent)),
     ProfileTileModel(name: 'Logout', icon: Icon(Icons.logout)),
