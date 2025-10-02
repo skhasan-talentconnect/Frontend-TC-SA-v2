@@ -29,6 +29,9 @@ class RouteNames {
   static const String amenity = 'amenity';
   static const String alumini = 'alumini';
   static const String activity = 'activity';
+  static const String infrastructure='infrastructure';
+  static const String feeAndScholarship='feeAndScholarship';
+  static const String otherDetails ='otherDeails';
   static const String review = 'review';
 
   //features

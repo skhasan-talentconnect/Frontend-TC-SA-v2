@@ -5,12 +5,14 @@ class SchoolTabController with ChangeNotifier {
   int currentIndex = 0;
 
   final List<String> tabs = [
-    "Overview",
+       "Overview",
     "Amenities",
+     "Infrastructure", 
+  "Other Details", 
+  "Fees And Scholarship",
     "Activities",
+    "Aluminis",
     "Reviews",
-    "Alumnis",
-    "Specialisties",
   ];
 
   void initialize(TickerProvider vsync) {

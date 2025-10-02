@@ -35,6 +35,9 @@ class Endpoints {
   //School Activities
   static const String adminSchoolsActivities = 'admin/schools/activities';
   static const String adminSchoolsAlumnus = 'admin/alumnus';
+  static const String adminInfrastructure='admin/schools/infrastructure';
+  static const String adminfeeAndScholarship='admin/schools/fees-scholarships';
+  static const String adminOtherDetails='admin/schools/other-details';
 
   static const String adminBlogs = 'admin/blogs';
   static const String adminCompare = 'admin/compare';

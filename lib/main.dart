@@ -13,7 +13,7 @@ import 'core/services/service_locator.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+ await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await SharedPrefHelper.init();
   await NotificationService().init();
   initServiceLocator();

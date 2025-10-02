@@ -113,7 +113,7 @@ class _AmenitiesViewState extends State<AmenitiesView> {
             appBar: SAppBar(
               leading: SIcon(
                 icon: Icons.keyboard_arrow_left,
-                onTap: () => Navigator.of(context).pop(),
+                onTap: () => context.pop(),
               ),
               title: "School Amenities",
             ),
