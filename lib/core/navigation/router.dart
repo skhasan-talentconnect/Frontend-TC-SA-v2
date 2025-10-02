@@ -19,6 +19,9 @@ import 'package:tc_sa/features/detailPages/activities/presentation/activities_vi
 import 'package:tc_sa/features/detailPages/alumini/presentation/alumini_view.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/view_models/alumini_view_model.dart';
 import 'package:tc_sa/features/detailPages/amenity/presentation/amenity_view.dart';
+import 'package:tc_sa/features/detailPages/feeAndScholarship/presentation/fees_scholarship_view.dart';
+import 'package:tc_sa/features/detailPages/infrastructure/presentation/infrastructure_view.dart';
+import 'package:tc_sa/features/detailPages/otherDetails/presentation/other_details_view.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/overview_view.dart';
 import 'package:tc_sa/features/detailPages/reviews/presentation/reviews_view.dart';
 import 'package:tc_sa/features/home/index.dart';
@@ -210,7 +213,22 @@ class AppRouter {
         name: RouteNames.amenity,
         builder: (context, state) => const AmenitiesView(),
       ),
-
+GoRoute(
+  path: '/infrastructure',
+  name: RouteNames.infrastructure, // Make sure to define RouteNames.infrastructure
+  builder: (context, state) => const InfrastructureView(),
+),
+// Add routes for OtherDetails and FeesScholarship here as well
+GoRoute(
+  path: '/other-details',
+  name: RouteNames.otherDetails,
+  builder: (context, state) => const OtherDetailsView(),
+),
+GoRoute(
+  path: '/fees-scholarship',
+  name: RouteNames.feeAndScholarship,
+  builder: (context, state) => const FeesAndScholarshipsView(),
+),
       // ✅ Reviews
       GoRoute(
         path: '/review',

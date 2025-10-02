@@ -27,6 +27,9 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
   final List<String> _tabs = const [
     "Overview",
     "Amenities",
+    "Infrastructure",
+    "Other Details",
+    "Fees And Scholarship",
     "Activities",
     "Aluminis",
     "Reviews",
@@ -48,18 +51,39 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
 
   void _handleTabSelection() {
     if (_tabController.indexIsChanging) {
+       final name = _vm.school?.name ?? 'School';
+    final id = widget.schoolId;
       switch (_tabController.index) {
+       
         case 1:
-          final name = _vm.school?.name ?? 'School';
+       
           context.pushNamed(
             RouteNames.amenity,
             extra: {'schoolId': widget.schoolId, 'schoolName': name},
           );
           break;
-        case 2:
+        case 2: // New case for Infrastructure
+          context.pushNamed(
+            RouteNames.infrastructure,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+        case 3: // New case for Other Details
+          context.pushNamed(
+            RouteNames.otherDetails,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+        case 4: // New case for Fees & Scholarship
+           context.pushNamed(
+            RouteNames.feeAndScholarship,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+        case 5:
           context.pushNamed(RouteNames.activity, extra: widget.schoolId);
           break;
-        case 3:
+        case 6:
           context.pushNamed(
             RouteNames.alumini,
             extra: {
@@ -68,7 +92,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
             },
           );
           break;
-        case 4:
+        case 7:
           context.pushNamed(RouteNames.review);
           break;
         default:
