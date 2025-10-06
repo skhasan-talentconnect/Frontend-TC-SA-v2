@@ -6,12 +6,12 @@ import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/detailPages/feeAndScholarship/presentation/view_models/feeAndScholarship_view_model.dart';
 import 'package:tc_sa/features/detailPages/feeAndScholarship/presentation/widgets/scholarship_card.dart';
 
-
 class FeesAndScholarshipsView extends StatefulWidget {
   const FeesAndScholarshipsView({super.key});
 
   @override
-  State<FeesAndScholarshipsView> createState() => _FeesAndScholarshipsViewState();
+  State<FeesAndScholarshipsView> createState() =>
+      _FeesAndScholarshipsViewState();
 }
 
 class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
@@ -83,38 +83,103 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                   // --- FEES SECTION ---
                   Text(
                     'Class-wise Fee Structure',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
-                  Card(
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 2,
+                          spreadRadius: 1,
+                          offset: Offset(0, 1),
+                          color: Colors.black.withOpacity(0.2),
+                        ),
+                      ],
+                    ),
                     clipBehavior: Clip.antiAlias,
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: DataTable(
-                        headingRowColor: MaterialStateProperty.all(Colors.teal.shade50),
+                        headingRowColor: MaterialStateProperty.all(
+                          Colors.teal.shade50,
+                        ),
                         columns: const [
-                          DataColumn(label: Text('Class', style: TextStyle(fontWeight: FontWeight.bold))),
-                          DataColumn(label: Text('Tuition', style: TextStyle(fontWeight: FontWeight.bold)), numeric: true),
-                          DataColumn(label: Text('Activity', style: TextStyle(fontWeight: FontWeight.bold)), numeric: true),
-                          DataColumn(label: Text('Transport', style: TextStyle(fontWeight: FontWeight.bold)), numeric: true),
-                          DataColumn(label: Text('Misc', style: TextStyle(fontWeight: FontWeight.bold)), numeric: true),
-                          DataColumn(label: Text('Total', style: TextStyle(fontWeight: FontWeight.bold)), numeric: true),
+                          DataColumn(
+                            label: Text(
+                              'Class',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Tuition',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            numeric: true,
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Activity',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            numeric: true,
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Transport',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            numeric: true,
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Misc',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            numeric: true,
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Total',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            numeric: true,
+                          ),
                         ],
-                        rows: model.classFees.map((fee) {
-                          final total = (fee.tuition ?? 0) + (fee.activity ?? 0) + (fee.transport ?? 0) + (fee.misc ?? 0);
-                          return DataRow(cells: [
-                            DataCell(Text(fee.className ?? '-')),
-                            DataCell(Text('₹${fee.tuition ?? 0}')),
-                            DataCell(Text('₹${fee.activity ?? 0}')),
-                            DataCell(Text('₹${fee.transport ?? 0}')),
-                            DataCell(Text('₹${fee.misc ?? 0}')),
-                            DataCell(Text('₹$total', style: const TextStyle(fontWeight: FontWeight.bold))),
-                          ]);
-                        }).toList(),
+                        rows:
+                            model.classFees.map((fee) {
+                              final total =
+                                  (fee.tuition ?? 0) +
+                                  (fee.activity ?? 0) +
+                                  (fee.transport ?? 0) +
+                                  (fee.misc ?? 0);
+                              return DataRow(
+                                cells: [
+                                  DataCell(Text(fee.className ?? '-')),
+                                  DataCell(Text('₹${fee.tuition ?? 0}')),
+                                  DataCell(Text('₹${fee.activity ?? 0}')),
+                                  DataCell(Text('₹${fee.transport ?? 0}')),
+                                  DataCell(Text('₹${fee.misc ?? 0}')),
+                                  DataCell(
+                                    Text(
+                                      '₹$total',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }).toList(),
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 24),
                   const Divider(thickness: 1.5),
                   const SizedBox(height: 24),
@@ -122,17 +187,20 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                   // --- SCHOLARSHIPS SECTION ---
                   Text(
                     'Scholarships & Concessions',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   if (model.scholarships.isEmpty)
                     const Text('No scholarships listed for this school.')
                   else
                     Column(
-                      children: model.scholarships.map((scholarship) {
-                        // This assumes you have a ScholarshipCard widget
-                        return ScholarshipCard(scholarship: scholarship);
-                      }).toList(),
+                      children:
+                          model.scholarships.map((scholarship) {
+                            // This assumes you have a ScholarshipCard widget
+                            return ScholarshipCard(scholarship: scholarship);
+                          }).toList(),
                     ),
                 ],
               ),

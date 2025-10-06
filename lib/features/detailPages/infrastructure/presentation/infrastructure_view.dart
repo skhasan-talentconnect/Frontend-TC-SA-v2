@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
+
 import 'view_models/infrastructure_view_model.dart';
 import 'widgets/chip_list_card.dart';
 import 'widgets/detail_tile.dart';
@@ -93,10 +94,18 @@ class _InfrastructureViewState extends State<InfrastructureView> {
               child: ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
-                  Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 2,
+                          spreadRadius: 1,
+                          offset: Offset(0, 1),
+                          color: Colors.black.withOpacity(0.2),
+                        ),
+                      ],
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
