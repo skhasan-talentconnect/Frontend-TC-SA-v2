@@ -10,7 +10,8 @@ class FeesAndScholarshipsView extends StatefulWidget {
   const FeesAndScholarshipsView({super.key});
 
   @override
-  State<FeesAndScholarshipsView> createState() => _FeesAndScholarshipsViewState();
+  State<FeesAndScholarshipsView> createState() =>
+      _FeesAndScholarshipsViewState();
 }
 
 class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
@@ -143,7 +144,9 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: DataTable(
-                        headingRowColor: MaterialStateProperty.all(Colors.teal.shade50),
+                        headingRowColor: MaterialStateProperty.all(
+                          Colors.teal.shade50,
+                        ),
                         columns: const [
                           DataColumn(label: Text('Class', style: TextStyle(fontWeight: FontWeight.bold))),
                           DataColumn(label: Text('Tuition', style: TextStyle(fontWeight: FontWeight.bold)), numeric: true),
@@ -160,14 +163,16 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 24),
                   const Divider(thickness: 1.5),
                   const SizedBox(height: 24),
 
                   Text(
                     'Scholarships & Concessions',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   if (model.scholarships.isEmpty)

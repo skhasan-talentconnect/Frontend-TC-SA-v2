@@ -18,9 +18,19 @@ class ChipListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 2,
+            spreadRadius: 1,
+            offset: Offset(0, 1),
+            color: Colors.black.withOpacity(0.2),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -33,9 +43,9 @@ class ChipListCard extends StatelessWidget {
                 Text(
                   title,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: iconColor,
-                      ),
+                    fontWeight: FontWeight.bold,
+                    color: iconColor,
+                  ),
                 ),
               ],
             ),
@@ -46,14 +56,18 @@ class ChipListCard extends StatelessWidget {
               Wrap(
                 spacing: 8.0,
                 runSpacing: 4.0,
-                children: items
-                    .map((item) => Chip(
-                          label: Text(item),
-                          backgroundColor: chipColor,
-                          labelStyle:
-                              const TextStyle(fontWeight: FontWeight.w500),
-                        ))
-                    .toList(),
+                children:
+                    items
+                        .map(
+                          (item) => Chip(
+                            label: Text(item),
+                            backgroundColor: chipColor,
+                            labelStyle: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        )
+                        .toList(),
               ),
           ],
         ),

@@ -11,14 +11,24 @@ class TitledCard extends StatelessWidget {
     required this.title,
     required this.icon,
     required this.child,
-    this.color = Colors.deepPurpleAccent, 
+    this.color = Colors.deepPurpleAccent,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 2,
+            spreadRadius: 1,
+            offset: Offset(0, 1),
+            color: Colors.black.withOpacity(0.2),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -31,9 +41,9 @@ class TitledCard extends StatelessWidget {
                 Text(
                   title,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: color,
-                      ),
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
                 ),
               ],
             ),
