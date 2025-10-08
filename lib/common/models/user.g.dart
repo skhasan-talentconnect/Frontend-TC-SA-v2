@@ -16,6 +16,8 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
   state: json['state'] as String?,
   city: json['city'] as String?,
   area: json['area'] as String?,
+  latitude: (json['latitude'] as num?)?.toDouble(),
+  longitude: (json['longitude'] as num?)?.toDouble(),
   shortlistedSchools:
       (json['shortlistedSchools'] as List<dynamic>?)
           ?.map((e) => e as String)
@@ -40,6 +42,8 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   'state': instance.state,
   'city': instance.city,
   'area': instance.area,
+  'latitude': instance.latitude,
+  'longitude': instance.longitude,
   'shortlistedSchools': instance.shortlistedSchools,
   'userType': _$JsonConverterToJson<String, UserType>(
     instance.userType,

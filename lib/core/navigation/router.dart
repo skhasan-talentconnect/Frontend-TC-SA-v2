@@ -15,15 +15,19 @@ import 'package:tc_sa/features/blogs/index.dart';
 import 'package:tc_sa/features/chatbot/presentation/chatbot_view.dart';
 import 'package:tc_sa/features/compare/presentation/compare_school_view.dart';
 import 'package:tc_sa/features/compare/presentation/compare_with_view.dart';
+import 'package:tc_sa/features/detailPages/academics/presentation/academics_view.dart';
 import 'package:tc_sa/features/detailPages/activities/presentation/activities_view.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/alumini_view.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/view_models/alumini_view_model.dart';
 import 'package:tc_sa/features/detailPages/amenity/presentation/amenity_view.dart';
 import 'package:tc_sa/features/detailPages/feeAndScholarship/presentation/fees_scholarship_view.dart';
 import 'package:tc_sa/features/detailPages/infrastructure/presentation/infrastructure_view.dart';
+import 'package:tc_sa/features/detailPages/internationalExposure/presentation/international_view.dart';
 import 'package:tc_sa/features/detailPages/otherDetails/presentation/other_details_view.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/overview_view.dart';
 import 'package:tc_sa/features/detailPages/reviews/presentation/reviews_view.dart';
+import 'package:tc_sa/features/detailPages/safetySecurity/presentation/safetySecurity_view.dart';
+import 'package:tc_sa/features/detailPages/technologyAdaption/presentation/tech_adaption_view.dart';
 import 'package:tc_sa/features/home/index.dart';
 import 'package:tc_sa/features/home/presentation/landing_page.dart';
 import 'package:tc_sa/features/notifications/presentation/notification_view.dart';
@@ -225,6 +229,20 @@ GoRoute(
   builder: (context, state) => const OtherDetailsView(),
 ),
 GoRoute(
+  path: '/academics',
+  name: RouteNames.academics, 
+  builder: (context, state) => const AcademicsView(),
+),
+GoRoute(
+  path: '/technology-adoption',
+  name: RouteNames.techAdaption, // Add this to your RouteNames class
+  builder: (context, state) => const TechnologyAdoptionView(),
+),GoRoute(
+  path: '/safety-security',
+  name: RouteNames.safetySecurity, // Add this to your RouteNames class
+  builder: (context, state) => const SafetyAndSecurityView(),
+),
+GoRoute(
   path: '/fees-scholarship',
   name: RouteNames.feeAndScholarship,
   builder: (context, state) => const FeesAndScholarshipsView(),
@@ -235,6 +253,11 @@ GoRoute(
         name: RouteNames.review,
         builder: (context, state) => ReviewsView(),
       ),
+      GoRoute(
+  path: '/international-exposure',
+  name: RouteNames.internationalExposure, 
+  builder: (context, state) => const InternationalExposureView(),
+),
 
       GoRoute(
         path: '/compare-with',

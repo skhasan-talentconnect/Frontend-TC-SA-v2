@@ -1,12 +1,14 @@
 class FeesAndScholarshipsModel {
   final String? id;
   final String? schoolId;
+   final double? feesTransparency;
   final List<ClassFeeModel> classFees;
   final List<ScholarshipModel> scholarships;
 
   FeesAndScholarshipsModel({
     this.id,
     this.schoolId,
+      this.feesTransparency,
     this.classFees = const [],
     this.scholarships = const [],
   });
@@ -15,6 +17,7 @@ class FeesAndScholarshipsModel {
     return FeesAndScholarshipsModel(
       id: json['_id'] as String?,
       schoolId: json['schoolId'] as String?,
+        feesTransparency: (json['feesTransparency'] as num?)?.toDouble(),
       classFees: (json['classFees'] as List<dynamic>?)
               ?.map((e) => ClassFeeModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -28,6 +31,7 @@ class FeesAndScholarshipsModel {
 
   Map<String, dynamic> toJson() => {
         'schoolId': schoolId,
+          'feesTransparency': feesTransparency,
         'classFees': classFees.map((e) => e.toJson()).toList(),
         'scholarships': scholarships.map((e) => e.toJson()).toList(),
       };

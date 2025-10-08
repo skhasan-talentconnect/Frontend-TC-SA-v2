@@ -13,6 +13,8 @@ abstract class ProfileDataSource {
     required String gender,
     required String area,
     required String dateOfBirth,
+    double? latitude, // <-- Add this
+    double? longitude, // <-- Add this
   });
 
   ResultFuture<User?> updateProfile({
@@ -24,5 +26,7 @@ abstract class ProfileDataSource {
     required String area,
     required String gender,
     required String dateOfBirth,
+    double? latitude, // <-- Add this
+    double? longitude, // <-- Add this
   });
 }

@@ -24,7 +24,7 @@ class Endpoints {
   //School Endpoints
   static const String adminSchools = 'admin/schools';
   static const String adminSchoolsStatus = 'admin/schools/status';
-
+static const String nearbySchools='admin/schools/nearby';
   //School Amenities
   static const String adminSchoolsAmenities = 'admin/schools/amenities';
   static const String studentApplications = 'applications';
@@ -38,6 +38,11 @@ class Endpoints {
   static const String adminInfrastructure='admin/schools/infrastructure';
   static const String adminfeeAndScholarship='admin/schools/fees-scholarships';
   static const String adminOtherDetails='admin/schools/other-details';
+  static const String adminAcademics='admin/schools/academics';
+  static const String adminTechAdoption='admin/schools/technology-adoption';
+  static const String adminSafetyAndSecurity='admin/schools/safety-security';
+    static const String adminInternationalExposure='admin/schools/international-exposure';
+    static const String reviewsBySchoolAdmin='reviews';
 
   static const String adminBlogs = 'admin/blogs';
   static const String adminCompare = 'admin/compare';
@@ -55,11 +60,7 @@ class Endpoints {
   static const String adminSearch = 'admin/search';
   static const String notifications = 'notifications';
 
-  //Reviews Endpoints
-  static const String reviews = 'reviews';
-  static const String reviewsAdmin = 'reviews/admin';
-  static const String reviewsUsers = 'reviews/users';
-  static const String reviewsLike = 'reviews/like';
+
 
   //Applications
   static const String formStudent = 'form/student';

@@ -6,7 +6,6 @@ import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/detailPages/feeAndScholarship/presentation/view_models/feeAndScholarship_view_model.dart';
 import 'package:tc_sa/features/detailPages/feeAndScholarship/presentation/widgets/scholarship_card.dart';
 
-
 class FeesAndScholarshipsView extends StatefulWidget {
   const FeesAndScholarshipsView({super.key});
 
@@ -80,12 +79,65 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
               child: ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
-                  // --- FEES SECTION ---
                   Text(
-                    'Class-wise Fee Structure',
+                    'Fee Details',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
+
+                  // --- UPDATED WIDGET FOR FEE TRANSPARENCY ---
+                  // This now handles the 'null' case with an 'else'
+                  (model.feesTransparency != null)
+                      ? Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Fee Transparency Score', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                                    Text(
+                                      '${model.feesTransparency!.toStringAsFixed(0)}%',
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.teal),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: LinearProgressIndicator(
+                                    value: model.feesTransparency! / 100,
+                                    minHeight: 12,
+                                    backgroundColor: Colors.teal.shade100,
+                                    color: Colors.teal,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          color: Colors.grey.shade100,
+                          child: const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Fee Transparency Score', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                                Text('Not Available', style: TextStyle(fontSize: 16, color: Colors.grey)),
+                              ],
+                            ),
+                          ),
+                        ),
+                  const SizedBox(height: 20),
+                  // --- END OF UPDATED WIDGET ---
+
                   Card(
                     clipBehavior: Clip.antiAlias,
                     child: SingleChildScrollView(
@@ -95,9 +147,6 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                         columns: const [
                           DataColumn(label: Text('Class', style: TextStyle(fontWeight: FontWeight.bold))),
                           DataColumn(label: Text('Tuition', style: TextStyle(fontWeight: FontWeight.bold)), numeric: true),
-                          DataColumn(label: Text('Activity', style: TextStyle(fontWeight: FontWeight.bold)), numeric: true),
-                          DataColumn(label: Text('Transport', style: TextStyle(fontWeight: FontWeight.bold)), numeric: true),
-                          DataColumn(label: Text('Misc', style: TextStyle(fontWeight: FontWeight.bold)), numeric: true),
                           DataColumn(label: Text('Total', style: TextStyle(fontWeight: FontWeight.bold)), numeric: true),
                         ],
                         rows: model.classFees.map((fee) {
@@ -105,9 +154,6 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                           return DataRow(cells: [
                             DataCell(Text(fee.className ?? '-')),
                             DataCell(Text('₹${fee.tuition ?? 0}')),
-                            DataCell(Text('₹${fee.activity ?? 0}')),
-                            DataCell(Text('₹${fee.transport ?? 0}')),
-                            DataCell(Text('₹${fee.misc ?? 0}')),
                             DataCell(Text('₹$total', style: const TextStyle(fontWeight: FontWeight.bold))),
                           ]);
                         }).toList(),
@@ -119,7 +165,6 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                   const Divider(thickness: 1.5),
                   const SizedBox(height: 24),
 
-                  // --- SCHOLARSHIPS SECTION ---
                   Text(
                     'Scholarships & Concessions',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
@@ -130,7 +175,6 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                   else
                     Column(
                       children: model.scholarships.map((scholarship) {
-                        // This assumes you have a ScholarshipCard widget
                         return ScholarshipCard(scholarship: scholarship);
                       }).toList(),
                     ),

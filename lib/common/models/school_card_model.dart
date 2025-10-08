@@ -15,10 +15,12 @@ abstract class SchoolCardModel with _$SchoolCardModel {
     String? board,
     String? genderType,
     List<String>? shifts,
+
     List<String>? amenities,
     String? schoolMode,
   }) = _SchoolCardModel;
 
   factory SchoolCardModel.fromJson(Map<String, dynamic> json) =>
       _$SchoolCardModelFromJson(json);
+      
 }

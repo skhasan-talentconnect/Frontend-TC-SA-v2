@@ -2,9 +2,10 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationUtils {
-  static Future<Map<String, String>?> getCurrentPlace() async {
+  // Update the return type to handle double values for coordinates
+  static Future<Map<String, dynamic>?> getCurrentPlace() async {
     try {
-      // 1. Get current position
+      // 1. Get current position (which contains lat/lon)
       final position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
 
@@ -18,7 +19,10 @@ class LocationUtils {
 
       final placemark = placemarks.first;
 
+      // 3. Return a map including the coordinates
       return {
+        'latitude': position.latitude,
+        'longitude': position.longitude,
         'state': placemark.administrativeArea ?? '',
         'city': placemark.locality ?? '',
         'area': placemark.subLocality ?? '',

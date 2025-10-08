@@ -47,6 +47,8 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   late final TextEditingController areaController = TextEditingController(
     text: appStateProvider.user?.area ?? '',
   );
+    double? _latitude;
+  double? _longitude;
 
   // ----- simple state variables -----
   List<String> cityItems = [];
@@ -102,10 +104,14 @@ Future<void> _fetchFromGoogleLocation() async {
     final fetchedState = place['state'] ?? '';
     final fetchedCity = place['city'] ?? '';
     final fetchedArea = place['area'] ?? '';
+        final double? fetchedLat = place['latitude'] as double?;
+      final double? fetchedLon = place['longitude'] as double?;
 
     setState(() {
       stateController.text = fetchedState;
       selectedState = fetchedState;
+           _latitude = fetchedLat;
+        _longitude = fetchedLon;
       cityItems = StateCityAreaUtils.getCities(fetchedState);
 
       if (cityItems.contains(fetchedCity)) {
@@ -143,7 +149,8 @@ Future<void> _fetchFromGoogleLocation() async {
   @override
   void initState() {
     super.initState();
-
+  _latitude = appStateProvider.user?.latitude;
+    _longitude = appStateProvider.user?.longitude;
     // initialize from controllers (pre-filled user values)
     selectedState = stateController.text.isNotEmpty ? stateController.text.trim() : null;
     selectedCity = cityController.text.isNotEmpty ? cityController.text.trim() : null;
@@ -315,7 +322,7 @@ Future<void> _fetchFromGoogleLocation() async {
                               ),
 
                               SButton(
-  label: "Fetch from Google Location",
+  label: "Fetch from Google Location (to see schools near you)",
   onPressed: _fetchFromGoogleLocation,
 ),
                             ],
@@ -359,6 +366,8 @@ Future<void> _fetchFromGoogleLocation() async {
                                 gender: gender,
                                 area: area,
                                 dateOfBirth: dateOfBirth,
+                                latitude: _latitude,
+              longitude: _longitude,
                               );
                             } else {
                               failure = await addEditProfileViewModel.addProfile(
@@ -370,6 +379,8 @@ Future<void> _fetchFromGoogleLocation() async {
                                 gender: gender,
                                 area: area,
                                 dateOfBirth: dateOfBirth,
+                                  latitude: _latitude,
+              longitude: _longitude,
                               );
                             }
 

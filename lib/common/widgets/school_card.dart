@@ -205,48 +205,59 @@ class _SchoolCardState extends State<SchoolCard> {
                             Row(
                               spacing: 4,
                               children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
+                                // Safely display the FIRST amenity, if it exists
+                                if (widget.school.amenities != null &&
+                                    widget.school.amenities!.length > 0)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(width: 0.5),
+                                    ),
+                                    child: Text(
+                                      widget.school.amenities![0],
+                                      style: STextStyles.s10W600,
+                                    ),
                                   ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    border: Border.all(width: 0.5),
+
+                                // Safely display the SECOND amenity, if it exists
+                                if (widget.school.amenities != null &&
+                                    widget.school.amenities!.length > 1)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(width: 0.5),
+                                    ),
+                                    child: Text(
+                                      widget.school.amenities![1],
+                                      style: STextStyles.s10W600,
+                                    ),
                                   ),
-                                  child: Text(
-                                    widget.school.amenities?[0] ?? '',
-                                    style: STextStyles.s10W600,
+
+                                // Safely display the THIRD amenity, if it exists
+                                if (widget.school.amenities != null &&
+                                    widget.school.amenities!.length > 2)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(width: 0.5),
+                                    ),
+                                    child: Text(
+                                      widget.school.amenities![2],
+                                      style: STextStyles.s10W600,
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    border: Border.all(width: 0.5),
-                                  ),
-                                  child: Text(
-                                    widget.school.amenities?[1] ?? '',
-                                    style: STextStyles.s10W600,
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    border: Border.all(width: 0.5),
-                                  ),
-                                  child: Text(
-                                    widget.school.amenities?[2] ?? '',
-                                    style: STextStyles.s10W600,
-                                  ),
-                                ),
                               ],
                             ),
                             const SizedBox(height: 10),
