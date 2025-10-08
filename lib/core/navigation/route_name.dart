@@ -29,11 +29,14 @@ class RouteNames {
   static const String amenity = 'amenity';
   static const String alumini = 'alumini';
   static const String activity = 'activity';
-  static const String infrastructure='infrastructure';
-  static const String feeAndScholarship='feeAndScholarship';
-  static const String otherDetails ='otherDeails';
+  static const String infrastructure = 'infrastructure';
+  static const String feeAndScholarship = 'feeAndScholarship';
+  static const String otherDetails = 'otherDeails';
   static const String review = 'review';
-
+  static const String academics = 'academics';
+  static const String techAdaption = 'techAdaption';
+  static const String safetySecurity = 'safetySecurity';
+  static const String internationalExposure='internationalExposure';
   //features
   static const String compare = 'compare';
   static const String compareWith = 'compare-with';

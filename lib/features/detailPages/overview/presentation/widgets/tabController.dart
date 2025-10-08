@@ -13,6 +13,10 @@ class SchoolTabController with ChangeNotifier {
     "Activities",
     "Aluminis",
     "Reviews",
+    'academics',
+    'techAdaption',
+    'safetySecurity',
+      'internationalExposure'
   ];
 
   void initialize(TickerProvider vsync) {

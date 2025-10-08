@@ -1,3 +1,4 @@
+
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/home/data/data_source_impl.dart';
@@ -9,6 +10,13 @@ class SchoolViewModel extends ViewStateProvider {
   List<SchoolCardModel> get boardSchools => _boardSchools;
   set boardSchools(List<SchoolCardModel> value) {
     _boardSchools = value;
+    notifyListeners();
+  }
+
+   List<SchoolCardModel> _nearbySchools = [];
+  List<SchoolCardModel> get nearbySchools => _nearbySchools;
+  set nearbySchools(List<SchoolCardModel> value) {
+    _nearbySchools = value;
     notifyListeners();
   }
 
@@ -82,6 +90,37 @@ class SchoolViewModel extends ViewStateProvider {
       },
       (res) {
         citySchools = res;
+      },
+    );
+
+    setViewState(ViewState.complete);
+    return failure;
+  }
+Future<Failure?> getNearbySchools() async {
+    setViewState(ViewState.busy);
+    Failure? failure;
+
+    final user = getIt<AppStateProvider>().user;
+
+    // Ensure we have all the necessary data from the user model
+    if (user?.latitude == null || user?.longitude == null || user?.state == null) {
+      setViewState(ViewState.complete);
+      // Silently fail if location data is missing, or return a specific failure
+      return null; 
+    }
+
+    final result = await _schoolDataSource.getNearbySchools(
+      latitude: user!.latitude!,
+      longitude: user.longitude!,
+      state: user.state!,
+    );
+    
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (res) {
+        nearbySchools = res;
       },
     );
 

@@ -80,27 +80,66 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
               child: ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
-                  // --- FEES SECTION ---
                   Text(
-                    'Class-wise Fee Structure',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    'Fee Details',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 2,
-                          spreadRadius: 1,
-                          offset: Offset(0, 1),
-                          color: Colors.black.withOpacity(0.2),
+
+                  // --- UPDATED WIDGET FOR FEE TRANSPARENCY ---
+                  // This now handles the 'null' case with an 'else'
+                  (model.feesTransparency != null)
+                      ? Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Fee Transparency Score', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                                    Text(
+                                      '${model.feesTransparency!.toStringAsFixed(0)}%',
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.teal),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: LinearProgressIndicator(
+                                    value: model.feesTransparency! / 100,
+                                    minHeight: 12,
+                                    backgroundColor: Colors.teal.shade100,
+                                    color: Colors.teal,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          color: Colors.grey.shade100,
+                          child: const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Fee Transparency Score', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                                Text('Not Available', style: TextStyle(fontSize: 16, color: Colors.grey)),
+                              ],
+                            ),
+                          ),
                         ),
-                      ],
-                    ),
+                  const SizedBox(height: 20),
+                  // --- END OF UPDATED WIDGET ---
+
+                  Card(
                     clipBehavior: Clip.antiAlias,
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -109,73 +148,18 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                           Colors.teal.shade50,
                         ),
                         columns: const [
-                          DataColumn(
-                            label: Text(
-                              'Class',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Tuition',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            numeric: true,
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Activity',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            numeric: true,
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Transport',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            numeric: true,
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Misc',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            numeric: true,
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Total',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            numeric: true,
-                          ),
+                          DataColumn(label: Text('Class', style: TextStyle(fontWeight: FontWeight.bold))),
+                          DataColumn(label: Text('Tuition', style: TextStyle(fontWeight: FontWeight.bold)), numeric: true),
+                          DataColumn(label: Text('Total', style: TextStyle(fontWeight: FontWeight.bold)), numeric: true),
                         ],
-                        rows:
-                            model.classFees.map((fee) {
-                              final total =
-                                  (fee.tuition ?? 0) +
-                                  (fee.activity ?? 0) +
-                                  (fee.transport ?? 0) +
-                                  (fee.misc ?? 0);
-                              return DataRow(
-                                cells: [
-                                  DataCell(Text(fee.className ?? '-')),
-                                  DataCell(Text('₹${fee.tuition ?? 0}')),
-                                  DataCell(Text('₹${fee.activity ?? 0}')),
-                                  DataCell(Text('₹${fee.transport ?? 0}')),
-                                  DataCell(Text('₹${fee.misc ?? 0}')),
-                                  DataCell(
-                                    Text(
-                                      '₹$total',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }).toList(),
+                        rows: model.classFees.map((fee) {
+                          final total = (fee.tuition ?? 0) + (fee.activity ?? 0) + (fee.transport ?? 0) + (fee.misc ?? 0);
+                          return DataRow(cells: [
+                            DataCell(Text(fee.className ?? '-')),
+                            DataCell(Text('₹${fee.tuition ?? 0}')),
+                            DataCell(Text('₹$total', style: const TextStyle(fontWeight: FontWeight.bold))),
+                          ]);
+                        }).toList(),
                       ),
                     ),
                   ),
@@ -184,7 +168,6 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                   const Divider(thickness: 1.5),
                   const SizedBox(height: 24),
 
-                  // --- SCHOLARSHIPS SECTION ---
                   Text(
                     'Scholarships & Concessions',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -196,11 +179,9 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                     const Text('No scholarships listed for this school.')
                   else
                     Column(
-                      children:
-                          model.scholarships.map((scholarship) {
-                            // This assumes you have a ScholarshipCard widget
-                            return ScholarshipCard(scholarship: scholarship);
-                          }).toList(),
+                      children: model.scholarships.map((scholarship) {
+                        return ScholarshipCard(scholarship: scholarship);
+                      }).toList(),
                     ),
                 ],
               ),

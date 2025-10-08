@@ -18,6 +18,8 @@ _SchoolCardModel _$SchoolCardModelFromJson(
   board: json['board'] as String?,
   genderType: json['genderType'] as String?,
   shifts: (json['shifts'] as List<dynamic>?)?.map((e) => e as String).toList(),
+  latitude: (json['latitude'] as num?)?.toDouble(),
+  longitude: (json['longitude'] as num?)?.toDouble(),
   amenities:
       (json['amenities'] as List<dynamic>?)?.map((e) => e as String).toList(),
   schoolMode: json['schoolMode'] as String?,
@@ -34,6 +36,8 @@ Map<String, dynamic> _$SchoolCardModelToJson(_SchoolCardModel instance) =>
       'board': instance.board,
       'genderType': instance.genderType,
       'shifts': instance.shifts,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
       'amenities': instance.amenities,
       'schoolMode': instance.schoolMode,
     };

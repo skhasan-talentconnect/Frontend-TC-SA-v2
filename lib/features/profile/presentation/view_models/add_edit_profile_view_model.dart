@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/profile/data/data_source/data_source_impl.dart';
 
@@ -13,6 +14,13 @@ class AddEditProfileViewModel extends ViewStateProvider {
     notifyListeners();
   }
 
+  // Helper to set the initial date from the user profile string
+  void initializeDate(String? dateString) {
+    if (dateString != null && dateString.isNotEmpty) {
+      _pickedDate = DateTime.tryParse(dateString);
+    }
+  }
+
   Future<Failure?> addProfile({
     required String name,
     required String email,
@@ -22,9 +30,10 @@ class AddEditProfileViewModel extends ViewStateProvider {
     required String gender,
     required String area,
     required String dateOfBirth,
+    required double? latitude,
+    required double? longitude,
   }) async {
     setViewState(ViewState.busy);
-
     Failure? failure;
 
     final result = await profileDataSourceImpl.addProfile(
@@ -36,6 +45,8 @@ class AddEditProfileViewModel extends ViewStateProvider {
       city: city,
       gender: gender,
       dateOfBirth: dateOfBirth,
+      latitude: latitude,
+      longitude: longitude
     );
 
     result.fold(
@@ -43,12 +54,14 @@ class AddEditProfileViewModel extends ViewStateProvider {
         failure = APIFailure.fromException(exception: exception);
       },
       (result) {
-        getIt<AppStateProvider>().user = result;
+        if (result != null) {
+          getIt<AppStateProvider>().user = result;
+          getIt<AppStateProvider>().getUserDetails(); // Refresh global state
+        }
       },
     );
 
     setViewState(ViewState.complete);
-
     return failure;
   }
 
@@ -61,9 +74,10 @@ class AddEditProfileViewModel extends ViewStateProvider {
     required String city,
     required String gender,
     required String dateOfBirth,
+    required double? latitude,
+    required double? longitude,
   }) async {
     setViewState(ViewState.busy);
-
     Failure? failure;
 
     final result = await profileDataSourceImpl.updateProfile(
@@ -75,6 +89,8 @@ class AddEditProfileViewModel extends ViewStateProvider {
       area: area,
       gender: gender,
       dateOfBirth: dateOfBirth,
+      latitude: latitude,
+      longitude: longitude
     );
 
     result.fold(
@@ -82,12 +98,14 @@ class AddEditProfileViewModel extends ViewStateProvider {
         failure = APIFailure.fromException(exception: exception);
       },
       (result) {
-        getIt<AppStateProvider>().user = result;
+        if (result != null) {
+          getIt<AppStateProvider>().user = result;
+          getIt<AppStateProvider>().getUserDetails(); // Refresh global state
+        }
       },
     );
 
     setViewState(ViewState.complete);
-
     return failure;
   }
 }

@@ -50,6 +50,8 @@ class ProfileDataSourceImpl implements ProfileDataSource {
     required String city,
     required String area,
     required String gender,
+      double? latitude, // <-- Add parameter
+    double? longitude, // <-- Add parameter
     required String dateOfBirth,
   }) async {
     Request r = Request(
@@ -67,6 +69,8 @@ class ProfileDataSourceImpl implements ProfileDataSource {
         'gender': gender.toLowerCase(),
         'dateOfBirth': dateOfBirth,
         'userType': UserType.student.label,
+        'latitude': latitude, // <-- Add to body
+        'longitude': longitude, // <-- Add to body
       },
     );
 
@@ -96,6 +100,8 @@ class ProfileDataSourceImpl implements ProfileDataSource {
     required String area,
     required String gender,
     required String dateOfBirth,
+          double? latitude, // <-- Add parameter
+    double? longitude, // <-- Add parameter
   }) async {
     final authId = await SecretRepo.getString('auth_id');
     Request r = Request(
@@ -113,6 +119,8 @@ class ProfileDataSourceImpl implements ProfileDataSource {
         'gender': gender.toLowerCase(),
         'dateOfBirth': dateOfBirth,
         'userType': UserType.student.label,
+        'latitude': latitude, // <-- Add to body
+        'longitude': longitude, // <-- Add to body
       },
     );
 
