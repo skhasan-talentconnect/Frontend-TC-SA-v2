@@ -1,5 +1,3 @@
-
-
 import 'package:dartz/dartz.dart';
 import 'package:tc_sa/common/models/school_card_model.dart';
 import 'package:tc_sa/core/index.dart';

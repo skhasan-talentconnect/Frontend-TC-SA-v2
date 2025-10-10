@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
+import 'package:tc_sa/features/profile/presentation/location_fetching.dart';
+import 'package:tc_sa/features/profile/presentation/location_utils.dart';
 import 'package:tc_sa/features/preferences/index.dart' show PrefViewModel;
 
 class PrefView extends StatefulWidget {
@@ -26,6 +29,17 @@ class _PrefViewState extends State<PrefView> {
   final cityController = TextEditingController();
   final areaController = TextEditingController();
   final genderController = TextEditingController();
+  
+  double? _latitude;
+  double? _longitude;
+
+  static const List<String> defaultAreas = [
+  "Main Area",
+  "Central",
+  "Station Road",
+  "Market"
+];
+
 
   @override
   void initState() {
@@ -364,7 +378,14 @@ class _PrefViewState extends State<PrefView> {
                                   ],
                                 ),
                               ),
+        if(appStateProvider.isGuest)...
+          [
 
+                          SButton(
+            label: "Fetch from Google Location (to see schools near you)",
+            onPressed: _fetchFromGoogleLocation,
+          ),
+          ],
                               SButton(
                                 label: widget.isEdit ? 'Edit' : 'Submit',
                                 onPressed: () async {
@@ -407,6 +428,9 @@ class _PrefViewState extends State<PrefView> {
                                           city: selectedCity,
                                           area: selectedArea,
                                           gender: gender,
+                                            latitude: _latitude,
+              longitude: _longitude,
+                                          
                                         );
                                         appStateProvider.userPref = UserPref(
                                           boards: boards,
@@ -425,6 +449,7 @@ class _PrefViewState extends State<PrefView> {
                                               interests: interest,
                                               schoolType: schoolType,
                                               shift: shifts,
+                                              
                                             );
                                       } else {
                                         failure = await prefViewModel
@@ -467,4 +492,86 @@ class _PrefViewState extends State<PrefView> {
       ),
     );
   }
+  Future<void> _fetchFromGoogleLocation() async {
+  try {
+
+    // 1. Request location permission
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Toasts.showErrorToast(context, message: "Location services are disabled.");
+      return;
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Toasts.showErrorToast(context, message: "Location permission denied.");
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      Toasts.showErrorToast(context,
+          message:
+              "Location permission permanently denied. Enable it from settings.");
+      return;
+    }
+
+    // 2. Fetch state and city using your LocationUtils
+    final place = await LocationUtils.getCurrentPlace();
+
+    print("Fetched place: $place"); // Debug
+
+    if (place == null ||
+        (place['state'] == null && place['city'] == null)) {
+      Toasts.showErrorToast(context,
+          message: "Could not detect state or city from Google.");
+      return;
+    }
+
+    final fetchedState = place['state'] ?? '';
+    final fetchedCity = place['city'] ?? '';
+    final fetchedArea = place['area'] ?? '';
+        final double? fetchedLat = place['latitude'] as double?;
+      final double? fetchedLon = place['longitude'] as double?;
+
+    setState(() {
+      stateController.text = fetchedState;
+      selectedState = fetchedState;
+           _latitude = fetchedLat;
+        _longitude = fetchedLon;
+      cityItems = StateCityAreaUtils.getCities(fetchedState);
+
+      if (cityItems.contains(fetchedCity)) {
+        cityController.text = fetchedCity;
+        selectedCity = fetchedCity;
+        areaItems = StateCityAreaUtils.getAreas(fetchedCity);
+      } else if (cityItems.isNotEmpty) {
+        cityController.text = cityItems.first;
+        selectedCity = cityItems.first;
+        areaItems = StateCityAreaUtils.getAreas(cityItems.first);
+      }
+
+      if (areaItems.isNotEmpty) {
+        if (areaItems.contains(fetchedArea)) {
+          areaController.text = fetchedArea;
+          selectedArea = fetchedArea;
+        } else {
+          areaController.text = areaItems.first;
+          selectedArea = areaItems.first;
+        }
+      } else {
+        areaItems = defaultAreas;
+        areaController.text = defaultAreas.first;
+        selectedArea = defaultAreas.first;
+      }
+    });
+
+    Toasts.showSuccessToast(context, message: "Location fetched successfully.");
+  } catch (e) {
+    Toasts.showErrorToast(context, message: "Error fetching location: $e");
+  }
+}
+
 }

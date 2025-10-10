@@ -42,6 +42,9 @@ static const String nearbySchools='admin/schools/nearby';
   static const String adminTechAdoption='admin/schools/technology-adoption';
   static const String adminSafetyAndSecurity='admin/schools/safety-security';
     static const String adminInternationalExposure='admin/schools/international-exposure';
+        static const String adminFaculty='admin/schools/faculty';
+
+    static const String adminAdmissionTimeline='admin/schools/admission-timeline';
     static const String reviewsBySchoolAdmin='reviews';
 
   static const String adminBlogs = 'admin/blogs';
