@@ -1,4 +1,3 @@
-
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/home/data/data_source_impl.dart';
@@ -13,7 +12,7 @@ class SchoolViewModel extends ViewStateProvider {
     notifyListeners();
   }
 
-   List<SchoolCardModel> _nearbySchools = [];
+  List<SchoolCardModel> _nearbySchools = [];
   List<SchoolCardModel> get nearbySchools => _nearbySchools;
   set nearbySchools(List<SchoolCardModel> value) {
     _nearbySchools = value;
@@ -40,7 +39,10 @@ class SchoolViewModel extends ViewStateProvider {
     Failure? failure;
 
     final result = await _schoolDataSource.getSchools(
-      filters: {'board': getIt<AppStateProvider>().userPref?.boards},
+      filters: {
+        'board': getIt<AppStateProvider>().userPref?.boards,
+        'city': getIt<AppStateProvider>().user?.city,
+      },
     );
     result.fold(
       (exception) {
@@ -82,7 +84,13 @@ class SchoolViewModel extends ViewStateProvider {
     Failure? failure;
 
     final result = await _schoolDataSource.getSchools(
-      filters: {'city': getIt<AppStateProvider>().user?.city},
+      filters: {
+        'state': getIt<AppStateProvider>().user?.state,
+        'city': getIt<AppStateProvider>().user?.city,
+        'board': getIt<AppStateProvider>().userPref?.boards,
+        'schoolMode': getIt<AppStateProvider>().userPref?.schoolType,
+        'genderType': getIt<AppStateProvider>().user?.gender,
+      },
     );
     result.fold(
       (exception) {
@@ -96,17 +104,20 @@ class SchoolViewModel extends ViewStateProvider {
     setViewState(ViewState.complete);
     return failure;
   }
-Future<Failure?> getNearbySchools() async {
+
+  Future<Failure?> getNearbySchools() async {
     setViewState(ViewState.busy);
     Failure? failure;
 
     final user = getIt<AppStateProvider>().user;
 
     // Ensure we have all the necessary data from the user model
-    if (user?.latitude == null || user?.longitude == null || user?.state == null) {
+    if (user?.latitude == null ||
+        user?.longitude == null ||
+        user?.state == null) {
       setViewState(ViewState.complete);
       // Silently fail if location data is missing, or return a specific failure
-      return null; 
+      return null;
     }
 
     final result = await _schoolDataSource.getNearbySchools(
@@ -114,7 +125,7 @@ Future<Failure?> getNearbySchools() async {
       longitude: user.longitude!,
       state: user.state!,
     );
-    
+
     result.fold(
       (exception) {
         failure = APIFailure.fromException(exception: exception);

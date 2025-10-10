@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -47,18 +45,17 @@ class _SchoolsViewState extends State<SchoolsView> {
                       : RefreshIndicator(
                         color: SColor.primaryColor,
                         onRefresh: () async {
-                          
                           final failure =
                               await schoolViewModel.getStateSchools();
-                          if(mounted) failure?.showError(context);
+                          if (mounted) failure?.showError(context);
                           final failure2 =
                               await schoolViewModel.getCitySchools();
                           failure2?.showError(context);
                           final failure3 =
                               await schoolViewModel.getBoardsSchools();
                           failure3?.showError(context);
-                           final failure4 = 
-                           await schoolViewModel.getNearbySchools();
+                          final failure4 =
+                              await schoolViewModel.getNearbySchools();
                           failure4?.showError(context);
                         },
                         child: SingleChildScrollView(
@@ -71,7 +68,8 @@ class _SchoolsViewState extends State<SchoolsView> {
                                 builder:
                                     (vmContext, schools, _) =>
                                         SchoolListSection(
-                                          title: 'Schools Based on Board',
+                                          title:
+                                              'Schools Based on Board & City',
                                           schools: schools,
                                         ),
                               ),
@@ -82,13 +80,15 @@ class _SchoolsViewState extends State<SchoolsView> {
                                   context.pushNamed(RouteNames.services);
                                 },
                               ),
-                               Selector<SchoolViewModel, List<SchoolCardModel>>(
-                          selector: (_, vm) => vm.nearbySchools,
-                          builder: (vmContext, schools, _) =>
-                              SchoolListSection(
-                            title: 'Schools Near You',
-                            schools: schools,
-                          ),),
+                              Selector<SchoolViewModel, List<SchoolCardModel>>(
+                                selector: (_, vm) => vm.nearbySchools,
+                                builder:
+                                    (vmContext, schools, _) =>
+                                        SchoolListSection(
+                                          title: 'Schools Near You',
+                                          schools: schools,
+                                        ),
+                              ),
                               Selector<SchoolViewModel, List<SchoolCardModel>>(
                                 selector: (_, vm) => vm.stateSchools,
                                 builder:

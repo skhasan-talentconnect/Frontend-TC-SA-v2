@@ -173,41 +173,66 @@ class _SchoolCardState extends State<SchoolCard> {
                                     ],
                                   ),
                                 ),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    spacing: 4,
-                                    children: [
-                                      Text(
-                                        'Ratings',
-                                        style: STextStyles.s14W400.copyWith(
-                                          color: SColor.secTextColor,
-                                          overflow: TextOverflow.visible,
+                                // Expanded(
+                                //   child: Column(
+                                //     mainAxisSize: MainAxisSize.min,
+                                //     crossAxisAlignment:
+                                //         CrossAxisAlignment.start,
+                                //     spacing: 4,
+                                //     children: [
+                                //       Text(
+                                //         'Ratings',
+                                //         style: STextStyles.s14W400.copyWith(
+                                //           color: SColor.secTextColor,
+                                //           overflow: TextOverflow.visible,
+                                //         ),
+                                //       ),
+                                //       Text(
+                                //         widget.school.ratings != null
+                                //             ? '${widget.school.ratings} / 5'
+                                //             : '-',
+                                //         style: STextStyles.s14W600.copyWith(
+                                //           color: SColor.secTextColor,
+                                //           overflow: TextOverflow.visible,
+                                //         ),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
+                                if ((widget.school.score ?? 0) > 0) ...[
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      spacing: 4,
+                                      children: [
+                                        Text(
+                                          'Score',
+                                          style: STextStyles.s14W400.copyWith(
+                                            color: SColor.secTextColor,
+                                            overflow: TextOverflow.visible,
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        widget.school.ratings != null
-                                            ? '${widget.school.ratings} / 5'
-                                            : '-',
-                                        style: STextStyles.s14W600.copyWith(
-                                          color: SColor.secTextColor,
-                                          overflow: TextOverflow.visible,
+                                        Text(
+                                          widget.school.score.toString(),
+                                          style: STextStyles.s14W600.copyWith(
+                                            color: SColor.secTextColor,
+                                            overflow: TextOverflow.visible,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ],
                             ),
                             const SizedBox(height: 10),
                             Row(
                               spacing: 4,
                               children: [
-                                // Safely display the FIRST amenity, if it exists
                                 if (widget.school.amenities != null &&
-                                    widget.school.amenities!.length > 0)
+                                    widget.school.amenities!.isNotEmpty)
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 8,
@@ -241,7 +266,6 @@ class _SchoolCardState extends State<SchoolCard> {
                                     ),
                                   ),
 
-                                // Safely display the THIRD amenity, if it exists
                                 if (widget.school.amenities != null &&
                                     widget.school.amenities!.length > 2)
                                   Container(
