@@ -231,9 +231,8 @@ class _SchoolCardState extends State<SchoolCard> {
                             Row(
                               spacing: 4,
                               children: [
-                                // Safely display the FIRST amenity, if it exists
                                 if (widget.school.amenities != null &&
-                                    widget.school.amenities!.length > 0)
+                                    widget.school.amenities!.isNotEmpty)
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 8,
