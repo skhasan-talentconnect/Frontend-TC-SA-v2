@@ -11,6 +11,7 @@ import 'package:tc_sa/features/detailPages/overview/presentation/widgets/quick_h
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/recruiter_chip_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+
 class SchoolDetailView extends StatefulWidget {
   const SchoolDetailView({super.key, required this.schoolId});
   final String schoolId;
@@ -36,7 +37,9 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
     'academics',
     'techAdaption',
     'safetySecurity',
-    'internationalExposure'
+    'internationalExposure',
+    'admission Timeline',
+    'faculty details'
   ];
 
   final MyFormViewModel myFormViewModel = MyFormViewModel();
@@ -117,6 +120,18 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
         case 11:
           context.pushNamed(
             RouteNames.internationalExposure,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+        case 12:
+          context.pushNamed(
+            RouteNames.admissionTimeline,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+        case 13:
+          context.pushNamed(
+            RouteNames.faculty,
             extra: {'schoolId': widget.schoolId, 'schoolName': name},
           );
           break;

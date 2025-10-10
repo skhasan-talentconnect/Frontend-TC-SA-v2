@@ -36,7 +36,9 @@ class RouteNames {
   static const String academics = 'academics';
   static const String techAdaption = 'techAdaption';
   static const String safetySecurity = 'safetySecurity';
+  static const String admissionTimeline='admissionTimeline';
   static const String internationalExposure='internationalExposure';
+  static const String faculty='faculty';
   //features
   static const String compare = 'compare';
   static const String compareWith = 'compare-with';

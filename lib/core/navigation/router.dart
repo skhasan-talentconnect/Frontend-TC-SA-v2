@@ -17,9 +17,11 @@ import 'package:tc_sa/features/compare/presentation/compare_school_view.dart';
 import 'package:tc_sa/features/compare/presentation/compare_with_view.dart';
 import 'package:tc_sa/features/detailPages/academics/presentation/academics_view.dart';
 import 'package:tc_sa/features/detailPages/activities/presentation/activities_view.dart';
+import 'package:tc_sa/features/detailPages/admission-timeline/presentation/admission_timeline_view.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/alumini_view.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/view_models/alumini_view_model.dart';
 import 'package:tc_sa/features/detailPages/amenity/presentation/amenity_view.dart';
+import 'package:tc_sa/features/detailPages/faculty/presentation/faculty_view.dart';
 import 'package:tc_sa/features/detailPages/feeAndScholarship/presentation/fees_scholarship_view.dart';
 import 'package:tc_sa/features/detailPages/infrastructure/presentation/infrastructure_view.dart';
 import 'package:tc_sa/features/detailPages/internationalExposure/presentation/international_view.dart';
@@ -234,6 +236,11 @@ GoRoute(
   builder: (context, state) => const AcademicsView(),
 ),
 GoRoute(
+  path: '/faculty',
+  name: RouteNames.faculty, // Add this to your RouteNames class
+  builder: (context, state) => const FacultyView(),
+),
+GoRoute(
   path: '/technology-adoption',
   name: RouteNames.techAdaption, // Add this to your RouteNames class
   builder: (context, state) => const TechnologyAdoptionView(),
@@ -258,7 +265,11 @@ GoRoute(
   name: RouteNames.internationalExposure, 
   builder: (context, state) => const InternationalExposureView(),
 ),
-
+GoRoute(
+  path: '/admission-timeline',
+  name: RouteNames.admissionTimeline, // Add this to your RouteNames class
+  builder: (context, state) => const AdmissionTimelineView(),
+),
       GoRoute(
         path: '/compare-with',
         name: RouteNames.compareWith,

@@ -17,6 +17,8 @@ class SchoolTabController with ChangeNotifier {
     'techAdaption',
     'safetySecurity',
       'internationalExposure'
+         'admission Timeline',
+    'faculty details'
   ];
 
   void initialize(TickerProvider vsync) {
