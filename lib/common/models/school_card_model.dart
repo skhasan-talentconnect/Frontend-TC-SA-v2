@@ -15,6 +15,8 @@ abstract class SchoolCardModel with _$SchoolCardModel {
     String? board,
     String? genderType,
     double? score,
+    double? latitude,
+    double? longitude,
     List<String>? shifts,
     List<String>? amenities,
     String? schoolMode,

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
+import 'package:tc_sa/features/profile/presentation/location_fetching.dart';
 import 'package:tc_sa/features/users/shortlist/index.dart';
 
 class SchoolCard extends StatefulWidget {
@@ -96,48 +97,26 @@ class _SchoolCardState extends State<SchoolCard> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               spacing: 4,
                               children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: Colors.red.shade100,
-                                  ),
-                                  child: Text(
-                                    widget.school.board ?? '',
-                                    style: STextStyles.s10W600,
+                                Icon(
+                                  Icons.location_on,
+                                  color: SColor.secTextColor,
+                                  size: 16,
+                                ),
+                                Text(
+                                  widget.school.location ?? '-',
+                                  style: STextStyles.s12W600.copyWith(
+                                    color: SColor.secTextColor,
+                                    overflow: TextOverflow.visible,
                                   ),
                                 ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
+                                Text(
+                                  LocationUtils.getDistanceFromUser(
+                                    widget.school.latitude,
+                                    widget.school.longitude,
                                   ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: Colors.green.shade100,
-                                  ),
-                                  child: Text(
-                                    widget.school.schoolMode?.toCapitalise ??
-                                        '',
-                                    style: STextStyles.s10W600,
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: Colors.orange.shade100,
-                                  ),
-                                  child: Text(
-                                    widget.school.genderType?.toCapitalise ??
-                                        '',
-                                    style: STextStyles.s10W600,
+                                  style: STextStyles.s12W600.copyWith(
+                                    color: SColor.secTextColor,
+                                    overflow: TextOverflow.visible,
                                   ),
                                 ),
                               ],
@@ -229,6 +208,58 @@ class _SchoolCardState extends State<SchoolCard> {
                             ),
                             const SizedBox(height: 10),
                             Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: 4,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: Colors.red.shade100,
+                                  ),
+                                  child: Text(
+                                    widget.school.board ?? '',
+                                    style: STextStyles.s10W600,
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: Colors.green.shade100,
+                                  ),
+                                  child: Text(
+                                    widget.school.schoolMode?.toCapitalise ??
+                                        '',
+                                    style: STextStyles.s10W600,
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: Colors.orange.shade100,
+                                  ),
+                                  child: Text(
+                                    widget.school.genderType?.toCapitalise ??
+                                        '',
+                                    style: STextStyles.s10W600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
                               spacing: 4,
                               children: [
                                 if (widget.school.amenities != null &&
@@ -282,26 +313,6 @@ class _SchoolCardState extends State<SchoolCard> {
                                       style: STextStyles.s10W600,
                                     ),
                                   ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              spacing: 4,
-                              children: [
-                                Icon(
-                                  Icons.location_on,
-                                  color: SColor.secTextColor,
-                                  size: 20,
-                                ),
-                                Text(
-                                  widget.school.location ?? '-',
-                                  style: STextStyles.s12W600.copyWith(
-                                    color: SColor.secTextColor,
-                                    overflow: TextOverflow.visible,
-                                  ),
-                                ),
                               ],
                             ),
                             const SizedBox(height: 8),

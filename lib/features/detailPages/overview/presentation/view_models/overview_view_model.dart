@@ -18,9 +18,17 @@ class OverviewViewModel extends ViewStateProvider {
   List<SchoolModel> get schoolsByStatus => _schoolsByStatus;
 
   String? _message;
+
   String? get message => _message;
 
-  // ---- ACTIONS ----
+  bool _isSaving = false;
+
+  bool get isSaving => _isSaving;
+
+  set isSaving(bool value) {
+    _isSaving = value;
+    notifyListeners();
+  }
 
   Future<Failure?> getSchoolsById({required String id}) async {
     Failure? failure;
