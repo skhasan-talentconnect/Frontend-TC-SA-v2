@@ -78,13 +78,22 @@ class _FacultyViewState extends State<FacultyView> {
 
             return RefreshIndicator(
               onRefresh: _refresh,
-              child: ListView.builder(
+              child: ListView(
                 padding: const EdgeInsets.all(16.0),
-                itemCount: facultyMembers.length,
-                itemBuilder: (context, index) {
-                  // --- 2. USE THE NEW PUBLIC WIDGET ---
-                  return FacultyMemberCard(member: facultyMembers[index]);
-                },
+                children: [
+                  // --- 1. ADDED THE CENTERED TITLE ---
+                  Center(
+                    child: Text(
+                      'Faculty Details',
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(height: 16.0), 
+
+                  ...facultyMembers.map((member) {
+                    return FacultyMemberCard(member: member);
+                  }).toList(),
+                ],
               ),
             );
           },
@@ -93,5 +102,3 @@ class _FacultyViewState extends State<FacultyView> {
     );
   }
 }
-
-// --- 3. THE _FacultyMemberCard WIDGET IS REMOVED FROM THIS FILE ---

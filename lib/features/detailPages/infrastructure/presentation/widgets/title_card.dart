@@ -47,7 +47,6 @@ class TitledCard extends StatelessWidget {
                 ),
               ],
             ),
-            const Divider(height: 20, thickness: 1),
             child,
           ],
         ),

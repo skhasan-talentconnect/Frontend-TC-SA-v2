@@ -181,7 +181,7 @@ class _AmenitiesViewState extends State<AmenitiesView> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        const Divider(color: Colors.grey, thickness: 0.5),
+                       
                         const SizedBox(height: 22),
 
                         // Amenities chips (predefined + custom)
@@ -235,7 +235,6 @@ class _AmenitiesViewState extends State<AmenitiesView> {
                           ),
                         ),
 
-                        const Divider(color: Colors.grey, thickness: 0.5),
                         const SizedBox(height: 22),
 
                         // School Information (static)

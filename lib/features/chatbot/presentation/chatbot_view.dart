@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
@@ -10,6 +9,8 @@ import 'package:tc_sa/core/network/app_failure.dart';
 import 'package:tc_sa/features/chatbot/data/entities/chatbot_question_model.dart';
 import 'package:tc_sa/features/chatbot/presentation/view_models/chatbot_view_model.dart';
 import 'package:tc_sa/features/chatbot/presentation/widgets/chatbot_widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class ChatbotView extends StatefulWidget {
   const ChatbotView({super.key});
@@ -49,13 +50,28 @@ class _ChatbotViewState extends State<ChatbotView> {
     });
   }
 
+  Future<void> _launchURL(String? urlString) async {
+    if (urlString == null || urlString.isEmpty) return;
+
+    final Uri url = Uri.parse(urlString);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      // Optional: Show a snackbar or toast if launching fails
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not open the link: $urlString')),
+        );
+      }
+    }
+  }
+
   Future<void> _onSend(BuildContext context) async {
     if (_selected.isEmpty) {
       final txt = _inputController.text.trim();
       if (txt.isNotEmpty) {
         final found = vm.questions.firstWhere(
           (qq) => qq.question.toLowerCase() == txt.toLowerCase(),
-          orElse: () => ChatbotQuestion(id: 0, question: '', field: '', value: ''),
+          orElse:
+              () => ChatbotQuestion(id: 0, question: '', field: '', value: ''),
         );
         if (found.id != 0) {
           _selected.removeWhere((e) => e.field == found.field);
@@ -84,16 +100,18 @@ class _ChatbotViewState extends State<ChatbotView> {
       }
       failure = await vm.applyFilters(filters: filters);
     }
-    
+
     if (failure != null) {
       if (!mounted) return;
       failure.showError(context);
     }
-    
+
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
-  Map<String, List<ChatbotQuestion>> _groupByField(List<ChatbotQuestion> items) {
+  Map<String, List<ChatbotQuestion>> _groupByField(
+    List<ChatbotQuestion> items,
+  ) {
     final map = <String, List<ChatbotQuestion>>{};
     for (final q in items) {
       map.putIfAbsent(q.field, () => <ChatbotQuestion>[]).add(q);
@@ -110,14 +128,46 @@ class _ChatbotViewState extends State<ChatbotView> {
           final isPageLoading = vm.viewState == ViewState.busy;
           final grouped = _groupByField(vm.questions);
           final sections = <_SectionDef>[
-            _SectionDef(title: 'Schools with fee range:', field: 'feeRange', icon: Icons.payments_outlined),
-            _SectionDef(title: 'Schools with board:', field: 'board', icon: Icons.menu_book_outlined),
-            _SectionDef(title: 'Schools with type:', field: 'schoolMode', icon: Icons.school_outlined),
-            _SectionDef(title: 'Schools with gender:', field: 'genderType', icon: Icons.people_outline),
-            _SectionDef(title: 'Schools with transport:', field: 'transportAvailable', icon: Icons.directions_bus_outlined),
-             _SectionDef(title: 'Schools in my area inly', field: 'area', icon: Icons.location_city),
-              _SectionDef(title: 'Schools in my city only', field: 'city', icon: Icons.location_city),
-            _SectionDef(title: 'Schools with rank:', field: 'rank', icon: Icons.emoji_events_outlined),
+            _SectionDef(
+              title: 'Schools with fee range:',
+              field: 'feeRange',
+              icon: Icons.payments_outlined,
+            ),
+            _SectionDef(
+              title: 'Schools with board:',
+              field: 'board',
+              icon: Icons.menu_book_outlined,
+            ),
+            _SectionDef(
+              title: 'Schools with type:',
+              field: 'schoolMode',
+              icon: Icons.school_outlined,
+            ),
+            _SectionDef(
+              title: 'Schools with gender:',
+              field: 'genderType',
+              icon: Icons.people_outline,
+            ),
+            _SectionDef(
+              title: 'Schools with transport:',
+              field: 'transportAvailable',
+              icon: Icons.directions_bus_outlined,
+            ),
+            _SectionDef(
+              title: 'Schools in my area inly',
+              field: 'area',
+              icon: Icons.location_city,
+            ),
+            _SectionDef(
+              title: 'Schools in my city only',
+              field: 'city',
+              icon: Icons.location_city,
+            ),
+            _SectionDef(
+              title: 'Schools with rank:',
+              field: 'rank',
+              icon: Icons.emoji_events_outlined,
+            ),
           ];
 
           return Scaffold(
@@ -160,7 +210,9 @@ class _ChatbotViewState extends State<ChatbotView> {
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
                             'No suggestions available.',
-                            style: STextStyles.s12W400.copyWith(color: Colors.black45),
+                            style: STextStyles.s12W400.copyWith(
+                              color: Colors.black45,
+                            ),
                           ),
                         )
                       else ...[
@@ -175,18 +227,24 @@ class _ChatbotViewState extends State<ChatbotView> {
                               spacing: 8,
                               runSpacing: 8,
                               children:
-                                  (grouped[sec.field]!).map((q) => ChatbotWidgets.questionChip(
-                                      q: q,
-                                      selected: _selected.any((e) => e.id == q.id),
-                                      onTap: () => _toggleSelect(q),
-                                    )).toList(),
+                                  (grouped[sec.field]!)
+                                      .map(
+                                        (q) => ChatbotWidgets.questionChip(
+                                          q: q,
+                                          selected: _selected.any(
+                                            (e) => e.id == q.id,
+                                          ),
+                                          onTap: () => _toggleSelect(q),
+                                        ),
+                                      )
+                                      .toList(),
                             ),
                             const SizedBox(height: 16),
                           ],
                         const Divider(height: 24),
 
                         // AI Response Section
-                        if (vm.recommendedSchoolNames.isNotEmpty)
+                        if (vm.recommendedSchools.isNotEmpty)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -200,7 +258,9 @@ class _ChatbotViewState extends State<ChatbotView> {
                                   const SizedBox(width: 8),
                                   Text(
                                     'AI Recommendations',
-                                    style: STextStyles.s20W600.copyWith(color: SColor.secTextColor),
+                                    style: STextStyles.s20W600.copyWith(
+                                      color: SColor.secTextColor,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -214,19 +274,65 @@ class _ChatbotViewState extends State<ChatbotView> {
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: vm.recommendedSchoolNames.map((line) => Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text("• ", style: TextStyle(fontSize: 18)),
-                                      Expanded(
-                                        child: Text(
-                                          line,
-                                          style: STextStyles.s14W600.copyWith(color: Colors.blue),
-                                          
-                                        ),
-                                      ),
-                                    ],
-                                  )).toList(),
+                                  // 3. Update the map function to build clickable widgets
+                                  children:
+                                      vm.recommendedSchools
+                                          .map(
+                                            (school) => GestureDetector(
+                                              // 1. Safely access the website property
+                                              onTap:
+                                                  () => _launchURL(
+                                                    school.website,
+                                                  ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 4.0,
+                                                    ),
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    const Text(
+                                                      "• ",
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.blue,
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Text(
+                                                        // 2. Safely access the name and provide a fallback
+                                                        school.name,
+                                                        style: STextStyles
+                                                            .s14W600
+                                                            .copyWith(
+                                                              color:
+                                                                  Colors.blue,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .underline,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    if (school.website != null)
+                                                      const Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                              left: 4.0,
+                                                            ),
+                                                        child: Icon(
+                                                          Icons.open_in_new,
+                                                          size: 16,
+                                                          color: Colors.blue,
+                                                        ),
+                                                      ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -240,7 +346,9 @@ class _ChatbotViewState extends State<ChatbotView> {
                             children: [
                               Text(
                                 'Filtered Schools (${vm.resolvedSchools.length})',
-                                style: STextStyles.s16W600.copyWith(color: SColor.secTextColor),
+                                style: STextStyles.s16W600.copyWith(
+                                  color: SColor.secTextColor,
+                                ),
                               ),
                               const SizedBox(height: 12),
                               ListView.separated(
@@ -248,7 +356,9 @@ class _ChatbotViewState extends State<ChatbotView> {
                                   final school = vm.resolvedSchools[index];
                                   return SchoolCard(school: school);
                                 },
-                                separatorBuilder: (context, index) => const SizedBox(height: 16),
+                                separatorBuilder:
+                                    (context, index) =>
+                                        const SizedBox(height: 16),
                                 itemCount: vm.resolvedSchools.length,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -257,14 +367,18 @@ class _ChatbotViewState extends State<ChatbotView> {
                           ),
 
                         // Empty State
-                        if (vm.resolvedSchools.isEmpty && vm.recommendedSchoolNames.isEmpty && !isPageLoading)
+                        if (vm.resolvedSchools.isEmpty &&
+                            vm.recommendedSchools.isEmpty &&
+                            !isPageLoading)
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 32.0),
                             child: Center(
                               child: Text(
                                 'No results to show.\nSelect questions and press Send.',
                                 textAlign: TextAlign.center,
-                                style: STextStyles.s14W400.copyWith(color: Colors.black54),
+                                style: STextStyles.s14W400.copyWith(
+                                  color: Colors.black54,
+                                ),
                               ),
                             ),
                           ),
@@ -276,9 +390,10 @@ class _ChatbotViewState extends State<ChatbotView> {
                 ChatbotWidgets.bottomBar(
                   child: ChatbotWidgets.inputBar(
                     controller: _inputController,
-                    placeholder: _selected.isEmpty
-                        ? 'Select one or more predefined questions…'
-                        : _selected.map((e) => e.question).join(' + '),
+                    placeholder:
+                        _selected.isEmpty
+                            ? 'Select one or more predefined questions…'
+                            : _selected.map((e) => e.question).join(' + '),
                     showClear: _selected.isNotEmpty,
                     onClearSelected: () {
                       setState(() {

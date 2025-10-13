@@ -10,6 +10,7 @@ class Endpoints {
   static const String authForgotPasswordVerifyOtp =
       'auth/forgot-password/verify-otp';
   static const String authResetPassword = 'auth/reset-password';
+  
   static const String authGoogle = 'auth/google';
   static const String authVerifyEmail = 'auth/verify-email';
 
@@ -69,4 +70,5 @@ static const String nearbySchools='admin/schools/nearby';
   static const String formStudent = 'form/student';
   static const String formTrack = 'form/track';
   static const String form = 'form';
+
 }

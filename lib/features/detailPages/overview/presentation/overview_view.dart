@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/application/forms/presentation/view_models/my_form_view_model.dart';
+import 'package:tc_sa/features/detailPages/infrastructure/presentation/widgets/title_card.dart';
 import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/view_models/overview_view_model.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/info_chip_widget.dart';
@@ -102,7 +103,10 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
           );
           break;
         case 7:
-          context.pushNamed(RouteNames.review);
+          context.pushNamed(
+            RouteNames.review,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
           break;
         case 8:
           context.pushNamed(
@@ -547,150 +551,190 @@ class _OverviewTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isSmall = size.width < 600;
-    final isMed = size.width >= 600 && size.width < 900;
-    final cross = isSmall ? 2 : (isMed ? 3 : 4);
-    final infoFont = isSmall ? 16.0 : (isMed ? 18.0 : 20.0);
-    final pad = isSmall ? 8.0 : (isMed ? 12.0 : 16.0);
 
-    final feeHi = (school.feeRange ?? "")
-        .split(RegExp(r'[-–]'))
-        .last
-        .trim()
-        .replaceAll(RegExp(r'[^\d]'), '');
+    // Improved fee parsing
+    final feeParts = (school.feeRange ?? "").split(RegExp(r'[-–]'));
+    final feeLow = feeParts.isNotEmpty ? feeParts.first.trim() : '-';
+    final feeHigh =
+        feeParts.length > 1
+            ? feeParts.last.trim()
+            : (feeParts.isNotEmpty ? feeParts.first.trim() : '-');
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(pad),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Quick Highlights
-          Text(
-            "Quick Highlights",
-            style: TextStyle(
-              fontSize: infoFont + 4,
-              fontWeight: FontWeight.bold,
+          // Quick Highlights Section
+          TitledCard(
+            title: "Quick Highlights",
+            icon: Icons.info,
+            child: GridView.count(
+              
+              crossAxisCount: isSmall ? 2 : 3,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+                      childAspectRatio: 1.2, 
+
+              children: [
+               
+                QuickHighlights(
+                  icon: Icons.school_outlined,
+                  title: "School Mode",
+                  value: school.schoolMode ?? "-",
+                ),
+                QuickHighlights(
+                  icon: Icons.wc_outlined,
+                  title: "Gender",
+                  value: school.genderType ?? "-",
+                ),
+                QuickHighlights(
+                  icon: Icons.directions_bus_outlined,
+                  title: "Transport",
+                  value: school.transportAvailable ?? "-",
+                ),
+                QuickHighlights(
+                  icon: Icons.translate_outlined,
+                  title: "Medium",
+                  value: school.languageMedium?.join(", ") ?? "-",
+                ),
+                QuickHighlights(
+                  icon: Icons.access_time_outlined,
+                  title: "Shifts",
+                  value: school.shifts?.join(", ") ?? "-",
+                ),
+                QuickHighlights(
+                  icon: Icons.label_outline,
+                  title: "Type",
+                  value: school.tags?.join(", ") ?? "-",
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 10),
-          GridView.count(
-            crossAxisCount: cross,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 1.5,
-            children: [
-              QuickHighlights(
-                title: "School Mode",
-                value: school.schoolMode ?? "-",
-              ),
-              QuickHighlights(
-                title: "Gender Allowed",
-                value: school.genderType ?? "-",
-              ),
-              QuickHighlights(
-                title: "Transport",
-                value: (school.transportAvailable ?? "-"),
-              ),
-              QuickHighlights(
-                title: "Medium",
-                value: (school.languageMedium?.join(", ") ?? "-"),
-              ),
-              QuickHighlights(
-                title: "Shifts",
-                value: (school.shifts?.join(", ") ?? "-"),
-              ),
-              QuickHighlights(
-                title: "Type",
-                value: (school.tags?.join(", ") ?? (school.description ?? "-")),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          const Divider(),
           const SizedBox(height: 20),
 
-          // Fee Range
-          Text(
-            "Fee Range",
-            style: TextStyle(
-              fontSize: infoFont + 4,
-              fontWeight: FontWeight.bold,
+          // Fee Range Section
+         _TitledCard(
+            title: "Fee Structure",
+            icon: Icons.account_balance_wallet_outlined,
+            iconColor: Colors.green,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Display the full fee range text
+                Text(
+                  school.feeRange ?? "Not Available",
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: Colors.green.shade800),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "Annual Fee Range",
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                ),
+                const SizedBox(height: 16),
+                
+                // Visual bar for the range
+                Container(
+                  height: 8,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.green.shade100,
+                        Colors.green.shade400,
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                
+                // Low and High labels
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Lowest: $feeLow", style: const TextStyle(fontWeight: FontWeight.w500)),
+                    Text("Highest: $feeHigh", style: const TextStyle(fontWeight: FontWeight.w500)),
+                  ],
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Highest Fee",
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: infoFont,
-                ),
-              ),
-              Text(
-                feeHi.isEmpty ? (school.feeRange ?? "-") : feeHi,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: infoFont - 2,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Average Fee",
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: infoFont,
-                ),
-              ),
-              Text(
-                school.feeRange ?? "-",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: infoFont - 2,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 20),
-          const Divider(),
           const SizedBox(height: 20),
 
-          // Top Amenities (using tags/specialist as placeholders if amenities not present)
-          Text(
-            "Top Amenities",
-            style: TextStyle(
-              fontSize: infoFont + 4,
-              fontWeight: FontWeight.bold,
+          // Top Amenities Section
+          _TitledCard(
+            title: "Top Tags",
+            icon: Icons.widgets_outlined,
+            iconColor: Colors.blue,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children:
+                  (school.tags?.isNotEmpty == true
+                          ? school.tags!
+                          : (school.specialist?.isNotEmpty == true
+                              ? school.specialist!
+                              : const [
+                                "E-Library",
+                                "Science Lab",
+                                "Computer Lab",
+                              ]))
+                      .map(
+                        (e) => RecruiterChip(label: e, isSmallScreen: isSmall),
+                      )
+                      .toList(),
             ),
           ),
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children:
-                (school.tags?.isNotEmpty == true
-                        ? school.tags!
-                        : (school.specialist?.isNotEmpty == true
-                            ? school.specialist!
-                            : const [
-                              "E-Library",
-                              "Science Lab",
-                              "Computer Lab",
-                            ]))
-                    .map((e) => RecruiterChip(label: e, isSmallScreen: isSmall))
-                    .toList(),
-          ),
-          const SizedBox(height: 20),
         ],
       ),
     );
   }
 }
+
+// --- Local Helper Widgets for this View ---
+
+class _TitledCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Widget child;
+  final Color iconColor;
+
+  const _TitledCard({
+    required this.title,
+    required this.icon,
+    required this.child,
+    required this.iconColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(icon, color: iconColor, size: 28),
+                const SizedBox(width: 10),
+                Text(
+                  title,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const Divider(height: 24, thickness: 1),
+            child,
+          ],
+        ),
+      ),
+    );
+  }
+}
+

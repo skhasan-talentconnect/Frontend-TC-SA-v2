@@ -1,9 +1,11 @@
-// features/chatbot/data/entities/filter_id_model.dart
+
+import 'package:tc_sa/features/chatbot/data/entities/recommended_model.dart';
 
 class FilterIdsResult {
   final int count;
   final List<String> schoolIds; // From DB filter
-  final List<String> recommendedSchools; // From AI filter
+   final List<RecommendedSchool> recommendedSchools; // 2. Change this from List<String>
+// From AI filter
   final String? aiResponse;
 
   FilterIdsResult({
@@ -24,12 +26,10 @@ class FilterIdsResult {
             .toList() ??
         [];
 
-    final List<String> recommendedSchools =
-        (json['recommendedSchools'] as List<dynamic>?)
-                ?.map((e) => e?.toString() ?? '')
-                .where((s) => s.isNotEmpty)
-                .toList() ??
-            [];
+  final List<RecommendedSchool> recommendedSchools = 
+      (json['recommendedSchools'] as List<dynamic>? ?? [])
+        .map((e) => RecommendedSchool.fromJson(e as Map<String, dynamic>))
+        .toList();
 
     final String? aiResponse = json['aiResponse'] as String?;
 

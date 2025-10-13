@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
+import 'package:tc_sa/features/detailPages/infrastructure/presentation/widgets/title_card.dart';
 import 'view_models/academics_view_model.dart';
 
 class AcademicsView extends StatefulWidget {
@@ -84,7 +85,7 @@ class _AcademicsViewState extends State<AcademicsView> {
                   const SizedBox(height: 20),
                   _buildChipListCard(context, 'Special Exam Training', Icons.model_training, model.specialExamsTraining, Colors.purple),
                   const SizedBox(height: 20),
-                  _buildChipListCard(context, 'Extra-Curricular Activities', Icons.palette_outlined, model.extraCurricularActivities, Colors.orange),
+                  _buildChipListCard(context, 'Extra-Curricular Activities', Icons.palette_outlined, model.extraCurricularActivities, Colors.purple),
                 ],
               ),
             );
@@ -95,10 +96,10 @@ class _AcademicsViewState extends State<AcademicsView> {
   }
 
   Widget _buildBoardResultsCard(BuildContext context, double? class10, double? class12) {
-    return _TitledCard(
+    return TitledCard(
       title: 'Average Board Results',
-      icon: Icons.assessment_outlined,
-      iconColor: Colors.blue,
+      icon: Icons.leaderboard,
+ 
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Row(
@@ -141,10 +142,10 @@ class _AcademicsViewState extends State<AcademicsView> {
   }
 
   Widget _buildOverallMarksCard(BuildContext context, double? marks) {
-    return _TitledCard(
+    return TitledCard(
       title: 'Overall School Average',
-      icon: Icons.star_border_rounded,
-      iconColor: Colors.amber,
+      icon: Icons.workspace_premium,
+   
       child: (marks == null)
           ? const Padding(padding: EdgeInsets.all(16.0), child: Text('Data not available.'))
           : Padding(
@@ -175,10 +176,10 @@ class _AcademicsViewState extends State<AcademicsView> {
   }
 
   Widget _buildChipListCard(BuildContext context, String title, IconData icon, List<String> items, Color color) {
-    return _TitledCard(
+    return TitledCard(
       title: title,
       icon: icon,
-      iconColor: color,
+
       child: (items.isEmpty)
           ? const Padding(padding: EdgeInsets.symmetric(vertical: 16.0), child: Text('No data available for this section.'))
           : Padding(
@@ -193,44 +194,6 @@ class _AcademicsViewState extends State<AcademicsView> {
                 )).toList(),
               ),
             ),
-    );
-  }
-}
-
-// A local, private widget for consistent card styling on this page
-class _TitledCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final Widget child;
-  final Color iconColor;
-
-  const _TitledCard({required this.title, required this.icon, required this.child, required this.iconColor});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: iconColor, size: 28),
-                const SizedBox(width: 10),
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const Divider(height: 24, thickness: 1),
-            child,
-          ],
-        ),
-      ),
     );
   }
 }

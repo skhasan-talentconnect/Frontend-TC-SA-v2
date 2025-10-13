@@ -1,55 +1,52 @@
 import 'package:flutter/material.dart';
 
 class QuickHighlights extends StatelessWidget {
+  final IconData icon; // <-- ADDED
   final String title;
   final String value;
 
-  const QuickHighlights({super.key, required this.title, required this.value});
+  const QuickHighlights({
+    super.key,
+    required this.icon, // <-- ADDED
+    required this.title,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isSmallScreen = MediaQuery.of(context).size.width < 600;
-
     return Container(
-      padding: EdgeInsets.all(isSmallScreen ? 8.0 : 12.0),
+      padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
-        border: Border.all(color: Colors.grey.shade300),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: Colors.grey.shade200),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Flexible(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: isSmallScreen ? 14.0 : 16.0,
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-              ),
-              softWrap: true,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              maxLines: 2,
+          Icon(icon, size: 28.0, color: Colors.purple), // <-- ADDED
+          const SizedBox(height: 8),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 15.0,
+              color: Colors.black54,
+              fontWeight: FontWeight.w500,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 4),
           Text(
             value,
-            style: TextStyle(
-              fontSize: isSmallScreen ? 14.0 : 16.0,
+            style: const TextStyle(
+              fontSize: 16.0,
               fontWeight: FontWeight.bold,
-              color: Colors.blue[700],
+              color: Colors.black,
             ),
-            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
