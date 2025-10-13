@@ -49,7 +49,7 @@ class ChipListCard extends StatelessWidget {
                 ),
               ],
             ),
-            const Divider(height: 20, thickness: 1),
+  
             if (items.isEmpty)
               const Text('No data available')
             else

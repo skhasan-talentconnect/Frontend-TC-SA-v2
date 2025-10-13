@@ -36,7 +36,7 @@ class ScholarshipDiversityCard extends StatelessWidget {
               color: Colors.deepPurple,
             ),
           ),
-          const Divider(height: 32),
+        
           const Text('Types Offered', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
           const SizedBox(height: 8),
           Wrap(

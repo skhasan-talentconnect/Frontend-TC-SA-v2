@@ -8,6 +8,7 @@ import 'package:tc_sa/features/chatbot/data/data_source/data_source.dart';
 import 'package:tc_sa/features/chatbot/data/data_source/data_source_impl.dart';
 import 'package:tc_sa/features/chatbot/data/entities/chatbot_question_model.dart';
 import 'package:tc_sa/features/chatbot/data/entities/filter_id_model.dart';
+import 'package:tc_sa/features/chatbot/data/entities/recommended_model.dart';
 
 class ChatbotViewModel extends ViewStateProvider {
   final ChatbotDataSource _ds = ChatbotDataSourceImpl();
@@ -19,8 +20,8 @@ class ChatbotViewModel extends ViewStateProvider {
   String? _aiResponse;
   String? get aiResponse => _aiResponse;
 
-  List<String> _recommendedSchoolNames = [];
-  List<String> get recommendedSchoolNames => _recommendedSchoolNames;
+  List<RecommendedSchool> _recommendedSchools = [];
+  List<RecommendedSchool> get recommendedSchools => _recommendedSchools;
 
   List<SchoolCardModel> _resolvedSchools = [];
   List<SchoolCardModel> get resolvedSchools => _resolvedSchools;
@@ -47,7 +48,7 @@ class ChatbotViewModel extends ViewStateProvider {
   }) async {
     // Clear previous results immediately
     _resolvedSchools = [];
-    _recommendedSchoolNames = [];
+       _recommendedSchools = [];
     _aiResponse = null;
     notifyListeners();
 
@@ -81,7 +82,7 @@ class ChatbotViewModel extends ViewStateProvider {
     aiResult.fold(
       (ex) => overallFailure ??= ex as Failure?,
       (result) {
-        _recommendedSchoolNames = result.recommendedSchools;
+          _recommendedSchools = result.recommendedSchools; 
         _aiResponse = result.aiResponse;
       },
     );
@@ -181,7 +182,7 @@ class ChatbotViewModel extends ViewStateProvider {
 
   void clear() {
     _aiResponse = null;
-    _recommendedSchoolNames = [];
+    _recommendedSchools = [];
     _resolvedSchools = [];
     notifyListeners();
   }

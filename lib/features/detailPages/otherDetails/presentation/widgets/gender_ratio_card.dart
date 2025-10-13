@@ -13,14 +13,14 @@ class GenderRatioCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return TitledCard(
       title: 'Gender Distribution',
-      icon: Icons.pie_chart_outline_rounded,
+      icon: Icons.wc_outlined,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _buildRatioIndicator('Male', ratio.male ?? 0, Colors.blue),
-            _buildRatioIndicator('Female', ratio.female ?? 0, Colors.pink),
+            _buildRatioIndicator('Female', ratio.female ?? 0, Colors.pinkAccent),
             _buildRatioIndicator('Others', ratio.others ?? 0, Colors.grey.shade600),
           ],
         ),

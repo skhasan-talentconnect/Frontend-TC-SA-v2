@@ -123,7 +123,7 @@ class _AlumniViewState extends State<AlumniView> {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        const Divider(color: Colors.grey, thickness: 0.5),
+                   
                         const SizedBox(height: 22),
 
                         // Famous Alumni
@@ -147,8 +147,7 @@ class _AlumniViewState extends State<AlumniView> {
                             ),
                           ),
                           const SizedBox(height: 22),
-                          const Divider(color: Colors.grey, thickness: 0.5),
-                          const SizedBox(height: 22),
+                      
                         ],
 
                         // Top Alumni
@@ -175,8 +174,7 @@ class _AlumniViewState extends State<AlumniView> {
                             ),
                           ),
                           const SizedBox(height: 22),
-                          const Divider(color: Colors.grey, thickness: 0.5),
-                          const SizedBox(height: 22),
+                    
                         ],
 
                         // Other Alumni

@@ -94,6 +94,15 @@ class _InfrastructureViewState extends State<InfrastructureView> {
               child: ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
+
+                  Center(
+                    child: Text(
+                      'Infrastructure',
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 16),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
