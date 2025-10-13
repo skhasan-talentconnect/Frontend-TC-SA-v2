@@ -9,8 +9,8 @@ import 'package:tc_sa/features/detailPages/overview/presentation/view_models/ove
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/info_chip_widget.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/quick_highlight_widget.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/recruiter_chip_widget.dart';
+import 'package:tc_sa/features/users/shortlist/index.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 
 class SchoolDetailView extends StatefulWidget {
   const SchoolDetailView({super.key, required this.schoolId});
@@ -39,10 +39,13 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
     'safetySecurity',
     'internationalExposure',
     'admission Timeline',
-    'faculty details'
+    'faculty details',
   ];
 
   final MyFormViewModel myFormViewModel = MyFormViewModel();
+  final ShortlistViewModel shortlistViewModel = ShortlistViewModel();
+
+  final ValueNotifier<bool> isSaved = ValueNotifier(false);
 
   @override
   void initState() {
@@ -53,6 +56,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final failure = await _vm.getSchoolsById(id: widget.schoolId);
       failure?.showError(context);
+      isSaved.value = getIt<AppStateProvider>().isSaved(widget.schoolId);
     });
   }
 
@@ -179,6 +183,60 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                 onTap: () => context.pop(),
               ),
               title: school?.name ?? "School",
+              actions:
+                  !getIt<AppStateProvider>().isGuest
+                      ? [
+                        ChangeNotifierProvider.value(
+                          value: shortlistViewModel,
+                          child: Selector<ShortlistViewModel, bool>(
+                            selector: (_, vm) => vm.isLoading,
+                            builder: (vmContext, isSaving, _) {
+                              if (isSaving) {
+                                return SLoadingIndicator(
+                                  size: 24,
+                                  thickness: 3,
+                                );
+                              }
+
+                              return ValueListenableBuilder(
+                                valueListenable: isSaved,
+                                builder:
+                                    (_, vIsSaved, __) => SIcon(
+                                      icon:
+                                          !vIsSaved
+                                              ? Icons.bookmark_outline
+                                              : Icons.bookmark,
+                                      color: SColor.secTextColor,
+                                      size: 28,
+                                      onTap: () async {
+                                        final failure;
+                                        vIsSaved
+                                            ? failure = await shortlistViewModel
+                                                .removeShortlist(
+                                                  schoolId:
+                                                      _vm.school?.id ?? '',
+                                                )
+                                            : failure = await shortlistViewModel
+                                                .addShortlist(
+                                                  schoolId:
+                                                      _vm.school?.id ?? '',
+                                                );
+                                        if (failure == null) {
+                                          isSaved.value = !vIsSaved;
+                                          Toasts.showSuccessToast(
+                                            context,
+                                            message:
+                                                '${!vIsSaved ? 'Added to' : 'Removed from'} Shortlist',
+                                          );
+                                        }
+                                      },
+                                    ),
+                              );
+                            },
+                          ),
+                        ),
+                      ]
+                      : [],
             ),
             body: Builder(
               builder: (_) {

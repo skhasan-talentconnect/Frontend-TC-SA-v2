@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SchoolCardModel {
 
- String? get schoolId; int? get ratings; String? get name; String? get feeRange; String? get area; String? get location; String? get board; String? get genderType; double? get score; List<String>? get shifts; List<String>? get amenities; String? get schoolMode;
+ String? get schoolId; int? get ratings; String? get name; String? get feeRange; String? get area; String? get location; String? get board; String? get genderType; double? get score; double? get latitude; double? get longitude; List<String>? get shifts; List<String>? get amenities; String? get schoolMode;
 /// Create a copy of SchoolCardModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $SchoolCardModelCopyWith<SchoolCardModel> get copyWith => _$SchoolCardModelCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SchoolCardModel&&(identical(other.schoolId, schoolId) || other.schoolId == schoolId)&&(identical(other.ratings, ratings) || other.ratings == ratings)&&(identical(other.name, name) || other.name == name)&&(identical(other.feeRange, feeRange) || other.feeRange == feeRange)&&(identical(other.area, area) || other.area == area)&&(identical(other.location, location) || other.location == location)&&(identical(other.board, board) || other.board == board)&&(identical(other.genderType, genderType) || other.genderType == genderType)&&(identical(other.score, score) || other.score == score)&&const DeepCollectionEquality().equals(other.shifts, shifts)&&const DeepCollectionEquality().equals(other.amenities, amenities)&&(identical(other.schoolMode, schoolMode) || other.schoolMode == schoolMode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SchoolCardModel&&(identical(other.schoolId, schoolId) || other.schoolId == schoolId)&&(identical(other.ratings, ratings) || other.ratings == ratings)&&(identical(other.name, name) || other.name == name)&&(identical(other.feeRange, feeRange) || other.feeRange == feeRange)&&(identical(other.area, area) || other.area == area)&&(identical(other.location, location) || other.location == location)&&(identical(other.board, board) || other.board == board)&&(identical(other.genderType, genderType) || other.genderType == genderType)&&(identical(other.score, score) || other.score == score)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&const DeepCollectionEquality().equals(other.shifts, shifts)&&const DeepCollectionEquality().equals(other.amenities, amenities)&&(identical(other.schoolMode, schoolMode) || other.schoolMode == schoolMode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,schoolId,ratings,name,feeRange,area,location,board,genderType,score,const DeepCollectionEquality().hash(shifts),const DeepCollectionEquality().hash(amenities),schoolMode);
+int get hashCode => Object.hash(runtimeType,schoolId,ratings,name,feeRange,area,location,board,genderType,score,latitude,longitude,const DeepCollectionEquality().hash(shifts),const DeepCollectionEquality().hash(amenities),schoolMode);
 
 @override
 String toString() {
-  return 'SchoolCardModel(schoolId: $schoolId, ratings: $ratings, name: $name, feeRange: $feeRange, area: $area, location: $location, board: $board, genderType: $genderType, score: $score, shifts: $shifts, amenities: $amenities, schoolMode: $schoolMode)';
+  return 'SchoolCardModel(schoolId: $schoolId, ratings: $ratings, name: $name, feeRange: $feeRange, area: $area, location: $location, board: $board, genderType: $genderType, score: $score, latitude: $latitude, longitude: $longitude, shifts: $shifts, amenities: $amenities, schoolMode: $schoolMode)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $SchoolCardModelCopyWith<$Res>  {
   factory $SchoolCardModelCopyWith(SchoolCardModel value, $Res Function(SchoolCardModel) _then) = _$SchoolCardModelCopyWithImpl;
 @useResult
 $Res call({
- String? schoolId, int? ratings, String? name, String? feeRange, String? area, String? location, String? board, String? genderType, double? score, List<String>? shifts, List<String>? amenities, String? schoolMode
+ String? schoolId, int? ratings, String? name, String? feeRange, String? area, String? location, String? board, String? genderType, double? score, double? latitude, double? longitude, List<String>? shifts, List<String>? amenities, String? schoolMode
 });
 
 
@@ -65,7 +65,7 @@ class _$SchoolCardModelCopyWithImpl<$Res>
 
 /// Create a copy of SchoolCardModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? schoolId = freezed,Object? ratings = freezed,Object? name = freezed,Object? feeRange = freezed,Object? area = freezed,Object? location = freezed,Object? board = freezed,Object? genderType = freezed,Object? score = freezed,Object? shifts = freezed,Object? amenities = freezed,Object? schoolMode = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? schoolId = freezed,Object? ratings = freezed,Object? name = freezed,Object? feeRange = freezed,Object? area = freezed,Object? location = freezed,Object? board = freezed,Object? genderType = freezed,Object? score = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? shifts = freezed,Object? amenities = freezed,Object? schoolMode = freezed,}) {
   return _then(_self.copyWith(
 schoolId: freezed == schoolId ? _self.schoolId : schoolId // ignore: cast_nullable_to_non_nullable
 as String?,ratings: freezed == ratings ? _self.ratings : ratings // ignore: cast_nullable_to_non_nullable
@@ -76,6 +76,8 @@ as String?,location: freezed == location ? _self.location : location // ignore: 
 as String?,board: freezed == board ? _self.board : board // ignore: cast_nullable_to_non_nullable
 as String?,genderType: freezed == genderType ? _self.genderType : genderType // ignore: cast_nullable_to_non_nullable
 as String?,score: freezed == score ? _self.score : score // ignore: cast_nullable_to_non_nullable
+as double?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,shifts: freezed == shifts ? _self.shifts : shifts // ignore: cast_nullable_to_non_nullable
 as List<String>?,amenities: freezed == amenities ? _self.amenities : amenities // ignore: cast_nullable_to_non_nullable
 as List<String>?,schoolMode: freezed == schoolMode ? _self.schoolMode : schoolMode // ignore: cast_nullable_to_non_nullable
@@ -164,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? schoolId,  int? ratings,  String? name,  String? feeRange,  String? area,  String? location,  String? board,  String? genderType,  double? score,  List<String>? shifts,  List<String>? amenities,  String? schoolMode)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? schoolId,  int? ratings,  String? name,  String? feeRange,  String? area,  String? location,  String? board,  String? genderType,  double? score,  double? latitude,  double? longitude,  List<String>? shifts,  List<String>? amenities,  String? schoolMode)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SchoolCardModel() when $default != null:
-return $default(_that.schoolId,_that.ratings,_that.name,_that.feeRange,_that.area,_that.location,_that.board,_that.genderType,_that.score,_that.shifts,_that.amenities,_that.schoolMode);case _:
+return $default(_that.schoolId,_that.ratings,_that.name,_that.feeRange,_that.area,_that.location,_that.board,_that.genderType,_that.score,_that.latitude,_that.longitude,_that.shifts,_that.amenities,_that.schoolMode);case _:
   return orElse();
 
 }
@@ -185,10 +187,10 @@ return $default(_that.schoolId,_that.ratings,_that.name,_that.feeRange,_that.are
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? schoolId,  int? ratings,  String? name,  String? feeRange,  String? area,  String? location,  String? board,  String? genderType,  double? score,  List<String>? shifts,  List<String>? amenities,  String? schoolMode)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? schoolId,  int? ratings,  String? name,  String? feeRange,  String? area,  String? location,  String? board,  String? genderType,  double? score,  double? latitude,  double? longitude,  List<String>? shifts,  List<String>? amenities,  String? schoolMode)  $default,) {final _that = this;
 switch (_that) {
 case _SchoolCardModel():
-return $default(_that.schoolId,_that.ratings,_that.name,_that.feeRange,_that.area,_that.location,_that.board,_that.genderType,_that.score,_that.shifts,_that.amenities,_that.schoolMode);case _:
+return $default(_that.schoolId,_that.ratings,_that.name,_that.feeRange,_that.area,_that.location,_that.board,_that.genderType,_that.score,_that.latitude,_that.longitude,_that.shifts,_that.amenities,_that.schoolMode);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +207,10 @@ return $default(_that.schoolId,_that.ratings,_that.name,_that.feeRange,_that.are
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? schoolId,  int? ratings,  String? name,  String? feeRange,  String? area,  String? location,  String? board,  String? genderType,  double? score,  List<String>? shifts,  List<String>? amenities,  String? schoolMode)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? schoolId,  int? ratings,  String? name,  String? feeRange,  String? area,  String? location,  String? board,  String? genderType,  double? score,  double? latitude,  double? longitude,  List<String>? shifts,  List<String>? amenities,  String? schoolMode)?  $default,) {final _that = this;
 switch (_that) {
 case _SchoolCardModel() when $default != null:
-return $default(_that.schoolId,_that.ratings,_that.name,_that.feeRange,_that.area,_that.location,_that.board,_that.genderType,_that.score,_that.shifts,_that.amenities,_that.schoolMode);case _:
+return $default(_that.schoolId,_that.ratings,_that.name,_that.feeRange,_that.area,_that.location,_that.board,_that.genderType,_that.score,_that.latitude,_that.longitude,_that.shifts,_that.amenities,_that.schoolMode);case _:
   return null;
 
 }
@@ -220,7 +222,7 @@ return $default(_that.schoolId,_that.ratings,_that.name,_that.feeRange,_that.are
 @JsonSerializable()
 
 class _SchoolCardModel implements SchoolCardModel {
-   _SchoolCardModel({this.schoolId, this.ratings, this.name, this.feeRange, this.area, this.location, this.board, this.genderType, this.score, final  List<String>? shifts, final  List<String>? amenities, this.schoolMode}): _shifts = shifts,_amenities = amenities;
+   _SchoolCardModel({this.schoolId, this.ratings, this.name, this.feeRange, this.area, this.location, this.board, this.genderType, this.score, this.latitude, this.longitude, final  List<String>? shifts, final  List<String>? amenities, this.schoolMode}): _shifts = shifts,_amenities = amenities;
   factory _SchoolCardModel.fromJson(Map<String, dynamic> json) => _$SchoolCardModelFromJson(json);
 
 @override final  String? schoolId;
@@ -232,6 +234,8 @@ class _SchoolCardModel implements SchoolCardModel {
 @override final  String? board;
 @override final  String? genderType;
 @override final  double? score;
+@override final  double? latitude;
+@override final  double? longitude;
  final  List<String>? _shifts;
 @override List<String>? get shifts {
   final value = _shifts;
@@ -265,16 +269,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SchoolCardModel&&(identical(other.schoolId, schoolId) || other.schoolId == schoolId)&&(identical(other.ratings, ratings) || other.ratings == ratings)&&(identical(other.name, name) || other.name == name)&&(identical(other.feeRange, feeRange) || other.feeRange == feeRange)&&(identical(other.area, area) || other.area == area)&&(identical(other.location, location) || other.location == location)&&(identical(other.board, board) || other.board == board)&&(identical(other.genderType, genderType) || other.genderType == genderType)&&(identical(other.score, score) || other.score == score)&&const DeepCollectionEquality().equals(other._shifts, _shifts)&&const DeepCollectionEquality().equals(other._amenities, _amenities)&&(identical(other.schoolMode, schoolMode) || other.schoolMode == schoolMode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SchoolCardModel&&(identical(other.schoolId, schoolId) || other.schoolId == schoolId)&&(identical(other.ratings, ratings) || other.ratings == ratings)&&(identical(other.name, name) || other.name == name)&&(identical(other.feeRange, feeRange) || other.feeRange == feeRange)&&(identical(other.area, area) || other.area == area)&&(identical(other.location, location) || other.location == location)&&(identical(other.board, board) || other.board == board)&&(identical(other.genderType, genderType) || other.genderType == genderType)&&(identical(other.score, score) || other.score == score)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&const DeepCollectionEquality().equals(other._shifts, _shifts)&&const DeepCollectionEquality().equals(other._amenities, _amenities)&&(identical(other.schoolMode, schoolMode) || other.schoolMode == schoolMode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,schoolId,ratings,name,feeRange,area,location,board,genderType,score,const DeepCollectionEquality().hash(_shifts),const DeepCollectionEquality().hash(_amenities),schoolMode);
+int get hashCode => Object.hash(runtimeType,schoolId,ratings,name,feeRange,area,location,board,genderType,score,latitude,longitude,const DeepCollectionEquality().hash(_shifts),const DeepCollectionEquality().hash(_amenities),schoolMode);
 
 @override
 String toString() {
-  return 'SchoolCardModel(schoolId: $schoolId, ratings: $ratings, name: $name, feeRange: $feeRange, area: $area, location: $location, board: $board, genderType: $genderType, score: $score, shifts: $shifts, amenities: $amenities, schoolMode: $schoolMode)';
+  return 'SchoolCardModel(schoolId: $schoolId, ratings: $ratings, name: $name, feeRange: $feeRange, area: $area, location: $location, board: $board, genderType: $genderType, score: $score, latitude: $latitude, longitude: $longitude, shifts: $shifts, amenities: $amenities, schoolMode: $schoolMode)';
 }
 
 
@@ -285,7 +289,7 @@ abstract mixin class _$SchoolCardModelCopyWith<$Res> implements $SchoolCardModel
   factory _$SchoolCardModelCopyWith(_SchoolCardModel value, $Res Function(_SchoolCardModel) _then) = __$SchoolCardModelCopyWithImpl;
 @override @useResult
 $Res call({
- String? schoolId, int? ratings, String? name, String? feeRange, String? area, String? location, String? board, String? genderType, double? score, List<String>? shifts, List<String>? amenities, String? schoolMode
+ String? schoolId, int? ratings, String? name, String? feeRange, String? area, String? location, String? board, String? genderType, double? score, double? latitude, double? longitude, List<String>? shifts, List<String>? amenities, String? schoolMode
 });
 
 
@@ -302,7 +306,7 @@ class __$SchoolCardModelCopyWithImpl<$Res>
 
 /// Create a copy of SchoolCardModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? schoolId = freezed,Object? ratings = freezed,Object? name = freezed,Object? feeRange = freezed,Object? area = freezed,Object? location = freezed,Object? board = freezed,Object? genderType = freezed,Object? score = freezed,Object? shifts = freezed,Object? amenities = freezed,Object? schoolMode = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? schoolId = freezed,Object? ratings = freezed,Object? name = freezed,Object? feeRange = freezed,Object? area = freezed,Object? location = freezed,Object? board = freezed,Object? genderType = freezed,Object? score = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? shifts = freezed,Object? amenities = freezed,Object? schoolMode = freezed,}) {
   return _then(_SchoolCardModel(
 schoolId: freezed == schoolId ? _self.schoolId : schoolId // ignore: cast_nullable_to_non_nullable
 as String?,ratings: freezed == ratings ? _self.ratings : ratings // ignore: cast_nullable_to_non_nullable
@@ -313,6 +317,8 @@ as String?,location: freezed == location ? _self.location : location // ignore: 
 as String?,board: freezed == board ? _self.board : board // ignore: cast_nullable_to_non_nullable
 as String?,genderType: freezed == genderType ? _self.genderType : genderType // ignore: cast_nullable_to_non_nullable
 as String?,score: freezed == score ? _self.score : score // ignore: cast_nullable_to_non_nullable
+as double?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,shifts: freezed == shifts ? _self._shifts : shifts // ignore: cast_nullable_to_non_nullable
 as List<String>?,amenities: freezed == amenities ? _self._amenities : amenities // ignore: cast_nullable_to_non_nullable
 as List<String>?,schoolMode: freezed == schoolMode ? _self.schoolMode : schoolMode // ignore: cast_nullable_to_non_nullable
