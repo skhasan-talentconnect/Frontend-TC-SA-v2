@@ -1,6 +1,7 @@
 import 'package:tc_sa/core/common/view_state_provider.dart';
 import 'package:tc_sa/core/network/app_failure.dart';
 import 'package:tc_sa/features/detailPages/overview/data/data_source/data_source_impl.dart';
+import 'package:tc_sa/features/detailPages/overview/data/entities/applied_form_model.dart';
 import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
 
 class OverviewViewModel extends ViewStateProvider {
@@ -29,6 +30,17 @@ class OverviewViewModel extends ViewStateProvider {
     _isSaving = value;
     notifyListeners();
   }
+
+  AppliedFormModel? _appliedFormModel;
+
+  AppliedFormModel? get appliedFormModel => _appliedFormModel;
+
+  set appliedFormModel(AppliedFormModel? model) {
+    _appliedFormModel = model;
+    notifyListeners();
+  }
+
+  bool get isApplied => appliedFormModel?.isApplied ?? false;
 
   Future<Failure?> getSchoolsById({required String id}) async {
     Failure? failure;
@@ -216,6 +228,26 @@ class OverviewViewModel extends ViewStateProvider {
       (res) {
         _message = res; // optional: “deleted successfully”
         if (_school?.id == id) _school = null;
+      },
+    );
+
+    setViewState(ViewState.complete);
+    notifyListeners();
+    return failure;
+  }
+
+  Future<Failure?> getIsAppliedSchool({required String schoolId}) async {
+    Failure? failure;
+    setViewState(ViewState.busy);
+
+    final result = await _service.getIsSchoolApplied(schoolId: schoolId);
+
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (res) {
+        appliedFormModel = res;
       },
     );
 

@@ -1,11 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:tc_sa/core/network/endpoints.dart';
-import 'package:tc_sa/core/network/exceptions.dart';
-import 'package:tc_sa/core/network/network.dart';
-import 'package:tc_sa/core/network/request.dart';
-import 'package:tc_sa/core/network/typedef.dart';
+import 'package:tc_sa/core/index.dart';
+import 'package:tc_sa/features/detailPages/overview/data/entities/applied_form_model.dart';
 import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
-
 
 class OverviewDataSourceImpl {
   final NetworkService _networkService = NetworkService();
@@ -189,6 +185,34 @@ class OverviewDataSourceImpl {
             schoolsData.map((json) => SchoolModel.fromJson(json)).toList();
 
         return Right(schools);
+      }
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+
+    return Right(null);
+  }
+
+  ResultFuture<AppliedFormModel?> getIsSchoolApplied({
+    required String schoolId,
+  }) async {
+    final studId = getIt<AppStateProvider>().user?.sId;
+
+    Request r = Request(
+      method: RequestMethod.get,
+      endpoint: "${Endpoints.formIsApplied}/$studId/$schoolId",
+    );
+
+    try {
+      final result = await _networkService.request(r);
+      final response = result.data as Map<String, dynamic>;
+
+      if (response.isNotEmpty) {
+        final AppliedFormModel isApplied = AppliedFormModel.fromJson(
+          response['data'] as Map<String, dynamic>,
+        );
+
+        return Right(isApplied);
       }
     } catch (e) {
       return Left(APIException.from(e));

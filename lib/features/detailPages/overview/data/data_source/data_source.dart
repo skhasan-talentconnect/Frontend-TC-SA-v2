@@ -1,5 +1,6 @@
-import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
 import 'package:tc_sa/core/network/typedef.dart';
+import 'package:tc_sa/features/detailPages/overview/data/entities/applied_form_model.dart';
+import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
 
 abstract class OverviewDataSource {
   ResultFuture<SchoolModel?> addSchool({
@@ -45,15 +46,13 @@ abstract class OverviewDataSource {
     String? website,
   });
 
-  ResultFuture<String?> deleteSchool({
-    required String id,
-  });
+  ResultFuture<String?> deleteSchool({required String id});
 
-  ResultFuture<SchoolModel?> getSchoolById({
-    required String id,
-  });
+  ResultFuture<SchoolModel?> getSchoolById({required String id});
 
-  ResultFuture<List<SchoolModel>?> getSchoolsByStatus({
-    required String status,
+  ResultFuture<List<SchoolModel>?> getSchoolsByStatus({required String status});
+
+  ResultFuture<AppliedFormModel?> getIsSchoolApplied({
+    required String schoolId,
   });
 }
