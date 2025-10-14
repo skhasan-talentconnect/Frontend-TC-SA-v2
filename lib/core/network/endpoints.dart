@@ -10,11 +10,11 @@ class Endpoints {
   static const String authForgotPasswordVerifyOtp =
       'auth/forgot-password/verify-otp';
   static const String authResetPassword = 'auth/reset-password';
-  
+
   static const String authGoogle = 'auth/google';
   static const String authVerifyEmail = 'auth/verify-email';
 
-  static const String authSendOtp   = 'otp/send-otp';
+  static const String authSendOtp = 'otp/send-otp';
   static const String authVerifyOtp = 'otp/verify-otp';
 
   //User Endpoints
@@ -25,7 +25,7 @@ class Endpoints {
   //School Endpoints
   static const String adminSchools = 'admin/schools';
   static const String adminSchoolsStatus = 'admin/schools/status';
-static const String nearbySchools='admin/schools/nearby';
+  static const String nearbySchools = 'admin/schools/nearby';
   //School Amenities
   static const String adminSchoolsAmenities = 'admin/schools/amenities';
   static const String studentApplications = 'applications';
@@ -36,17 +36,20 @@ static const String nearbySchools='admin/schools/nearby';
   //School Activities
   static const String adminSchoolsActivities = 'admin/schools/activities';
   static const String adminSchoolsAlumnus = 'admin/alumnus';
-  static const String adminInfrastructure='admin/schools/infrastructure';
-  static const String adminfeeAndScholarship='admin/schools/fees-scholarships';
-  static const String adminOtherDetails='admin/schools/other-details';
-  static const String adminAcademics='admin/schools/academics';
-  static const String adminTechAdoption='admin/schools/technology-adoption';
-  static const String adminSafetyAndSecurity='admin/schools/safety-security';
-    static const String adminInternationalExposure='admin/schools/international-exposure';
-        static const String adminFaculty='admin/schools/faculty';
+  static const String adminInfrastructure = 'admin/schools/infrastructure';
+  static const String adminfeeAndScholarship =
+      'admin/schools/fees-scholarships';
+  static const String adminOtherDetails = 'admin/schools/other-details';
+  static const String adminAcademics = 'admin/schools/academics';
+  static const String adminTechAdoption = 'admin/schools/technology-adoption';
+  static const String adminSafetyAndSecurity = 'admin/schools/safety-security';
+  static const String adminInternationalExposure =
+      'admin/schools/international-exposure';
+  static const String adminFaculty = 'admin/schools/faculty';
 
-    static const String adminAdmissionTimeline='admin/schools/admission-timeline';
-    static const String reviewsBySchoolAdmin='reviews';
+  static const String adminAdmissionTimeline =
+      'admin/schools/admission-timeline';
+  static const String reviewsBySchoolAdmin = 'reviews';
 
   static const String adminBlogs = 'admin/blogs';
   static const String adminCompare = 'admin/compare';
@@ -64,11 +67,9 @@ static const String nearbySchools='admin/schools/nearby';
   static const String adminSearch = 'admin/search';
   static const String notifications = 'notifications';
 
-
-
   //Applications
   static const String formStudent = 'form/student';
   static const String formTrack = 'form/track';
+  static const String formIsApplied = 'form/is-applied';
   static const String form = 'form';
-
 }

@@ -3,8 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
+import 'package:tc_sa/features/application/forms/index.dart';
 import 'package:tc_sa/features/application/forms/presentation/view_models/my_form_view_model.dart';
 import 'package:tc_sa/features/detailPages/infrastructure/presentation/widgets/title_card.dart';
+import 'package:tc_sa/features/detailPages/overview/data/entities/applied_form_model.dart';
 import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/view_models/overview_view_model.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/info_chip_widget.dart';
@@ -57,6 +59,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final failure = await _vm.getSchoolsById(id: widget.schoolId);
       failure?.showError(context);
+      await _vm.getIsAppliedSchool(schoolId: widget.schoolId);
       isSaved.value = getIt<AppStateProvider>().isSaved(widget.schoolId);
     });
   }
@@ -391,6 +394,8 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                                                     )
                                                     : SButton(
                                                       onPressed: () async {
+                                                        if (_vm.isApplied)
+                                                          return;
                                                         final failure =
                                                             await myFormViewModel
                                                                 .submitForm(
@@ -400,12 +405,27 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                                                                       widget
                                                                           .schoolId,
                                                                 );
-                                                        failure?.showError(
+                                                        Toasts.showSuccessOrFailureToast(
                                                           context,
+                                                          failure: failure,
+                                                          popOnSuccess: false,
+                                                          hideSuccess: true,
+                                                          successCallback: () {
+                                                            _vm.appliedFormModel =
+                                                                AppliedFormModel(
+                                                                  status:
+                                                                      FormStatus
+                                                                          .pending,
+                                                                  isApplied:
+                                                                      true,
+                                                                );
+                                                          },
                                                         );
                                                       },
                                                       backgroundColor:
-                                                          Colors.blue,
+                                                          _vm.isApplied
+                                                              ? Colors.grey
+                                                              : Colors.blue,
                                                       padding:
                                                           const EdgeInsets.symmetric(
                                                             vertical: 14,
@@ -413,7 +433,9 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                                                       label: '',
                                                       max: true,
                                                       text: Text(
-                                                        "Apply",
+                                                        _vm.isApplied
+                                                            ? 'Applied'
+                                                            : "Apply",
                                                         style: TextStyle(
                                                           fontSize: infoFont,
                                                           color: Colors.white,
@@ -569,16 +591,14 @@ class _OverviewTab extends StatelessWidget {
             title: "Quick Highlights",
             icon: Icons.info,
             child: GridView.count(
-              
               crossAxisCount: isSmall ? 2 : 3,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
-                      childAspectRatio: 1.2, 
+              childAspectRatio: 1.2,
 
               children: [
-               
                 QuickHighlights(
                   icon: Icons.school_outlined,
                   title: "School Mode",
@@ -615,7 +635,7 @@ class _OverviewTab extends StatelessWidget {
           const SizedBox(height: 20),
 
           // Fee Range Section
-         _TitledCard(
+          _TitledCard(
             title: "Fee Structure",
             icon: Icons.account_balance_wallet_outlined,
             iconColor: Colors.green,
@@ -625,7 +645,10 @@ class _OverviewTab extends StatelessWidget {
                 // Display the full fee range text
                 Text(
                   school.feeRange ?? "Not Available",
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: Colors.green.shade800),
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green.shade800,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -633,28 +656,31 @@ class _OverviewTab extends StatelessWidget {
                   style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Visual bar for the range
                 Container(
                   height: 8,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     gradient: LinearGradient(
-                      colors: [
-                        Colors.green.shade100,
-                        Colors.green.shade400,
-                      ],
+                      colors: [Colors.green.shade100, Colors.green.shade400],
                     ),
                   ),
                 ),
                 const SizedBox(height: 8),
-                
+
                 // Low and High labels
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Lowest: $feeLow", style: const TextStyle(fontWeight: FontWeight.w500)),
-                    Text("Highest: $feeHigh", style: const TextStyle(fontWeight: FontWeight.w500)),
+                    Text(
+                      "Lowest: $feeLow",
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      "Highest: $feeHigh",
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    ),
                   ],
                 ),
               ],
@@ -737,4 +763,3 @@ class _TitledCard extends StatelessWidget {
     );
   }
 }
-
