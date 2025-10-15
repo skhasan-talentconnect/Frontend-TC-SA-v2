@@ -48,7 +48,7 @@ class ScholarshipCard extends StatelessWidget {
                 ),
               ),
 
-            const Divider(height: 24),
+            
 
             Text(
               'Amount: ₹${scholarship.amount ?? 0}',

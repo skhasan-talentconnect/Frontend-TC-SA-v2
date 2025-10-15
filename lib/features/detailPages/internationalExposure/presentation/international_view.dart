@@ -86,9 +86,8 @@ class _InternationalExposureViewState extends State<InternationalExposureView> {
                     Text('Exchange Programs', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 16),
                     ...model.exchangePrograms.map((program) => _ExchangeProgramCard(program: program)),
-                    const SizedBox(height: 24),
-                    const Divider(thickness: 1.5),
-                    const SizedBox(height: 24),
+                    
+                    const SizedBox(height: 28),
                   ],
                   if (hasTieUps) ...[
                     Text('Global Tie-ups', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
@@ -126,7 +125,7 @@ class _ExchangeProgramCard extends StatelessWidget {
             Text(program.partnerSchool ?? 'N/A', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             Chip(label: Text(program.programType ?? 'N/A')),
-            const Divider(height: 24),
+            
             _InfoRow(icon: Icons.access_time, title: 'Duration', value: program.duration),
             _InfoRow(icon: Icons.people_outline, title: 'Students Participated', value: program.studentsParticipated?.toString()),
             _InfoRow(icon: Icons.calendar_today_outlined, title: 'Active Since', value: program.activeSince?.toString()),
@@ -155,7 +154,6 @@ class _GlobalTieUpCard extends StatelessWidget {
             Text(tieUp.partnerName ?? 'N/A', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             Chip(label: Text(tieUp.natureOfTieUp ?? 'N/A')),
-            const Divider(height: 24),
             _InfoRow(icon: Icons.calendar_today_outlined, title: 'Active Since', value: tieUp.activeSince?.toString()),
             const SizedBox(height: 12),
             if(tieUp.description != null && tieUp.description!.isNotEmpty)
