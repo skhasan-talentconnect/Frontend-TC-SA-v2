@@ -755,7 +755,7 @@ class _TitledCard extends StatelessWidget {
                 ),
               ],
             ),
-            const Divider(height: 24, thickness: 1),
+       
             child,
           ],
         ),

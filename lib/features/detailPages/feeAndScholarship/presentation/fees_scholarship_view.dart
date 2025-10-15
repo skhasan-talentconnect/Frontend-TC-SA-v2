@@ -164,9 +164,7 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                     ),
                   ),
 
-                  const SizedBox(height: 24),
-                  const Divider(thickness: 1.5),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 28),
 
                   Text(
                     'Scholarships & Concessions',

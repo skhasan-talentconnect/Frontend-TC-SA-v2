@@ -146,7 +146,6 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
                 Text('E-learning Platforms', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
               ],
             ),
-            const Divider(height: 24),
             if (platforms.isEmpty)
               const Text('No platforms listed.')
             else

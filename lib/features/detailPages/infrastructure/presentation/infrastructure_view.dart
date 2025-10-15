@@ -128,7 +128,7 @@ class _InfrastructureViewState extends State<InfrastructureView> {
                             title: 'Library Books',
                             value: model.libraryBooks?.toString() ?? 'N/A',
                           ),
-                          const Divider(height: 1),
+                         
                           DetailTile(
                             icon: Icons.smart_screen_outlined,
                             title: 'Smart Classrooms',
