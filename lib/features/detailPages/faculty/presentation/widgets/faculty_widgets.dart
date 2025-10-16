@@ -26,7 +26,7 @@ class FacultyMemberCard extends StatelessWidget {
               member.qualification ?? 'N/A',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade600),
             ),
-            const Divider(height: 24),
+   
             Row(
               children: [
                 const Icon(Icons.work_history_outlined, size: 20, color: Colors.blueAccent),

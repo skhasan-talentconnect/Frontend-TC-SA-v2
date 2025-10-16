@@ -7,11 +7,13 @@ class SBottomBar extends StatelessWidget {
   const SBottomBar({
     required this.currentIndex,
     required this.onTap,
+    this.hasNewShortlist = false, // 1. Add the new property
     super.key,
   });
 
   final void Function(int index) onTap;
   final int currentIndex;
+  final bool hasNewShortlist; // 2. Define it
 
   @override
   Widget build(BuildContext context) {
@@ -27,20 +29,34 @@ class SBottomBar extends StatelessWidget {
         backgroundColor: SColor.backgroundColor,
         onTap: onTap,
         items: [
-          ...NavItem.values.map(
-            (item) => BottomBarItem(
-              icon: Icon(
-                item.index == currentIndex
-                    ? item.selectedIcon
-                    : item.unSelectedIcon,
-                color: SColor.secTextColor,
-              ),
+          // 3. Update the mapping logic
+          ...NavItem.values.map((item) {
+            // Determine if this is the shortlist item.
+            // Based on your HomeView, the shortlist index is 3.
+            final bool isShortlistItem = item.index == 3;
+
+            // Conditionally create the icon widget
+            Widget iconWidget = Icon(
+              item.index == currentIndex ? item.selectedIcon : item.unSelectedIcon,
+              color: SColor.secTextColor,
+            );
+
+            // If it's the shortlist item AND there's a notification, wrap the icon in a Badge
+            if (isShortlistItem && hasNewShortlist) {
+              iconWidget = Badge(
+                child: iconWidget,
+              );
+            }
+            
+            // Return the final BottomBarItem
+            return BottomBarItem(
+              icon: iconWidget,
               title: Text(
                 item.label,
                 style: STextStyles.s12W400.copyWith(color: SColor.secTextColor),
               ),
-            ),
-          ),
+            );
+          }),
         ],
         option: AnimatedBarOptions(iconStyle: IconStyle.animated),
       ),

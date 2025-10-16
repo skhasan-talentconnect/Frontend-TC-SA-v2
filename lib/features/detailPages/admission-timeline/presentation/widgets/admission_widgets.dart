@@ -53,7 +53,6 @@ class TimelineCard extends StatelessWidget {
                 ),
               ],
             ),
-            const Divider(height: 24),
             InfoRow(icon: Icons.calendar_today_outlined, title: 'Starts On', value: _formatDate(timeline.admissionStartDate)),
             InfoRow(icon: Icons.event_available_outlined, title: 'Ends On', value: _formatDate(timeline.admissionEndDate)),
             const SizedBox(height: 12),
@@ -63,7 +62,6 @@ class TimelineCard extends StatelessWidget {
               InfoRow(icon: Icons.info_outline, title: 'Info', value: timeline.eligibility!.otherInfo!),
             
             if (timeline.documentsRequired.isNotEmpty) ...[
-              const Divider(height: 24),
               const Text('Documents Required', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               const SizedBox(height: 8),
               Wrap(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/theme/s_colors.dart';
 import 'package:tc_sa/common/utils/no_internet_view.dart';
+import 'package:tc_sa/core/common/shortlist_notification_provider.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/firebase_options.dart';
 
@@ -17,16 +18,23 @@ Future<void> main() async {
   initServiceLocator();
   await getIt.allReady();
 
+  final Widget wrappedApp = MultiProvider(
+    providers: [
+      // Add any other existing providers here
+      // For example: ChangeNotifierProvider(create: (_) => AppStateProvider()),
+      ChangeNotifierProvider(create: (_) => ShortlistNotificationProvider()),
+    ],
+    child: const MyApp(),
+  );
+
   if (kIsWeb) {
     runApp(
-      //const MyApp(),
-      DevicePreview(builder: (context) => MyApp()),
+      // 4. Use the wrappedApp in DevicePreview
+      DevicePreview(builder: (context) => wrappedApp),
     );
   } else {
-    runApp(
-      const MyApp(),
-      //DevicePreview(builder: (context) => MyApp()),
-    );
+    // 5. Use the wrappedApp for mobile
+    runApp(wrappedApp);
   }
 }
 
