@@ -16,6 +16,7 @@ GetIt getIt = GetIt.instance;
 void initServiceLocator() {
   getIt
     ..registerLazySingleton<NetworkService>(NetworkService.new)
+    ..registerLazySingleton<ConnectivityProvider>(ConnectivityProvider.new)
     ..registerLazySingleton<AppStateProvider>(AppStateProvider.new)
     ..registerFactory<ProfileDataSourceImpl>(ProfileDataSourceImpl.new)
     ..registerFactory<PrefDataSourceImpl>(PrefDataSourceImpl.new)
