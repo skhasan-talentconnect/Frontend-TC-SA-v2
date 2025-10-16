@@ -18,8 +18,11 @@ class $AssetsAnimationsGen {
   /// File path: assets/animations/no_found_page.json
   String get noFoundPage => 'assets/animations/no_found_page.json';
 
+  /// File path: assets/animations/no_internet.json
+  String get noInternet => 'assets/animations/no_internet.json';
+
   /// List of all assets
-  List<String> get values => [aGitkeep, noFoundPage];
+  List<String> get values => [aGitkeep, noFoundPage, noInternet];
 }
 
 class $AssetsIconsGen {
