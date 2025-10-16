@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
+import 'package:tc_sa/core/common/shortlist_notification_provider.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/profile/presentation/location_fetching.dart';
 import 'package:tc_sa/features/users/shortlist/index.dart';
@@ -20,17 +21,35 @@ class _SchoolCardState extends State<SchoolCard> {
   final ValueNotifier<bool> isSaved = ValueNotifier(false);
   ShortlistViewModel shortlistViewModel = getIt<ShortlistViewModel>();
 
-  @override
+  /*  @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       isSaved.value = getIt<AppStateProvider>().isSaved(widget.school.schoolId);
     });
     super.initState();
+  }*/
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final appState = getIt<AppStateProvider>();
+      isSaved.value = appState.isSaved(widget.school.schoolId);
+
+      // 🔄 Keep in sync with provider changes
+      appState.addListener(() {
+        final newState = appState.isSaved(widget.school.schoolId);
+        if (newState != isSaved.value) {
+          isSaved.value = newState;
+        }
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
+    final appStateProvider = getIt<AppStateProvider>();
 
     return ChangeNotifierProvider.value(
       value: shortlistViewModel,
@@ -109,6 +128,7 @@ class _SchoolCardState extends State<SchoolCard> {
                                     overflow: TextOverflow.visible,
                                   ),
                                 ),
+                                const SizedBox(width: 20),
                                 Text(
                                   LocationUtils.getDistanceFromUser(
                                     widget.school.latitude,
@@ -178,7 +198,8 @@ class _SchoolCardState extends State<SchoolCard> {
                                 //     ],
                                 //   ),
                                 // ),
-                                if ((widget.school.score ?? 0) > 0) ...[
+                                if ((widget.school.score?.toInt() ?? 0) >
+                                    0) ...[
                                   Expanded(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
@@ -194,7 +215,10 @@ class _SchoolCardState extends State<SchoolCard> {
                                           ),
                                         ),
                                         Text(
-                                          widget.school.score.toString(),
+                                          widget.school.score
+                                                  ?.toInt()
+                                                  .toString() ??
+                                              '-',
                                           style: STextStyles.s14W600.copyWith(
                                             color: SColor.secTextColor,
                                             overflow: TextOverflow.visible,
@@ -331,14 +355,14 @@ class _SchoolCardState extends State<SchoolCard> {
                         valueListenable: isSaved,
                         builder:
                             (_, vIsSaved, __) => Container(
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Colors.white.withOpacity(0.2),
                               ),
                               child:
                                   vm.isLoading
-                                      ? Center(
+                                      ? const Center(
                                         child: SLoadingIndicator(
                                           size: 22,
                                           thickness: 3,
@@ -351,28 +375,52 @@ class _SchoolCardState extends State<SchoolCard> {
                                                 : Icons.bookmark_outline,
                                         color: Colors.black,
                                         onTap: () async {
-                                          final failure;
-                                          vIsSaved
-                                              ? failure = await vm
-                                                  .removeShortlist(
-                                                    schoolId:
-                                                        widget
-                                                            .school
-                                                            .schoolId ??
-                                                        '',
-                                                  )
-                                              : failure = await vm.addShortlist(
-                                                schoolId:
-                                                    widget.school.schoolId ??
-                                                    '',
-                                              );
-                                          if (failure == null) {
-                                            isSaved.value = !vIsSaved;
-                                            Toasts.showSuccessToast(
+                                          if (appStateProvider.isGuest) {
+                                            // ✅ FIX: Corrected toast message
+                                            Toasts.showInfoToast(
                                               context,
                                               message:
-                                                  '${!vIsSaved ? 'Added to' : 'Removed from'} Shortlist',
+                                                  'Please log in to save schools',
                                             );
+                                          } else {
+                                            final bool isAdding = !vIsSaved;
+
+                                            final failure =
+                                                vIsSaved
+                                                    ? await vm.removeShortlist(
+                                                      schoolId:
+                                                          widget
+                                                              .school
+                                                              .schoolId ??
+                                                          '',
+                                                    )
+                                                    : await vm.addShortlist(
+                                                      schoolId:
+                                                          widget
+                                                              .school
+                                                              .schoolId ??
+                                                          '',
+                                                    );
+
+                                            if (failure == null &&
+                                                context.mounted) {
+                                              isSaved.value = !vIsSaved;
+                                              Toasts.showSuccessToast(
+                                                context,
+                                                message:
+                                                    '${isAdding ? 'Added to' : 'Removed from'} Shortlist',
+                                              );
+
+                                              // This logic is already correct
+                                              if (isAdding) {
+                                                Provider.of<
+                                                  ShortlistNotificationProvider
+                                                >(
+                                                  context,
+                                                  listen: false,
+                                                ).notifyNewShortlist();
+                                              }
+                                            }
                                           }
                                         },
                                       ),

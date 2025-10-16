@@ -212,7 +212,7 @@ class _TitledCard extends StatelessWidget {
                 Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
               ],
             ),
-            const Divider(height: 24),
+            
             ...children,
           ],
         ),

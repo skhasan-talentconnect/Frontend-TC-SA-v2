@@ -47,6 +47,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
 
   final MyFormViewModel myFormViewModel = MyFormViewModel();
   final ShortlistViewModel shortlistViewModel = ShortlistViewModel();
+  final appStateProvider = getIt<AppStateProvider>();
 
   final ValueNotifier<bool> isSaved = ValueNotifier(false);
 
@@ -162,6 +163,83 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
     _tabController.dispose();
     _vm.dispose(); // because we use .value below
     super.dispose();
+  }
+
+  int calculateMatchPercentage({
+    required SchoolModel school,
+    required UserPref userPref,
+  }) {
+    int totalCriteria =
+        6; // state, city, board, schoolType, schoolMode, specialist/interest
+    int matched = 0;
+
+    // 1. State
+    if (userPref.state != null &&
+        userPref.state!.isNotEmpty &&
+        school.state != null &&
+        school.state!.isNotEmpty) {
+      if (userPref.state!.toLowerCase() == school.state!.toLowerCase()) {
+        matched++;
+      }
+    }
+
+    // 2. City
+    if (userPref.city != null &&
+        userPref.city!.isNotEmpty &&
+        school.city != null &&
+        school.city!.isNotEmpty) {
+      if (userPref.city!.toLowerCase() == school.city!.toLowerCase()) {
+        matched++;
+      }
+    }
+
+    // 3. Board
+    if (userPref.boards != null &&
+        userPref.boards!.isNotEmpty &&
+        school.board != null &&
+        school.board!.isNotEmpty) {
+      if (userPref.boards!.toLowerCase() == school.board!.toLowerCase()) {
+        matched++;
+      }
+    }
+
+    // 4. School Type (UserPref) vs School Tags (SchoolModel)
+    if (userPref.schoolType != null &&
+        userPref.schoolType!.isNotEmpty &&
+        school.tags != null &&
+        school.tags!.isNotEmpty) {
+      if (school.tags!
+          .map((e) => e.toLowerCase())
+          .contains(userPref.schoolType!.toLowerCase())) {
+        matched++;
+      }
+    }
+
+    // 5. School Mode / Shift
+    if (userPref.shift != null &&
+        userPref.shift!.isNotEmpty &&
+        school.shifts != null &&
+        school.shifts!.isNotEmpty) {
+      if (school.shifts!
+          .map((e) => e.toLowerCase())
+          .contains(userPref.shift!.toLowerCase())) {
+        matched++;
+      }
+    }
+
+    // 6. Specialist vs Interest
+    if (userPref.interests != null &&
+        userPref.interests!.isNotEmpty &&
+        school.specialist != null &&
+        school.specialist!.isNotEmpty) {
+      if (school.specialist!
+          .map((e) => e.toLowerCase())
+          .contains(userPref.interests!.toLowerCase())) {
+        matched++;
+      }
+    }
+
+    return ((matched / totalCriteria) * 100).round();
   }
 
   @override
@@ -394,34 +472,44 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                                                     )
                                                     : SButton(
                                                       onPressed: () async {
-                                                        if (_vm.isApplied)
-                                                          return;
-                                                        final failure =
-                                                            await myFormViewModel
-                                                                .submitForm(
-                                                                  applicationId:
-                                                                      '',
-                                                                  schoolId:
-                                                                      widget
-                                                                          .schoolId,
-                                                                );
-                                                        Toasts.showSuccessOrFailureToast(
-                                                          context,
-                                                          failure: failure,
-                                                          popOnSuccess: false,
-                                                          hideSuccess: true,
-                                                          successCallback: () {
-                                                            _vm.appliedFormModel =
-                                                                AppliedFormModel(
-                                                                  status:
-                                                                      FormStatus
-                                                                          .pending,
-                                                                  isApplied:
-                                                                      true,
-                                                                );
-                                                          },
-                                                        );
-                                                      },
+                                                        if (appStateProvider
+                                                            .isGuest) {
+                                                          Toasts.showInfoToast(
+                                                            context,
+                                                            message:
+                                                                'Please log in to apply',
+                                                          );
+                                                        } else {
+                                                          if (_vm.isApplied) {
+                                                            return;
+                                                          }
+                                                          final failure =
+                                                              await myFormViewModel
+                                                                  .submitForm(
+                                                                    applicationId:
+                                                                        '', // You may need to provide a valid ID here
+                                                                    schoolId:
+                                                                        widget
+                                                                            .schoolId,
+                                                                  );
+                                                          Toasts.showSuccessOrFailureToast(
+                                                            context,
+                                                            failure: failure,
+                                                            popOnSuccess: false,
+                                                            hideSuccess: true,
+                                                            successCallback: () {
+                                                              _vm.appliedFormModel =
+                                                                  AppliedFormModel(
+                                                                    status:
+                                                                        FormStatus
+                                                                            .pending,
+                                                                    isApplied:
+                                                                        true,
+                                                                  );
+                                                            },
+                                                          );
+                                                        }
+                                                      }, // <-- This brace closes the onPressed callback
                                                       backgroundColor:
                                                           _vm.isApplied
                                                               ? Colors.grey
@@ -443,7 +531,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                                                               FontWeight.bold,
                                                         ),
                                                       ),
-                                                    ),
+                                                    ), // <-- This parenthesis closes the SButton widget
                                       ),
                                     ),
                                   ),
@@ -462,11 +550,25 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                             spacing: 8,
                             children: [
                               Expanded(
-                                child: InfoChip(
-                                  topText: school.rank ?? "-",
-                                  bottomText: "IIRF Rank",
-                                  fontSize: infoFont,
-                                  isSmallScreen: isSmall,
+                                child: Builder(
+                                  builder: (_) {
+                                    final userPref =
+                                        getIt<AppStateProvider>().userPref;
+                                    int matchPercentage = 0;
+                                    if (userPref != null) {
+                                      matchPercentage =
+                                          calculateMatchPercentage(
+                                            school: school,
+                                            userPref: userPref,
+                                          );
+                                    }
+                                    return InfoChip(
+                                      topText: "$matchPercentage%",
+                                      bottomText: "Match %",
+                                      fontSize: infoFont,
+                                      isSmallScreen: isSmall,
+                                    );
+                                  },
                                 ),
                               ),
                               Expanded(
@@ -755,7 +857,7 @@ class _TitledCard extends StatelessWidget {
                 ),
               ],
             ),
-       
+
             child,
           ],
         ),

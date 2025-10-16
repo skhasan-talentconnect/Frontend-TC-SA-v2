@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
+import 'package:tc_sa/core/common/shortlist_notification_provider.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/home/presentation/widgets/s_drawer.dart';
 
@@ -14,12 +16,21 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+
+  
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final appStateProvider = getIt<AppStateProvider>();
-
+Future<void> _syncUserDetails() async {
+    if (!appStateProvider.isGuest && mounted) {
+      final failure = await appStateProvider.getUserDetails();
+      if (mounted) failure?.showError(context);
+    }
+  }
   @override
   void initState() {
+   
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+
       print(appStateProvider.isGuest);
       print(appStateProvider.user?.toJson());
       if (!appStateProvider.isGuest) {
@@ -28,6 +39,7 @@ class _HomeViewState extends State<HomeView> {
       }
     });
     super.initState();
+    _syncUserDetails();
   }
 
   int _calculateIndex(BuildContext context) {
@@ -70,9 +82,13 @@ class _HomeViewState extends State<HomeView> {
         child: widget.navigationShell,
       ),
 
-      bottomNavigationBar: SBottomBar(
-        currentIndex: currentIndex,
-        onTap: (index) {
+      bottomNavigationBar: Consumer<ShortlistNotificationProvider>(
+        builder: (context, notificationProvider, child) {
+          return SBottomBar(
+            // 4. Pass the notification status to the SBottomBar
+            hasNewShortlist: notificationProvider.hasNewShortlist,
+            currentIndex: currentIndex,
+            onTap: (index) {
           switch (index) {
             case 0:
               context.goNamed(RouteNames.home);
@@ -90,6 +106,8 @@ class _HomeViewState extends State<HomeView> {
               if (appStateProvider.isGuest) {
                 Toasts.showInfoToast(context, message: 'Please Login first');
               } else {
+                Provider.of<ShortlistNotificationProvider>(context, listen: false)
+                  .clearNotification();
                 context.goNamed(RouteNames.shortlist);
               }
               break;
@@ -100,9 +118,4 @@ class _HomeViewState extends State<HomeView> {
                 context.goNamed(RouteNames.myForms);
               }
               break;
-          }
-        },
-      ),
-    );
-  }
-}
+          }});}),);}}

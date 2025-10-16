@@ -9,6 +9,7 @@ import 'package:tc_sa/features/profile/presentation/location_fetching.dart';
 import 'package:tc_sa/features/profile/presentation/location_utils.dart';
 import 'package:tc_sa/features/preferences/index.dart' show PrefViewModel;
 
+
 class PrefView extends StatefulWidget {
   const PrefView({required this.isEdit, super.key});
   final bool isEdit;
