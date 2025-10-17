@@ -21,7 +21,13 @@ class ReviewCard extends StatelessWidget {
     return Card(
       elevation: 2,
       margin: const EdgeInsets.only(bottom: 16.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      // --- THEME UPDATE: White background, amber shadow/border ---
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey.shade200, width: 1),
+      ),
+      shadowColor: Colors.amber.shade100.withOpacity(0.5),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -29,7 +35,14 @@ class ReviewCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(child: Text(name.isNotEmpty ? name.substring(0, 1) : 'A')),
+                // --- THEME UPDATE: Yellow avatar ---
+                CircleAvatar(
+                  backgroundColor: Colors.amber.shade700,
+                  child: Text(
+                    name.isNotEmpty ? name.substring(0, 1) : 'A',
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -53,7 +66,7 @@ class ReviewCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            Text(reviewText, style: Theme.of(context).textTheme.bodyMedium),
+            Text(reviewText, style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.4)),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -61,7 +74,14 @@ class ReviewCard extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text('$likes'),
                 const Spacer(),
-                TextButton(onPressed: () {}, child: const Text('Reply')),
+                // --- THEME UPDATE: Yellow text button ---
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Reply',
+                    style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold),
+                  ),
+                ),
               ],
             ),
           ],

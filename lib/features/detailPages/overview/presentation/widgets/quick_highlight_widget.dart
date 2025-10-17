@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class QuickHighlights extends StatelessWidget {
-  final IconData icon; // <-- ADDED
+  final IconData icon;
   final String title;
   final String value;
 
   const QuickHighlights({
     super.key,
-    required this.icon, // <-- ADDED
+    required this.icon,
     required this.title,
     required this.value,
   });
@@ -20,12 +20,19 @@ class QuickHighlights extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
         border: Border.all(color: Colors.grey.shade200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05), // Softer shadow
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 28.0, color: Colors.purple), // <-- ADDED
+          Icon(icon, size: 28.0, color: Colors.amber), // Updated color
           const SizedBox(height: 8),
           Text(
             title,

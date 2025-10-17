@@ -56,6 +56,8 @@ class _InternationalExposureViewState extends State<InternationalExposureView> {
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
+        // --- THEME UPDATE ---
+        backgroundColor: Colors.white,
         appBar: SAppBar(
           title: _schoolName,
           leading: SIcon(
@@ -66,35 +68,63 @@ class _InternationalExposureViewState extends State<InternationalExposureView> {
         body: Consumer<InternationalExposureViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy) {
-              return const Center(child: SLoadingIndicator());
+              return const Center(child: SLoadingIndicator(color: Colors.amber));
             }
 
             final model = vm.exposure;
-            final hasPrograms = model?.exchangePrograms.isNotEmpty ?? false;
-            final hasTieUps = model?.globalTieUps.isNotEmpty ?? false;
+            final exchangePrograms = model?.exchangePrograms ?? [];
+            final globalTieUps = model?.globalTieUps ?? [];
+            final bool hasData = exchangePrograms.isNotEmpty || globalTieUps.isNotEmpty;
 
-            if (model == null || (!hasPrograms && !hasTieUps)) {
-              return Center(child: Text(vm.message ?? "No international exposure data found."));
+            if (!hasData) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.public_off_outlined, size: 60, color: Colors.grey.shade400),
+                    const SizedBox(height: 16),
+                    Text(
+                      vm.message ?? "No international exposure data found.",
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
+                    ),
+                  ],
+                )
+              );
             }
 
             return RefreshIndicator(
               onRefresh: _refresh,
-              child: ListView(
+              // --- THEME UPDATE ---
+              color: Colors.amber,
+              child: ListView.separated(
                 padding: const EdgeInsets.all(16.0),
-                children: [
-                  if (hasPrograms) ...[
-                    Text('Exchange Programs', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 16),
-                    ...model.exchangePrograms.map((program) => _ExchangeProgramCard(program: program)),
-                    
-                    const SizedBox(height: 28),
-                  ],
-                  if (hasTieUps) ...[
-                    Text('Global Tie-ups', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 16),
-                    ...model.globalTieUps.map((tieUp) => _GlobalTieUpCard(tieUp: tieUp)),
-                  ],
-                ],
+                itemCount: (exchangePrograms.isNotEmpty ? 1 : 0) + exchangePrograms.length + (globalTieUps.isNotEmpty ? 1 : 0) + globalTieUps.length,
+                separatorBuilder: (context, index) {
+                  if (index == exchangePrograms.length && globalTieUps.isNotEmpty) {
+                    return const Divider(height: 32, thickness: 1);
+                  }
+                  return const SizedBox(height: 12);
+                },
+                itemBuilder: (context, index) {
+                  // --- Exchange Programs Section ---
+                  if (exchangePrograms.isNotEmpty) {
+                    if (index == 0) {
+                      return Text('Exchange Programs', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold));
+                    }
+                    if (index <= exchangePrograms.length) {
+                      return _ExchangeProgramCard(program: exchangePrograms[index - 1]);
+                    }
+                  }
+
+                  // --- Global Tie-ups Section ---
+                  int tieUpStartIndex = exchangePrograms.isNotEmpty ? exchangePrograms.length + 1 : 0;
+                  
+                  if (index == tieUpStartIndex) {
+                     return Text('Global Tie-ups', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold));
+                  }
+                  int tieUpIndex = index - tieUpStartIndex - 1;
+                  return _GlobalTieUpCard(tieUp: globalTieUps[tieUpIndex]);
+                },
               ),
             );
           },
@@ -105,7 +135,7 @@ class _InternationalExposureViewState extends State<InternationalExposureView> {
 }
 
 
-// --- Local Helper Widgets for this View ---
+// --- Local Helper Widgets for this View (Updated) ---
 
 class _ExchangeProgramCard extends StatelessWidget {
   final ExchangeProgramModel program;
@@ -115,19 +145,32 @@ class _ExchangeProgramCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: EdgeInsets.zero,
+      // --- THEME UPDATE: Yellow border/shadow ---
+      color: Colors.white,
+      shadowColor: Colors.amber.shade100.withOpacity(0.5),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.amber.shade200, width: 1)
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(program.partnerSchool ?? 'N/A', style: Theme.of(context).textTheme.titleLarge),
+            Text(program.partnerSchool ?? 'N/A', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
-            Chip(label: Text(program.programType ?? 'N/A')),
-            
+            if (program.programType != null)
+              Chip(
+                label: Text(program.programType!),
+                // --- THEME UPDATE ---
+                backgroundColor: Colors.amber.shade50,
+                side: BorderSide(color: Colors.amber.shade200),
+                labelStyle: TextStyle(color: Colors.amber, fontWeight: FontWeight.w500),
+              ),
+            const Divider(height: 24),
             _InfoRow(icon: Icons.access_time, title: 'Duration', value: program.duration),
-            _InfoRow(icon: Icons.people_outline, title: 'Students Participated', value: program.studentsParticipated?.toString()),
+            _InfoRow(icon: Icons.people_outline, title: 'Students', value: program.studentsParticipated?.toString()),
             _InfoRow(icon: Icons.calendar_today_outlined, title: 'Active Since', value: program.activeSince?.toString()),
           ],
         ),
@@ -144,20 +187,34 @@ class _GlobalTieUpCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: EdgeInsets.zero,
+      // --- THEME UPDATE: Yellow border/shadow ---
+      color: Colors.white,
+      shadowColor: Colors.amber.shade100.withOpacity(0.5),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.amber.shade200, width: 1)
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(tieUp.partnerName ?? 'N/A', style: Theme.of(context).textTheme.titleLarge),
+            Text(tieUp.partnerName ?? 'N/A', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
-            Chip(label: Text(tieUp.natureOfTieUp ?? 'N/A')),
+            if (tieUp.natureOfTieUp != null)
+              Chip(
+                label: Text(tieUp.natureOfTieUp!),
+                // --- THEME UPDATE ---
+                backgroundColor: Colors.orange.shade50,
+                side: BorderSide(color: Colors.orange.shade200),
+                labelStyle: TextStyle(color: Colors.orange, fontWeight: FontWeight.w500),
+              ),
+          SizedBox(height: 10,),
             _InfoRow(icon: Icons.calendar_today_outlined, title: 'Active Since', value: tieUp.activeSince?.toString()),
             const SizedBox(height: 12),
             if(tieUp.description != null && tieUp.description!.isNotEmpty)
-            Text(tieUp.description!, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade700)),
+            Text(tieUp.description!, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade700, height: 1.4)),
           ],
         ),
       ),
@@ -174,13 +231,14 @@ class _InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 18, color: Colors.grey.shade600),
-          const SizedBox(width: 8),
-          Text('$title: ', style: const TextStyle(fontSize: 15)),
-          Text(value ?? 'N/A', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+          Icon(icon, size: 20, color: Colors.grey.shade700),
+          const SizedBox(width: 12),
+          Text('$title: ', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+          Expanded(child: Text(value ?? 'N/A', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold))),
         ],
       ),
     );

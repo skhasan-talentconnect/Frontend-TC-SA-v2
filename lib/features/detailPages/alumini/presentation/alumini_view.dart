@@ -1,8 +1,13 @@
+// features/detailPages/alumini/presentation/alumini_view.dart
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
 import 'package:tc_sa/common/widgets/s_app_bar.dart';
 import 'package:tc_sa/common/widgets/s_icon.dart';
+import 'package:tc_sa/common/widgets/s_loading_indicator.dart';
 import 'package:tc_sa/core/common/view_state_provider.dart';
+
 import 'package:tc_sa/features/detailPages/alumini/presentation/view_models/alumini_view_model.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/widgets/alumni_item_widget.dart';
 
@@ -43,20 +48,24 @@ class _AlumniViewState extends State<AlumniView> {
     final others = model?.alumnis ?? const [];
 
     return Scaffold(
+      // --- 1. THEME UPDATE ---
       backgroundColor: Colors.white,
       appBar: SAppBar(
         leading: SIcon(
           icon: Icons.keyboard_arrow_left,
-          onTap: () => Navigator.of(context).pop(),
+          // --- 2. NAVIGATION FIX ---
+          onTap: () => context.pop(),
         ),
         title: "School Alumni",
       ),
       body: RefreshIndicator(
         onRefresh: () => _refresh(context),
+        // --- 3. THEME UPDATE ---
+        color: Colors.amber,
         child: Builder(
           builder: (_) {
             if (state == ViewState.busy) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: SLoadingIndicator(color: Colors.amber));
             }
             if (model == null) {
               return ListView(
@@ -74,7 +83,8 @@ class _AlumniViewState extends State<AlumniView> {
                   // Banner
                   Container(
                     height: 150,
-                    color: Colors.grey.shade200,
+                    // --- 4. THEME UPDATE ---
+                    color: Colors.amber.shade100,
                     child: Center(
                       child: Image.network(
                         bannerFallback,
@@ -83,8 +93,9 @@ class _AlumniViewState extends State<AlumniView> {
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
-                            color: Colors.grey[300],
-                            child: const Icon(Icons.school, size: 50),
+                            // --- 4. THEME UPDATE ---
+                            color: Colors.amber.shade50,
+                            child: Icon(Icons.school, size: 50, color: Colors.amber.shade800),
                           );
                         },
                       ),
@@ -114,7 +125,8 @@ class _AlumniViewState extends State<AlumniView> {
                               child: Text(
                                 displayAddress,
                                 style: const TextStyle(
-                                  color: Colors.blue,
+                                  // --- 5. THEME UPDATE (using a different color for links) ---
+                                  color: Colors.blue, 
                                   fontSize: 15,
                                 ),
                                 softWrap: true,
@@ -123,78 +135,67 @@ class _AlumniViewState extends State<AlumniView> {
                           ],
                         ),
                         const SizedBox(height: 16),
-                   
                         const SizedBox(height: 22),
 
                         // Famous Alumni
                         if (famous.isNotEmpty) ...[
                           const Text(
                             "Famous Alumni",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
                           ...famous.map(
                             (fa) => AlumniItemWidget(
                               name: fa.name ?? "-",
                               profession: fa.profession,
+                              // --- 6. THEME UPDATE ---
                               backgroundGradient: const [
-                                Color(0xFFE3F2FD), // blue-50/100
-                                Color(0xFFFFFFFF),
+                                Color(0xFFFFF8E1), // yellow-50
+                                Color(0xFFFFFFFF), // white
                               ],
                             ),
                           ),
                           const SizedBox(height: 22),
-                      
                         ],
 
                         // Top Alumni
                         if (top.isNotEmpty) ...[
                           const Text(
                             "Top Alumni",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
                           ...top.map(
                             (ta) => AlumniItemWidget(
                               name: ta.name ?? "-",
-                              percentage:
-                                  ta.percentage == null
-                                      ? null
-                                      : "${ta.percentage!.toStringAsFixed(1)}%",
+                              percentage: ta.percentage == null
+                                  ? null
+                                  : "${ta.percentage!.toStringAsFixed(1)}%",
+                              // --- 6. THEME UPDATE ---
                               backgroundGradient: const [
-                                Color(0xFFE8F5E9), // green-50/100
+                                Color(0xFFFFF3E0), // orange-50
                                 Color(0xFFFFFFFF),
                               ],
                             ),
                           ),
                           const SizedBox(height: 22),
-                    
                         ],
 
                         // Other Alumni
                         if (others.isNotEmpty) ...[
                           const Text(
                             "Other Alumni",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
                           ...others.map(
                             (al) => AlumniItemWidget(
                               name: al.name ?? "-",
-                              percentage:
-                                  al.percentage == null
-                                      ? null
-                                      : "${al.percentage!.toStringAsFixed(1)}%",
-                              backgroundGradient: const [Color(0xFFF3E8FF), Color(0xFFFFFFFF)],
+                              percentage: al.percentage == null
+                                  ? null
+                                  : "${al.percentage!.toStringAsFixed(1)}%",
+                              // --- 6. THEME UPDATE ---
+                              backgroundColor: Colors.white, // Plain white
                             ),
                           ),
                         ],

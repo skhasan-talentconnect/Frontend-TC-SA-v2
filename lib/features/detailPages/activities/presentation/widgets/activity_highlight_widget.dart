@@ -13,27 +13,19 @@ class ActivityHighlightWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
+    final textTheme = Theme.of(context).textTheme;
 
     return Container(
-      padding: EdgeInsets.all(isSmallScreen ? 12.0 : 16.0),
+      padding: EdgeInsets.all(isSmallScreen ? 14.0 : 18.0), // Adjusted padding
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        // --- START Gradient Background ---
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.white,        // Start with white
-            Colors.blue.shade50, // Transition to a very light blue
-          ],
-        ),
-        // --- END Gradient Background ---
-        border: Border.all(color: Colors.blue.shade100, width: 1.5), // Slightly more prominent border
+        color: Colors.white, // White background
+        borderRadius: BorderRadius.circular(12), // Softer corners
+        border: Border.all(color: Colors.amber.shade300, width: 1), // Light yellow border
         boxShadow: [
           BoxShadow(
-            color: Colors.blue.withOpacity(0.1), // Adjusted shadow color for gradient
-            blurRadius: 6, // Slightly increased blur
-            offset: const Offset(0, 3), // Slightly increased offset
+            color: Colors.amber.shade100.withOpacity(0.5), // Subtle yellow shadow
+            blurRadius: 8,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -42,21 +34,21 @@ class ActivityHighlightWidget extends StatelessWidget {
         children: [
           Icon(
             icon,
-            size: isSmallScreen ? 32.0 : 38.0, // Increased icon size
-            color: Colors.blue[700],
+            size: isSmallScreen ? 36.0 : 42.0, // Larger icon
+            color: Colors.amber.shade800, // Darker yellow icon
           ),
-          const SizedBox(height: 10), // Increased spacing
+          const SizedBox(height: 12), // Increased spacing
           Text(
             title,
-            style: TextStyle(
-              fontSize: isSmallScreen ? 14.0 : 16.0, // Increased font size
-              color: Colors.black87, // Slightly darker for better readability
-              fontWeight: FontWeight.w600, // Slightly bolder
+            style: textTheme.bodyLarge?.copyWith( // Use bodyLarge for slightly bigger text
+              color: Colors.black87,
+              fontWeight: FontWeight.w500, // Medium weight
             ),
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
+          
         ],
       ),
     );

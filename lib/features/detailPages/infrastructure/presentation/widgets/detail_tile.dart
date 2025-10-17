@@ -15,13 +15,13 @@ class DetailTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(icon, color: Colors.grey.shade700),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+      leading: Icon(icon, color: Colors.grey.shade600), // Slightly lighter icon
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
       trailing: Text(
         value,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
       ),
-      contentPadding: EdgeInsets.zero,
+      contentPadding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 0),
     );
   }
 }

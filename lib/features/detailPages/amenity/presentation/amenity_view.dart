@@ -1,4 +1,3 @@
-// features/detailPages/amenity/presentation/amenity_view.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -19,10 +18,7 @@ class AmenitiesView extends StatefulWidget {
 }
 
 class _AmenitiesViewState extends State<AmenitiesView> {
-  // local VM (we’ll wrap with ChangeNotifierProvider.value)
   final AmenitiesViewModel _vm = AmenitiesViewModel();
-
-  // parsed once
   String _schoolId = '';
   String _schoolName = 'School';
   bool _parsed = false;
@@ -34,35 +30,36 @@ class _AmenitiesViewState extends State<AmenitiesView> {
     _parsed = true;
 
     final state = GoRouterState.of(context);
-
-    // Prefer extras (we usually push as: extra: {'schoolId': '...', 'schoolName': '...'})
     final extra = state.extra;
+    
     if (extra is Map) {
       final id = (extra['schoolId'] ?? '').toString();
       final name = (extra['schoolName'] ?? '').toString();
       if (id.isNotEmpty) _schoolId = id;
       if (name.trim().isNotEmpty) _schoolName = name.trim();
+    } else if (extra is String && extra.trim().isNotEmpty) {
+      _schoolId = extra.trim();
+      _schoolName = 'Amenities';
     }
 
-    // Optional fallbacks if you ever switch styles later:
-    // path param: /amenity/:id[?name=...]
     if (_schoolId.isEmpty) {
       _schoolId = (state.pathParameters['id'] ?? '').toString();
     }
-    // query: /amenity?id=...&name=...
     if (_schoolId.isEmpty) {
       _schoolId = (state.uri.queryParameters['id'] ?? '').toString();
     }
-    final qpName = (state.uri.queryParameters['name'] ?? '').toString();
-    if (qpName.trim().isNotEmpty) _schoolName = qpName.trim();
+    
+    if (_schoolName == 'School' || _schoolName == 'Amenities') {
+       final qpName = (state.uri.queryParameters['name'] ?? '').toString();
+       if (qpName.trim().isNotEmpty) _schoolName = qpName.trim();
+    }
 
-    // fire API if we have an id
     if (_schoolId.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _vm.getAmenitiesBySchoolId(schoolId: _schoolId);
       });
     } else {
-      _vm.setViewState(ViewState.complete); // show friendly “missing context”
+      _vm.setViewState(ViewState.complete);
     }
   }
 
@@ -85,28 +82,20 @@ class _AmenitiesViewState extends State<AmenitiesView> {
         builder: (context, vm, _) {
           final state = vm.viewState;
           final model = vm.amenities;
+          final isSmallScreen = MediaQuery.of(context).size.width < 600;
 
-          final screenWidth = MediaQuery.of(context).size.width;
-          final isSmallScreen = screenWidth < 600;
-
-          // Static (predefined; keep as-is)
           final List<String> photos = [
             "https://example.com/photo1.jpg",
             "https://example.com/photo2.jpg",
           ];
-
           const String schoolInfo =
               "Sacred Heart Boys School provides excellent facilities and a supportive learning environment for students. Our campus features modern amenities, spacious classrooms, and dedicated staff who prioritize student development and well-being. We offer a comprehensive education with a focus on academic excellence, character building, and extracurricular activities.";
 
-          // Merge predefined + custom (dedupe + sort)
-          final List<String> amenityChips = (() {
-            final pre = model?.predefinedAmenities ?? const <String>[];
-            final cus = model?.customAmenities ?? const <String>[];
-            final set = {...pre, ...cus};
-            final list = set.toList()
-              ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
-            return list;
-          })();
+          final List<String> amenityChips = {
+            ...(model?.predefinedAmenities ?? <String>[]),
+            ...(model?.customAmenities ?? <String>[]),
+          }.toList()
+            ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
 
           return Scaffold(
             backgroundColor: Colors.white,
@@ -115,24 +104,37 @@ class _AmenitiesViewState extends State<AmenitiesView> {
                 icon: Icons.keyboard_arrow_left,
                 onTap: () => context.pop(),
               ),
-              title: "School Amenities",
+              title: _schoolName, // Use the dynamic school name
             ),
             body: RefreshIndicator(
               onRefresh: _refresh,
-              color: Colors.blue,
+              // --- THEME UPDATE ---
+              color: Colors.amber,
               child: Builder(
                 builder: (_) {
                   if (_schoolId.isEmpty) {
-                    return ListView(
-                      children: const [
-                        SizedBox(height: 120),
-                        Center(child: Text('Missing school context')),
-                      ],
-                    );
+                    return const Center(child: Text('Missing school context'));
                   }
 
                   if (state == ViewState.busy) {
-                    return const Center(child: SLoadingIndicator());
+                    return const Center(child: SLoadingIndicator(color: Colors.amber));
+                  }
+                  
+                  if (model == null) {
+                    // --- UI POLISH: More modern 'Not Found' message ---
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.layers_clear, size: 60, color: Colors.grey.shade400),
+                          const SizedBox(height: 16),
+                          Text(
+                            vm.message ?? "No amenities found",
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
+                          ),
+                        ],
+                      ),
+                    );
                   }
 
                   return SingleChildScrollView(
@@ -141,115 +143,77 @@ class _AmenitiesViewState extends State<AmenitiesView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Photos (static for now)
                         if (photos.isNotEmpty)
                           SizedBox(
                             height: 200,
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               itemCount: photos.length,
-                              separatorBuilder: (_, __) =>
-                                  const SizedBox(width: 10),
+                              separatorBuilder: (_, __) => const SizedBox(width: 10),
                               itemBuilder: (context, index) {
-                                return Image.network(
-                                  photos[index],
-                                  fit: BoxFit.cover,
-                                  height: 200,
-                                  width: 300,
-                                  errorBuilder: (_, __, ___) => Container(
-                                    width: 300,
+                                return ClipRRect(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  child: Image.network(
+                                    photos[index],
+                                    fit: BoxFit.cover,
                                     height: 200,
-                                    color: Colors.grey[300],
-                                    child: const Icon(
-                                      Icons.broken_image,
-                                      size: 50,
+                                    width: 300,
+                                    errorBuilder: (_, __, ___) => Container(
+                                      width: 300,
+                                      height: 200,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius: BorderRadius.circular(12.0),
+                                      ),
+                                      child: const Icon(Icons.broken_image, size: 50, color: Colors.grey),
                                     ),
                                   ),
                                 );
                               },
                             ),
                           ),
+                        
+                        const SizedBox(height: 24),
 
-                        const SizedBox(height: 16),
-
-                        // School Name
-                        Text(
-                          _schoolName,
-                          style: const TextStyle(
-                            fontSize: 23,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                       
-                        const SizedBox(height: 22),
-
-                        // Amenities chips (predefined + custom)
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [Colors.blue.shade50, Colors.white],
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                blurRadius: 8,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "School Amenities",
-                                style: TextStyle(
-                                  fontSize: 23,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              if (amenityChips.isEmpty)
-                                Text(
-                                  vm.message ?? "No amenities found for this school.",
+                        _TitledCard(
+                          title: "School Amenities",
+                          icon: Icons.widgets_outlined,
+                          // --- THEME UPDATE ---
+                          iconColor: Colors.amber.shade700,
+                          child: (amenityChips.isEmpty)
+                              ? Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                  child: Text(vm.message ?? "No amenities found for this school."),
                                 )
-                              else
-                                Wrap(
-                                  spacing: 8,
-                                  runSpacing: 8,
-                                  children: amenityChips
-                                      .map(
-                                        (a) => RecruiterChip(
-                                          label: a,
-                                          isSmallScreen: isSmallScreen,
-                                        ),
-                                      )
-                                      .toList(),
+                              : Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children: amenityChips
+                                        .map((a) => RecruiterChip(
+                                              label: a,
+                                              isSmallScreen: isSmallScreen,
+                                            ))
+                                        .toList(),
+                                  ),
                                 ),
-                            ],
-                          ),
                         ),
+                        
+                        const SizedBox(height: 24),
 
-                        const SizedBox(height: 22),
-
-                        // School Information (static)
-                        const Text(
-                          "School Information",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
+                        _TitledCard(
+                          title: "School Information",
+                          icon: Icons.info_outline,
+                          iconColor: Colors.blueGrey,
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(
+                              schoolInfo,
+                              style: TextStyle(fontSize: 16, height: 1.5),
+                              textAlign: TextAlign.justify,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        const Text(
-                          schoolInfo,
-                          style: TextStyle(fontSize: 16),
-                          textAlign: TextAlign.justify,
                         ),
                         const SizedBox(height: 24),
                       ],
@@ -260,6 +224,53 @@ class _AmenitiesViewState extends State<AmenitiesView> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+// --- LOCAL HELPER WIDGET ---
+class _TitledCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Widget child;
+  final Color iconColor;
+
+  const _TitledCard({
+    required this.title,
+    required this.icon,
+    required this.child,
+    this.iconColor = Colors.black,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      // --- THEME UPDATE ---
+      color: Colors.white,
+      shadowColor: Colors.grey.withOpacity(0.1),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(icon, color: iconColor, size: 28),
+                const SizedBox(width: 10),
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          
+            child,
+          ],
+        ),
       ),
     );
   }

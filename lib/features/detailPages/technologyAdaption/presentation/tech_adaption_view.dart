@@ -1,9 +1,11 @@
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/detailPages/technologyAdaption/presentation/view_models/techAdaption_view_model.dart';
+
 
 class TechnologyAdoptionView extends StatefulWidget {
   const TechnologyAdoptionView({super.key});
@@ -54,6 +56,8 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
+        // --- 1. THEME UPDATE ---
+        backgroundColor: Colors.white,
         appBar: SAppBar(
           title: _schoolName,
           leading: SIcon(
@@ -64,17 +68,32 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
         body: Consumer<TechnologyAdoptionViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy) {
-              return const Center(child: SLoadingIndicator());
+              // --- 2. THEME UPDATE ---
+              return const Center(child: SLoadingIndicator(color: Colors.amber));
             }
 
             final model = vm.techAdoption;
 
             if (model == null) {
-              return Center(child: Text(vm.message ?? "No technology data found."));
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.computer_outlined, size: 60, color: Colors.grey.shade400),
+                    const SizedBox(height: 16),
+                    Text(
+                      vm.message ?? "No technology data found.",
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
+                    ),
+                  ],
+                )
+              );
             }
 
             return RefreshIndicator(
               onRefresh: _refresh,
+              // --- 3. THEME UPDATE ---
+              color: Colors.amber,
               child: ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
@@ -94,6 +113,9 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      // --- 4. THEME UPDATE ---
+      color: Colors.white,
+      shadowColor: Colors.amber.shade100.withOpacity(0.5),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -106,7 +128,12 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
                 if (percentage != null)
                   Text(
                     '${percentage.toStringAsFixed(0)}%',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.indigo),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      // --- 5. THEME UPDATE ---
+                      color: Colors.amber.shade800
+                    ),
                   )
                 else
                   const Text('N/A', style: TextStyle(fontSize: 16, color: Colors.grey)),
@@ -119,8 +146,9 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
                 child: LinearProgressIndicator(
                   value: percentage / 100,
                   minHeight: 12,
-                  backgroundColor: Colors.indigo.shade100,
-                  color: Colors.indigo,
+                  // --- 6. THEME UPDATE ---
+                  backgroundColor: Colors.amber.shade100,
+                  color: Colors.amber.shade700,
                 ),
               ),
             ],
@@ -134,6 +162,9 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      // --- 7. THEME UPDATE ---
+      color: Colors.white,
+      shadowColor: Colors.amber.shade100.withOpacity(0.5),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -141,22 +172,32 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
           children: [
             Row(
               children: [
-                const Icon(Icons.cast_for_education, color: Colors.indigo, size: 28),
+                // --- 8. THEME UPDATE ---
+                Icon(Icons.cast_for_education, color: Colors.amber.shade800, size: 28),
                 const SizedBox(width: 10),
                 Text('E-learning Platforms', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
               ],
             ),
+          
             if (platforms.isEmpty)
-              const Text('No platforms listed.')
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Text('No platforms listed.'),
+              )
             else
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 4.0,
-                children: platforms.map((platform) => Chip(
-                  label: Text(platform),
-                  backgroundColor: Colors.indigo.withOpacity(0.1),
-                  side: BorderSide(color: Colors.indigo.withOpacity(0.3)),
-                )).toList(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Wrap(
+                  spacing: 8.0,
+                  runSpacing: 4.0,
+                  children: platforms.map((platform) => Chip(
+                    label: Text(platform),
+                    // --- 9. THEME UPDATE ---
+                    backgroundColor: Colors.amber.withOpacity(0.1),
+                    side: BorderSide(color: Colors.amber.withOpacity(0.3)),
+                    labelStyle: TextStyle(color: Colors.amber.shade900, fontWeight: FontWeight.w500),
+                  )).toList(),
+                ),
               ),
           ],
         ),

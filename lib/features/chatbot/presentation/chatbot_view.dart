@@ -154,7 +154,7 @@ class _ChatbotViewState extends State<ChatbotView> {
               icon: Icons.directions_bus_outlined,
             ),
             _SectionDef(
-              title: 'Schools in my area inly',
+              title: 'Schools in my area only',
               field: 'area',
               icon: Icons.location_city,
             ),
@@ -163,11 +163,7 @@ class _ChatbotViewState extends State<ChatbotView> {
               field: 'city',
               icon: Icons.location_city,
             ),
-            _SectionDef(
-              title: 'Schools with rank:',
-              field: 'rank',
-              icon: Icons.emoji_events_outlined,
-            ),
+          
           ];
 
           return Scaffold(

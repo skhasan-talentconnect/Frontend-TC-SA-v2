@@ -3,10 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
+import 'package:tc_sa/features/detailPages/infrastructure/presentation/widgets/title_card.dart';
 
 import 'view_models/infrastructure_view_model.dart';
 import 'widgets/chip_list_card.dart';
 import 'widgets/detail_tile.dart';
+
 
 class InfrastructureView extends StatefulWidget {
   const InfrastructureView({super.key});
@@ -24,25 +26,20 @@ class _InfrastructureViewState extends State<InfrastructureView> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // This ensures the logic runs only once
     if (_isInitialized) return;
     _isInitialized = true;
 
     final extra = GoRouterState.of(context).extra;
-
-    // Correctly parse the map you are passing
     if (extra is Map) {
       _schoolId = extra['schoolId'] as String? ?? '';
       _schoolName = extra['schoolName'] as String? ?? 'Infrastructure';
     }
 
     if (_schoolId.isNotEmpty) {
-      // Fetch data after the UI is ready
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _vm.getInfrastructureBySchoolId(schoolId: _schoolId);
       });
     } else {
-      // If no ID was passed, update the state to show an error message
       _vm.setViewState(ViewState.complete);
     }
   }
@@ -64,8 +61,9 @@ class _InfrastructureViewState extends State<InfrastructureView> {
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
+        backgroundColor: Colors.white, // Set background to white
         appBar: SAppBar(
-          title: _schoolName, // Uses the name passed via 'extra'
+          title: _schoolName,
           leading: SIcon(
             icon: Icons.keyboard_arrow_left,
             onTap: () => context.pop(),
@@ -74,53 +72,49 @@ class _InfrastructureViewState extends State<InfrastructureView> {
         body: Consumer<InfrastructureViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy) {
-              return const Center(child: SLoadingIndicator());
+              return const Center(child: SLoadingIndicator(color: Colors.amber));
             }
-
             if (_schoolId.isEmpty) {
               return const Center(child: Text("School ID was not provided."));
             }
-
             final model = vm.infrastructure;
-
             if (model == null) {
               return Center(
-                child: Text(vm.message ?? "No infrastructure data available."),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.layers_clear, size: 60, color: Colors.grey.shade400),
+                    const SizedBox(height: 16),
+                    Text(
+                      vm.message ?? "No infrastructure data available.",
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
+                    ),
+                  ],
+                )
               );
             }
 
             return RefreshIndicator(
               onRefresh: _refresh,
+              color: Colors.amber, // Set refresh color
               child: ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
-
                   Center(
                     child: Text(
                       'Infrastructure',
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                     ),
                   ),
-                  
-                  const SizedBox(height: 16),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 2,
-                          spreadRadius: 1,
-                          offset: Offset(0, 1),
-                          color: Colors.black.withOpacity(0.2),
-                        ),
-                      ],
-                    ),
+                  const SizedBox(height: 16.0),
+
+                  // Use the new TitledCard for a consistent look
+                  TitledCard(
+                    title: "Facilities",
+                    icon: Icons.business_outlined,
+                    iconColor: Colors.amber.shade700,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 8.0,
-                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Column(
                         children: [
                           DetailTile(
@@ -128,7 +122,7 @@ class _InfrastructureViewState extends State<InfrastructureView> {
                             title: 'Library Books',
                             value: model.libraryBooks?.toString() ?? 'N/A',
                           ),
-                         
+                  
                           DetailTile(
                             icon: Icons.smart_screen_outlined,
                             title: 'Smart Classrooms',
@@ -143,16 +137,16 @@ class _InfrastructureViewState extends State<InfrastructureView> {
                     title: 'Laboratories',
                     icon: Icons.science_outlined,
                     items: model.labs,
-                    chipColor: Colors.blue.shade100,
-                    iconColor: Colors.blueAccent,
+                    chipColor: Colors.amber.shade100, // Updated color
+                    iconColor: Colors.amber.shade800, // Updated color
                   ),
                   const SizedBox(height: 20),
                   ChipListCard(
                     title: 'Sports Grounds',
                     icon: Icons.sports_soccer_outlined,
                     items: model.sportsGrounds,
-                    chipColor: Colors.green.shade100,
-                    iconColor: Colors.green,
+                      chipColor: Colors.amber.shade100, // Updated color
+                    iconColor: Colors.amber.shade800, // Kept green for sports
                   ),
                 ],
               ),

@@ -3,7 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
-import 'package:tc_sa/features/detailPages/infrastructure/presentation/widgets/title_card.dart';
+// Assuming TitledCard is imported from here or defined locally
+import 'package:tc_sa/features/detailPages/infrastructure/presentation/widgets/title_card.dart'; 
 import 'view_models/academics_view_model.dart';
 
 class AcademicsView extends StatefulWidget {
@@ -55,6 +56,8 @@ class _AcademicsViewState extends State<AcademicsView> {
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
+        // --- 1. SET SCAFFOLD BACKGROUND TO WHITE ---
+        backgroundColor: Colors.white,
         appBar: SAppBar(
           title: _schoolName,
           leading: SIcon(
@@ -83,9 +86,10 @@ class _AcademicsViewState extends State<AcademicsView> {
                   const SizedBox(height: 20),
                   _buildOverallMarksCard(context, model.averageSchoolMarks),
                   const SizedBox(height: 20),
-                  _buildChipListCard(context, 'Special Exam Training', Icons.model_training, model.specialExamsTraining, Colors.purple),
+                  // --- 2. UPDATED CHIP COLORS ---
+                  _buildChipListCard(context, 'Special Exam Training', Icons.model_training, model.specialExamsTraining, Colors.amber),
                   const SizedBox(height: 20),
-                  _buildChipListCard(context, 'Extra-Curricular Activities', Icons.palette_outlined, model.extraCurricularActivities, Colors.purple),
+                  _buildChipListCard(context, 'Extra-Curricular Activities', Icons.palette_outlined, model.extraCurricularActivities, Colors.orange),
                 ],
               ),
             );
@@ -99,14 +103,14 @@ class _AcademicsViewState extends State<AcademicsView> {
     return TitledCard(
       title: 'Average Board Results',
       icon: Icons.leaderboard,
- 
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            if (class10 != null) _buildResultIndicator('Class 10', class10, Colors.blue),
-            if (class12 != null) _buildResultIndicator('Class 12', class12, Colors.green),
+            // --- 3. UPDATED INDICATOR COLORS ---
+            if (class10 != null) _buildResultIndicator('Class 10', class10, Colors.amber.shade700),
+            if (class12 != null) _buildResultIndicator('Class 12', class12, Colors.amber),
             if (class10 == null && class12 == null) const Text('No board result data available.'),
           ],
         ),
@@ -141,11 +145,11 @@ class _AcademicsViewState extends State<AcademicsView> {
     );
   }
 
+  // --- 4. THIS WIDGET ALREADY USES AMBER, SO NO CHANGES NEEDED ---
   Widget _buildOverallMarksCard(BuildContext context, double? marks) {
     return TitledCard(
       title: 'Overall School Average',
       icon: Icons.workspace_premium,
-   
       child: (marks == null)
           ? const Padding(padding: EdgeInsets.all(16.0), child: Text('Data not available.'))
           : Padding(
@@ -179,7 +183,6 @@ class _AcademicsViewState extends State<AcademicsView> {
     return TitledCard(
       title: title,
       icon: icon,
-
       child: (items.isEmpty)
           ? const Padding(padding: EdgeInsets.symmetric(vertical: 16.0), child: Text('No data available for this section.'))
           : Padding(

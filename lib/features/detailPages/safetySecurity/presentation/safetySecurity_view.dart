@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
-import 'package:tc_sa/features/detailPages/safetySecurity/presentation/view_models/safetySecurity_view_model.dart';
+import 'package:tc_sa/features/detailPages/safetySecurity/data/entities/safety-security-model.dart';
+import 'view_models/safetySecurity_view_model.dart';
+
 
 class SafetyAndSecurityView extends StatefulWidget {
   const SafetyAndSecurityView({super.key});
@@ -55,6 +56,8 @@ class _SafetyAndSecurityViewState extends State<SafetyAndSecurityView> {
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
+        // --- THEME UPDATE ---
+        backgroundColor: Colors.white,
         appBar: SAppBar(
           title: _schoolName,
           leading: SIcon(
@@ -65,17 +68,31 @@ class _SafetyAndSecurityViewState extends State<SafetyAndSecurityView> {
         body: Consumer<SafetyAndSecurityViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy) {
-              return const Center(child: SLoadingIndicator());
+              return const Center(child: SLoadingIndicator(color: Colors.amber));
             }
 
             final model = vm.safetyAndSecurity;
 
             if (model == null) {
-              return Center(child: Text(vm.message ?? "No safety data found."));
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.health_and_safety_outlined, size: 60, color: Colors.grey.shade400),
+                    const SizedBox(height: 16),
+                    Text(
+                      vm.message ?? "No safety data found.",
+                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
+                    ),
+                  ],
+                )
+              );
             }
 
             return RefreshIndicator(
               onRefresh: _refresh,
+              // --- THEME UPDATE ---
+              color: Colors.amber,
               child: ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
@@ -99,6 +116,9 @@ class _SafetyAndSecurityViewState extends State<SafetyAndSecurityView> {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      // --- THEME UPDATE ---
+      color: Colors.white,
+      shadowColor: Colors.amber.shade100.withOpacity(0.5),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -108,7 +128,15 @@ class _SafetyAndSecurityViewState extends State<SafetyAndSecurityView> {
               children: [
                 const Text('CCTV Coverage', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                 if (percentage != null)
-                  Text('${percentage.toStringAsFixed(0)}%', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.redAccent)),
+                  Text(
+                    '${percentage.toStringAsFixed(0)}%',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      // --- THEME UPDATE ---
+                      color: Colors.amber
+                    ),
+                  ),
               ],
             ),
             if (percentage != null) ...[
@@ -118,8 +146,9 @@ class _SafetyAndSecurityViewState extends State<SafetyAndSecurityView> {
                 child: LinearProgressIndicator(
                   value: percentage / 100,
                   minHeight: 12,
-                  backgroundColor: Colors.red.shade100,
-                  color: Colors.redAccent,
+                  // --- THEME UPDATE ---
+                  backgroundColor: Colors.orange.shade100,
+                  color: Colors.amber,
                 ),
               ),
             ],
@@ -129,12 +158,13 @@ class _SafetyAndSecurityViewState extends State<SafetyAndSecurityView> {
     );
   }
 
-  Widget _buildMedicalCard(BuildContext context, medicalFacility) {
+  Widget _buildMedicalCard(BuildContext context, MedicalFacilityModel? medicalFacility) {
     if (medicalFacility == null) return const SizedBox.shrink();
     return _TitledCard(
       title: 'Medical Facility',
       icon: Icons.medical_services_outlined,
-      iconColor: Colors.redAccent,
+      // --- THEME UPDATE ---
+      iconColor: Colors.amber,
       children: [
         _InfoTile(
           title: 'Doctor Availability',
@@ -146,12 +176,13 @@ class _SafetyAndSecurityViewState extends State<SafetyAndSecurityView> {
     );
   }
 
-  Widget _buildTransportCard(BuildContext context, transportSafety) {
+  Widget _buildTransportCard(BuildContext context, TransportSafetyModel? transportSafety) {
      if (transportSafety == null) return const SizedBox.shrink();
     return _TitledCard(
       title: 'Transport Safety',
       icon: Icons.directions_bus_outlined,
-      iconColor: Colors.redAccent,
+      // --- THEME UPDATE ---
+      iconColor: Colors.amber,
       children: [
         _CheckTile(title: 'GPS Trackers in Buses', isAvailable: transportSafety.gpsTrackerAvailable),
         _CheckTile(title: 'Verified Drivers', isAvailable: transportSafety.driversVerified),
@@ -163,7 +194,8 @@ class _SafetyAndSecurityViewState extends State<SafetyAndSecurityView> {
     return _TitledCard(
       title: 'General Safety',
       icon: Icons.health_and_safety_outlined,
-      iconColor: Colors.redAccent,
+      // --- THEME UPDATE ---
+      iconColor: Colors.amber,
       children: [
         _CheckTile(title: 'Visitor Management System', isAvailable: visitorManagement),
         const SizedBox(height: 8),
@@ -175,8 +207,9 @@ class _SafetyAndSecurityViewState extends State<SafetyAndSecurityView> {
             runSpacing: 4.0,
             children: fireMeasures.map((measure) => Chip(
               label: Text(measure),
-              backgroundColor: Colors.red.withOpacity(0.1),
-              side: BorderSide(color: Colors.red.withOpacity(0.3)),
+              // --- THEME UPDATE ---
+              backgroundColor: Colors.amber.withOpacity(0.1),
+              side: BorderSide(color: Colors.amber.withOpacity(0.3)),
             )).toList(),
           )
         ],
@@ -199,7 +232,13 @@ class _TitledCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      // --- THEME UPDATE ---
+      color: Colors.white,
+      shadowColor: Colors.grey.withOpacity(0.1),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey.shade200, width: 1) // Softer border
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -212,7 +251,8 @@ class _TitledCard extends StatelessWidget {
                 Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
               ],
             ),
-            
+          
+          
             ...children,
           ],
         ),
@@ -255,7 +295,8 @@ class _CheckTile extends StatelessWidget {
         children: [
           Icon(
             available ? Icons.check_circle : Icons.cancel,
-            color: available ? Colors.green : Colors.grey,
+            // --- THEME UPDATE: Use grey for 'no' ---
+            color: available ? Colors.green : Colors.grey.shade400,
             size: 20,
           ),
           const SizedBox(width: 8),

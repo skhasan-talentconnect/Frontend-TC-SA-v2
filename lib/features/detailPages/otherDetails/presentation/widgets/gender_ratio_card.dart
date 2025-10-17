@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tc_sa/features/detailPages/infrastructure/presentation/widgets/title_card.dart';
+
 import 'package:tc_sa/features/detailPages/otherDetails/data/entities/otherDetails_model.dart';
 
-
 class GenderRatioCard extends StatelessWidget {
-
   final GenderRatioModel ratio;
 
   const GenderRatioCard({super.key, required this.ratio});
@@ -13,14 +12,18 @@ class GenderRatioCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return TitledCard(
       title: 'Gender Distribution',
-      icon: Icons.wc_outlined,
+      // --- UI UPDATE: More modern and inclusive icon ---
+      icon: Icons.people_alt_outlined,
+      // --- THEME UPDATE: Set icon color ---
+      iconColor: Colors.amber.shade700,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildRatioIndicator('Male', ratio.male ?? 0, Colors.blue),
-            _buildRatioIndicator('Female', ratio.female ?? 0, Colors.pinkAccent),
+            // --- THEME UPDATE: New colors for indicators ---
+            _buildRatioIndicator('Male', ratio.male ?? 0, Colors.blue.shade700),
+            _buildRatioIndicator('Female', ratio.female ?? 0, Colors.pink.shade400),
             _buildRatioIndicator('Others', ratio.others ?? 0, Colors.grey.shade600),
           ],
         ),
