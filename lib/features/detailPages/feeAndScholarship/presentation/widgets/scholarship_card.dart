@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:tc_sa/features/detailPages/feeAndScholarship/data/entities/feeAndScholarship_model.dart';
 
 class ScholarshipCard extends StatelessWidget {
-  // 2. Change the parameter type from Map to ScholarshipModel
   final ScholarshipModel scholarship;
 
   const ScholarshipCard({super.key, required this.scholarship});
 
   @override
   Widget build(BuildContext context) {
-    // 3. Access data safely using dot notation (e.g., scholarship.name)
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
+        // --- THEME UPDATE: Yellow border and shadow ---
+        border: Border.all(color: Colors.amber.shade300, width: 1),
         boxShadow: [
           BoxShadow(
-            blurRadius: 2,
+            blurRadius: 6,
             spreadRadius: 1,
-            offset: Offset(0, 1),
-            color: Colors.black.withOpacity(0.2),
+            offset: Offset(0, 3),
+            color: Colors.amber.shade100.withOpacity(0.5),
           ),
         ],
       ),
@@ -41,14 +41,17 @@ class ScholarshipCard extends StatelessWidget {
             if (scholarship.type != null)
               Chip(
                 label: Text(scholarship.type!),
-                backgroundColor: Colors.teal.shade100,
-                avatar: const Icon(
+                // --- THEME UPDATE: Yellow chip ---
+                backgroundColor: Colors.amber.shade100,
+                avatar: Icon(
                   Icons.category_outlined,
-                  color: Colors.black,
+                  color: Colors.amber.shade800,
                 ),
+                labelStyle: TextStyle(color: Colors.amber.shade900),
+                side: BorderSide(color: Colors.amber.shade300),
               ),
-
             
+           SizedBox(height: 20),
 
             Text(
               'Amount: ₹${scholarship.amount ?? 0}',
@@ -72,7 +75,8 @@ class ScholarshipCard extends StatelessWidget {
                     scholarship.documentsRequired
                         .map(
                           (doc) => Chip(
-                            backgroundColor: Colors.white,
+                            // --- THEME UPDATE: Lighter chip ---
+                            backgroundColor: Colors.grey.shade100,
                             label: Text(doc),
                           ),
                         )

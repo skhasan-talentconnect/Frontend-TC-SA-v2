@@ -1,3 +1,4 @@
+// features/detailPages/alumini/presentation/widgets/alumni_item_widget.dart
 import 'package:flutter/material.dart';
 
 class AlumniItemWidget extends StatelessWidget {
@@ -26,7 +27,6 @@ class AlumniItemWidget extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        // If gradient is provided, don't set color
         color: hasGradient ? null : (backgroundColor ?? const Color(0xFFF7F9FC)),
         gradient: hasGradient
             ? LinearGradient(
@@ -36,14 +36,15 @@ class AlumniItemWidget extends StatelessWidget {
               )
             : null,
         borderRadius: BorderRadius.circular(10),
+        // --- 1. THEME UPDATE ---
         border: Border.all(
-          // thin border to make light backgrounds pop
-          color: const Color(0xFFE2E8F0),
+          color: Colors.amber.shade300,
           width: 1,
         ),
+        // --- 2. THEME UPDATE ---
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.amber.shade100.withOpacity(0.5),
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),
@@ -81,10 +82,11 @@ class AlumniItemWidget extends StatelessWidget {
           if (percentage != null && percentage!.isNotEmpty)
             Text(
               percentage!,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF2563EB), // blue-600ish
+                // --- 3. THEME UPDATE ---
+                color: Colors.amber.shade800,
               ),
             ),
         ],

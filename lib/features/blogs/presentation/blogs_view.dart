@@ -12,7 +12,6 @@ class BlogPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Provide BlogViewModel here so descendants can watch/read it.
     return ChangeNotifierProvider(
       create: (_) => BlogViewModel()..getAllBlogs(),
       child: const _BlogPageBody(),
@@ -30,12 +29,16 @@ class _BlogPageBody extends StatelessWidget {
     final blogs = vm.blogs;
 
     return Scaffold(
+      // --- 1. THEME UPDATE: White background ---
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () => context.read<BlogViewModel>().getAllBlogs(),
+          // --- 2. THEME UPDATE: Refresh color ---
+          color: Colors.amber,
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            // padding: const EdgeInsets.all(13),
+            // Added consistent padding
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -53,14 +56,26 @@ class _BlogPageBody extends StatelessWidget {
                   const Center(
                     child: Padding(
                       padding: EdgeInsets.only(top: 60),
-                      child: CircularProgressIndicator(),
+                      // --- 3. THEME UPDATE: Loader color ---
+                      child: CircularProgressIndicator(color: Colors.amber),
                     ),
                   )
                 else if (blogs.isEmpty)
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.only(top: 60),
-                      child: Text(vm.message ?? 'No blogs available'),
+                      // --- 4. UI UPDATE: Modern 'Not Found' message ---
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.article_outlined, size: 60, color: Colors.grey.shade400),
+                          const SizedBox(height: 16),
+                          Text(
+                            vm.message ?? 'No blogs available',
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
+                          ),
+                        ],
+                      )
                     ),
                   )
                 else
@@ -68,7 +83,7 @@ class _BlogPageBody extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: blogs.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    separatorBuilder: (_, __) => const SizedBox(height: 16), // Increased spacing
                     itemBuilder: (context, index) {
                       final b = blogs[index];
                       return _BlogCard(blog: b);
@@ -95,16 +110,18 @@ class _BlogCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
+        // --- 5. THEME UPDATE: Card styling ---
         color: Colors.white,
-        boxShadow: const [
+        borderRadius: BorderRadius.circular(12), // Softer corners
+        border: Border.all(color: Colors.amber.shade300, width: 1), // Yellow border
+        boxShadow: [
           BoxShadow(
-            color: Colors.black26,
-            blurRadius: 2,
-            spreadRadius: 1,
-            offset: Offset(0, 2),
+            color: Colors.amber.shade100.withOpacity(0.5), // Yellow shadow
+            blurRadius: 8,
+            spreadRadius: 2,
+            offset: const Offset(0, 4),
           ),
         ],
-        borderRadius: BorderRadius.circular(20),
       ),
       margin: const EdgeInsets.only(bottom: 4, right: 2, left: 2),
       child: Padding(
@@ -115,7 +132,8 @@ class _BlogCard extends StatelessWidget {
             if (highlight.isNotEmpty)
               Text(
                 highlight,
-                style: STextStyles.s16W600.copyWith(color: SColor.primaryColor),
+                // --- 6. THEME UPDATE: Highlight text color ---
+                style: STextStyles.s16W600.copyWith(color: Colors.amber.shade800),
               ),
             const SizedBox(height: 12),
 
@@ -124,7 +142,7 @@ class _BlogCard extends StatelessWidget {
 
             Text(
               description,
-              style: const TextStyle(color: Colors.grey),
+              style: const TextStyle(color: Colors.grey, height: 1.5), // Added line height
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
@@ -132,14 +150,17 @@ class _BlogCard extends StatelessWidget {
 
             GestureDetector(
               onTap: () {
-                // GoRouter navigation with extra payload
                 context.pushNamed(RouteNames.blogResult, extra: blog);
               },
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Read more', style: TextStyle(color: Colors.black)),
-                  Icon(Icons.arrow_forward, color: Colors.black),
+                  // --- 7. THEME UPDATE: Read more color ---
+                  Text(
+                    'Read more',
+                    style: TextStyle(color: Colors.amber.shade900, fontWeight: FontWeight.bold),
+                  ),
+                  Icon(Icons.arrow_forward, color: Colors.amber.shade900),
                 ],
               ),
             ),

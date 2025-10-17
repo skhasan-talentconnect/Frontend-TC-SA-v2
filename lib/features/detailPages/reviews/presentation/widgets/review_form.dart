@@ -16,7 +16,12 @@ class _WriteReviewFormState extends State<WriteReviewForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    // --- THEME UPDATE: Define yellow theme color ---
+    final Color primaryColor = Colors.amber.shade700;
+
+    return Container(
+      // --- THEME UPDATE: Set background to white ---
+      color: Colors.white,
       padding: const EdgeInsets.all(24.0),
       child: Form(
         key: _formKey,
@@ -43,9 +48,13 @@ class _WriteReviewFormState extends State<WriteReviewForm> {
             const SizedBox(height: 16),
             TextFormField(
               controller: _textController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Share your experience...',
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
+                // --- THEME UPDATE: Set focused border color ---
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: primaryColor, width: 2.0),
+                ),
               ),
               maxLines: 5,
               validator: (value) {
@@ -63,6 +72,11 @@ class _WriteReviewFormState extends State<WriteReviewForm> {
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
+                // --- THEME UPDATE: Set button color ---
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  foregroundColor: Colors.white,
+                ),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     widget.onSubmit(_rating, _textController.text.trim());

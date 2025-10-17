@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart'; // Import go_router for context.pop()
 import 'package:tc_sa/features/blogs/data/entities/blog_model.dart';
+import 'package:timeago/timeago.dart' as timeago; // Import for date formatting
 
 class BlogPageDetail extends StatefulWidget {
   final BlogModel blog;
@@ -19,9 +21,21 @@ class _BlogPageDetailState extends State<BlogPageDetail> {
     currentLikes = widget.blog.likes ?? 0;
   }
 
+  // Helper to format the date
+  String _formatDate(String? dateString) {
+    if (dateString == null) return 'Published recently';
+    try {
+      final dateTime = DateTime.parse(dateString);
+      return timeago.format(dateTime);
+    } catch (e) {
+      return 'Published recently';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final blog = widget.blog;
+    final publishedDate = _formatDate(blog.createdAt);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -30,7 +44,8 @@ class _BlogPageDetailState extends State<BlogPageDetail> {
         title: const Text('Blog Detail', style: TextStyle(fontWeight: FontWeight.bold)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          // --- NAVIGATION FIX: Use context.pop() ---
+          onPressed: () => context.pop(),
         ),
       ),
       body: SingleChildScrollView(
@@ -41,10 +56,11 @@ class _BlogPageDetailState extends State<BlogPageDetail> {
             if ((blog.highlight ?? '').isNotEmpty)
               Text(
                 blog.highlight!,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black,
+                  // --- THEME UPDATE ---
+                  color: Colors.amber.shade800,
                 ),
               ),
             const SizedBox(height: 16),
@@ -61,13 +77,16 @@ class _BlogPageDetailState extends State<BlogPageDetail> {
                   onTap: () {
                     setState(() {
                       isLiked = !isLiked;
-                      currentLikes = isLiked ? (blog.likes ?? 0) + 1 : (blog.likes ?? 0);
+                      // This logic only visually toggles, it doesn't update the backend
+                      currentLikes = isLiked ? (widget.blog.likes ?? 0) + 1 : (widget.blog.likes ?? 0);
                     });
                   },
                   child: Icon(
-                    Icons.favorite,
+                    // --- THEME UPDATE: Use filled heart ---
+                    isLiked ? Icons.favorite : Icons.favorite_border,
                     size: 20,
-                    color: isLiked ? Colors.red : Colors.grey,
+                    // --- THEME UPDATE: Use yellow for liked ---
+                    color: isLiked ? Colors.redAccent : Colors.grey,
                   ),
                 ),
                 const SizedBox(width: 4),
@@ -78,17 +97,21 @@ class _BlogPageDetailState extends State<BlogPageDetail> {
                 const SizedBox(width: 16),
                 const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
                 const SizedBox(width: 4),
-                const Text(
-                  'Published recently',
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                Text(
+                  publishedDate, // Use formatted date
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
                 ),
               ],
             ),
             const SizedBox(height: 16),
 
+            // --- UI UPDATE: Added a divider ---
+            const Divider(thickness: 1, color: Color(0xFFF1F5F9)),
+            const SizedBox(height: 16),
+
             Text(
               blog.description ?? '',
-              style: const TextStyle(fontSize: 16, height: 1.5),
+              style: const TextStyle(fontSize: 16, height: 1.5, color: Colors.black87),
             ),
             const SizedBox(height: 24),
 
@@ -126,16 +149,18 @@ class _ContributorCard extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              // --- THEME UPDATE ---
+              color: Colors.amber.shade100,
               shape: BoxShape.circle,
             ),
             child: Center(
               child: Text(
                 initial,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  // --- THEME UPDATE ---
+                  color: Colors.amber.shade800,
                 ),
               ),
             ),

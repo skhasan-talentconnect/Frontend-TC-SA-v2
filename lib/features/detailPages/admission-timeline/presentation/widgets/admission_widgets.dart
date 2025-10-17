@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tc_sa/features/detailPages/admission-timeline/data/entities/admission-model.dart';
 
-
 class TimelineCard extends StatelessWidget {
   final TimelineEntryModel timeline;
   const TimelineCard({super.key, required this.timeline});
 
+  // --- 1. UPDATED COLORS ---
   Color _getStatusColor(String? status) {
     switch (status) {
       case 'Ongoing':
-        return Colors.green;
+        return Colors.amber.shade700; // Changed from green
       case 'Starting Soon':
-        return Colors.blue;
+        return Colors.orange.shade700; // Changed from blue
       case 'Ended':
         return Colors.grey;
       default:
@@ -30,6 +30,8 @@ class TimelineCard extends StatelessWidget {
     return Card(
       elevation: 3,
       margin: const EdgeInsets.only(bottom: 16.0),
+      // --- 2. SET CARD BACKGROUND TO WHITE ---
+      color: Colors.white, 
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -45,6 +47,7 @@ class TimelineCard extends StatelessWidget {
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
+                // --- 3. STATUS CHIP WILL NOW USE NEW COLORS ---
                 Chip(
                   label: Text(timeline.status ?? 'N/A'),
                   backgroundColor: _getStatusColor(timeline.status).withOpacity(0.1),
@@ -62,12 +65,18 @@ class TimelineCard extends StatelessWidget {
               InfoRow(icon: Icons.info_outline, title: 'Info', value: timeline.eligibility!.otherInfo!),
             
             if (timeline.documentsRequired.isNotEmpty) ...[
+        
               const Text('Documents Required', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8.0,
                 runSpacing: 4.0,
-                children: timeline.documentsRequired.map((doc) => Chip(label: Text(doc))).toList(),
+                // --- 4. DOCUMENT CHIPS UPDATED TO YELLOW THEME ---
+                children: timeline.documentsRequired.map((doc) => Chip(
+                  label: Text(doc),
+                  backgroundColor: Colors.amber.shade50,
+                  side: BorderSide(color: Colors.amber.shade200),
+                )).toList(),
               )
             ]
           ],

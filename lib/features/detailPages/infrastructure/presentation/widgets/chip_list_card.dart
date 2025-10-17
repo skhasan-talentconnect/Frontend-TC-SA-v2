@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tc_sa/features/detailPages/infrastructure/presentation/widgets/title_card.dart';
 
 class ChipListCard extends StatelessWidget {
   final String title;
@@ -18,60 +19,36 @@ class ChipListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 2,
-            spreadRadius: 1,
-            offset: Offset(0, 1),
-            color: Colors.black.withOpacity(0.2),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: iconColor, size: 28),
-                const SizedBox(width: 10),
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: iconColor,
-                  ),
-                ),
-              ],
-            ),
-  
-            if (items.isEmpty)
-              const Text('No data available')
-            else
-              Wrap(
+    // Use the TitledCard as the base
+    return TitledCard(
+      title: title,
+      icon: icon,
+      iconColor: iconColor,
+      child: (items.isEmpty)
+          ? const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
+              child: Text('No data available'),
+            )
+          : Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Wrap(
                 spacing: 8.0,
                 runSpacing: 4.0,
-                children:
-                    items
-                        .map(
-                          (item) => Chip(
-                            label: Text(item),
-                            backgroundColor: chipColor,
-                            labelStyle: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        )
-                        .toList(),
+                children: items
+                    .map(
+                      (item) => Chip(
+                        label: Text(item),
+                        backgroundColor: chipColor,
+                        labelStyle: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                        // Add a subtle border to the chip
+                        side: BorderSide(color: iconColor.withOpacity(0.3)),
+                      ),
+                    )
+                    .toList(),
               ),
-          ],
-        ),
-      ),
+            ),
     );
   }
 }

@@ -56,6 +56,8 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
+        // --- 1. THEME UPDATE: White background ---
+        backgroundColor: Colors.white,
         appBar: SAppBar(
           title: _schoolName,
           leading: SIcon(
@@ -66,17 +68,31 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
         body: Consumer<FeesAndScholarshipsViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy) {
-              return const Center(child: SLoadingIndicator());
+              return const Center(child: SLoadingIndicator(color: Colors.amber));
             }
 
             final model = vm.feesAndScholarships;
 
             if (model == null) {
-              return Center(child: Text(vm.message ?? "No data found."));
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.receipt_long_outlined, size: 60, color: Colors.grey.shade400),
+                    const SizedBox(height: 16),
+                    Text(
+                      vm.message ?? "No data found.",
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
+                    ),
+                  ],
+                )
+              );
             }
 
             return RefreshIndicator(
               onRefresh: _refresh,
+              // --- 2. THEME UPDATE: Refresh color ---
+              color: Colors.amber,
               child: ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
@@ -86,8 +102,6 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                   ),
                   const SizedBox(height: 16),
 
-                  // --- UPDATED WIDGET FOR FEE TRANSPARENCY ---
-                  // This now handles the 'null' case with an 'else'
                   (model.feesTransparency != null)
                       ? Card(
                           elevation: 2,
@@ -103,7 +117,12 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                                     const Text('Fee Transparency Score', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                                     Text(
                                       '${model.feesTransparency!.toStringAsFixed(0)}%',
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.teal),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        // --- 3. THEME UPDATE: Bar color ---
+                                        color: Colors.amber,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -113,8 +132,9 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                                   child: LinearProgressIndicator(
                                     value: model.feesTransparency! / 100,
                                     minHeight: 12,
-                                    backgroundColor: Colors.teal.shade100,
-                                    color: Colors.teal,
+                                    // --- 3. THEME UPDATE: Bar color ---
+                                    backgroundColor: Colors.amber.shade100,
+                                    color: Colors.amber.shade700,
                                   ),
                                 ),
                               ],
@@ -137,16 +157,14 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                           ),
                         ),
                   const SizedBox(height: 20),
-                  // --- END OF UPDATED WIDGET ---
 
                   Card(
                     clipBehavior: Clip.antiAlias,
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: DataTable(
-                        headingRowColor: MaterialStateProperty.all(
-                          Colors.teal.shade50,
-                        ),
+                        // --- 4. THEME UPDATE: Data table header ---
+                        headingRowColor: MaterialStateProperty.all(Colors.amber.shade50),
                         columns: const [
                           DataColumn(label: Text('Class', style: TextStyle(fontWeight: FontWeight.bold))),
                           DataColumn(label: Text('Tuition', style: TextStyle(fontWeight: FontWeight.bold)), numeric: true),
@@ -169,8 +187,8 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                   Text(
                     'Scholarships & Concessions',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   const SizedBox(height: 16),
                   if (model.scholarships.isEmpty)

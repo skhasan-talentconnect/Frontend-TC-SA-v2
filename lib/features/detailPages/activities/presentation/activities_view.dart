@@ -1,4 +1,3 @@
-// features/detailPages/activities/presentation/activity_view.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -20,10 +19,7 @@ class ActivityView extends StatefulWidget {
 }
 
 class _ActivityViewState extends State<ActivityView> {
-  // local VM instance (we'll wrap with ChangeNotifierProvider.value)
   final ActivitiesViewModel _vm = ActivitiesViewModel();
-
-  // parsed once
   String _schoolId = '';
   bool _parsed = false;
 
@@ -34,19 +30,20 @@ class _ActivityViewState extends State<ActivityView> {
     _parsed = true;
 
     final state = GoRouterState.of(context);
-
-    // 1) prefer extras (since Overview pushes extra as String)
     final extra = state.extra;
-    if (extra is String && extra.trim().isNotEmpty) {
+
+    // --- NAVIGATION BUG FIX ---
+    // Handle both Map (from OverviewView) and String (if pushed directly)
+    if (extra is Map) {
+      _schoolId = extra['schoolId'] as String? ?? '';
+    } else if (extra is String && extra.trim().isNotEmpty) {
       _schoolId = extra.trim();
     }
+    // --- END FIX ---
 
-    // 2) optional path param fallback if you ever switch to /activity/:id
     if (_schoolId.isEmpty) {
       _schoolId = (state.pathParameters['id'] ?? '').toString();
     }
-
-    // 3) optional query fallback ?id=...
     if (_schoolId.isEmpty) {
       _schoolId = (state.uri.queryParameters['id'] ?? '').toString();
     }
@@ -56,7 +53,6 @@ class _ActivityViewState extends State<ActivityView> {
         _vm.getActivitiesBySchoolId(schoolId: _schoolId);
       });
     } else {
-      // nothing to load, set to complete so the UI can show a friendly message
       _vm.setViewState(ViewState.complete);
     }
   }
@@ -80,7 +76,6 @@ class _ActivityViewState extends State<ActivityView> {
         builder: (context, vm, _) {
           final state = vm.viewState;
           final model = vm.activitiesModel;
-
           final size = MediaQuery.of(context).size;
           final isSmall = size.width < 600;
           final cross = isSmall ? 2 : 3;
@@ -90,34 +85,38 @@ class _ActivityViewState extends State<ActivityView> {
             appBar: SAppBar(
               leading: SIcon(
                 icon: Icons.keyboard_arrow_left,
-                onTap: () => Navigator.of(context).pop(),
+                // --- NAVIGATION FIX ---
+                onTap: () => context.pop(),
               ),
               title: "School Activities",
             ),
             body: RefreshIndicator(
               onRefresh: _refresh,
-              color: Colors.blue,
+              // --- THEME UPDATE ---
+              color: Colors.amber, 
               child: Builder(
                 builder: (_) {
                   if (_schoolId.isEmpty) {
-                    return ListView(
-                      children: const [
-                        SizedBox(height: 120),
-                        Center(child: Text('Missing school context')),
-                      ],
-                    );
+                    return const Center(child: Text('Missing school context'));
                   }
-
                   if (state == ViewState.busy) {
                     return const Center(child: SLoadingIndicator());
                   }
 
                   if (model == null) {
-                    return ListView(
-                      children: const [
-                        SizedBox(height: 120),
-                        Center(child: Text("No activities found")),
-                      ],
+                    // --- UI POLISH: More modern 'Not Found' message ---
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.layers_clear, size: 60, color: Colors.grey.shade400),
+                          const SizedBox(height: 16),
+                          Text(
+                            vm.message ?? "No activities found",
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
+                          ),
+                        ],
+                      ),
                     );
                   }
 
@@ -127,24 +126,22 @@ class _ActivityViewState extends State<ActivityView> {
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: Column(
                       children: [
-                        // Banner (static placeholder)
+                        // --- THEME UPDATE: Banner color and icon color ---
                         Container(
                           height: 150,
-                          color: Colors.grey.shade200,
+                          color: Colors.amber.shade100,
                           alignment: Alignment.center,
-                          child: const Icon(Icons.event_available, size: 64),
+                          child: Icon(Icons.event_available, size: 64, color: Colors.amber.shade800),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              // --- UI POLISH: Title styling ---
+                              Text(
                                 "Activity Focus Areas",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 16),
                               if (activities.isEmpty)
@@ -162,15 +159,13 @@ class _ActivityViewState extends State<ActivityView> {
                                   children: activities
                                       .map(
                                         (title) => ActivityHighlightWidget(
-                                          icon:
-                                              ActivityIconMapper.getIconFor(title),
+                                          icon: ActivityIconMapper.getIconFor(title),
                                           title: title,
                                         ),
                                       )
                                       .toList(),
                                 ),
                               const SizedBox(height: 24),
-                              const Divider(color: Colors.grey, thickness: 0.5),
                             ],
                           ),
                         ),

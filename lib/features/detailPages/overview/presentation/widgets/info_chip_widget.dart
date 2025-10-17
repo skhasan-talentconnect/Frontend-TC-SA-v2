@@ -17,19 +17,31 @@ class InfoChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Increased vertical padding
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(6),
+        color: Colors.white,
+        border: Border.all(color: Colors.amber.shade200), // Updated color
+        borderRadius: BorderRadius.circular(8), // Softer corners
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             topText,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: fontSize,
+              color: Colors.amber, // Updated color
+            ),
           ),
-          Text(bottomText, style: TextStyle(fontSize: fontSize * 0.85)),
+          const SizedBox(height: 2), // Added spacing
+          Text(
+            bottomText,
+            style: TextStyle(
+              fontSize: fontSize * 0.8, // Slightly smaller
+              color: Colors.grey.shade600, // Softer text color
+            ),
+          ),
         ],
       ),
     );
