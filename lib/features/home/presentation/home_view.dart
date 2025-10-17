@@ -16,23 +16,18 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-
-  
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final appStateProvider = getIt<AppStateProvider>();
-Future<void> _syncUserDetails() async {
+  Future<void> _syncUserDetails() async {
     if (!appStateProvider.isGuest && mounted) {
       final failure = await appStateProvider.getUserDetails();
       if (mounted) failure?.showError(context);
     }
   }
+
   @override
   void initState() {
-   
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-
-      print(appStateProvider.isGuest);
-      print(appStateProvider.user?.toJson());
       if (!appStateProvider.isGuest) {
         final failure = await appStateProvider.getUserDetails();
         failure?.showError(context);
@@ -85,37 +80,51 @@ Future<void> _syncUserDetails() async {
       bottomNavigationBar: Consumer<ShortlistNotificationProvider>(
         builder: (context, notificationProvider, child) {
           return SBottomBar(
-            // 4. Pass the notification status to the SBottomBar
             hasNewShortlist: notificationProvider.hasNewShortlist,
             currentIndex: currentIndex,
             onTap: (index) {
-          switch (index) {
-            case 0:
-              context.goNamed(RouteNames.home);
-              break;
-            case 1:
-              context.goNamed(RouteNames.blogs);
-              break;
-            case 2:
-              context.goNamed(
-                RouteNames.preferences,
-                extra: appStateProvider.userPref != null,
-              );
-              break;
-            case 3:
-              if (appStateProvider.isGuest) {
-                Toasts.showInfoToast(context, message: 'Please Login first');
-              } else {
-                Provider.of<ShortlistNotificationProvider>(context, listen: false)
-                  .clearNotification();
-                context.goNamed(RouteNames.shortlist);
+              switch (index) {
+                case 0:
+                  context.goNamed(RouteNames.home);
+                  break;
+                case 1:
+                  context.goNamed(RouteNames.blogs);
+                  break;
+                case 2:
+                  context.goNamed(
+                    RouteNames.preferences,
+                    extra: appStateProvider.userPref != null,
+                  );
+                  break;
+                case 3:
+                  if (appStateProvider.isGuest) {
+                    Toasts.showInfoToast(
+                      context,
+                      message: 'Please Login first',
+                    );
+                  } else {
+                    Provider.of<ShortlistNotificationProvider>(
+                      context,
+                      listen: false,
+                    ).clearNotification();
+                    context.goNamed(RouteNames.shortlist);
+                  }
+                  break;
+                case 4:
+                  if (appStateProvider.isGuest) {
+                    Toasts.showInfoToast(
+                      context,
+                      message: 'Please Login first',
+                    );
+                  } else {
+                    context.goNamed(RouteNames.myForms);
+                  }
+                  break;
               }
-              break;
-            case 4:
-              if (appStateProvider.isGuest) {
-                Toasts.showInfoToast(context, message: 'Please Login first');
-              } else {
-                context.goNamed(RouteNames.myForms);
-              }
-              break;
-          }});}),);}}
+            },
+          );
+        },
+      ),
+    );
+  }
+}

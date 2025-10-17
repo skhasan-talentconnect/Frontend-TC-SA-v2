@@ -22,6 +22,8 @@ class _SchoolResultPageState extends State<SchoolResultsPage> {
 
       final failure = await prefViewModel.predictSchools(
         filters: {
+          'state': appStateProvider.user?.state,
+          'city': appStateProvider.user?.city,
           'board': appStateProvider.userPref?.boards,
           'schoolMode': appStateProvider.userPref?.schoolType,
           'genderType': appStateProvider.user?.gender,
