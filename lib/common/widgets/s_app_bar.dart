@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tc_sa/common/index.dart' show SColor, STextStyles;
 import 'package:tc_sa/common/widgets/s_icon.dart';
 import 'package:tc_sa/core/index.dart';
@@ -32,7 +33,7 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: leading,
       titleSpacing: leading != null ? -10 : 24,
       title: Text(
-        _isHome ? 'RawRecruit' : title ?? '',
+        _isHome ? 'Synzy' : title ?? '',
         style:
             _isHome
                 ? STextStyles.s18W600.copyWith(color: SColor.secTextColor)
@@ -54,22 +55,27 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
           child:
               _isHome
                   ? getIt<AppStateProvider>().isGuest
-                      ? Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 6,
-                          horizontal: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: SColor.secTextColor,
-                            width: 0.5,
+                      ? GestureDetector(
+                        onTap: () {
+                          context.pushNamed(RouteNames.loginRegister);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 6,
+                            horizontal: 12,
                           ),
-                        ),
-                        child: Text(
-                          'Login',
-                          style: STextStyles.s12W600.copyWith(
-                            color: SColor.secTextColor,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: SColor.secTextColor,
+                              width: 0.5,
+                            ),
+                          ),
+                          child: Text(
+                            'Login',
+                            style: STextStyles.s12W600.copyWith(
+                              color: SColor.secTextColor,
+                            ),
                           ),
                         ),
                       )

@@ -2,11 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tc_sa/common/theme/s_colors.dart';
-import 'package:tc_sa/common/theme/styles.dart';
 import 'package:tc_sa/common/widgets/s_loading_indicator.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/core/services/secret_repo.dart';
+import 'package:tc_sa/gen/assets.gen.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -85,11 +84,9 @@ class _SplashViewState extends State<SplashView> {
               child:
                   loading
                       ? SLoadingIndicator()
-                      : Text(
-                        'Splash Page',
-                        style: STextStyles.s22W600.copyWith(
-                          color: SColor.secTextColor,
-                        ),
+                      : Padding(
+                        padding: const EdgeInsets.all(32.0),
+                        child: Image.asset(Assets.images.appLogo.path),
                       ),
             ),
       ),
