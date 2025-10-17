@@ -136,9 +136,7 @@ class _AuthViewState extends State<AuthView> {
                                     vm.isLogin = true;
                                     emailController.text = '';
                                     passController.text = '';
-                                    context.pushReplacementNamed(
-                                      RouteNames.home,
-                                    );
+                                    context.goNamed(RouteNames.home);
                                   } else {
                                     context.pushReplacementNamed(
                                       RouteNames.addEditProfile,
