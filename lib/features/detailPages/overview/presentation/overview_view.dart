@@ -740,7 +740,7 @@ class _OverviewTab extends StatelessWidget {
           _TitledCard(
             title: "Fee Structure",
             icon: Icons.account_balance_wallet_outlined,
-            iconColor: Colors.green,
+            iconColor: Colors.amber,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -749,13 +749,13 @@ class _OverviewTab extends StatelessWidget {
                   school.feeRange ?? "Not Available",
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.green.shade800,
+                    color: Colors.amber,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   "Annual Fee Range",
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                  style: TextStyle(color: Colors.amber, fontSize: 14),
                 ),
                 const SizedBox(height: 16),
 
@@ -765,7 +765,7 @@ class _OverviewTab extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     gradient: LinearGradient(
-                      colors: [Colors.green.shade100, Colors.green.shade400],
+                      colors: [Colors.white, Colors.amber],
                     ),
                   ),
                 ),
@@ -794,7 +794,7 @@ class _OverviewTab extends StatelessWidget {
           _TitledCard(
             title: "Top Tags",
             icon: Icons.widgets_outlined,
-            iconColor: Colors.blue,
+            iconColor: Colors.amber,
             child: Wrap(
               spacing: 8,
               runSpacing: 8,

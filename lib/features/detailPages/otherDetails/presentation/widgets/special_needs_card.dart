@@ -25,7 +25,7 @@ class SpecialNeedsCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               // --- 2. THEME UPDATE: Use green for positive, grey for neutral ---
-              color: hasStaff ? Colors.green.shade50 : Colors.grey.shade100,
+              color: hasStaff ? Colors.amber : Colors.white,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: hasStaff ? Colors.green.shade200 : Colors.grey.shade300),
             ),
@@ -33,7 +33,7 @@ class SpecialNeedsCard extends StatelessWidget {
               children: [
                 Icon(
                   hasStaff ? Icons.check_circle_rounded : Icons.cancel_rounded,
-                  color: hasStaff ? Colors.green.shade700 : Colors.grey.shade600,
+                  color: hasStaff ? Colors.amber : Colors.white,
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -41,7 +41,7 @@ class SpecialNeedsCard extends StatelessWidget {
                     'Dedicated Special Educator',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: hasStaff ? Colors.green.shade800 : Colors.grey.shade800,
+                      color: hasStaff ? Colors.amber : Colors.white,
                     ),
                   ),
                 ),
