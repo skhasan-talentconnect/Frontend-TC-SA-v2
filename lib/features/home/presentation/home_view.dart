@@ -47,7 +47,7 @@ class _HomeViewState extends State<HomeView> {
     return 0;
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     final currentIndex = _calculateIndex(context);
 
@@ -91,7 +91,12 @@ class _HomeViewState extends State<HomeView> {
           child: const Icon(Icons.chat, color: Colors.black),
         ),
         body: Padding(
-          padding: const EdgeInsets.only(right: 16, left: 16, top: 8, bottom: 0),
+          padding: const EdgeInsets.only(
+            right: 16,
+            left: 16,
+            top: 8,
+            bottom: 0,
+          ),
           child: widget.navigationShell,
         ),
         bottomNavigationBar: Consumer<ShortlistNotificationProvider>(
@@ -102,8 +107,10 @@ class _HomeViewState extends State<HomeView> {
               onTap: (index) {
                 // Clear notification dot when shortlist tab (index 3) is tapped
                 if (index == 3 && !appStateProvider.isGuest) {
-                   Provider.of<ShortlistNotificationProvider>(context, listen: false)
-                      .clearNotification();
+                  Provider.of<ShortlistNotificationProvider>(
+                    context,
+                    listen: false,
+                  ).clearNotification();
                 }
 
                 switch (index) {
@@ -121,14 +128,20 @@ class _HomeViewState extends State<HomeView> {
                     break;
                   case 3:
                     if (appStateProvider.isGuest) {
-                      Toasts.showInfoToast(context, message: 'Please Login first');
+                      Toasts.showInfoToast(
+                        context,
+                        message: 'Please Login first',
+                      );
                     } else {
                       context.goNamed(RouteNames.shortlist);
                     }
                     break;
                   case 4:
                     if (appStateProvider.isGuest) {
-                      Toasts.showInfoToast(context, message: 'Please Login first');
+                      Toasts.showInfoToast(
+                        context,
+                        message: 'Please Login first',
+                      );
                     } else {
                       context.goNamed(RouteNames.myForms);
                     }

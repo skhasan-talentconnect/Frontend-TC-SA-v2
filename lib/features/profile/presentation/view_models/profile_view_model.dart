@@ -8,21 +8,30 @@ class ProfileViewModel extends ViewStateProvider {
     ProfileTileModel(
       path: RouteNames.registerSchool,
       name: 'Register Your School',
-      icon: Icon(Icons.book),
+      icon: Icon(Icons.book, color: Colors.black),
     ),
     ProfileTileModel(
       path: RouteNames.resetPassword,
       name: 'Reset Password',
-      icon: Icon(Icons.lock_reset),
+      icon: Icon(Icons.lock_reset, color: Colors.black),
     ),
     ProfileTileModel(
       path: RouteNames.addApplication,
       name: 'Fill Application Form',
-      icon: Icon(Icons.assignment),
+      icon: Icon(Icons.assignment, color: Colors.black),
     ),
-    ProfileTileModel(name: 'Contact Us', icon: Icon(Icons.phone)),
-    ProfileTileModel(name: 'Support', icon: Icon(Icons.support_agent)),
-    ProfileTileModel(name: 'Logout', icon: Icon(Icons.logout)),
+    ProfileTileModel(
+      name: 'Contact Us',
+      icon: Icon(Icons.phone, color: Colors.black),
+    ),
+    ProfileTileModel(
+      name: 'Support',
+      icon: Icon(Icons.support_agent, color: Colors.black),
+    ),
+    ProfileTileModel(
+      name: 'Logout',
+      icon: Icon(Icons.logout, color: Colors.black),
+    ),
   ];
   List<ProfileTileModel> get routes => _routes;
 
