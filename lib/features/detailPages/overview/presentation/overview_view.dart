@@ -12,13 +12,18 @@ import 'package:tc_sa/features/detailPages/overview/presentation/view_models/ove
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/info_chip_widget.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/quick_highlight_widget.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/recruiter_chip_widget.dart';
-import 'package:tc_sa/features/detailPages/overview/presentation/widgets/social_presense.dart';
 import 'package:tc_sa/features/users/shortlist/index.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SchoolDetailView extends StatefulWidget {
-  const SchoolDetailView({super.key, required this.schoolId});
+  const SchoolDetailView({
+    super.key,
+    required this.schoolId,
+    this.distance, // ✅ add this
+  });
+
   final String schoolId;
+   final String? distance; 
 
   @override
   State<SchoolDetailView> createState() => _SchoolDetailViewState();
@@ -69,133 +74,135 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
     });
   }
 
+  void _handleTabSelection() {
+    if (_tabController.indexIsChanging) {
+      final name = _vm.school?.name ?? 'School';
+      final id =
+          widget
+              .schoolId; // Using id for clarity, though not strictly needed here
 
-void _handleTabSelection() {
-  if (_tabController.indexIsChanging) {
-    final name = _vm.school?.name ?? 'School';
-    final id = widget.schoolId; // Using id for clarity, though not strictly needed here
-    
-    switch (_tabController.index) {
-      // Index 0: "Overview" - typically not routed, handled by default
-      
-      // Index 1: 'academics'
-      case 1:
-        context.pushNamed(
-          RouteNames.academics,
-          extra: {'schoolId': widget.schoolId, 'schoolName': name},
-        );
-        break;
-        
-      // Index 2: 'faculty details'
-      case 2:
-        context.pushNamed(
-          RouteNames.faculty,
-          extra: {'schoolId': widget.schoolId, 'schoolName': name},
-        );
-        break;
-        
-      // Index 3: "Infrastructure"
-      case 3:
-        context.pushNamed(
-          RouteNames.infrastructure,
-          extra: {'schoolId': widget.schoolId, 'schoolName': name},
-        );
-        break;
-        
-      // Index 4: 'techAdaption'
-      case 4:
-        context.pushNamed(
-          RouteNames.techAdaption,
-          extra: {'schoolId': widget.schoolId, 'schoolName': name},
-        );
-        break;
-        
-      // Index 5: "Activities"
-      case 5:
-        // Assuming RouteNames.activity expects a map with schoolId and schoolName
-        context.pushNamed(
-          RouteNames.activity, 
-          extra: {'schoolId': widget.schoolId, 'schoolName': name},
-        );
-        break;
-        
-      // Index 6: 'safetySecurity'
-      case 6:
-        context.pushNamed(
-          RouteNames.safetySecurity,
-          extra: {'schoolId': widget.schoolId, 'schoolName': name},
-        );
-        break;
-        
-      // Index 7: 'internationalExposure'
-      case 7:
-        context.pushNamed(
-          RouteNames.internationalExposure,
-          extra: {'schoolId': widget.schoolId, 'schoolName': name},
-        );
-        break;
-        
-      // Index 8: "Fees And Scholarship"
-      case 8:
-        context.pushNamed(
-          RouteNames.feeAndScholarship,
-          extra: {'schoolId': widget.schoolId, 'schoolName': name},
-        );
-        break;
-        
-      // Index 9: 'admission Timeline'
-      case 9:
-        context.pushNamed(
-          RouteNames.admissionTimeline,
-          extra: {'schoolId': widget.schoolId, 'schoolName': name},
-        );
-        break;
-        
-      // Index 10: "Amenities"
-      case 10:
-        context.pushNamed(
-          RouteNames.amenity,
-          extra: {'schoolId': widget.schoolId, 'schoolName': name},
-        );
-        break;
-        
-      // Index 11: "Aluminis"
-      case 11:
-        context.pushNamed(
-          RouteNames.alumini,
-          extra: {'schoolId': widget.schoolId, 'schoolName': name},
-        );
-        break;
-        
-      // Index 12: "Reviews"
-      case 12:
-        context.pushNamed(
-          RouteNames.review,
-          extra: {'schoolId': widget.schoolId, 'schoolName': name},
-        );
-        break;
-        
-      // Index 13: "Other Details"
-      case 13:
-        context.pushNamed(
-          RouteNames.otherDetails,
-          extra: {'schoolId': widget.schoolId, 'schoolName': name},
-        );
-        break;
-        
-      default:
-        // Handle any unmapped or default case (like Index 0: Overview)
-        break;
-    }
+      switch (_tabController.index) {
+        // Index 0: "Overview" - typically not routed, handled by default
 
-    // This logic ensures that after pushing a new route, the tab is reset to "Overview" (Index 0).
-    if (_tabController.index != 0) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _tabController.index = 0;
-      });
+        // Index 1: 'academics'
+        case 1:
+          context.pushNamed(
+            RouteNames.academics,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+
+        // Index 2: 'faculty details'
+        case 2:
+          context.pushNamed(
+            RouteNames.faculty,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+
+        // Index 3: "Infrastructure"
+        case 3:
+          context.pushNamed(
+            RouteNames.infrastructure,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+
+        // Index 4: 'techAdaption'
+        case 4:
+          context.pushNamed(
+            RouteNames.techAdaption,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+
+        // Index 5: "Activities"
+        case 5:
+          // Assuming RouteNames.activity expects a map with schoolId and schoolName
+          context.pushNamed(
+            RouteNames.activity,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+
+        // Index 6: 'safetySecurity'
+        case 6:
+          context.pushNamed(
+            RouteNames.safetySecurity,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+
+        // Index 7: 'internationalExposure'
+        case 7:
+          context.pushNamed(
+            RouteNames.internationalExposure,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+
+        // Index 8: "Fees And Scholarship"
+        case 8:
+          context.pushNamed(
+            RouteNames.feeAndScholarship,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+
+        // Index 9: 'admission Timeline'
+        case 9:
+          context.pushNamed(
+            RouteNames.admissionTimeline,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+
+        // Index 10: "Amenities"
+        case 10:
+          context.pushNamed(
+            RouteNames.amenity,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+
+        // Index 11: "Aluminis"
+        case 11:
+          context.pushNamed(
+            RouteNames.alumini,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+
+        // Index 12: "Reviews"
+        case 12:
+          context.pushNamed(
+            RouteNames.review,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+
+        // Index 13: "Other Details"
+        case 13:
+          context.pushNamed(
+            RouteNames.otherDetails,
+            extra: {'schoolId': widget.schoolId, 'schoolName': name},
+          );
+          break;
+
+        default:
+          // Handle any unmapped or default case (like Index 0: Overview)
+          break;
+      }
+
+      // This logic ensures that after pushing a new route, the tab is reset to "Overview" (Index 0).
+      if (_tabController.index != 0) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _tabController.index = 0;
+        });
+      }
     }
   }
-}
+
   @override
   void dispose() {
     _tabController.removeListener(_handleTabSelection);
@@ -416,6 +423,8 @@ void _handleTabSelection() {
                                 children: [
                                   const Icon(Icons.location_on, size: 18),
                                   const SizedBox(width: 3),
+
+                                  // Location Text (Clickable)
                                   GestureDetector(
                                     onTap: () async {
                                       if (location.isNotEmpty) {
@@ -447,14 +456,30 @@ void _handleTabSelection() {
                                       style: TextStyle(
                                         fontSize: infoFont,
                                         color: Colors.blue,
-                                        decoration:
-                                            TextDecoration
-                                                .underline, // makes it look clickable
+                                        decoration: TextDecoration.underline,
                                       ),
                                     ),
                                   ),
+
+                                  // ✅ Add a small vertical divider (dot) only if distance is available
+                                  if (widget.distance != null) ...[
+                                    const SizedBox(width: 8),
+                                    
+                                    const SizedBox(width: 6),
+
+                                    // ✅ Distance Text
+                                    Text(
+                                      "${widget.distance!} km away",
+                                      style: TextStyle(
+                                        fontSize: infoFont - 2,
+                                        color: Colors.grey[700],
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
                                 ],
                               ),
+
                               const SizedBox(height: 10),
                               Row(
                                 children: [
@@ -715,7 +740,7 @@ class _OverviewTab extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final isSmall = size.width < 600;
 
-    // Improved fee parsing
+    // Fee parsing
     final feeParts = (school.feeRange ?? "").split(RegExp(r'[-–]'));
     final feeLow = feeParts.isNotEmpty ? feeParts.first.trim() : '-';
     final feeHigh =
@@ -727,6 +752,10 @@ class _OverviewTab extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
+          // --- SOCIAL MEDIA PRESENCE SECTION AT TOP ---
+          SocialPresenceRow(school: school),
+          const SizedBox(height: 16),
+
           // Quick Highlights Section
           TitledCard(
             title: "Quick Highlights",
@@ -738,7 +767,6 @@ class _OverviewTab extends StatelessWidget {
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
               childAspectRatio: 1.2,
-
               children: [
                 QuickHighlights(
                   icon: Icons.school_outlined,
@@ -775,113 +803,11 @@ class _OverviewTab extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-          // Fee Range Section
-          // Fee Range Section - Minimalist Ticker Design
-          _TitledCard(
-            title: "Annual Fee Structure",
-            icon: Icons.account_balance_wallet_outlined,
-            iconColor: Colors.amber.shade700,
-            child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.stretch, // Stretch children to fill width
-              children: [
-                // 1. MAIN DISPLAY ROW: Low and High Fees
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // Low Fee Column (Subtle)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "MINIMUM",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey.shade500, // Very subtle label
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          feeLow ?? "N/A", // Use the parsed low value
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black87, // Dark text for contrast
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    // High Fee Column (Amber Highlight)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "MAXIMUM",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color:
-                                Colors
-                                    .amber
-                                    .shade700, // Amber label for emphasis
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          feeHigh ?? "N/A", // Use the parsed high value
-                          style: TextStyle(
-                            fontSize: 32, // Larger size for max fee
-                            fontWeight: FontWeight.w800,
-                            color:
-                                Colors.amber.shade700, // The main amber focus
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-
-                // 2. VISUAL BAR: Simple and clean indicator
-                Container(
-                  height: 4, // Very thin bar
-                  decoration: BoxDecoration(
-                    color:
-                        Colors
-                            .amber
-                            .shade700, // Solid amber color for the range
-                    borderRadius: BorderRadius.circular(2),
-                    // Add a subtle drop shadow for depth
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.amber.withOpacity(0.3),
-                        spreadRadius: 1,
-                        blurRadius: 4,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // 3. FULL RANGE TEXT (Detail)
-                Text(
-                  'Full range: ${school.feeRange ?? "Not Available"}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade600,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ],
-            ),
+          // --- SIMPLIFIED FEE RANGE DISPLAY ---
+          FeeRangeDisplay(
+            feeLow: feeLow,
+            feeHigh: feeHigh,
+            feeRange: school.feeRange ?? "-",
           ),
           const SizedBox(height: 20),
 
@@ -909,30 +835,167 @@ class _OverviewTab extends StatelessWidget {
                       .toList(),
             ),
           ),
-
           const SizedBox(height: 20),
-
-_TitledCard(
-  title: "Online Presence",
-  icon: Icons.public_outlined,
-  iconColor: Colors.indigoAccent,
-  child: SocialLinksSection(school: school),
-),
-
         ],
       ),
     );
   }
 }
 
-// --- Local Helper Widgets for this View ---
+
+class SocialPresenceRow extends StatelessWidget {
+  const SocialPresenceRow({required this.school});
+  final SchoolModel school;
+
+Future<void> _launch(String url) async {
+  final uri = Uri.parse(url);
+  try {
+    if (!await launchUrl(uri, mode: LaunchMode.platformDefault)) {
+      debugPrint('Could not launch $url');
+    }
+  } catch (e) {
+    debugPrint('Launch failed: $e');
+  }
+}
+
+ Widget _buildSocial({
+  required IconData icon,
+  required String name,
+  required String? url,
+  required Color color,
+}) {
+  if (url == null || url.isEmpty) return SizedBox.shrink();
+
+  return GestureDetector(
+    onTap: () => _launch(url),
+    child: Row(
+      children: [
+        Icon(icon, color: color, size: 22),
+        const SizedBox(width: 6),
+        Text(
+          name,
+          style: TextStyle(
+            color: color,
+            fontWeight: FontWeight.w600,
+            fontSize: 15,
+            decoration: TextDecoration.underline,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+  @override
+  Widget build(BuildContext context) {
+    final items = [
+      _buildSocial(
+        icon: Icons.public_outlined,
+        name: 'Website',
+       url: school.website,
+
+        color: Colors.yellow.shade700,
+      ),
+      _buildSocial(
+        icon: Icons.camera_alt_outlined,
+        name: 'Instagram',
+        url: school.instagramHandle,
+        color: Colors.pink,
+      ),
+      _buildSocial(
+        icon: Icons.alternate_email_outlined,
+        name: 'Twitter',
+      url: school.twitterHandle,
+        color: Colors.blue,
+      ),
+      _buildSocial(
+        icon: Icons.business_outlined,
+        name: 'LinkedIn',
+        url: school.linkedinHandle,
+        color: Colors.indigo,
+      ),
+    ].where((w) => w is! SizedBox).toList(); // Remove empty items
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            if (items.length > 0) items[0],
+            if (items.length > 1) const SizedBox(width: 18),
+            if (items.length > 1) items[1],
+          ],
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            if (items.length > 2) items[2],
+            if (items.length > 3) const SizedBox(width: 18),
+            if (items.length > 3) items[3],
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class FeeRangeDisplay extends StatelessWidget {
+  final String feeLow;
+  final String feeHigh;
+  final String feeRange;
+  const FeeRangeDisplay({required this.feeLow, required this.feeHigh, required this.feeRange});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text('MINIMUM', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                      Text(feeLow, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: 1,
+                  height: 32,
+                  color: Colors.grey.shade300,
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text('MAXIMUM', style: TextStyle(fontSize: 12, color: Colors.amber)),
+                      Text(feeHigh, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.amber.shade700)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text('Full Range: $feeRange', style: TextStyle(fontSize: 13, color: Colors.grey.shade600, fontStyle: FontStyle.italic)),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class _TitledCard extends StatelessWidget {
   final String title;
   final IconData icon;
   final Widget child;
   final Color iconColor;
-
   const _TitledCard({
     required this.title,
     required this.icon,
@@ -943,11 +1006,13 @@ class _TitledCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(

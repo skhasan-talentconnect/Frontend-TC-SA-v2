@@ -1,23 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/profile/data/data_source/data_source_impl.dart';
 
 class AddEditProfileViewModel extends ViewStateProvider {
   final profileDataSourceImpl = ProfileDataSourceImpl();
-
-  DateTime? _pickedDate;
+DateTime? _pickedDate;
   DateTime? get pickedDate => _pickedDate;
-  String get displayPickedDate =>
-      '${pickedDate?.day}/${pickedDate?.month}/${pickedDate?.year}';
+
+  // Displayed on the UI (dd/MM/yyyy)
+  String get displayPickedDate => pickedDate == null
+      ? ''
+      : DateFormat('dd/MM/yyyy').format(pickedDate!);
+
+  // To send to API (yyyy-MM-dd)
+  String get apiPickedDate => pickedDate == null
+      ? ''
+      : DateFormat('yyyy-MM-dd').format(pickedDate!);
+
   set pickedDate(DateTime? date) {
     _pickedDate = date;
     notifyListeners();
   }
 
-  // Helper to set the initial date from the user profile string
   void initializeDate(String? dateString) {
     if (dateString != null && dateString.isNotEmpty) {
-      _pickedDate = DateTime.tryParse(dateString);
+      try {
+        // Handle both yyyy-MM-dd (from API) or dd/MM/yyyy (from display)
+        if (dateString.contains('/')) {
+          final parts = dateString.split('/');
+          _pickedDate = DateTime(
+            int.parse(parts[2]),
+            int.parse(parts[1]),
+            int.parse(parts[0]),
+          );
+        } else {
+          _pickedDate = DateTime.tryParse(dateString);
+        }
+      } catch (_) {
+        _pickedDate = null;
+      }
     }
   }
 

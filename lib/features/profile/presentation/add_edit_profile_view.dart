@@ -338,7 +338,7 @@ Future<void> _fetchFromGoogleLocation() async {
                             final state = stateController.text.trim();
                             final city = cityController.text.trim();
                             final area = areaController.text.trim();
-                            final dateOfBirth = dateOfBirthController.text.trim();
+                            final dateOfBirth = addEditProfileViewModel.apiPickedDate;
 
                             if (name.isEmpty ||
                                 email.isEmpty ||

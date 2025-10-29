@@ -7,15 +7,18 @@ import 'package:tc_sa/core/index.dart';
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
 
-  Future<void> _launchSchoolRegistration() async {
-    const url = 'https://smart-school-finder.netlify.app/';
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
+
+Future<void> _launchSchoolRegistration() async {
+  const url = 'https://smart-school-finder.netlify.app/';
+  final uri = Uri.parse(url);
+  try {
+    if (!await launchUrl(uri, mode: LaunchMode.platformDefault)) {
       debugPrint('Could not launch $url');
     }
+  } catch (e) {
+    debugPrint('Launch failed: $e');
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +52,6 @@ class LandingPage extends StatelessWidget {
                 },
               ),
 
-              // 🔹 New "Register Your School" button
               SButton.outlined(
                 label: 'Register Your School',
                 max: true,

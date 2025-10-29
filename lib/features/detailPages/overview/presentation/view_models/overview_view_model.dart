@@ -258,9 +258,6 @@ class OverviewViewModel extends ViewStateProvider {
     return failure;
   }
 
-  // --------------------------------------------------------------------------
-  // CHECK IF APPLIED
-  // --------------------------------------------------------------------------
   Future<Failure?> getIsAppliedSchool({required String schoolId}) async {
     Failure? failure;
     setViewState(ViewState.busy);

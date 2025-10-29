@@ -1,4 +1,6 @@
 // lib/core/navigation/app_router.dart
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -176,18 +178,29 @@ class AppRouter {
       //   },
       // ),
       // ✅ School details
-      GoRoute(
-        path: '/overview',
-        name: RouteNames.overview,
-        builder: (context, state) {
-          final schoolId = state.extra as String?;
-          if (schoolId == null) {
-            return NotFoundView(isSchool: true);
-          }
-          print('<------>ID: $schoolId');
-          return SchoolDetailView(schoolId: schoolId);
-        },
-      ),
+GoRoute(
+  path: '/overview',
+  name: RouteNames.overview,
+  builder: (context, state) {
+    final extras = state.extra as Map<String, dynamic>?;
+    final schoolId = extras?['schoolId'] as String?;
+   final distance = extras?['distance'] as String?;
+
+    if (schoolId == null) {
+      return NotFoundView(isSchool: true);
+    }
+
+    print('<------>ID: $schoolId | Distance: $distance');
+
+    return SchoolDetailView(
+      schoolId: schoolId,
+      distance: distance,
+    );
+  },
+),
+
+
+
       GoRoute(
         path: '/alumini',
         name: RouteNames.alumini,

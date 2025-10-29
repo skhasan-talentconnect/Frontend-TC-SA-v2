@@ -102,13 +102,13 @@ class _SDrawerState extends State<SDrawer> {
                         navigateTo(RouteNames.support);
                       },
                     ),
-                    SListTile(
+                   /* SListTile(
                       leading: Icon(Icons.settings),
                       label: 'Settings',
                       onTap: () {
                         navigateTo(RouteNames.blogs);
                       },
-                    ),
+                    ),*/
                   ],
                 ),
               ),

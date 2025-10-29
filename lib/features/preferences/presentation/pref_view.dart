@@ -92,6 +92,8 @@ class _PrefViewState extends State<PrefView> {
     'Gujarat': ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot'],
     'Rajasthan': ['Jaipur', 'Jodhpur', 'Udaipur'],
     'Punjab': ['Chandigarh', 'Ludhiana', 'Amritsar'],
+        'Delhi': ['Delhi', 'New Delhi'],
+
     'Haryana': ['Gurugram', 'Faridabad', 'Panipat'],
     'Karnataka': ['Bengaluru', 'Mysore', 'Mangalore'],
     'Tamil Nadu': ['Chennai', 'Coimbatore', 'Madurai'],
@@ -100,6 +102,10 @@ class _PrefViewState extends State<PrefView> {
 
   final Map<String, List<String>> cityAreas = {
     // Maharashtra
+      'Delhi': ['Connaught Place', 'Karol Bagh', 'Dwarka', 'Saket', 'Rohini'],
+
+  'Panaji': ['Altinho', 'Campal', 'Fontainhas'],
+  'Madgaon': ['Fatorda', 'Colva Road', 'Borda'],
     'Mumbai': ['Bandra', 'Mahim', 'South Bombay', 'Andheri', 'Juhu', 'Powai'],
     'Pune': [
       'Kothrud',
