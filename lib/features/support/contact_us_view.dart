@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tc_sa/common/index.dart'; // Assuming SAppBar and SIcon are here
-import 'package:url_launcher/url_launcher.dart'; // Add 'url_launcher' to your pubspec.yaml
+import 'package:url_launcher/url_launcher.dart';
 
-class SupportView extends StatelessWidget {
-  const SupportView({super.key});
+class ContactUsView extends StatelessWidget {
+  const ContactUsView({super.key});
 
-  // Helper method to launch URLs
+  // Helper method to launch URLs (mailto, maps, etc.)
   Future<void> _launchUrl(String url) async {
     final Uri uri = Uri.parse(url);
-    if (!await launchUrl(uri)) {
-      // You can show a toast or snackbar here if it fails
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      // You can show a toast or snackbar here if launching fails
       print('Could not launch $url');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // --- Placeholder Information ---
+    const String supportEmail = "synzy2025@gmail.com";
+    const String officeAddress = "Banglore,india";
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: SAppBar(
-        title: "Support & About",
+        title: "Contact Us",
         leading: SIcon(
           icon: Icons.keyboard_arrow_left,
           onTap: () => context.pop(),
@@ -32,14 +36,14 @@ class SupportView extends StatelessWidget {
           // --- Main Header ---
           Center(
             child: Icon(
-              Icons.support_agent,
+              Icons.contact_mail_outlined,
               size: 80,
               color: Colors.amber.shade700,
             ),
           ),
           const SizedBox(height: 16),
           Text(
-            'How can we help?',
+            'Get in Touch',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
@@ -47,7 +51,7 @@ class SupportView extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Get in touch with us for any admission consultancy or app questions.',
+            'We would love to hear from you. Here’s how you can reach us.',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Colors.grey.shade600,
@@ -57,24 +61,31 @@ class SupportView extends StatelessWidget {
           const Divider(),
           const SizedBox(height: 24),
 
-          // --- Admission Consultancy Card ---
+          // --- App Support Card ---
           _TitledCard(
-            title: "Admission Consultancy",
-            icon: Icons.school_outlined,
+            title: "App Support",
+            icon: Icons.email_outlined,
             iconColor: Colors.amber.shade800,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'For any admission-related consultancy, feel free to contact us directly. Our team is ready to assist you with your application process.',
+                  'For technical issues, bug reports, or feedback about the app, please send us an email.',
                   style: TextStyle(fontSize: 16, height: 1.5),
                 ),
                 const SizedBox(height: 20),
-                // --- EMAIL ROW REMOVED ---
-                _ContactRow(
-                  icon: Icons.phone_outlined,
-                  text: '+91 84314 72672',
-                  onTap: () => _launchUrl('tel:+918431472672'),
+                Center(
+                  child: ElevatedButton.icon(
+                    onPressed: () => _launchUrl('mailto:$supportEmail?subject=App Support Request'),
+                    icon: const Icon(Icons.mail_outline),
+                    label: const Text('Mail Us'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber.shade700,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -82,29 +93,42 @@ class SupportView extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          // --- About App Card ---
+          // --- Address Card ---
           _TitledCard(
-            title: "About Our App",
-            icon: Icons.info_outline,
+            title: "Our Office",
+            icon: Icons.location_on_outlined,
             iconColor: Colors.blueGrey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'This app is designed to be your one-stop solution for finding the best schools. You can search, filter, and compare schools based on your preferences, and apply directly through the app.',
-                  style: const TextStyle(fontSize: 16, height: 1.5),
+                const Text(
+                  officeAddress,
+                  style: TextStyle(fontSize: 16, height: 1.5),
                 ),
-                const SizedBox(height: 16),
-                Text(
-                  'Version 1.0.0', // You can make this dynamic later
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade500,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                const SizedBox(height: 20),
+          
               ],
             ),
+          ),
+
+          const SizedBox(height: 24),
+          const Divider(),
+          const SizedBox(height: 24),
+
+          // --- Follow Us Section ---
+          Text(
+            'Follow Us',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 20,
+            children: [
+      
+              _SocialIcon(icon: Icons.link_outlined, onTap: () => _launchUrl('https://www.linkedin.com/company/talentsconnectss/')),
+            ],
           ),
         ],
       ),
@@ -112,19 +136,14 @@ class SupportView extends StatelessWidget {
   }
 }
 
-// --- Local Helper Widget for Titled Cards ---
+// --- Local Helper Widgets ---
+
 class _TitledCard extends StatelessWidget {
   final String title;
   final IconData icon;
   final Widget child;
   final Color iconColor;
-
-  const _TitledCard({
-    required this.title,
-    required this.icon,
-    required this.child,
-    this.iconColor = Colors.black,
-  });
+  const _TitledCard({required this.title, required this.icon, required this.child, this.iconColor = Colors.black});
 
   @override
   Widget build(BuildContext context) {
@@ -161,39 +180,19 @@ class _TitledCard extends StatelessWidget {
   }
 }
 
-// --- Local Helper Widget for Clickable Contact Info ---
-class _ContactRow extends StatelessWidget {
+class _SocialIcon extends StatelessWidget {
   final IconData icon;
-  final String text;
   final VoidCallback onTap;
-
-  const _ContactRow({required this.icon, required this.text, required this.onTap});
+  const _SocialIcon({required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Row(
-          children: [
-            Icon(icon, color: Colors.blue.shade700, size: 22),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                text,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return IconButton(
+      onPressed: onTap,
+      icon: Icon(icon),
+      iconSize: 32,
+      color: Colors.grey.shade700,
+      splashRadius: 24,
     );
   }
 }

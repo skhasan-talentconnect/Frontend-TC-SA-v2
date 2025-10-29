@@ -21,10 +21,12 @@ class ProfileViewModel extends ViewStateProvider {
       icon: Icon(Icons.assignment, color: Colors.black),
     ),
     ProfileTileModel(
+      path: RouteNames.contactUs,
       name: 'Contact Us',
       icon: Icon(Icons.phone, color: Colors.black),
     ),
     ProfileTileModel(
+      path:RouteNames.support ,
       name: 'Support',
       icon: Icon(Icons.support_agent, color: Colors.black),
     ),

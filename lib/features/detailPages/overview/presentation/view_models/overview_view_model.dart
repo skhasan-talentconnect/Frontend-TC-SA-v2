@@ -19,22 +19,17 @@ class OverviewViewModel extends ViewStateProvider {
   List<SchoolModel> get schoolsByStatus => _schoolsByStatus;
 
   String? _message;
-
   String? get message => _message;
 
   bool _isSaving = false;
-
   bool get isSaving => _isSaving;
-
   set isSaving(bool value) {
     _isSaving = value;
     notifyListeners();
   }
 
   AppliedFormModel? _appliedFormModel;
-
   AppliedFormModel? get appliedFormModel => _appliedFormModel;
-
   set appliedFormModel(AppliedFormModel? model) {
     _appliedFormModel = model;
     notifyListeners();
@@ -42,11 +37,12 @@ class OverviewViewModel extends ViewStateProvider {
 
   bool get isApplied => appliedFormModel?.isApplied ?? false;
 
+  // --------------------------------------------------------------------------
+  // GET SINGLE SCHOOL
+  // --------------------------------------------------------------------------
   Future<Failure?> getSchoolsById({required String id}) async {
     Failure? failure;
     setViewState(ViewState.busy);
-
-    print('<-----> HIT ${_school?.toJson()}');
 
     final result = await _service.getSchoolById(id: id);
 
@@ -57,9 +53,7 @@ class OverviewViewModel extends ViewStateProvider {
         school = null;
       },
       (res) {
-        print('<-----> HIT ${_school?.toJson()}');
         school = res;
-        print('<-----> After HIT ${_school?.toJson()}');
         _message = null;
       },
     );
@@ -69,6 +63,9 @@ class OverviewViewModel extends ViewStateProvider {
     return failure;
   }
 
+  // --------------------------------------------------------------------------
+  // GET SCHOOLS BY STATUS
+  // --------------------------------------------------------------------------
   Future<Failure?> getSchoolsByStatus({required String status}) async {
     Failure? failure;
     setViewState(ViewState.busy);
@@ -92,6 +89,9 @@ class OverviewViewModel extends ViewStateProvider {
     return failure;
   }
 
+  // --------------------------------------------------------------------------
+  // ADD SCHOOL
+  // --------------------------------------------------------------------------
   Future<Failure?> addSchools({
     required String name,
     required String description,
@@ -111,6 +111,10 @@ class OverviewViewModel extends ViewStateProvider {
     List<String>? specialist,
     List<String>? tags,
     String? website,
+    // 🆕 Added social handles
+    String? instagramHandle,
+    String? twitterHandle,
+    String? linkedinHandle,
   }) async {
     Failure? failure;
     setViewState(ViewState.busy);
@@ -134,6 +138,10 @@ class OverviewViewModel extends ViewStateProvider {
       tags: tags,
       website: website,
       status: status,
+      // 🆕 include new handles
+      instagramHandle: instagramHandle,
+      twitterHandle: twitterHandle,
+      linkedinHandle: linkedinHandle,
     );
 
     result.fold(
@@ -142,7 +150,7 @@ class OverviewViewModel extends ViewStateProvider {
         _message = failure?.message;
       },
       (res) {
-        _school = res; // optional: return created school
+        _school = res;
         _message = null;
       },
     );
@@ -152,6 +160,9 @@ class OverviewViewModel extends ViewStateProvider {
     return failure;
   }
 
+  // --------------------------------------------------------------------------
+  // UPDATE SCHOOL
+  // --------------------------------------------------------------------------
   Future<Failure?> updateSchools({
     required String id,
     required String name,
@@ -172,6 +183,10 @@ class OverviewViewModel extends ViewStateProvider {
     List<String>? specialist,
     List<String>? tags,
     String? website,
+    // 🆕 Added social handles
+    String? instagramHandle,
+    String? twitterHandle,
+    String? linkedinHandle,
   }) async {
     Failure? failure;
     setViewState(ViewState.busy);
@@ -196,6 +211,10 @@ class OverviewViewModel extends ViewStateProvider {
       tags: tags,
       website: website,
       status: status,
+      // 🆕 include new handles
+      instagramHandle: instagramHandle,
+      twitterHandle: twitterHandle,
+      linkedinHandle: linkedinHandle,
     );
 
     result.fold(
@@ -204,7 +223,7 @@ class OverviewViewModel extends ViewStateProvider {
         _message = failure?.message;
       },
       (res) {
-        _school = res; // keep local state in sync
+        _school = res;
         _message = null;
       },
     );
@@ -214,6 +233,9 @@ class OverviewViewModel extends ViewStateProvider {
     return failure;
   }
 
+  // --------------------------------------------------------------------------
+  // DELETE SCHOOL
+  // --------------------------------------------------------------------------
   Future<Failure?> deleteSchools({required String id}) async {
     Failure? failure;
     setViewState(ViewState.busy);
@@ -226,7 +248,7 @@ class OverviewViewModel extends ViewStateProvider {
         _message = failure?.message;
       },
       (res) {
-        _message = res; // optional: “deleted successfully”
+        _message = res;
         if (_school?.id == id) _school = null;
       },
     );
@@ -236,6 +258,9 @@ class OverviewViewModel extends ViewStateProvider {
     return failure;
   }
 
+  // --------------------------------------------------------------------------
+  // CHECK IF APPLIED
+  // --------------------------------------------------------------------------
   Future<Failure?> getIsAppliedSchool({required String schoolId}) async {
     Failure? failure;
     setViewState(ViewState.busy);

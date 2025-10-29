@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
+import 'package:tc_sa/gen/assets.gen.dart';
 
 class SDrawer extends StatefulWidget {
   const SDrawer({super.key});
@@ -28,14 +29,14 @@ class _SDrawerState extends State<SDrawer> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Image.network(
-                          'https://s3.us-east-1.amazonaws.com/cdn.designcrowd.com/blog/25-famous-app-logos-to-keep-you-amused/Snapchat.png',
+                        Image.asset(
+                          Assets.images.appLogo.path,
                           height: 30,
                           width: 30,
                         ),
                         SizedBox(width: 8),
                         Text(
-                          'SmartSchoolFinder',
+                          'Synzy',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -63,42 +64,42 @@ class _SDrawerState extends State<SDrawer> {
                         navigateTo(RouteNames.home);
                       },
                     ),
-                    SListTile(
-                      leading: Icon(Icons.insights),
-                      label: 'Insights',
-                      onTap: () {
-                        navigateTo(RouteNames.blogs);
-                      },
-                    ),
-                    SListTile(
-                      leading: Icon(Icons.bookmark),
-                      label: 'Shortlisted',
-                      trailing: Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: SColor.primaryColor,
-                        ),
-                        child: Text(
-                          '${getIt<AppStateProvider>().shortlistSchools.length}',
-                          style: STextStyles.s12W600.copyWith(
-                            color: SColor.textColor,
-                          ),
-                        ),
-                      ),
-                      onTap: () {
-                        if (getIt<AppStateProvider>().isGuest) {
-                          Toasts.showInfoToast(context, message: 'Please Login');
-                        } else {
-                          navigateTo(RouteNames.shortlist);
-                        }
-                      },
-                    ),
+                    // SListTile(
+                    //   leading: Icon(Icons.insights),
+                    //   label: 'Insights',
+                    //   onTap: () {
+                    //     navigateTo(RouteNames.blogs);
+                    //   },
+                    // ),
+                    // SListTile(
+                    //   leading: Icon(Icons.bookmark),
+                    //   label: 'Shortlisted',
+                    //   trailing: Container(
+                    //     padding: EdgeInsets.all(8),
+                    //     decoration: BoxDecoration(
+                    //       shape: BoxShape.circle,
+                    //       color: SColor.primaryColor,
+                    //     ),
+                    //     child: Text(
+                    //       '${getIt<AppStateProvider>().shortlistSchools.length}',
+                    //       style: STextStyles.s12W600.copyWith(
+                    //         color: SColor.textColor,
+                    //       ),
+                    //     ),
+                    //   ),
+                    //   onTap: () {
+                    //     if (getIt<AppStateProvider>().isGuest) {
+                    //       Toasts.showInfoToast(context, message: 'Please Login');
+                    //     } else {
+                    //       navigateTo(RouteNames.shortlist);
+                    //     }
+                    //   },
+                    // ),
                     SListTile(
                       leading: Icon(Icons.support_agent),
                       label: 'Support',
                       onTap: () {
-                        navigateTo(RouteNames.blogs);
+                        navigateTo(RouteNames.support);
                       },
                     ),
                     SListTile(
@@ -149,7 +150,7 @@ class _SDrawerState extends State<SDrawer> {
   }
 
   void navigateTo(String path) {
-    context.goNamed(path);
+    context.pushNamed(path);
     context.pop();
   }
 }
