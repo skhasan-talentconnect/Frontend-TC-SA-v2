@@ -218,16 +218,16 @@ class AppRouter {
           );
         },
       ),
-      GoRoute(
-        path: '/activity',
-        name: RouteNames.activity,
-        builder: (context, state) => const ActivityView(),
-      ),
-      GoRoute(
-        path: '/amenity',
-        name: RouteNames.amenity,
-        builder: (context, state) => const AmenitiesView(),
-      ),
+      // GoRoute(
+      //   path: '/activity',
+      //   name: RouteNames.activity,
+      //   builder: (context, state) => const ActivityView(),
+      // ),
+      // GoRoute(
+      //   path: '/amenity',
+      //   name: RouteNames.amenity,
+      //   builder: (context, state) => const AmenitiesView(),
+      // ),
       GoRoute(
         path: '/support',
         name: RouteNames.support,
@@ -238,60 +238,60 @@ class AppRouter {
         name: RouteNames.contactUs,
         builder: (context, state) => ContactUsView(),
       ),
-      GoRoute(
-        path: '/infrastructure',
-        name:
-            RouteNames
-                .infrastructure, // Make sure to define RouteNames.infrastructure
-        builder: (context, state) => const InfrastructureView(),
-      ),
-      // Add routes for OtherDetails and FeesScholarship here as well
-      GoRoute(
-        path: '/other-details',
-        name: RouteNames.otherDetails,
-        builder: (context, state) => const OtherDetailsView(),
-      ),
-      GoRoute(
-        path: '/academics',
-        name: RouteNames.academics,
-        builder: (context, state) => const AcademicsView(schoolId: ''),
-      ),
-      GoRoute(
-        path: '/faculty',
-        name: RouteNames.faculty, // Add this to your RouteNames class
-        builder: (context, state) => const FacultyView(),
-      ),
-      GoRoute(
-        path: '/technology-adoption',
-        name: RouteNames.techAdaption, // Add this to your RouteNames class
-        builder: (context, state) => const TechnologyAdoptionView(),
-      ),
-      GoRoute(
-        path: '/safety-security',
-        name: RouteNames.safetySecurity, // Add this to your RouteNames class
-        builder: (context, state) => const SafetyAndSecurityView(),
-      ),
-      GoRoute(
-        path: '/fees-scholarship',
-        name: RouteNames.feeAndScholarship,
-        builder: (context, state) => const FeesAndScholarshipsView(),
-      ),
-      // ✅ Reviews
-      GoRoute(
-        path: '/review',
-        name: RouteNames.review,
-        builder: (context, state) => ReviewsView(),
-      ),
-      GoRoute(
-        path: '/international-exposure',
-        name: RouteNames.internationalExposure,
-        builder: (context, state) => const InternationalExposureView(),
-      ),
-      GoRoute(
-        path: '/admission-timeline',
-        name: RouteNames.admissionTimeline, // Add this to your RouteNames class
-        builder: (context, state) => const AdmissionTimelineView(),
-      ),
+      // GoRoute(
+      //   path: '/infrastructure',
+      //   name:
+      //       RouteNames
+      //           .infrastructure, // Make sure to define RouteNames.infrastructure
+      //   builder: (context, state) => const InfrastructureView(),
+      // ),
+      // // Add routes for OtherDetails and FeesScholarship here as well
+      // GoRoute(
+      //   path: '/other-details',
+      //   name: RouteNames.otherDetails,
+      //   builder: (context, state) => const OtherDetailsView(),
+      // ),
+      // GoRoute(
+      //   path: '/academics',
+      //   name: RouteNames.academics,
+      //   builder: (context, state) => const AcademicsView(schoolId: ''),
+      // ),
+      // GoRoute(
+      //   path: '/faculty',
+      //   name: RouteNames.faculty, // Add this to your RouteNames class
+      //   builder: (context, state) => const FacultyView(),
+      // ),
+      // GoRoute(
+      //   path: '/technology-adoption',
+      //   name: RouteNames.techAdaption, // Add this to your RouteNames class
+      //   builder: (context, state) => const TechnologyAdoptionView(),
+      // ),
+      // GoRoute(
+      //   path: '/safety-security',
+      //   name: RouteNames.safetySecurity, // Add this to your RouteNames class
+      //   builder: (context, state) => const SafetyAndSecurityView(),
+      // ),
+      // GoRoute(
+      //   path: '/fees-scholarship',
+      //   name: RouteNames.feeAndScholarship,
+      //   builder: (context, state) => const FeesAndScholarshipsView(),
+      // ),
+      // // ✅ Reviews
+      // GoRoute(
+      //   path: '/review',
+      //   name: RouteNames.review,
+      //   builder: (context, state) => ReviewsView(schoolId: '',),
+      // ),
+      // GoRoute(
+      //   path: '/international-exposure',
+      //   name: RouteNames.internationalExposure,
+      //   builder: (context, state) => const InternationalExposureView(),
+      // ),
+      // GoRoute(
+      //   path: '/admission-timeline',
+      //   name: RouteNames.admissionTimeline, // Add this to your RouteNames class
+      //   builder: (context, state) => const AdmissionTimelineView(),
+      // ),
       GoRoute(
         path: '/compare-with',
         name: RouteNames.compareWith,

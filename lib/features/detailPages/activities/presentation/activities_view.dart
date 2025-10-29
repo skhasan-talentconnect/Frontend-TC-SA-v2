@@ -12,61 +12,62 @@ import 'package:tc_sa/features/detailPages/activities/presentation/widgets/activ
 import 'package:tc_sa/features/detailPages/activities/presentation/widgets/icon_mapper.dart';
 
 class ActivityView extends StatefulWidget {
-  const ActivityView({super.key});
-
+  const ActivityView({super.key, required this.schoolId});
+  final String schoolId;
   @override
   State<ActivityView> createState() => _ActivityViewState();
 }
 
 class _ActivityViewState extends State<ActivityView> {
   final ActivitiesViewModel _vm = ActivitiesViewModel();
-  String _schoolId = '';
-  bool _parsed = false;
-
+  // String _schoolId = '';
+  // bool _parsed = false;
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_parsed) return;
-    _parsed = true;
-
-    final state = GoRouterState.of(context);
-    final extra = state.extra;
-
-    // --- NAVIGATION BUG FIX ---
-    // Handle both Map (from OverviewView) and String (if pushed directly)
-    if (extra is Map) {
-      _schoolId = extra['schoolId'] as String? ?? '';
-    } else if (extra is String && extra.trim().isNotEmpty) {
-      _schoolId = extra.trim();
-    }
-    // --- END FIX ---
-
-    if (_schoolId.isEmpty) {
-      _schoolId = (state.pathParameters['id'] ?? '').toString();
-    }
-    if (_schoolId.isEmpty) {
-      _schoolId = (state.uri.queryParameters['id'] ?? '').toString();
-    }
-
-    if (_schoolId.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _vm.getActivitiesBySchoolId(schoolId: _schoolId);
+void initState(){
+    super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+        _vm.getActivitiesBySchoolId(schoolId: widget.schoolId);
       });
-    } else {
-      _vm.setViewState(ViewState.complete);
-    }
-  }
+}
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_parsed) return;
+  //   _parsed = true;
+
+  //   final state = GoRouterState.of(context);
+  //   final extra = state.extra;
+
+  //   // --- NAVIGATION BUG FIX ---
+  //   // Handle both Map (from OverviewView) and String (if pushed directly)
+  //   if (extra is Map) {
+  //     _schoolId = extra['schoolId'] as String? ?? '';
+  //   } else if (extra is String && extra.trim().isNotEmpty) {
+  //     _schoolId = extra.trim();
+  //   }
+  //   // --- END FIX ---
+
+  //   if (_schoolId.isEmpty) {
+  //     _schoolId = (state.pathParameters['id'] ?? '').toString();
+  //   }
+  //   if (_schoolId.isEmpty) {
+  //     _schoolId = (state.uri.queryParameters['id'] ?? '').toString();
+  //   }
+
+  //   if (_schoolId.isNotEmpty) {
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       _vm.getActivitiesBySchoolId(schoolId: _schoolId);
+  //     });
+  //   } else {
+  //     _vm.setViewState(ViewState.complete);
+  //   }
+  // }
 
   Future<void> _refresh() async {
-    if (_schoolId.isEmpty) return;
-    await _vm.getActivitiesBySchoolId(schoolId: _schoolId);
+    if (widget.schoolId.isEmpty) return;
+    await _vm.getActivitiesBySchoolId(schoolId: widget.schoolId);
   }
 
-  @override
-  void dispose() {
-    _vm.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,21 +83,21 @@ class _ActivityViewState extends State<ActivityView> {
 
           return Scaffold(
             backgroundColor: Colors.white,
-            appBar: SAppBar(
-              leading: SIcon(
-                icon: Icons.keyboard_arrow_left,
-                // --- NAVIGATION FIX ---
-                onTap: () => context.pop(),
-              ),
-              title: "School Activities",
-            ),
+            // appBar: SAppBar(
+            //   leading: SIcon(
+            //     icon: Icons.keyboard_arrow_left,
+            //     // --- NAVIGATION FIX ---
+            //     onTap: () => context.pop(),
+            //   ),
+            //   title: "School Activities",
+            // ),
             body: RefreshIndicator(
               onRefresh: _refresh,
               // --- THEME UPDATE ---
               color: Colors.amber, 
               child: Builder(
                 builder: (_) {
-                  if (_schoolId.isEmpty) {
+                  if (widget.schoolId.isEmpty) {
                     return const Center(child: Text('Missing school context'));
                   }
                   if (state == ViewState.busy) {

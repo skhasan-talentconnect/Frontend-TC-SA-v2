@@ -56,6 +56,10 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
   final appStateProvider = getIt<AppStateProvider>();
 
   final PageController pageController = PageController();
+
+  final ScrollController _tabScrollController = ScrollController();
+late List<GlobalKey> _tabKeys;
+
   final ValueNotifier<bool> isSaved = ValueNotifier(false);
 
   @override
@@ -69,6 +73,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
       await overviewViewModel.getIsAppliedSchool(schoolId: widget.schoolId);
       isSaved.value = getIt<AppStateProvider>().isSaved(widget.schoolId);
     });
+     _tabKeys = List.generate(DetailTabEnum.values.length, (_) => GlobalKey());
   }
 
   @override
@@ -453,10 +458,14 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                                 horizontal: 8,
                               ),
                               scrollDirection: Axis.horizontal,
+                              controller: _tabScrollController,
+
                               child: Row(
                                 children: [
                                   ...DetailTabEnum.values.map((tab) {
                                     return GestureDetector(
+                                              key: _tabKeys[tab.index], // 👈 Assign GlobalKey here
+
                                       onTap: () {
                                         vm.currentPageIndex = tab.index;
                                         pageController.animateToPage(
@@ -464,6 +473,8 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                                           duration: Duration(milliseconds: 500),
                                           curve: Curves.ease,
                                         );
+                                                           _scrollToTab(tab.index);
+
                                       },
                                       child: CustomTab(
                                         tabName: tab.label,
@@ -485,22 +496,23 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                 controller: pageController,
                 onPageChanged: (index) {
                   vm.currentPageIndex = index;
+                    _scrollToTab(index);
                 },
                 children: [
                   OverviewTab(school: vm.school as SchoolModel),
                   AcademicsView(schoolId: widget.schoolId),
-                  FacultyView(),
-                  InfrastructureView(),
-                  TechnologyAdoptionView(),
-                  ActivityView(),
-                  SafetyAndSecurityView(),
-                  InternationalExposureView(),
-                  FeesAndScholarshipsView(),
-                  AdmissionTimelineView(),
-                  AmenitiesView(),
+                  FacultyView(schoolId: widget.schoolId),
+                  InfrastructureView(schoolId: widget.schoolId),
+                  TechnologyAdoptionView(schoolId: widget.schoolId),
+                  ActivityView(schoolId: widget.schoolId),
+                  SafetyAndSecurityView(schoolId: widget.schoolId),
+                  InternationalExposureView(schoolId: widget.schoolId),
+                  FeesAndScholarshipsView(schoolId: widget.schoolId),
+                  AdmissionTimelineView(schoolId: widget.schoolId),
+                  AmenitiesView(schoolId: widget.schoolId),
                   AlumniView(schoolId: widget.schoolId),
-                  ReviewsView(),
-                  OtherDetailsView(),
+                  ReviewsView(schoolId: widget.schoolId),
+                  OtherDetailsView(schoolId: widget.schoolId),
                 ],
               ),
             ),
@@ -509,6 +521,47 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
       ),
     );
   }
+void _scrollToTab(int index) {
+  final keyContext = _tabKeys[index].currentContext;
+  if (keyContext == null) return;
+
+  // Get the RenderBox for the tab
+  final box = keyContext.findRenderObject() as RenderBox?;
+  if (box == null) return;
+
+  // ✅ Correct way: use RenderObject of the scroll view as ancestor
+  final scrollBox = _tabScrollController.position.context.notificationContext
+      ?.findRenderObject() as RenderBox?;
+
+  if (scrollBox == null) return;
+
+  // Get tab’s position relative to the scrollable area
+  final position = box.localToGlobal(Offset.zero, ancestor: scrollBox);
+
+  final tabLeft = position.dx;
+  final tabRight = tabLeft + box.size.width;
+  final viewportWidth = scrollBox.size.width;
+
+  double targetOffset = _tabScrollController.offset;
+
+  // Scroll left if hidden on the left
+  if (tabLeft < 0) {
+    targetOffset += tabLeft - 16;
+  }
+  // Scroll right if hidden on the right
+  else if (tabRight > viewportWidth) {
+    targetOffset += (tabRight - viewportWidth) + 16;
+  }
+
+  _tabScrollController.animateTo(
+    targetOffset.clamp(
+      _tabScrollController.position.minScrollExtent,
+      _tabScrollController.position.maxScrollExtent,
+    ),
+    duration: const Duration(milliseconds: 300),
+    curve: Curves.easeOut,
+  );
+}
 
   int calculateMatchPercentage({
     required SchoolModel school,

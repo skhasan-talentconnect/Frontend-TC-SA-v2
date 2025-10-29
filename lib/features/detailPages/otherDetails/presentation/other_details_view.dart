@@ -9,61 +9,64 @@ import 'package:tc_sa/features/detailPages/otherDetails/presentation/widgets/sch
 import 'package:tc_sa/features/detailPages/otherDetails/presentation/widgets/special_needs_card.dart';
 
 class OtherDetailsView extends StatefulWidget {
-  const OtherDetailsView({super.key});
-
+  const OtherDetailsView({super.key, required this.schoolId});
+  final String schoolId;
   @override
   State<OtherDetailsView> createState() => _OtherDetailsViewState();
 }
 
 class _OtherDetailsViewState extends State<OtherDetailsView> {
   final OtherDetailsViewModel _vm = OtherDetailsViewModel();
-  String _schoolId = '';
-  String _schoolName = 'Other Details';
-  bool _isInitialized = false;
+  // String _schoolId = '';
+  // String _schoolName = 'Other Details';
+  // bool _isInitialized = false;
 
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_isInitialized) return;
+  //   _isInitialized = true;
+
+  //   final extra = GoRouterState.of(context).extra;
+  //   if (extra is Map) {
+  //     _schoolId = extra['schoolId'] as String? ?? '';
+  //     _schoolName = extra['schoolName'] as String? ?? 'Other Details';
+  //   }
+
+  //   if (_schoolId.isNotEmpty) {
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       _vm.getOtherDetailsBySchoolId(schoolId: _schoolId);
+  //     });
+  //   }
+  // }
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isInitialized) return;
-    _isInitialized = true;
-
-    final extra = GoRouterState.of(context).extra;
-    if (extra is Map) {
-      _schoolId = extra['schoolId'] as String? ?? '';
-      _schoolName = extra['schoolName'] as String? ?? 'Other Details';
-    }
-
-    if (_schoolId.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _vm.getOtherDetailsBySchoolId(schoolId: _schoolId);
+void initState(){
+    super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+        _vm.getOtherDetailsBySchoolId(schoolId: widget.schoolId);
       });
-    }
-  }
+}
 
   Future<void> _refresh() async {
-    if (_schoolId.isNotEmpty) {
-      await _vm.getOtherDetailsBySchoolId(schoolId: _schoolId);
+    if (widget.schoolId.isNotEmpty) {
+      await _vm.getOtherDetailsBySchoolId(schoolId: widget.schoolId);
     }
   }
 
-  @override
-  void dispose() {
-    _vm.dispose();
-    super.dispose();
-  }
+
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
-        appBar: SAppBar(
-          title: _schoolName,
-          leading: SIcon(
-            icon: Icons.keyboard_arrow_left,
-            onTap: () => context.pop(),
-          ),
-        ),
+        // appBar: SAppBar(
+        //   title: _schoolName,
+        //   leading: SIcon(
+        //     icon: Icons.keyboard_arrow_left,
+        //     onTap: () => context.pop(),
+        //   ),
+        // ),
         body: Consumer<OtherDetailsViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy) {

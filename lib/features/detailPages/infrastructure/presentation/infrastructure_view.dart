@@ -11,42 +11,54 @@ import 'widgets/detail_tile.dart';
 
 
 class InfrastructureView extends StatefulWidget {
-  const InfrastructureView({super.key});
-
+  const InfrastructureView({super.key, required this.schoolId});
+final String schoolId;
   @override
   State<InfrastructureView> createState() => _InfrastructureViewState();
 }
 
 class _InfrastructureViewState extends State<InfrastructureView> {
   final InfrastructureViewModel _vm = InfrastructureViewModel();
-  String _schoolId = '';
-  String _schoolName = 'Infrastructure'; // Default title
-  bool _isInitialized = false;
+
+  // String _schoolId = '';
+  // String _schoolName = 'Infrastructure'; // Default title
+  // bool _isInitialized = false;
+
+
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_isInitialized) return;
+  //   _isInitialized = true;
+
+  //   final extra = GoRouterState.of(context).extra;
+  //   if (extra is Map) {
+  //     _schoolId = extra['schoolId'] as String? ?? '';
+  //     _schoolName = extra['schoolName'] as String? ?? 'Infrastructure';
+  //   }
+
+  //   if (_schoolId.isNotEmpty) {
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       _vm.getInfrastructureBySchoolId(schoolId: _schoolId);
+  //     });
+  //   } else {
+  //     _vm.setViewState(ViewState.complete);
+  //   }
+  // }
+
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isInitialized) return;
-    _isInitialized = true;
-
-    final extra = GoRouterState.of(context).extra;
-    if (extra is Map) {
-      _schoolId = extra['schoolId'] as String? ?? '';
-      _schoolName = extra['schoolName'] as String? ?? 'Infrastructure';
-    }
-
-    if (_schoolId.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _vm.getInfrastructureBySchoolId(schoolId: _schoolId);
+  void initState(){
+    super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+        _vm.getInfrastructureBySchoolId(schoolId: widget.schoolId);
       });
-    } else {
-      _vm.setViewState(ViewState.complete);
-    }
+    
   }
 
   Future<void> _refresh() async {
-    if (_schoolId.isNotEmpty) {
-      await _vm.getInfrastructureBySchoolId(schoolId: _schoolId);
+    if (widget.schoolId.isNotEmpty) {
+      await _vm.getInfrastructureBySchoolId(schoolId: widget.schoolId);
     }
   }
 
@@ -62,19 +74,19 @@ class _InfrastructureViewState extends State<InfrastructureView> {
       value: _vm,
       child: Scaffold(
         backgroundColor: Colors.white, // Set background to white
-        appBar: SAppBar(
-          title: _schoolName,
-          leading: SIcon(
-            icon: Icons.keyboard_arrow_left,
-            onTap: () => context.pop(),
-          ),
-        ),
+        // appBar: SAppBar(
+        //   title: _schoolName,
+        //   leading: SIcon(
+        //     icon: Icons.keyboard_arrow_left,
+        //     onTap: () => context.pop(),
+        //   ),
+        // ),
         body: Consumer<InfrastructureViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy) {
               return const Center(child: SLoadingIndicator(color: Colors.amber));
             }
-            if (_schoolId.isEmpty) {
+            if (widget.schoolId.isEmpty) {
               return const Center(child: Text("School ID was not provided."));
             }
             final model = vm.infrastructure;
