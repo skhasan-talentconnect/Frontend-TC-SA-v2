@@ -22,6 +22,10 @@ abstract class OverviewDataSource {
     List<String>? specialist,
     List<String>? tags,
     String? website,
+    // 🆕 Added optional fields for social handles
+    String? instagramHandle,
+    String? twitterHandle,
+    String? linkedinHandle,
   });
 
   ResultFuture<SchoolModel?> updateSchool({
@@ -44,6 +48,10 @@ abstract class OverviewDataSource {
     List<String>? specialist,
     List<String>? tags,
     String? website,
+    // 🆕 Added optional fields for social handles
+    String? instagramHandle,
+    String? twitterHandle,
+    String? linkedinHandle,
   });
 
   ResultFuture<String?> deleteSchool({required String id});

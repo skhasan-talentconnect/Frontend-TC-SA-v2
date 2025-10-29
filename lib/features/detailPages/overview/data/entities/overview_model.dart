@@ -23,6 +23,11 @@ class SchoolModel {
   String? updatedAt;
   int? iV;
 
+  // 🆕 Added social handles
+  String? instagramHandle;
+  String? twitterHandle;
+  String? linkedinHandle;
+
   SchoolModel({
     this.id,
     this.name,
@@ -47,6 +52,9 @@ class SchoolModel {
     this.createdAt,
     this.updatedAt,
     this.iV,
+    this.instagramHandle,
+    this.twitterHandle,
+    this.linkedinHandle,
   });
 
   factory SchoolModel.fromJson(Map<String, dynamic> json) => SchoolModel(
@@ -73,6 +81,9 @@ class SchoolModel {
         createdAt: json['createdAt'] as String?,
         updatedAt: json['updatedAt'] as String?,
         iV: json['__v'] is int ? json['__v'] as int : int.tryParse('${json['__v'] ?? ''}'),
+        instagramHandle: json['instagramHandle'] as String?,
+        twitterHandle: json['twitterHandle'] as String?,
+        linkedinHandle: json['linkedinHandle'] as String?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -99,5 +110,8 @@ class SchoolModel {
         'createdAt': createdAt,
         'updatedAt': updatedAt,
         '__v': iV,
+        'instagramHandle': instagramHandle,
+        'twitterHandle': twitterHandle,
+        'linkedinHandle': linkedinHandle,
       };
 }

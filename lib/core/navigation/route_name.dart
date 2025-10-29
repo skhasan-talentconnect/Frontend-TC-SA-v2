@@ -22,7 +22,8 @@ class RouteNames {
   static const String preferences = 'preferences';
   static const String addEditPreferences = 'add-edit-preferences';
   static const String settings = 'settings';
-
+static const String support = 'support';
+static const String contactUs ='contactUs';
   //school
   static const String school = 'school';
   static const String overview = 'overview';

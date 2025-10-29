@@ -142,31 +142,39 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final filterSelectedColor = SColor.primaryColor;
+ @override
+Widget build(BuildContext context) {
+  final filterSelectedColor = SColor.primaryColor;
 
-    return Scaffold(
-      appBar: SAppBar(
-        leading: SIcon(
-          icon: Icons.keyboard_arrow_left,
-          onTap: () {
-            context.pop();
-          },
-        ),
-        title: 'Search',
+  return Scaffold(
+    appBar: SAppBar(
+      leading: SIcon(
+        icon: Icons.keyboard_arrow_left,
+        onTap: () => context.pop(),
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        children: [
-          SearchTextField(
-            controller: searchCtrl,
-            cursorColor: filterSelectedColor,
-            onSearchPressed: _handleSearch,
-          ),
+      title: 'Search',
+    ),
 
-          const SizedBox(height: 12),
+    // 🔍 floating search button
+    floatingActionButton: FloatingActionButton(
+      backgroundColor: SColor.primaryColor,
+      onPressed: _handleSearch,
+      child: const Icon(
+        Icons.search,
+        color: Colors.white,
+      ),
+    ),
 
+    body: ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      children: [
+        SearchTextField(
+          controller: searchCtrl,
+          cursorColor: filterSelectedColor,
+          onSearchPressed: _handleSearch,
+        ),
+
+        const SizedBox(height: 12),
           // States
           Container(
             padding: const EdgeInsets.all(12),

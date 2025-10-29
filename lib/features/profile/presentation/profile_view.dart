@@ -96,6 +96,23 @@ class _ProfileViewState extends State<ProfileView> {
                                 title: vm.user?.email ?? '-',
                                 titleTextStyles: STextStyles.s14W400,
                               ),
+                              Row(children: [SText(
+                                icon: Icons.location_city,
+                                iconSize: 20,
+                                title: vm.user?.city ?? '-',
+                                titleTextStyles: STextStyles.s14W400,
+                              ),
+                              SizedBox(width: 4),
+                               SText(
+                                title: vm.user?.state ?? '-',
+                                titleTextStyles: STextStyles.s14W400,
+                              ),],) ,
+                               SText(
+                                icon: Icons.person,
+                                iconSize: 20,
+                                title: vm.user?.gender?? '-',
+                                titleTextStyles: STextStyles.s14W400,
+                              ),
                             ],
                           ),
                         ],
@@ -225,12 +242,14 @@ class _ProfileViewState extends State<ProfileView> {
                         padding: EdgeInsets.symmetric(vertical: 8),
                         shrinkWrap: true,
                         children: [
-                          ProfileListItem(
+                          ProfileListItem.navigator(
+                            path: vm.routes[3].path,
                             label: vm.routes[3].name,
                             leading: vm.routes[3].icon,
                           ),
                           Divider(),
-                          ProfileListItem(
+                          ProfileListItem.navigator(
+                            path: vm.routes[4].path,
                             label: vm.routes[4].name,
                             leading: vm.routes[4].icon,
                           ),

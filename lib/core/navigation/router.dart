@@ -42,6 +42,8 @@ import 'package:tc_sa/features/registerSchool/register_school_view.dart';
 import 'package:tc_sa/features/search/data/entities/search_query.dart';
 import 'package:tc_sa/features/search/presentation/search_result_view.dart';
 import 'package:tc_sa/features/search/presentation/search_view.dart';
+import 'package:tc_sa/features/support/contact_us_view.dart';
+import 'package:tc_sa/features/support/support_view.dart';
 import 'package:tc_sa/features/users/shortlist/index.dart';
 
 class AppRouter {
@@ -218,6 +220,16 @@ class AppRouter {
         path: '/amenity',
         name: RouteNames.amenity,
         builder: (context, state) => const AmenitiesView(),
+      ),
+         GoRoute(
+        path: '/support',
+        name: RouteNames.support,
+        builder: (context, state) => SupportView(),
+      ),
+         GoRoute(
+        path: '/contactUs',
+        name: RouteNames.contactUs,
+        builder: (context, state) =>ContactUsView(),
       ),
 GoRoute(
   path: '/infrastructure',

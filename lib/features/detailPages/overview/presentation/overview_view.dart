@@ -12,6 +12,7 @@ import 'package:tc_sa/features/detailPages/overview/presentation/view_models/ove
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/info_chip_widget.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/quick_highlight_widget.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/recruiter_chip_widget.dart';
+import 'package:tc_sa/features/detailPages/overview/presentation/widgets/social_presense.dart';
 import 'package:tc_sa/features/users/shortlist/index.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,19 +31,22 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
 
   final List<String> _tabs = const [
     "Overview",
-    "Amenities",
-    "Infrastructure",
-    "Other Details",
-    "Fees And Scholarship",
-    "Activities",
-    "Aluminis",
-    "Reviews",
     'academics',
+    'faculty details',
+    "Infrastructure",
     'techAdaption',
+    "Activities",
     'safetySecurity',
     'internationalExposure',
+    "Fees And Scholarship",
+
     'admission Timeline',
-    'faculty details',
+    "Amenities",
+
+    "Aluminis",
+    "Reviews",
+
+    "Other Details",
   ];
 
   final MyFormViewModel myFormViewModel = MyFormViewModel();
@@ -65,98 +69,133 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
     });
   }
 
-  void _handleTabSelection() {
-    if (_tabController.indexIsChanging) {
-      final name = _vm.school?.name ?? 'School';
-      final id = widget.schoolId;
-      switch (_tabController.index) {
-        case 1:
-          context.pushNamed(
-            RouteNames.amenity,
-            extra: {'schoolId': widget.schoolId, 'schoolName': name},
-          );
-          break;
-        case 2: // New case for Infrastructure
-          context.pushNamed(
-            RouteNames.infrastructure,
-            extra: {'schoolId': widget.schoolId, 'schoolName': name},
-          );
-          break;
-        case 3: // New case for Other Details
-          context.pushNamed(
-            RouteNames.otherDetails,
-            extra: {'schoolId': widget.schoolId, 'schoolName': name},
-          );
-          break;
-        case 4: // New case for Fees & Scholarship
-          context.pushNamed(
-            RouteNames.feeAndScholarship,
-            extra: {'schoolId': widget.schoolId, 'schoolName': name},
-          );
-          break;
-        case 5:
-          context.pushNamed(RouteNames.activity, extra: widget.schoolId);
-          break;
-        case 6:
-          context.pushNamed(
-            RouteNames.alumini,
-            extra: {
-              'schoolId': widget.schoolId,
-              'schoolName': _vm.school?.name ?? 'School',
-            },
-          );
-          break;
-        case 7:
-          context.pushNamed(
-            RouteNames.review,
-            extra: {'schoolId': widget.schoolId, 'schoolName': name},
-          );
-          break;
-        case 8:
-          context.pushNamed(
-            RouteNames.academics,
-            extra: {'schoolId': widget.schoolId, 'schoolName': name},
-          );
-        case 9:
-          context.pushNamed(
-            RouteNames.techAdaption,
-            extra: {'schoolId': widget.schoolId, 'schoolName': name},
-          );
-          break;
-        case 10:
-          context.pushNamed(
-            RouteNames.safetySecurity,
-            extra: {'schoolId': widget.schoolId, 'schoolName': name},
-          );
-          break;
-        case 11:
-          context.pushNamed(
-            RouteNames.internationalExposure,
-            extra: {'schoolId': widget.schoolId, 'schoolName': name},
-          );
-          break;
-        case 12:
-          context.pushNamed(
-            RouteNames.admissionTimeline,
-            extra: {'schoolId': widget.schoolId, 'schoolName': name},
-          );
-          break;
-        case 13:
-          context.pushNamed(
-            RouteNames.faculty,
-            extra: {'schoolId': widget.schoolId, 'schoolName': name},
-          );
-          break;
-        default:
-      }
-      if (_tabController.index != 0) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) _tabController.index = 0;
-        });
-      }
+
+void _handleTabSelection() {
+  if (_tabController.indexIsChanging) {
+    final name = _vm.school?.name ?? 'School';
+    final id = widget.schoolId; // Using id for clarity, though not strictly needed here
+    
+    switch (_tabController.index) {
+      // Index 0: "Overview" - typically not routed, handled by default
+      
+      // Index 1: 'academics'
+      case 1:
+        context.pushNamed(
+          RouteNames.academics,
+          extra: {'schoolId': widget.schoolId, 'schoolName': name},
+        );
+        break;
+        
+      // Index 2: 'faculty details'
+      case 2:
+        context.pushNamed(
+          RouteNames.faculty,
+          extra: {'schoolId': widget.schoolId, 'schoolName': name},
+        );
+        break;
+        
+      // Index 3: "Infrastructure"
+      case 3:
+        context.pushNamed(
+          RouteNames.infrastructure,
+          extra: {'schoolId': widget.schoolId, 'schoolName': name},
+        );
+        break;
+        
+      // Index 4: 'techAdaption'
+      case 4:
+        context.pushNamed(
+          RouteNames.techAdaption,
+          extra: {'schoolId': widget.schoolId, 'schoolName': name},
+        );
+        break;
+        
+      // Index 5: "Activities"
+      case 5:
+        // Assuming RouteNames.activity expects a map with schoolId and schoolName
+        context.pushNamed(
+          RouteNames.activity, 
+          extra: {'schoolId': widget.schoolId, 'schoolName': name},
+        );
+        break;
+        
+      // Index 6: 'safetySecurity'
+      case 6:
+        context.pushNamed(
+          RouteNames.safetySecurity,
+          extra: {'schoolId': widget.schoolId, 'schoolName': name},
+        );
+        break;
+        
+      // Index 7: 'internationalExposure'
+      case 7:
+        context.pushNamed(
+          RouteNames.internationalExposure,
+          extra: {'schoolId': widget.schoolId, 'schoolName': name},
+        );
+        break;
+        
+      // Index 8: "Fees And Scholarship"
+      case 8:
+        context.pushNamed(
+          RouteNames.feeAndScholarship,
+          extra: {'schoolId': widget.schoolId, 'schoolName': name},
+        );
+        break;
+        
+      // Index 9: 'admission Timeline'
+      case 9:
+        context.pushNamed(
+          RouteNames.admissionTimeline,
+          extra: {'schoolId': widget.schoolId, 'schoolName': name},
+        );
+        break;
+        
+      // Index 10: "Amenities"
+      case 10:
+        context.pushNamed(
+          RouteNames.amenity,
+          extra: {'schoolId': widget.schoolId, 'schoolName': name},
+        );
+        break;
+        
+      // Index 11: "Aluminis"
+      case 11:
+        context.pushNamed(
+          RouteNames.alumini,
+          extra: {'schoolId': widget.schoolId, 'schoolName': name},
+        );
+        break;
+        
+      // Index 12: "Reviews"
+      case 12:
+        context.pushNamed(
+          RouteNames.review,
+          extra: {'schoolId': widget.schoolId, 'schoolName': name},
+        );
+        break;
+        
+      // Index 13: "Other Details"
+      case 13:
+        context.pushNamed(
+          RouteNames.otherDetails,
+          extra: {'schoolId': widget.schoolId, 'schoolName': name},
+        );
+        break;
+        
+      default:
+        // Handle any unmapped or default case (like Index 0: Overview)
+        break;
+    }
+
+    // This logic ensures that after pushing a new route, the tab is reset to "Overview" (Index 0).
+    if (_tabController.index != 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _tabController.index = 0;
+      });
     }
   }
-
+}
   @override
   void dispose() {
     _tabController.removeListener(_handleTabSelection);
@@ -737,53 +776,109 @@ class _OverviewTab extends StatelessWidget {
           const SizedBox(height: 20),
 
           // Fee Range Section
+          // Fee Range Section - Minimalist Ticker Design
           _TitledCard(
-            title: "Fee Structure",
+            title: "Annual Fee Structure",
             icon: Icons.account_balance_wallet_outlined,
-            iconColor: Colors.amber,
+            iconColor: Colors.amber.shade700,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.stretch, // Stretch children to fill width
               children: [
-                // Display the full fee range text
-                Text(
-                  school.feeRange ?? "Not Available",
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.amber,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  "Annual Fee Range",
-                  style: TextStyle(color: Colors.amber, fontSize: 14),
-                ),
-                const SizedBox(height: 16),
-
-                // Visual bar for the range
-                Container(
-                  height: 8,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    gradient: LinearGradient(
-                      colors: [Colors.white, Colors.amber],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                // Low and High labels
+                // 1. MAIN DISPLAY ROW: Low and High Fees
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(
-                      "Lowest: $feeLow",
-                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    // Low Fee Column (Subtle)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "MINIMUM",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey.shade500, // Very subtle label
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          feeLow ?? "N/A", // Use the parsed low value
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black87, // Dark text for contrast
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "Highest: $feeHigh",
-                      style: const TextStyle(fontWeight: FontWeight.w500),
+
+                    // High Fee Column (Amber Highlight)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "MAXIMUM",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color:
+                                Colors
+                                    .amber
+                                    .shade700, // Amber label for emphasis
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          feeHigh ?? "N/A", // Use the parsed high value
+                          style: TextStyle(
+                            fontSize: 32, // Larger size for max fee
+                            fontWeight: FontWeight.w800,
+                            color:
+                                Colors.amber.shade700, // The main amber focus
+                          ),
+                        ),
+                      ],
                     ),
                   ],
+                ),
+
+                const SizedBox(height: 20),
+
+                // 2. VISUAL BAR: Simple and clean indicator
+                Container(
+                  height: 4, // Very thin bar
+                  decoration: BoxDecoration(
+                    color:
+                        Colors
+                            .amber
+                            .shade700, // Solid amber color for the range
+                    borderRadius: BorderRadius.circular(2),
+                    // Add a subtle drop shadow for depth
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.amber.withOpacity(0.3),
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // 3. FULL RANGE TEXT (Detail)
+                Text(
+                  'Full range: ${school.feeRange ?? "Not Available"}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey.shade600,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
               ],
             ),
@@ -814,6 +909,16 @@ class _OverviewTab extends StatelessWidget {
                       .toList(),
             ),
           ),
+
+          const SizedBox(height: 20),
+
+_TitledCard(
+  title: "Online Presence",
+  icon: Icons.public_outlined,
+  iconColor: Colors.indigoAccent,
+  child: SocialLinksSection(school: school),
+),
+
         ],
       ),
     );
