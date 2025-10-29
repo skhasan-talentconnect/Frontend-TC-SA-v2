@@ -1,6 +1,4 @@
 // lib/core/navigation/app_router.dart
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +26,6 @@ import 'package:tc_sa/features/detailPages/feeAndScholarship/presentation/fees_s
 import 'package:tc_sa/features/detailPages/infrastructure/presentation/infrastructure_view.dart';
 import 'package:tc_sa/features/detailPages/internationalExposure/presentation/international_view.dart';
 import 'package:tc_sa/features/detailPages/otherDetails/presentation/other_details_view.dart';
-import 'package:tc_sa/features/detailPages/overview/presentation/overview_view.dart';
 import 'package:tc_sa/features/detailPages/reviews/presentation/reviews_view.dart';
 import 'package:tc_sa/features/detailPages/safetySecurity/presentation/safetySecurity_view.dart';
 import 'package:tc_sa/features/detailPages/technologyAdaption/presentation/tech_adaption_view.dart';
@@ -47,6 +44,8 @@ import 'package:tc_sa/features/search/presentation/search_view.dart';
 import 'package:tc_sa/features/support/contact_us_view.dart';
 import 'package:tc_sa/features/support/support_view.dart';
 import 'package:tc_sa/features/users/shortlist/index.dart';
+
+import '../../features/detailPages/overview/presentation/school_detail_view.dart';
 
 class AppRouter {
   GoRouter router = GoRouter(
@@ -178,28 +177,23 @@ class AppRouter {
       //   },
       // ),
       // ✅ School details
-GoRoute(
-  path: '/overview',
-  name: RouteNames.overview,
-  builder: (context, state) {
-    final extras = state.extra as Map<String, dynamic>?;
-    final schoolId = extras?['schoolId'] as String?;
-   final distance = extras?['distance'] as String?;
+      GoRoute(
+        path: '/overview',
+        name: RouteNames.overview,
+        builder: (context, state) {
+          final extras = state.extra as Map<String, dynamic>?;
+          final schoolId = extras?['schoolId'] as String?;
+          final distance = extras?['distance'] as String?;
 
-    if (schoolId == null) {
-      return NotFoundView(isSchool: true);
-    }
+          if (schoolId == null) {
+            return NotFoundView(isSchool: true);
+          }
 
-    print('<------>ID: $schoolId | Distance: $distance');
+          print('<------>ID: $schoolId | Distance: $distance');
 
-    return SchoolDetailView(
-      schoolId: schoolId,
-      distance: distance,
-    );
-  },
-),
-
-
+          return SchoolDetailView2(schoolId: schoolId, distance: distance);
+        },
+      ),
 
       GoRoute(
         path: '/alumini',
@@ -224,77 +218,80 @@ GoRoute(
           );
         },
       ),
+      // GoRoute(
+      //   path: '/activity',
+      //   name: RouteNames.activity,
+      //   builder: (context, state) => const ActivityView(),
+      // ),
+      // GoRoute(
+      //   path: '/amenity',
+      //   name: RouteNames.amenity,
+      //   builder: (context, state) => const AmenitiesView(),
+      // ),
       GoRoute(
-        path: '/activity',
-        name: RouteNames.activity,
-        builder: (context, state) => const ActivityView(),
-      ),
-      GoRoute(
-        path: '/amenity',
-        name: RouteNames.amenity,
-        builder: (context, state) => const AmenitiesView(),
-      ),
-         GoRoute(
         path: '/support',
         name: RouteNames.support,
         builder: (context, state) => SupportView(),
       ),
-         GoRoute(
+      GoRoute(
         path: '/contactUs',
         name: RouteNames.contactUs,
-        builder: (context, state) =>ContactUsView(),
+        builder: (context, state) => ContactUsView(),
       ),
-GoRoute(
-  path: '/infrastructure',
-  name: RouteNames.infrastructure, // Make sure to define RouteNames.infrastructure
-  builder: (context, state) => const InfrastructureView(),
-),
-// Add routes for OtherDetails and FeesScholarship here as well
-GoRoute(
-  path: '/other-details',
-  name: RouteNames.otherDetails,
-  builder: (context, state) => const OtherDetailsView(),
-),
-GoRoute(
-  path: '/academics',
-  name: RouteNames.academics, 
-  builder: (context, state) => const AcademicsView(),
-),
-GoRoute(
-  path: '/faculty',
-  name: RouteNames.faculty, // Add this to your RouteNames class
-  builder: (context, state) => const FacultyView(),
-),
-GoRoute(
-  path: '/technology-adoption',
-  name: RouteNames.techAdaption, // Add this to your RouteNames class
-  builder: (context, state) => const TechnologyAdoptionView(),
-),GoRoute(
-  path: '/safety-security',
-  name: RouteNames.safetySecurity, // Add this to your RouteNames class
-  builder: (context, state) => const SafetyAndSecurityView(),
-),
-GoRoute(
-  path: '/fees-scholarship',
-  name: RouteNames.feeAndScholarship,
-  builder: (context, state) => const FeesAndScholarshipsView(),
-),
-      // ✅ Reviews
-      GoRoute(
-        path: '/review',
-        name: RouteNames.review,
-        builder: (context, state) => ReviewsView(),
-      ),
-      GoRoute(
-  path: '/international-exposure',
-  name: RouteNames.internationalExposure, 
-  builder: (context, state) => const InternationalExposureView(),
-),
-GoRoute(
-  path: '/admission-timeline',
-  name: RouteNames.admissionTimeline, // Add this to your RouteNames class
-  builder: (context, state) => const AdmissionTimelineView(),
-),
+      // GoRoute(
+      //   path: '/infrastructure',
+      //   name:
+      //       RouteNames
+      //           .infrastructure, // Make sure to define RouteNames.infrastructure
+      //   builder: (context, state) => const InfrastructureView(),
+      // ),
+      // // Add routes for OtherDetails and FeesScholarship here as well
+      // GoRoute(
+      //   path: '/other-details',
+      //   name: RouteNames.otherDetails,
+      //   builder: (context, state) => const OtherDetailsView(),
+      // ),
+      // GoRoute(
+      //   path: '/academics',
+      //   name: RouteNames.academics,
+      //   builder: (context, state) => const AcademicsView(schoolId: ''),
+      // ),
+      // GoRoute(
+      //   path: '/faculty',
+      //   name: RouteNames.faculty, // Add this to your RouteNames class
+      //   builder: (context, state) => const FacultyView(),
+      // ),
+      // GoRoute(
+      //   path: '/technology-adoption',
+      //   name: RouteNames.techAdaption, // Add this to your RouteNames class
+      //   builder: (context, state) => const TechnologyAdoptionView(),
+      // ),
+      // GoRoute(
+      //   path: '/safety-security',
+      //   name: RouteNames.safetySecurity, // Add this to your RouteNames class
+      //   builder: (context, state) => const SafetyAndSecurityView(),
+      // ),
+      // GoRoute(
+      //   path: '/fees-scholarship',
+      //   name: RouteNames.feeAndScholarship,
+      //   builder: (context, state) => const FeesAndScholarshipsView(),
+      // ),
+      // // ✅ Reviews
+      // GoRoute(
+      //   path: '/review',
+      //   name: RouteNames.review,
+      //   builder: (context, state) => ReviewsView(schoolId: '',),
+      // ),
+      // GoRoute(
+      //   path: '/international-exposure',
+      //   name: RouteNames.internationalExposure,
+      //   builder: (context, state) => const InternationalExposureView(),
+      // ),
+      // GoRoute(
+      //   path: '/admission-timeline',
+      //   name: RouteNames.admissionTimeline, // Add this to your RouteNames class
+      //   builder: (context, state) => const AdmissionTimelineView(),
+      // ),
       GoRoute(
         path: '/compare-with',
         name: RouteNames.compareWith,
@@ -372,6 +369,11 @@ GoRoute(
         path: '/register/otp',
         builder:
             (context, state) => VerifyOtpView(phone: state.extra as String),
+      ),
+      GoRoute(
+        name: RouteNames.noViewFound,
+        path: '/no-view-found',
+        builder: (context, state) => NotFoundView(),
       ),
     ],
     errorBuilder: (_, __) => NotFoundView(),

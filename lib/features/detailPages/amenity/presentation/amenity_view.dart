@@ -11,67 +11,67 @@ import 'package:tc_sa/features/detailPages/amenity/presentation/view_models/amen
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/recruiter_chip_widget.dart';
 
 class AmenitiesView extends StatefulWidget {
-  const AmenitiesView({super.key});
-
+  const AmenitiesView({super.key, required this.schoolId});
+  final String schoolId;
   @override
   State<AmenitiesView> createState() => _AmenitiesViewState();
 }
 
 class _AmenitiesViewState extends State<AmenitiesView> {
   final AmenitiesViewModel _vm = AmenitiesViewModel();
-  String _schoolId = '';
-  String _schoolName = 'School';
-  bool _parsed = false;
-
+  // String _schoolId = '';
+  // String _schoolName = 'School';
+  // bool _parsed = false;
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_parsed) return;
-    _parsed = true;
-
-    final state = GoRouterState.of(context);
-    final extra = state.extra;
-    
-    if (extra is Map) {
-      final id = (extra['schoolId'] ?? '').toString();
-      final name = (extra['schoolName'] ?? '').toString();
-      if (id.isNotEmpty) _schoolId = id;
-      if (name.trim().isNotEmpty) _schoolName = name.trim();
-    } else if (extra is String && extra.trim().isNotEmpty) {
-      _schoolId = extra.trim();
-      _schoolName = 'Amenities';
-    }
-
-    if (_schoolId.isEmpty) {
-      _schoolId = (state.pathParameters['id'] ?? '').toString();
-    }
-    if (_schoolId.isEmpty) {
-      _schoolId = (state.uri.queryParameters['id'] ?? '').toString();
-    }
-    
-    if (_schoolName == 'School' || _schoolName == 'Amenities') {
-       final qpName = (state.uri.queryParameters['name'] ?? '').toString();
-       if (qpName.trim().isNotEmpty) _schoolName = qpName.trim();
-    }
-
-    if (_schoolId.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _vm.getAmenitiesBySchoolId(schoolId: _schoolId);
+void initState(){
+    super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+        _vm.getAmenitiesBySchoolId(schoolId: widget.schoolId);
       });
-    } else {
-      _vm.setViewState(ViewState.complete);
-    }
-  }
+}
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_parsed) return;
+  //   _parsed = true;
+
+  //   final state = GoRouterState.of(context);
+  //   final extra = state.extra;
+    
+  //   if (extra is Map) {
+  //     final id = (extra['schoolId'] ?? '').toString();
+  //     final name = (extra['schoolName'] ?? '').toString();
+  //     if (id.isNotEmpty) _schoolId = id;
+  //     if (name.trim().isNotEmpty) _schoolName = name.trim();
+  //   } else if (extra is String && extra.trim().isNotEmpty) {
+  //     _schoolId = extra.trim();
+  //     _schoolName = 'Amenities';
+  //   }
+
+  //   if (_schoolId.isEmpty) {
+  //     _schoolId = (state.pathParameters['id'] ?? '').toString();
+  //   }
+  //   if (_schoolId.isEmpty) {
+  //     _schoolId = (state.uri.queryParameters['id'] ?? '').toString();
+  //   }
+    
+  //   if (_schoolName == 'School' || _schoolName == 'Amenities') {
+  //      final qpName = (state.uri.queryParameters['name'] ?? '').toString();
+  //      if (qpName.trim().isNotEmpty) _schoolName = qpName.trim();
+  //   }
+
+  //   if (_schoolId.isNotEmpty) {
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       _vm.getAmenitiesBySchoolId(schoolId: _schoolId);
+  //     });
+  //   } else {
+  //     _vm.setViewState(ViewState.complete);
+  //   }
+  // }
 
   Future<void> _refresh() async {
-    if (_schoolId.isEmpty) return;
-    await _vm.getAmenitiesBySchoolId(schoolId: _schoolId);
-  }
-
-  @override
-  void dispose() {
-    _vm.dispose();
-    super.dispose();
+    if (widget.schoolId.isEmpty) return;
+    await _vm.getAmenitiesBySchoolId(schoolId: widget.schoolId);
   }
 
   @override
@@ -99,20 +99,20 @@ class _AmenitiesViewState extends State<AmenitiesView> {
 
           return Scaffold(
             backgroundColor: Colors.white,
-            appBar: SAppBar(
-              leading: SIcon(
-                icon: Icons.keyboard_arrow_left,
-                onTap: () => context.pop(),
-              ),
-              title: _schoolName, // Use the dynamic school name
-            ),
+            // appBar: SAppBar(
+            //   leading: SIcon(
+            //     icon: Icons.keyboard_arrow_left,
+            //     onTap: () => context.pop(),
+            //   ),
+            //   title: _schoolName, // Use the dynamic school name
+            // ),
             body: RefreshIndicator(
               onRefresh: _refresh,
               // --- THEME UPDATE ---
               color: Colors.amber,
               child: Builder(
                 builder: (_) {
-                  if (_schoolId.isEmpty) {
+                  if (widget.schoolId.isEmpty) {
                     return const Center(child: Text('Missing school context'));
                   }
 

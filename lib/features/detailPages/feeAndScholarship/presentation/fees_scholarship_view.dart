@@ -7,8 +7,8 @@ import 'package:tc_sa/features/detailPages/feeAndScholarship/presentation/view_m
 import 'package:tc_sa/features/detailPages/feeAndScholarship/presentation/widgets/scholarship_card.dart';
 
 class FeesAndScholarshipsView extends StatefulWidget {
-  const FeesAndScholarshipsView({super.key});
-
+  const FeesAndScholarshipsView({super.key, required this.schoolId});
+  final String schoolId;
   @override
   State<FeesAndScholarshipsView> createState() =>
       _FeesAndScholarshipsViewState();
@@ -16,40 +16,42 @@ class FeesAndScholarshipsView extends StatefulWidget {
 
 class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
   final FeesAndScholarshipsViewModel _vm = FeesAndScholarshipsViewModel();
-  String _schoolId = '';
-  String _schoolName = 'Fees & Scholarships';
-  bool _isInitialized = false;
-
+  // String _schoolId = '';
+  // String _schoolName = 'Fees & Scholarships';
+  // bool _isInitialized = false;
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isInitialized) return;
-    _isInitialized = true;
-
-    final extra = GoRouterState.of(context).extra;
-    if (extra is Map) {
-      _schoolId = extra['schoolId'] as String? ?? '';
-      _schoolName = extra['schoolName'] as String? ?? 'Fees & Scholarships';
-    }
-
-    if (_schoolId.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _vm.getFeesAndScholarshipsBySchoolId(schoolId: _schoolId);
+void initState(){
+    super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+        _vm.getFeesAndScholarshipsBySchoolId(schoolId: widget.schoolId);
       });
-    }
-  }
+}
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_isInitialized) return;
+  //   _isInitialized = true;
+
+  //   final extra = GoRouterState.of(context).extra;
+  //   if (extra is Map) {
+  //     _schoolId = extra['schoolId'] as String? ?? '';
+  //     _schoolName = extra['schoolName'] as String? ?? 'Fees & Scholarships';
+  //   }
+
+  //   if (_schoolId.isNotEmpty) {
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       _vm.getFeesAndScholarshipsBySchoolId(schoolId: _schoolId);
+  //     });
+  //   }
+  // }
 
   Future<void> _refresh() async {
-    if (_schoolId.isNotEmpty) {
-      await _vm.getFeesAndScholarshipsBySchoolId(schoolId: _schoolId);
+    if (widget.schoolId.isNotEmpty) {
+      await _vm.getFeesAndScholarshipsBySchoolId(schoolId: widget.schoolId);
     }
   }
 
-  @override
-  void dispose() {
-    _vm.dispose();
-    super.dispose();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,13 +60,13 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
       child: Scaffold(
         // --- 1. THEME UPDATE: White background ---
         backgroundColor: Colors.white,
-        appBar: SAppBar(
-          title: _schoolName,
-          leading: SIcon(
-            icon: Icons.keyboard_arrow_left,
-            onTap: () => context.pop(),
-          ),
-        ),
+        // appBar: SAppBar(
+        // //   title: _schoolName,
+        // //   leading: SIcon(
+        // //     icon: Icons.keyboard_arrow_left,
+        // //     onTap: () => context.pop(),
+        // //   ),
+        // // ),
         body: Consumer<FeesAndScholarshipsViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy) {

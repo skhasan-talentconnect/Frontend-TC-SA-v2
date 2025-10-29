@@ -10,43 +10,49 @@ import 'package:timeago/timeago.dart' as timeago;
 
 
 class ReviewsView extends StatefulWidget {
-  const ReviewsView({super.key});
-
+  const ReviewsView({super.key, required this.schoolId});
+  final String schoolId;
   @override
   State<ReviewsView> createState() => _ReviewsViewState();
 }
 
 class _ReviewsViewState extends State<ReviewsView> {
   final ReviewViewModel _vm = ReviewViewModel();
-  String _schoolId = '';
-  String _schoolName = 'Reviews';
-  bool _isInitialized = false;
+  // String _schoolId = '';
+  // String _schoolName = 'Reviews';
+  // bool _isInitialized = false;
 
   // Get the global AppStateProvider instance
   final appStateProvider = getIt<AppStateProvider>();
 
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_isInitialized) return;
+  //   _isInitialized = true;
+
+  //   final extra = GoRouterState.of(context).extra;
+  //   if (extra is Map) {
+  //     _schoolId = extra['schoolId'] as String? ?? '';
+  //     _schoolName = extra['schoolName'] as String? ?? 'Reviews';
+  //   }
+
+  //   if (_schoolId.isNotEmpty) {
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       _vm.getReviews(schoolId: _schoolId);
+  //     });
+  //   }
+  // }
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isInitialized) return;
-    _isInitialized = true;
-
-    final extra = GoRouterState.of(context).extra;
-    if (extra is Map) {
-      _schoolId = extra['schoolId'] as String? ?? '';
-      _schoolName = extra['schoolName'] as String? ?? 'Reviews';
-    }
-
-    if (_schoolId.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _vm.getReviews(schoolId: _schoolId);
+void initState(){
+    super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+        _vm.getReviews(schoolId: widget.schoolId);
       });
-    }
-  }
-
+}
   Future<void> _refresh() async {
-    if (_schoolId.isNotEmpty) {
-      await _vm.getReviews(schoolId: _schoolId);
+    if (widget.schoolId.isNotEmpty) {
+      await _vm.getReviews(schoolId: widget.schoolId);
     }
   }
 
@@ -77,7 +83,7 @@ class _ReviewsViewState extends State<ReviewsView> {
             }
 
             final success = await _vm.addReview(
-              schoolId: _schoolId,
+              schoolId: widget.schoolId,
               studentId: studentId,
               rating: rating,
               text: text,
@@ -100,21 +106,17 @@ class _ReviewsViewState extends State<ReviewsView> {
     );
   }
 
-  @override
-  void dispose() {
-    _vm.dispose();
-    super.dispose();
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
-        appBar: SAppBar(
-          title: _schoolName,
-          leading: SIcon(icon: Icons.keyboard_arrow_left, onTap: () => context.pop()),
-        ),
+        // appBar: SAppBar(
+        //   title: _schoolName,
+        //   leading: SIcon(icon: Icons.keyboard_arrow_left, onTap: () => context.pop()),
+        // ),
         body: Consumer<ReviewViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy && vm.reviews.isEmpty) {

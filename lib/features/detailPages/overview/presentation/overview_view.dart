@@ -23,7 +23,7 @@ class SchoolDetailView extends StatefulWidget {
   });
 
   final String schoolId;
-   final String? distance; 
+  final String? distance;
 
   @override
   State<SchoolDetailView> createState() => _SchoolDetailViewState();
@@ -464,7 +464,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                                   // ✅ Add a small vertical divider (dot) only if distance is available
                                   if (widget.distance != null) ...[
                                     const SizedBox(width: 8),
-                                    
+
                                     const SizedBox(width: 6),
 
                                     // ✅ Distance Text
@@ -709,7 +709,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                         children:
                             _tabs.map((tab) {
                               if (tab == "Overview") {
-                                return _OverviewTab(school: school);
+                                return OverviewTab(school: school);
                               }
                               return Center(
                                 child: Text(
@@ -731,8 +731,8 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
   }
 }
 
-class _OverviewTab extends StatelessWidget {
-  const _OverviewTab({required this.school});
+class OverviewTab extends StatelessWidget {
+  const OverviewTab({required this.school});
   final SchoolModel school;
 
   @override
@@ -842,79 +842,79 @@ class _OverviewTab extends StatelessWidget {
   }
 }
 
-
 class SocialPresenceRow extends StatelessWidget {
   const SocialPresenceRow({required this.school});
   final SchoolModel school;
 
-Future<void> _launch(String url) async {
-  final uri = Uri.parse(url);
-  try {
-    if (!await launchUrl(uri, mode: LaunchMode.platformDefault)) {
-      debugPrint('Could not launch $url');
+  Future<void> _launch(String url) async {
+    final uri = Uri.parse(url);
+    try {
+      if (!await launchUrl(uri, mode: LaunchMode.platformDefault)) {
+        debugPrint('Could not launch $url');
+      }
+    } catch (e) {
+      debugPrint('Launch failed: $e');
     }
-  } catch (e) {
-    debugPrint('Launch failed: $e');
   }
-}
 
- Widget _buildSocial({
-  required IconData icon,
-  required String name,
-  required String? url,
-  required Color color,
-}) {
-  if (url == null || url.isEmpty) return SizedBox.shrink();
+  Widget _buildSocial({
+    required IconData icon,
+    required String name,
+    required String? url,
+    required Color color,
+  }) {
+    if (url == null || url.isEmpty) return SizedBox.shrink();
 
-  return GestureDetector(
-    onTap: () => _launch(url),
-    child: Row(
-      children: [
-        Icon(icon, color: color, size: 22),
-        const SizedBox(width: 6),
-        Text(
-          name,
-          style: TextStyle(
-            color: color,
-            fontWeight: FontWeight.w600,
-            fontSize: 15,
-            decoration: TextDecoration.underline,
+    return GestureDetector(
+      onTap: () => _launch(url),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 22),
+          const SizedBox(width: 6),
+          Text(
+            name,
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
+              decoration: TextDecoration.underline,
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final items = [
-      _buildSocial(
-        icon: Icons.public_outlined,
-        name: 'Website',
-       url: school.website,
+    final items =
+        [
+          _buildSocial(
+            icon: Icons.public_outlined,
+            name: 'Website',
+            url: school.website,
 
-        color: Colors.yellow.shade700,
-      ),
-      _buildSocial(
-        icon: Icons.camera_alt_outlined,
-        name: 'Instagram',
-        url: school.instagramHandle,
-        color: Colors.pink,
-      ),
-      _buildSocial(
-        icon: Icons.alternate_email_outlined,
-        name: 'Twitter',
-      url: school.twitterHandle,
-        color: Colors.blue,
-      ),
-      _buildSocial(
-        icon: Icons.business_outlined,
-        name: 'LinkedIn',
-        url: school.linkedinHandle,
-        color: Colors.indigo,
-      ),
-    ].where((w) => w is! SizedBox).toList(); // Remove empty items
+            color: Colors.yellow.shade700,
+          ),
+          _buildSocial(
+            icon: Icons.camera_alt_outlined,
+            name: 'Instagram',
+            url: school.instagramHandle,
+            color: Colors.pink,
+          ),
+          _buildSocial(
+            icon: Icons.alternate_email_outlined,
+            name: 'Twitter',
+            url: school.twitterHandle,
+            color: Colors.blue,
+          ),
+          _buildSocial(
+            icon: Icons.business_outlined,
+            name: 'LinkedIn',
+            url: school.linkedinHandle,
+            color: Colors.indigo,
+          ),
+        ].where((w) => w is! SizedBox).toList(); // Remove empty items
 
     return Column(
       children: [
@@ -944,11 +944,16 @@ class FeeRangeDisplay extends StatelessWidget {
   final String feeLow;
   final String feeHigh;
   final String feeRange;
-  const FeeRangeDisplay({required this.feeLow, required this.feeHigh, required this.feeRange});
+  const FeeRangeDisplay({
+    required this.feeLow,
+    required this.feeHigh,
+    required this.feeRange,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
       margin: EdgeInsets.zero,
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -962,28 +967,50 @@ class FeeRangeDisplay extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: [
-                      Text('MINIMUM', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                      Text(feeLow, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text(
+                        'MINIMUM',
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                      Text(
+                        feeLow,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                Container(
-                  width: 1,
-                  height: 32,
-                  color: Colors.grey.shade300,
-                ),
+                Container(width: 1, height: 32, color: Colors.grey.shade300),
                 Expanded(
                   child: Column(
                     children: [
-                      Text('MAXIMUM', style: TextStyle(fontSize: 12, color: Colors.amber)),
-                      Text(feeHigh, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.amber.shade700)),
+                      Text(
+                        'MAXIMUM',
+                        style: TextStyle(fontSize: 12, color: Colors.amber),
+                      ),
+                      Text(
+                        feeHigh,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.amber.shade700,
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            Text('Full Range: $feeRange', style: TextStyle(fontSize: 13, color: Colors.grey.shade600, fontStyle: FontStyle.italic)),
+            Text(
+              'Full Range: $feeRange',
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey.shade600,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
           ],
         ),
       ),
@@ -1012,7 +1039,6 @@ class _TitledCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(

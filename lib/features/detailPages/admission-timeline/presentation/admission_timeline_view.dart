@@ -9,47 +9,47 @@ import 'package:tc_sa/features/detailPages/admission-timeline/presentation/widge
 
 
 class AdmissionTimelineView extends StatefulWidget {
-  const AdmissionTimelineView({super.key});
-
+  const AdmissionTimelineView({super.key, required this.schoolId});
+  final String schoolId;
   @override
   State<AdmissionTimelineView> createState() => _AdmissionTimelineViewState();
 }
 
 class _AdmissionTimelineViewState extends State<AdmissionTimelineView> {
   final AdmissionTimelineViewModel _vm = AdmissionTimelineViewModel();
-  String _schoolId = '';
-  String _schoolName = 'Admission Timeline';
-  bool _isInitialized = false;
-
+  // String _schoolId = '';
+  // String _schoolName = 'Admission Timeline';
+  // bool _isInitialized = false;
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isInitialized) return;
-    _isInitialized = true;
-
-    final extra = GoRouterState.of(context).extra;
-    if (extra is Map) {
-      _schoolId = extra['schoolId'] as String? ?? '';
-      _schoolName = extra['schoolName'] as String? ?? 'Admission Timeline';
-    }
-
-    if (_schoolId.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _vm.getAdmissionTimelineBySchoolId(schoolId: _schoolId);
+void initState(){
+    super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+        _vm.getAdmissionTimelineBySchoolId(schoolId: widget.schoolId);
       });
-    }
-  }
+}
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_isInitialized) return;
+  //   _isInitialized = true;
+
+  //   final extra = GoRouterState.of(context).extra;
+  //   if (extra is Map) {
+  //     _schoolId = extra['schoolId'] as String? ?? '';
+  //     _schoolName = extra['schoolName'] as String? ?? 'Admission Timeline';
+  //   }
+
+  //   if (_schoolId.isNotEmpty) {
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       _vm.getAdmissionTimelineBySchoolId(schoolId: _schoolId);
+  //     });
+  //   }
+  // }
 
   Future<void> _refresh() async {
-    if (_schoolId.isNotEmpty) {
-      await _vm.getAdmissionTimelineBySchoolId(schoolId: _schoolId);
+    if (widget.schoolId.isNotEmpty) {
+      await _vm.getAdmissionTimelineBySchoolId(schoolId: widget.schoolId);
     }
-  }
-
-  @override
-  void dispose() {
-    _vm.dispose();
-    super.dispose();
   }
 
   @override
@@ -57,13 +57,13 @@ class _AdmissionTimelineViewState extends State<AdmissionTimelineView> {
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
-        appBar: SAppBar(
-          title: _schoolName,
-          leading: SIcon(
-            icon: Icons.keyboard_arrow_left,
-            onTap: () => context.pop(),
-          ),
-        ),
+        // appBar: SAppBar(
+        //   title: _schoolName,
+        //   leading: SIcon(
+        //     icon: Icons.keyboard_arrow_left,
+        //     onTap: () => context.pop(),
+        //   ),
+        // ),
         body: Consumer<AdmissionTimelineViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy) {

@@ -9,40 +9,47 @@ import 'view_models/faculty_view_model.dart';
 
 
 class FacultyView extends StatefulWidget {
-  const FacultyView({super.key});
-
+  const FacultyView({super.key,required this.schoolId});
+final  String schoolId;
   @override
   State<FacultyView> createState() => _FacultyViewState();
 }
 
 class _FacultyViewState extends State<FacultyView> {
   final FacultyViewModel _vm = FacultyViewModel();
-  String _schoolId = '';
-  String _schoolName = 'Faculty';
-  bool _isInitialized = false;
+  // String _schoolId = '';
+  // String _schoolName = 'Faculty';
+  // bool _isInitialized = false;
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isInitialized) return;
-    _isInitialized = true;
+@override
+  void initState(){
+      super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _vm.getFacultyBySchoolId(schoolId: widget.schoolId);
+    });
+}
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_isInitialized) return;
+  //   _isInitialized = true;
 
-    final extra = GoRouterState.of(context).extra;
-    if (extra is Map) {
-      _schoolId = extra['schoolId'] as String? ?? '';
-      _schoolName = extra['schoolName'] as String? ?? 'Faculty';
-    }
+  //   final extra = GoRouterState.of(context).extra;
+  //   if (extra is Map) {
+  //     _schoolId = extra['schoolId'] as String? ?? '';
+  //     _schoolName = extra['schoolName'] as String? ?? 'Faculty';
+  //   }
 
-    if (_schoolId.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _vm.getFacultyBySchoolId(schoolId: _schoolId);
-      });
-    }
-  }
+  //   if (_schoolId.isNotEmpty) {
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       _vm.getFacultyBySchoolId(schoolId: _schoolId);
+  //     });
+  //   }
+  // }
 
   Future<void> _refresh() async {
-    if (_schoolId.isNotEmpty) {
-      await _vm.getFacultyBySchoolId(schoolId: _schoolId);
+    if (widget.schoolId.isNotEmpty) {
+      await _vm.getFacultyBySchoolId(schoolId: widget.schoolId);
     }
   }
 
@@ -57,13 +64,13 @@ class _FacultyViewState extends State<FacultyView> {
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
-        appBar: SAppBar(
-          title: _schoolName,
-          leading: SIcon(
-            icon: Icons.keyboard_arrow_left,
-            onTap: () => context.pop(),
-          ),
-        ),
+        // appBar: SAppBar(
+        //   title: wschoolName,
+        //   leading: SIcon(
+        //     icon: Icons.keyboard_arrow_left,
+        //     onTap: () => context.pop(),
+        //   ),
+        // ),
         body: Consumer<FacultyViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy) {

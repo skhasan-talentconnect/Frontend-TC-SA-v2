@@ -7,6 +7,15 @@ import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model
 class OverviewViewModel extends ViewStateProvider {
   final OverviewDataSourceImpl _service = OverviewDataSourceImpl();
 
+  int _currentPageIndex = 0;
+
+  int get currentPageIndex => _currentPageIndex;
+
+  set currentPageIndex(int val) {
+    _currentPageIndex = val;
+    notifyListeners();
+  }
+
   // STATE
   SchoolModel? _school;
   SchoolModel? get school => _school;

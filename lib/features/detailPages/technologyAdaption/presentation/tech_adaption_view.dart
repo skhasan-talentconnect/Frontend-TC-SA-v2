@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
@@ -8,40 +7,47 @@ import 'package:tc_sa/features/detailPages/technologyAdaption/presentation/view_
 
 
 class TechnologyAdoptionView extends StatefulWidget {
-  const TechnologyAdoptionView({super.key});
-
+  const TechnologyAdoptionView({super.key,required this.schoolId});
+final String schoolId;
   @override
   State<TechnologyAdoptionView> createState() => _TechnologyAdoptionViewState();
 }
 
 class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
   final TechnologyAdoptionViewModel _vm = TechnologyAdoptionViewModel();
-  String _schoolId = '';
-  String _schoolName = 'Technology Adoption';
-  bool _isInitialized = false;
+  // String _schoolId = '';
+  // String _schoolName = 'Technology Adoption';
+  // bool _isInitialized = false;
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isInitialized) return;
-    _isInitialized = true;
 
-    final extra = GoRouterState.of(context).extra;
-    if (extra is Map) {
-      _schoolId = extra['schoolId'] as String? ?? '';
-      _schoolName = extra['schoolName'] as String? ?? 'Technology Adoption';
-    }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_isInitialized) return;
+  //   _isInitialized = true;
 
-    if (_schoolId.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _vm.getTechnologyAdoptionBySchoolId(schoolId: _schoolId);
+  //   final extra = GoRouterState.of(context).extra;
+  //   if (extra is Map) {
+  //     _schoolId = extra['schoolId'] as String? ?? '';
+  //     _schoolName = extra['schoolName'] as String? ?? 'Technology Adoption';
+  //   }
+
+  //   if (_schoolId.isNotEmpty) {
+     
+  //   }
+  // }
+
+    @override
+    void initState(){
+    super.initState();
+ WidgetsBinding.instance.addPostFrameCallback((_) {
+        _vm.getTechnologyAdoptionBySchoolId(schoolId: widget.schoolId);
       });
     }
-  }
 
   Future<void> _refresh() async {
-    if (_schoolId.isNotEmpty) {
-      await _vm.getTechnologyAdoptionBySchoolId(schoolId: _schoolId);
+    if (widget.schoolId.isNotEmpty) {
+      await _vm.getTechnologyAdoptionBySchoolId(schoolId: widget.schoolId);
     }
   }
 
@@ -58,13 +64,13 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
       child: Scaffold(
         // --- 1. THEME UPDATE ---
         backgroundColor: Colors.white,
-        appBar: SAppBar(
-          title: _schoolName,
-          leading: SIcon(
-            icon: Icons.keyboard_arrow_left,
-            onTap: () => context.pop(),
-          ),
-        ),
+        // appBar: SAppBar(
+        //   title: _schoolName,
+        //   leading: SIcon(
+        //     icon: Icons.keyboard_arrow_left,
+        //     onTap: () => context.pop(),
+        //   ),
+        // ),
         body: Consumer<TechnologyAdoptionViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy) {
