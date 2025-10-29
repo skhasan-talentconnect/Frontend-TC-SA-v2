@@ -50,15 +50,23 @@ class _SchoolCardState extends State<SchoolCard> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
     final appStateProvider = getIt<AppStateProvider>();
+final distance = LocationUtils.getDistanceFromUser(
+  widget.school.latitude,
+  widget.school.longitude,
+);
 
     return ChangeNotifierProvider.value(
       value: shortlistViewModel,
       child: GestureDetector(
-        onTap:
-            () => context.pushNamed(
-              RouteNames.overview,
-              extra: widget.school.schoolId,
-            ),
+       
+onTap: () => context.pushNamed(
+  RouteNames.overview,
+  extra: {
+    'schoolId': widget.school.schoolId,
+  'distance': distance.isNotEmpty ? distance : ' N/A',
+  },
+),
+
 
         child: Align(
           alignment: Alignment.centerLeft,
