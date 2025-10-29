@@ -22,8 +22,8 @@ class RouteNames {
   static const String preferences = 'preferences';
   static const String addEditPreferences = 'add-edit-preferences';
   static const String settings = 'settings';
-static const String support = 'support';
-static const String contactUs ='contactUs';
+  static const String support = 'support';
+  static const String contactUs = 'contactUs';
   //school
   static const String school = 'school';
   static const String overview = 'overview';
@@ -37,9 +37,9 @@ static const String contactUs ='contactUs';
   static const String academics = 'academics';
   static const String techAdaption = 'techAdaption';
   static const String safetySecurity = 'safetySecurity';
-  static const String admissionTimeline='admissionTimeline';
-  static const String internationalExposure='internationalExposure';
-  static const String faculty='faculty';
+  static const String admissionTimeline = 'admissionTimeline';
+  static const String internationalExposure = 'internationalExposure';
+  static const String faculty = 'faculty';
   //features
   static const String compare = 'compare';
   static const String compareWith = 'compare-with';
@@ -60,4 +60,6 @@ static const String contactUs ='contactUs';
   static const String registerSchool = 'registerSchool';
   static const String addNumber = 'addNumber';
   static const String addOtp = 'addOtp';
+
+  static const String noViewFound = 'no-view-found';
 }
