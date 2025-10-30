@@ -57,23 +57,49 @@ class _PrefViewState extends State<PrefView> {
     areaController.text = appStateProvider.user?.area ?? '';
     genderController.text = appStateProvider.user?.gender ?? '';
 
-    if (kDebugMode) {
-      standardController.text = 'PlaySchool';
-      interestController.text = 'Focusing on Academics';
-      schoolTypeController.text = 'Convent';
-      shiftController.text = 'Morning';
-      boardController.text = 'SSC';
-      //Guest Flow
-      stateController.text = 'Maharashtra';
-      selectedState = 'Maharashtra';
-      selectedCity = 'Mumbai';
-      selectedArea = 'Bandra';
-      cityController.text = 'Mumbai';
-      areaController.text = 'Bandra';
-      genderController.text = 'Male';
-    }
+    // if (kDebugMode) {
+    //   standardController.text = 'PlaySchool';
+    //   interestController.text = 'Focusing on Academics';
+    //   schoolTypeController.text = 'Convent';
+    //   shiftController.text = 'Morning';
+    //   boardController.text = 'SSC';
+    //   //Guest Flow
+    //   stateController.text = 'Maharashtra';
+    //   selectedState = 'Maharashtra';
+    //   selectedCity = 'Mumbai';
+    //   selectedArea = 'Bandra';
+    //   cityController.text = 'Mumbai';
+    //   areaController.text = 'Bandra';
+    //   genderController.text = 'Male';
+    // }
+    _setPrefDefaults();
     super.initState();
   }
+void _setPrefDefaults() {
+  final pref = appStateProvider.userPref;
+  if (pref == null) return;
+
+  setState(() {
+    boardController.text = pref.boards ?? '';
+    standardController.text = pref.preferredStandard?.toCapitalise ?? '';
+    interestController.text = pref.interests ?? '';
+    schoolTypeController.text = pref.schoolType?.toCapitalise ?? '';
+    shiftController.text = pref.shift?.toCapitalise ?? '';
+  });
+
+  // Also set guest details if applicable
+  final user = appStateProvider.user;
+  if (user != null) {
+    stateController.text = user.state ?? '';
+    cityController.text = user.city ?? '';
+    areaController.text = user.area ?? '';
+    genderController.text = user.gender ?? '';
+
+    selectedState = user.state;
+    selectedCity = user.city;
+    selectedArea = user.area;
+  }
+}
 
   final PrefViewModel prefViewModel = PrefViewModel();
 
@@ -475,15 +501,28 @@ class _PrefViewState extends State<PrefView> {
                                       successMsg:
                                           'Preferences ${widget.isEdit ? 'Updated' : 'Added'}',
                                       popOnSuccess: false,
-                                      successCallback: () {
+                                      successCallback: () async {
                                         print(
                                           appStateProvider.userPref?.toJson(),
                                         );
-                                        if (!widget.isEdit) {
-                                          context.pushReplacementNamed(
-                                            RouteNames.home,
-                                          );
-                                        }
+                                       Toasts.showSuccessOrFailureToast(
+  context,
+  failure: failure,
+  successMsg: 'Preferences ${widget.isEdit ? 'Updated' : 'Added'}',
+  popOnSuccess: false,
+  successCallback: () {
+    print(appStateProvider.userPref?.toJson());
+
+    // ✅ Only redirect when preferences are updated
+    if (widget.isEdit) {
+      context.pushReplacementNamed(RouteNames.home);
+    } else {
+      // Keep existing behavior for add
+      context.pushReplacementNamed(RouteNames.home);
+    }
+  },
+);
+
                                       },
                                     );
                                   }

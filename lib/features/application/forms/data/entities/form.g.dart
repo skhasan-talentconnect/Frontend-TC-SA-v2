@@ -16,26 +16,28 @@ _Form _$FormFromJson(Map<String, dynamic> json) => _Form(
       json['studId'] == null
           ? null
           : User.fromJson(json['studId'] as Map<String, dynamic>),
+  interviewNote: json['interviewNote'] as String?,
   status: _$JsonConverterFromJson<String, FormStatus>(
     json['status'],
     const FormStatusConverter().fromJson,
   ),
   iV: (json['__v'] as num?)?.toInt(),
-  createdAt: json['createdAt'] as String?,
-  updatedAt: json['updatedAt'] as String?,
+  createdAt: const DateTimeConverter().fromJson(json['createdAt']),
+  updatedAt: const DateTimeConverter().fromJson(json['updatedAt']),
 );
 
 Map<String, dynamic> _$FormToJson(_Form instance) => <String, dynamic>{
   '_id': instance.sId,
   'schoolId': instance.school,
   'studId': instance.user,
+  'interviewNote': instance.interviewNote,
   'status': _$JsonConverterToJson<String, FormStatus>(
     instance.status,
     const FormStatusConverter().toJson,
   ),
   '__v': instance.iV,
-  'createdAt': instance.createdAt,
-  'updatedAt': instance.updatedAt,
+  'createdAt': const DateTimeConverter().toJson(instance.createdAt),
+  'updatedAt': const DateTimeConverter().toJson(instance.updatedAt),
 };
 
 Value? _$JsonConverterFromJson<Json, Value>(

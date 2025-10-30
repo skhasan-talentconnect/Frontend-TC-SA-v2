@@ -94,6 +94,7 @@ class _ProfileViewState extends State<ProfileView> {
                                 icon: Icons.email_outlined,
                                 iconSize: 20,
                                 title: vm.user?.email ?? '-',
+                                 overflow: TextOverflow.ellipsis,
                                 titleTextStyles: STextStyles.s14W400,
                               ),
                               Row(children: [SText(

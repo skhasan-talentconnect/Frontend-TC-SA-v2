@@ -15,22 +15,13 @@ import 'package:tc_sa/features/blogs/index.dart';
 import 'package:tc_sa/features/chatbot/presentation/chatbot_view.dart';
 import 'package:tc_sa/features/compare/presentation/compare_school_view.dart';
 import 'package:tc_sa/features/compare/presentation/compare_with_view.dart';
-import 'package:tc_sa/features/detailPages/academics/presentation/academics_view.dart';
-import 'package:tc_sa/features/detailPages/activities/presentation/activities_view.dart';
-import 'package:tc_sa/features/detailPages/admission-timeline/presentation/admission_timeline_view.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/alumini_view.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/view_models/alumini_view_model.dart';
-import 'package:tc_sa/features/detailPages/amenity/presentation/amenity_view.dart';
-import 'package:tc_sa/features/detailPages/faculty/presentation/faculty_view.dart';
-import 'package:tc_sa/features/detailPages/feeAndScholarship/presentation/fees_scholarship_view.dart';
-import 'package:tc_sa/features/detailPages/infrastructure/presentation/infrastructure_view.dart';
-import 'package:tc_sa/features/detailPages/internationalExposure/presentation/international_view.dart';
-import 'package:tc_sa/features/detailPages/otherDetails/presentation/other_details_view.dart';
-import 'package:tc_sa/features/detailPages/reviews/presentation/reviews_view.dart';
-import 'package:tc_sa/features/detailPages/safetySecurity/presentation/safetySecurity_view.dart';
-import 'package:tc_sa/features/detailPages/technologyAdaption/presentation/tech_adaption_view.dart';
 import 'package:tc_sa/features/home/index.dart';
 import 'package:tc_sa/features/home/presentation/landing_page.dart';
+import 'package:tc_sa/features/notifications/presentation/notification_detail_view.dart';
+import 'package:tc_sa/features/notifications/data/entities/notification.dart'
+    as app;
 import 'package:tc_sa/features/notifications/presentation/notification_view.dart';
 import 'package:tc_sa/features/predictor/index.dart';
 import 'package:tc_sa/features/predictor/presentation/view_models/predictor_view_model.dart';
@@ -228,6 +219,15 @@ class AppRouter {
       //   name: RouteNames.amenity,
       //   builder: (context, state) => const AmenitiesView(),
       // ),
+      GoRoute(
+  path: '/notification-detail',
+  name: RouteNames.notificationDetails,
+  builder: (context, state) {
+    final notification = state.extra as app.Notification;
+return NotificationDetailView(notification: notification);
+  },
+),
+
       GoRoute(
         path: '/support',
         name: RouteNames.support,
