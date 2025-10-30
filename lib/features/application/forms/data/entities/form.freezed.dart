@@ -15,8 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Form {
 
-@JsonKey(name: '_id') String? get sId;@JsonKey(name: 'schoolId') SchoolModel? get school;@JsonKey(name: 'studId') User? get user;//dynamic? applicationForm,
-@FormStatusConverter() FormStatus? get status;@JsonKey(name: '__v') int? get iV; String? get createdAt; String? get updatedAt;
+@JsonKey(name: '_id') String? get sId;@JsonKey(name: 'schoolId') SchoolModel? get school;@JsonKey(name: 'studId') User? get user;@JsonKey(name: 'interviewNote') String? get interviewNote;@FormStatusConverter() FormStatus? get status;@JsonKey(name: '__v') int? get iV;@DateTimeConverter() DateTime? get createdAt;@DateTimeConverter() DateTime? get updatedAt;
 /// Create a copy of Form
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +28,16 @@ $FormCopyWith<Form> get copyWith => _$FormCopyWithImpl<Form>(this as Form, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Form&&(identical(other.sId, sId) || other.sId == sId)&&(identical(other.school, school) || other.school == school)&&(identical(other.user, user) || other.user == user)&&(identical(other.status, status) || other.status == status)&&(identical(other.iV, iV) || other.iV == iV)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Form&&(identical(other.sId, sId) || other.sId == sId)&&(identical(other.school, school) || other.school == school)&&(identical(other.user, user) || other.user == user)&&(identical(other.interviewNote, interviewNote) || other.interviewNote == interviewNote)&&(identical(other.status, status) || other.status == status)&&(identical(other.iV, iV) || other.iV == iV)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,sId,school,user,status,iV,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,sId,school,user,interviewNote,status,iV,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'Form(sId: $sId, school: $school, user: $user, status: $status, iV: $iV, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'Form(sId: $sId, school: $school, user: $user, interviewNote: $interviewNote, status: $status, iV: $iV, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -49,7 +48,7 @@ abstract mixin class $FormCopyWith<$Res>  {
   factory $FormCopyWith(Form value, $Res Function(Form) _then) = _$FormCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? sId,@JsonKey(name: 'schoolId') SchoolModel? school,@JsonKey(name: 'studId') User? user,@FormStatusConverter() FormStatus? status,@JsonKey(name: '__v') int? iV, String? createdAt, String? updatedAt
+@JsonKey(name: '_id') String? sId,@JsonKey(name: 'schoolId') SchoolModel? school,@JsonKey(name: 'studId') User? user,@JsonKey(name: 'interviewNote') String? interviewNote,@FormStatusConverter() FormStatus? status,@JsonKey(name: '__v') int? iV,@DateTimeConverter() DateTime? createdAt,@DateTimeConverter() DateTime? updatedAt
 });
 
 
@@ -66,16 +65,17 @@ class _$FormCopyWithImpl<$Res>
 
 /// Create a copy of Form
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? sId = freezed,Object? school = freezed,Object? user = freezed,Object? status = freezed,Object? iV = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? sId = freezed,Object? school = freezed,Object? user = freezed,Object? interviewNote = freezed,Object? status = freezed,Object? iV = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 sId: freezed == sId ? _self.sId : sId // ignore: cast_nullable_to_non_nullable
 as String?,school: freezed == school ? _self.school : school // ignore: cast_nullable_to_non_nullable
 as SchoolModel?,user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as User?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as User?,interviewNote: freezed == interviewNote ? _self.interviewNote : interviewNote // ignore: cast_nullable_to_non_nullable
+as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as FormStatus?,iV: freezed == iV ? _self.iV : iV // ignore: cast_nullable_to_non_nullable
 as int?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as String?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as String?,
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 /// Create a copy of Form
@@ -172,10 +172,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? sId, @JsonKey(name: 'schoolId')  SchoolModel? school, @JsonKey(name: 'studId')  User? user, @FormStatusConverter()  FormStatus? status, @JsonKey(name: '__v')  int? iV,  String? createdAt,  String? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? sId, @JsonKey(name: 'schoolId')  SchoolModel? school, @JsonKey(name: 'studId')  User? user, @JsonKey(name: 'interviewNote')  String? interviewNote, @FormStatusConverter()  FormStatus? status, @JsonKey(name: '__v')  int? iV, @DateTimeConverter()  DateTime? createdAt, @DateTimeConverter()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Form() when $default != null:
-return $default(_that.sId,_that.school,_that.user,_that.status,_that.iV,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.sId,_that.school,_that.user,_that.interviewNote,_that.status,_that.iV,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -193,10 +193,10 @@ return $default(_that.sId,_that.school,_that.user,_that.status,_that.iV,_that.cr
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? sId, @JsonKey(name: 'schoolId')  SchoolModel? school, @JsonKey(name: 'studId')  User? user, @FormStatusConverter()  FormStatus? status, @JsonKey(name: '__v')  int? iV,  String? createdAt,  String? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? sId, @JsonKey(name: 'schoolId')  SchoolModel? school, @JsonKey(name: 'studId')  User? user, @JsonKey(name: 'interviewNote')  String? interviewNote, @FormStatusConverter()  FormStatus? status, @JsonKey(name: '__v')  int? iV, @DateTimeConverter()  DateTime? createdAt, @DateTimeConverter()  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Form():
-return $default(_that.sId,_that.school,_that.user,_that.status,_that.iV,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.sId,_that.school,_that.user,_that.interviewNote,_that.status,_that.iV,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -213,10 +213,10 @@ return $default(_that.sId,_that.school,_that.user,_that.status,_that.iV,_that.cr
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? sId, @JsonKey(name: 'schoolId')  SchoolModel? school, @JsonKey(name: 'studId')  User? user, @FormStatusConverter()  FormStatus? status, @JsonKey(name: '__v')  int? iV,  String? createdAt,  String? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? sId, @JsonKey(name: 'schoolId')  SchoolModel? school, @JsonKey(name: 'studId')  User? user, @JsonKey(name: 'interviewNote')  String? interviewNote, @FormStatusConverter()  FormStatus? status, @JsonKey(name: '__v')  int? iV, @DateTimeConverter()  DateTime? createdAt, @DateTimeConverter()  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Form() when $default != null:
-return $default(_that.sId,_that.school,_that.user,_that.status,_that.iV,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.sId,_that.school,_that.user,_that.interviewNote,_that.status,_that.iV,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -228,17 +228,17 @@ return $default(_that.sId,_that.school,_that.user,_that.status,_that.iV,_that.cr
 @JsonSerializable()
 
 class _Form implements Form {
-  const _Form({@JsonKey(name: '_id') this.sId, @JsonKey(name: 'schoolId') this.school, @JsonKey(name: 'studId') this.user, @FormStatusConverter() this.status, @JsonKey(name: '__v') this.iV, this.createdAt, this.updatedAt});
+  const _Form({@JsonKey(name: '_id') this.sId, @JsonKey(name: 'schoolId') this.school, @JsonKey(name: 'studId') this.user, @JsonKey(name: 'interviewNote') this.interviewNote, @FormStatusConverter() this.status, @JsonKey(name: '__v') this.iV, @DateTimeConverter() this.createdAt, @DateTimeConverter() this.updatedAt});
   factory _Form.fromJson(Map<String, dynamic> json) => _$FormFromJson(json);
 
 @override@JsonKey(name: '_id') final  String? sId;
 @override@JsonKey(name: 'schoolId') final  SchoolModel? school;
 @override@JsonKey(name: 'studId') final  User? user;
-//dynamic? applicationForm,
+@override@JsonKey(name: 'interviewNote') final  String? interviewNote;
 @override@FormStatusConverter() final  FormStatus? status;
 @override@JsonKey(name: '__v') final  int? iV;
-@override final  String? createdAt;
-@override final  String? updatedAt;
+@override@DateTimeConverter() final  DateTime? createdAt;
+@override@DateTimeConverter() final  DateTime? updatedAt;
 
 /// Create a copy of Form
 /// with the given fields replaced by the non-null parameter values.
@@ -253,16 +253,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Form&&(identical(other.sId, sId) || other.sId == sId)&&(identical(other.school, school) || other.school == school)&&(identical(other.user, user) || other.user == user)&&(identical(other.status, status) || other.status == status)&&(identical(other.iV, iV) || other.iV == iV)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Form&&(identical(other.sId, sId) || other.sId == sId)&&(identical(other.school, school) || other.school == school)&&(identical(other.user, user) || other.user == user)&&(identical(other.interviewNote, interviewNote) || other.interviewNote == interviewNote)&&(identical(other.status, status) || other.status == status)&&(identical(other.iV, iV) || other.iV == iV)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,sId,school,user,status,iV,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,sId,school,user,interviewNote,status,iV,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'Form(sId: $sId, school: $school, user: $user, status: $status, iV: $iV, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'Form(sId: $sId, school: $school, user: $user, interviewNote: $interviewNote, status: $status, iV: $iV, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -273,7 +273,7 @@ abstract mixin class _$FormCopyWith<$Res> implements $FormCopyWith<$Res> {
   factory _$FormCopyWith(_Form value, $Res Function(_Form) _then) = __$FormCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? sId,@JsonKey(name: 'schoolId') SchoolModel? school,@JsonKey(name: 'studId') User? user,@FormStatusConverter() FormStatus? status,@JsonKey(name: '__v') int? iV, String? createdAt, String? updatedAt
+@JsonKey(name: '_id') String? sId,@JsonKey(name: 'schoolId') SchoolModel? school,@JsonKey(name: 'studId') User? user,@JsonKey(name: 'interviewNote') String? interviewNote,@FormStatusConverter() FormStatus? status,@JsonKey(name: '__v') int? iV,@DateTimeConverter() DateTime? createdAt,@DateTimeConverter() DateTime? updatedAt
 });
 
 
@@ -290,16 +290,17 @@ class __$FormCopyWithImpl<$Res>
 
 /// Create a copy of Form
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? sId = freezed,Object? school = freezed,Object? user = freezed,Object? status = freezed,Object? iV = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? sId = freezed,Object? school = freezed,Object? user = freezed,Object? interviewNote = freezed,Object? status = freezed,Object? iV = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_Form(
 sId: freezed == sId ? _self.sId : sId // ignore: cast_nullable_to_non_nullable
 as String?,school: freezed == school ? _self.school : school // ignore: cast_nullable_to_non_nullable
 as SchoolModel?,user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as User?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as User?,interviewNote: freezed == interviewNote ? _self.interviewNote : interviewNote // ignore: cast_nullable_to_non_nullable
+as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as FormStatus?,iV: freezed == iV ? _self.iV : iV // ignore: cast_nullable_to_non_nullable
 as int?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as String?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as String?,
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

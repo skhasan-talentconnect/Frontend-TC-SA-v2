@@ -38,7 +38,7 @@ class FormCard extends StatelessWidget {
                 children: [
                   Text(
                     appliedForm.school?.name ??
-                        'School Name School Name School Name School Name',
+                        'School Name ',
                     style: STextStyles.s16W600.copyWith(
                       color: SColor.secTextColor,
                     ),

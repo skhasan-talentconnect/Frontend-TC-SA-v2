@@ -10,6 +10,8 @@ class SText extends StatelessWidget {
     this.titleTextStyles,
     this.options,
     this.spacing,
+        this.overflow,
+
     super.key,
   });
   final IconData? icon;
@@ -17,6 +19,9 @@ class SText extends StatelessWidget {
   final Color? iconColor;
   final double? spacing;
   final String? title;
+        final TextOverflow? overflow;
+
+  
   final TextStyle? titleTextStyles;
   final List<Widget>? options;
 

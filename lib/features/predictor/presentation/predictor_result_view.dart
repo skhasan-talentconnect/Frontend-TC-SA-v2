@@ -117,7 +117,7 @@ class _SchoolResultPageState extends State<SchoolResultsPage> {
                                   height: 40,
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      context.pushNamed(
+                                      context.goNamed(
                                         RouteNames.preferences,
                                         extra: true,
                                       );
