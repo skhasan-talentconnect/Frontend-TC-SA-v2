@@ -128,20 +128,14 @@ class _HomeViewState extends State<HomeView> {
                     break;
                   case 3:
                     if (appStateProvider.isGuest) {
-                      Toasts.showInfoToast(
-                        context,
-                        message: 'Please Login first',
-                      );
+                      Toasts.showLoginToast(context);
                     } else {
                       context.goNamed(RouteNames.shortlist);
                     }
                     break;
                   case 4:
                     if (appStateProvider.isGuest) {
-                      Toasts.showInfoToast(
-                        context,
-                        message: 'Please Login first',
-                      );
+                      Toasts.showLoginToast(context);
                     } else {
                       context.goNamed(RouteNames.myForms);
                     }

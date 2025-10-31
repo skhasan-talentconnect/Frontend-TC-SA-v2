@@ -58,7 +58,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
   final PageController pageController = PageController();
 
   final ScrollController _tabScrollController = ScrollController();
-late List<GlobalKey> _tabKeys;
+  late List<GlobalKey> _tabKeys;
 
   final ValueNotifier<bool> isSaved = ValueNotifier(false);
 
@@ -73,7 +73,7 @@ late List<GlobalKey> _tabKeys;
       await overviewViewModel.getIsAppliedSchool(schoolId: widget.schoolId);
       isSaved.value = getIt<AppStateProvider>().isSaved(widget.schoolId);
     });
-     _tabKeys = List.generate(DetailTabEnum.values.length, (_) => GlobalKey());
+    _tabKeys = List.generate(DetailTabEnum.values.length, (_) => GlobalKey());
   }
 
   @override
@@ -323,10 +323,8 @@ late List<GlobalKey> _tabKeys;
                                                         onPressed: () async {
                                                           if (appStateProvider
                                                               .isGuest) {
-                                                            Toasts.showInfoToast(
+                                                            Toasts.showLoginToast(
                                                               context,
-                                                              message:
-                                                                  'Please log in to apply',
                                                             );
                                                           } else {
                                                             if (vm.isApplied) {
@@ -464,7 +462,9 @@ late List<GlobalKey> _tabKeys;
                                 children: [
                                   ...DetailTabEnum.values.map((tab) {
                                     return GestureDetector(
-                                              key: _tabKeys[tab.index], // 👈 Assign GlobalKey here
+                                      key:
+                                          _tabKeys[tab
+                                              .index], // 👈 Assign GlobalKey here
 
                                       onTap: () {
                                         vm.currentPageIndex = tab.index;
@@ -473,8 +473,7 @@ late List<GlobalKey> _tabKeys;
                                           duration: Duration(milliseconds: 500),
                                           curve: Curves.ease,
                                         );
-                                                           _scrollToTab(tab.index);
-
+                                        _scrollToTab(tab.index);
                                       },
                                       child: CustomTab(
                                         tabName: tab.label,
@@ -496,7 +495,7 @@ late List<GlobalKey> _tabKeys;
                 controller: pageController,
                 onPageChanged: (index) {
                   vm.currentPageIndex = index;
-                    _scrollToTab(index);
+                  _scrollToTab(index);
                 },
                 children: [
                   OverviewTab(school: vm.school as SchoolModel),
@@ -521,47 +520,50 @@ late List<GlobalKey> _tabKeys;
       ),
     );
   }
-void _scrollToTab(int index) {
-  final keyContext = _tabKeys[index].currentContext;
-  if (keyContext == null) return;
 
-  // Get the RenderBox for the tab
-  final box = keyContext.findRenderObject() as RenderBox?;
-  if (box == null) return;
+  void _scrollToTab(int index) {
+    final keyContext = _tabKeys[index].currentContext;
+    if (keyContext == null) return;
 
-  // ✅ Correct way: use RenderObject of the scroll view as ancestor
-  final scrollBox = _tabScrollController.position.context.notificationContext
-      ?.findRenderObject() as RenderBox?;
+    // Get the RenderBox for the tab
+    final box = keyContext.findRenderObject() as RenderBox?;
+    if (box == null) return;
 
-  if (scrollBox == null) return;
+    // ✅ Correct way: use RenderObject of the scroll view as ancestor
+    final scrollBox =
+        _tabScrollController.position.context.notificationContext
+                ?.findRenderObject()
+            as RenderBox?;
 
-  // Get tab’s position relative to the scrollable area
-  final position = box.localToGlobal(Offset.zero, ancestor: scrollBox);
+    if (scrollBox == null) return;
 
-  final tabLeft = position.dx;
-  final tabRight = tabLeft + box.size.width;
-  final viewportWidth = scrollBox.size.width;
+    // Get tab’s position relative to the scrollable area
+    final position = box.localToGlobal(Offset.zero, ancestor: scrollBox);
 
-  double targetOffset = _tabScrollController.offset;
+    final tabLeft = position.dx;
+    final tabRight = tabLeft + box.size.width;
+    final viewportWidth = scrollBox.size.width;
 
-  // Scroll left if hidden on the left
-  if (tabLeft < 0) {
-    targetOffset += tabLeft - 16;
+    double targetOffset = _tabScrollController.offset;
+
+    // Scroll left if hidden on the left
+    if (tabLeft < 0) {
+      targetOffset += tabLeft - 16;
+    }
+    // Scroll right if hidden on the right
+    else if (tabRight > viewportWidth) {
+      targetOffset += (tabRight - viewportWidth) + 16;
+    }
+
+    _tabScrollController.animateTo(
+      targetOffset.clamp(
+        _tabScrollController.position.minScrollExtent,
+        _tabScrollController.position.maxScrollExtent,
+      ),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
-  // Scroll right if hidden on the right
-  else if (tabRight > viewportWidth) {
-    targetOffset += (tabRight - viewportWidth) + 16;
-  }
-
-  _tabScrollController.animateTo(
-    targetOffset.clamp(
-      _tabScrollController.position.minScrollExtent,
-      _tabScrollController.position.maxScrollExtent,
-    ),
-    duration: const Duration(milliseconds: 300),
-    curve: Curves.easeOut,
-  );
-}
 
   int calculateMatchPercentage({
     required SchoolModel school,

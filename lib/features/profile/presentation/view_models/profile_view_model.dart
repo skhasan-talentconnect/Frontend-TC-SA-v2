@@ -5,11 +5,11 @@ import 'package:tc_sa/features/profile/data/entities/index.dart';
 
 class ProfileViewModel extends ViewStateProvider {
   final List<ProfileTileModel> _routes = [
-    ProfileTileModel(
-      path: RouteNames.registerSchool,
-      name: 'Register Your School',
-      icon: Icon(Icons.book, color: Colors.black),
-    ),
+    // ProfileTileModel(
+    //   path: RouteNames.registerSchool,
+    //   name: 'Register Your School',
+    //   icon: Icon(Icons.book, color: Colors.black),
+    // ),
     ProfileTileModel(
       path: RouteNames.resetPassword,
       name: 'Reset Password',
@@ -26,7 +26,7 @@ class ProfileViewModel extends ViewStateProvider {
       icon: Icon(Icons.phone, color: Colors.black),
     ),
     ProfileTileModel(
-      path:RouteNames.support ,
+      path: RouteNames.support,
       name: 'Support',
       icon: Icon(Icons.support_agent, color: Colors.black),
     ),

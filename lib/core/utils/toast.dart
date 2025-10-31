@@ -12,6 +12,7 @@ class Toasts {
     required Color backgroundClr,
     required Border border,
     required IconData icon,
+    Widget? trailing,
   }) {
     final overlay = Overlay.of(context); // just
 
@@ -58,6 +59,11 @@ class Toasts {
                         maxLines: 2,
                       ),
                     ),
+                    if (trailing != null)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: trailing,
+                      ),
                   ],
                 ),
               ),
@@ -79,13 +85,43 @@ class Toasts {
     });
   }
 
-  static void showInfoToast(BuildContext context, {required String message}) {
+  static void showInfoToast(
+    BuildContext context, {
+    required String message,
+    Widget? trailing,
+  }) {
     _showToast(
       context,
       message: message,
       backgroundClr: Colors.yellow.shade100,
       border: Border.all(color: Colors.orange, width: 1.5),
       icon: Icons.info_outline,
+      trailing: trailing,
+    );
+  }
+
+  static void showLoginToast(BuildContext context) {
+    showInfoToast(
+      context,
+      message: 'Please Login first',
+      trailing: InkWell(
+        splashFactory: NoSplash.splashFactory,
+        onTap: () {
+          context.pushNamed(RouteNames.loginRegister);
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+          decoration: BoxDecoration(
+            color: Colors.orange.shade50,
+            border: Border.all(color: Colors.orange),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Text(
+            'Login',
+            style: STextStyles.s14W600.copyWith(color: Colors.black),
+          ),
+        ),
+      ),
     );
   }
 
