@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:tc_sa/common/models/photo.dart';
 
-import 'package:tc_sa/common/widgets/s_app_bar.dart';
-import 'package:tc_sa/common/widgets/s_icon.dart';
 import 'package:tc_sa/common/widgets/s_loading_indicator.dart';
 import 'package:tc_sa/core/common/view_state_provider.dart';
 
@@ -11,9 +9,10 @@ import 'package:tc_sa/features/detailPages/amenity/presentation/view_models/amen
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/recruiter_chip_widget.dart';
 
 class AmenitiesView extends StatefulWidget {
-  const AmenitiesView({super.key, required this.schoolId});
+  const AmenitiesView({super.key, required this.schoolId,required this.photos});
   final String schoolId;
-  @override
+  final List<Photo> photos;
+    @override
   State<AmenitiesView> createState() => _AmenitiesViewState();
 }
 
@@ -84,10 +83,7 @@ void initState(){
           final model = vm.amenities;
           final isSmallScreen = MediaQuery.of(context).size.width < 600;
 
-          final List<String> photos = [
-            "https://example.com/photo1.jpg",
-            "https://example.com/photo2.jpg",
-          ];
+         
           const String schoolInfo =
               "Sacred Heart Boys School provides excellent facilities and a supportive learning environment for students. Our campus features modern amenities, spacious classrooms, and dedicated staff who prioritize student development and well-being. We offer a comprehensive education with a focus on academic excellence, character building, and extracurricular activities.";
 
@@ -143,18 +139,18 @@ void initState(){
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (photos.isNotEmpty)
+                        if (widget.photos.isNotEmpty)
                           SizedBox(
                             height: 200,
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
-                              itemCount: photos.length,
+                              itemCount: widget.photos.length,
                               separatorBuilder: (_, __) => const SizedBox(width: 10),
                               itemBuilder: (context, index) {
                                 return ClipRRect(
                                   borderRadius: BorderRadius.circular(12.0),
                                   child: Image.network(
-                                    photos[index],
+                                    widget.photos[index].url?? '',
                                     fit: BoxFit.cover,
                                     height: 200,
                                     width: 300,

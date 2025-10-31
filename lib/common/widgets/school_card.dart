@@ -86,13 +86,24 @@ class _SchoolCardState extends State<SchoolCard> {
                   children: [
                     Container(
                       height: 200,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: SColor.primaryColor),
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(8),topRight: Radius.circular(8)),
+                      ),
                       clipBehavior: Clip.none,
                       width: double.infinity,
-                      child: Icon(
-                        Icons.image,
-                        color: Colors.grey.shade700,
-                        size: 48,
-                      ),
+                      child:
+                          widget.school.coverImage?.url != null
+                              ? Image.network(
+                                widget.school.coverImage?.url ?? '',
+                                height: 200,
+                                fit: BoxFit.cover,
+                              )
+                              : Icon(
+                                Icons.image,
+                                color: Colors.grey.shade700,
+                                size: 48,
+                              ),
                     ),
                     Expanded(
                       child: Container(
@@ -367,7 +378,7 @@ class _SchoolCardState extends State<SchoolCard> {
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.white.withOpacity(0.2),
+                                color: Colors.grey.withOpacity(0.8),
                               ),
                               child:
                                   vm.isLoading

@@ -15,6 +15,10 @@ _SchoolCardModel _$SchoolCardModelFromJson(
   feeRange: json['feeRange'] as String?,
   area: json['area'] as String?,
   location: json['location'] as String?,
+  coverImage:
+      json['coverImage'] == null
+          ? null
+          : Photo.fromJson(json['coverImage'] as Map<String, dynamic>),
   board: json['board'] as String?,
   genderType: json['genderType'] as String?,
   score: (json['score'] as num?)?.toDouble(),
@@ -34,6 +38,7 @@ Map<String, dynamic> _$SchoolCardModelToJson(_SchoolCardModel instance) =>
       'feeRange': instance.feeRange,
       'area': instance.area,
       'location': instance.location,
+      'coverImage': instance.coverImage,
       'board': instance.board,
       'genderType': instance.genderType,
       'score': instance.score,

@@ -178,8 +178,8 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                             height: bannerHeight,
                             width: double.infinity,
                             color: Colors.blue[100],
-                            child: const Center(
-                              child: Icon(
+                            child: Expanded(
+                              child: (school.photos?? []).isNotEmpty? Image.network(school.photos?.first.url??'',height: bannerHeight,fit: BoxFit.cover,) :Icon(
                                 Icons.school,
                                 size: 80,
                                 color: Colors.blue,
@@ -508,7 +508,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                   InternationalExposureView(schoolId: widget.schoolId),
                   FeesAndScholarshipsView(schoolId: widget.schoolId),
                   AdmissionTimelineView(schoolId: widget.schoolId),
-                  AmenitiesView(schoolId: widget.schoolId),
+                  AmenitiesView(schoolId: widget.schoolId,photos:school.photos?? []),
                   AlumniView(schoolId: widget.schoolId),
                   ReviewsView(schoolId: widget.schoolId),
                   OtherDetailsView(schoolId: widget.schoolId),

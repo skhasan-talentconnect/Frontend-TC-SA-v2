@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+
 import 'package:provider/provider.dart';
 
-import 'package:tc_sa/common/widgets/s_app_bar.dart';
-import 'package:tc_sa/common/widgets/s_icon.dart';
 import 'package:tc_sa/common/widgets/s_loading_indicator.dart';
 import 'package:tc_sa/core/common/view_state_provider.dart';
 
@@ -128,12 +126,7 @@ void initState(){
                     child: Column(
                       children: [
                         // --- THEME UPDATE: Banner color and icon color ---
-                        Container(
-                          height: 150,
-                          color: Colors.amber.shade100,
-                          alignment: Alignment.center,
-                          child: Icon(Icons.event_available, size: 64, color: Colors.amber.shade800),
-                        ),
+                     
                         Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(
