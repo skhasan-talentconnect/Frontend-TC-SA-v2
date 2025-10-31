@@ -1,3 +1,5 @@
+import 'package:tc_sa/common/index.dart';
+
 class SchoolModel {
   String? id;
   String? name;
@@ -7,6 +9,7 @@ class SchoolModel {
   String? city;
   String? schoolMode;
   String? genderType;
+  List<Photo>? photos;
   List<String>? shifts;
   String? feeRange;
   String? upto;
@@ -42,6 +45,7 @@ class SchoolModel {
     this.upto,
     this.email,
     this.specialist,
+    this.photos,
     this.tags,
     this.website,
     this.rank,
@@ -67,6 +71,7 @@ class SchoolModel {
         schoolMode: json['schoolMode'] as String?,
         genderType: json['genderType'] as String?,
         shifts: (json['shifts'] as List?)?.map((e) => e.toString()).toList() ?? const [],
+        photos: (json['photos'] as List?)?.map((e)=> Photo.fromJson(e as Map<String,dynamic>)).toList() ?? const [],
         feeRange: json['feeRange'] as String?,
         upto: json['upto'] as String?,
         email: json['email'] as String?,
@@ -107,6 +112,7 @@ class SchoolModel {
         'mobileNo': mobileNo,
         'languageMedium': languageMedium ?? const [],
         'transportAvailable': transportAvailable,
+        'photos': photos,
         'createdAt': createdAt,
         'updatedAt': updatedAt,
         '__v': iV,

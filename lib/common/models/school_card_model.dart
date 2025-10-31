@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:tc_sa/common/index.dart';
 
 part 'school_card_model.freezed.dart';
 part 'school_card_model.g.dart';
@@ -12,6 +13,7 @@ abstract class SchoolCardModel with _$SchoolCardModel {
     String? feeRange,
     String? area,
     String? location,
+    Photo? coverImage,
     String? board,
     String? genderType,
     double? score,
