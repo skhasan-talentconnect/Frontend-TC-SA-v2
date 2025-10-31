@@ -94,24 +94,28 @@ class _ProfileViewState extends State<ProfileView> {
                                 icon: Icons.email_outlined,
                                 iconSize: 20,
                                 title: vm.user?.email ?? '-',
-                                 overflow: TextOverflow.ellipsis,
+                                overflow: TextOverflow.ellipsis,
                                 titleTextStyles: STextStyles.s14W400,
                               ),
-                              Row(children: [SText(
-                                icon: Icons.location_city,
-                                iconSize: 20,
-                                title: vm.user?.city ?? '-',
-                                titleTextStyles: STextStyles.s14W400,
+                              Row(
+                                children: [
+                                  SText(
+                                    icon: Icons.location_city,
+                                    iconSize: 20,
+                                    title: vm.user?.city ?? '-',
+                                    titleTextStyles: STextStyles.s14W400,
+                                  ),
+                                  SizedBox(width: 4),
+                                  SText(
+                                    title: vm.user?.state ?? '-',
+                                    titleTextStyles: STextStyles.s14W400,
+                                  ),
+                                ],
                               ),
-                              SizedBox(width: 4),
-                               SText(
-                                title: vm.user?.state ?? '-',
-                                titleTextStyles: STextStyles.s14W400,
-                              ),],) ,
-                               SText(
+                              SText(
                                 icon: Icons.person,
                                 iconSize: 20,
-                                title: vm.user?.gender?? '-',
+                                title: vm.user?.gender ?? '-',
                                 titleTextStyles: STextStyles.s14W400,
                               ),
                             ],
@@ -221,7 +225,7 @@ class _ProfileViewState extends State<ProfileView> {
                               : SizedBox.shrink();
                         },
                         separatorBuilder: (_, __) => Divider(),
-                        itemCount: 3,
+                        itemCount: 2,
                       ),
                     ),
                     SizedBox(height: 12),
@@ -244,15 +248,15 @@ class _ProfileViewState extends State<ProfileView> {
                         shrinkWrap: true,
                         children: [
                           ProfileListItem.navigator(
-                            path: vm.routes[3].path,
-                            label: vm.routes[3].name,
-                            leading: vm.routes[3].icon,
+                            path: vm.routes[2].path,
+                            label: vm.routes[2].name,
+                            leading: vm.routes[2].icon,
                           ),
                           Divider(),
                           ProfileListItem.navigator(
-                            path: vm.routes[4].path,
-                            label: vm.routes[4].name,
-                            leading: vm.routes[4].icon,
+                            path: vm.routes[3].path,
+                            label: vm.routes[3].name,
+                            leading: vm.routes[3].icon,
                           ),
                         ],
                       ),
@@ -277,8 +281,8 @@ class _ProfileViewState extends State<ProfileView> {
                         shrinkWrap: true,
                         children: [
                           ProfileListItem(
-                            label: vm.routes[5].name,
-                            leading: vm.routes[5].icon,
+                            label: vm.routes[4].name,
+                            leading: vm.routes[4].icon,
                             onTap: () async {
                               await SecretRepo.remove('auth_token');
                               getIt<AppStateProvider>().authModel = null;

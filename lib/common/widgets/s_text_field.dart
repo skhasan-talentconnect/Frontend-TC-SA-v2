@@ -235,6 +235,30 @@ class _STextFieldState extends State<STextField> {
                                 padding: EdgeInsets.zero,
                                 itemBuilder: (context, index) {
                                   final item = widget.items?[index] ?? '';
+                                  // return ListTile(
+                                  //   contentPadding: EdgeInsets.zero,
+                                  //   dense: true,
+                                  //   onTap: () {
+                                  //     // update controller first
+                                  //     widget.controller.text = item;
+                                  //
+                                  //     // then call onChanged with the new value
+                                  //     if (widget.onChanged != null) {
+                                  //       widget.onChanged!(item);
+                                  //     }
+                                  //
+                                  //     // finally close the dropdown
+                                  //     _isExpanded.value = false;
+                                  //   },
+                                  //
+                                  //   title: Text(
+                                  //     item,
+                                  //     style: STextStyles.s16W400.copyWith(
+                                  //       color: SColor.secTextColor,
+                                  //     ),
+                                  //   ),
+                                  // );
+
                                   return GestureDetector(
                                     onTap: () {
                                       // update controller first
@@ -248,18 +272,20 @@ class _STextFieldState extends State<STextField> {
                                       // finally close the dropdown
                                       _isExpanded.value = false;
                                     },
-
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 4,
-                                          ),
-                                          child: Text(
-                                            item,
-                                            style: STextStyles.s16W400.copyWith(
-                                              color: SColor.secTextColor,
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 4,
+                                            ),
+                                            child: Text(
+                                              item,
+                                              style: STextStyles.s16W400
+                                                  .copyWith(
+                                                    color: SColor.secTextColor,
+                                                  ),
                                             ),
                                           ),
                                         ),

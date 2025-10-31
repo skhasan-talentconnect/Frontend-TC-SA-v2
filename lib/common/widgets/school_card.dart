@@ -50,23 +50,22 @@ class _SchoolCardState extends State<SchoolCard> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
     final appStateProvider = getIt<AppStateProvider>();
-final distance = LocationUtils.getDistanceFromUser(
-  widget.school.latitude,
-  widget.school.longitude,
-);
+    final distance = LocationUtils.getDistanceFromUser(
+      widget.school.latitude,
+      widget.school.longitude,
+    );
 
     return ChangeNotifierProvider.value(
       value: shortlistViewModel,
       child: GestureDetector(
-       
-onTap: () => context.pushNamed(
-  RouteNames.overview,
-  extra: {
-    'schoolId': widget.school.schoolId,
-  'distance': distance.isNotEmpty ? distance : ' N/A',
-  },
-),
-
+        onTap:
+            () => context.pushNamed(
+              RouteNames.overview,
+              extra: {
+                'schoolId': widget.school.schoolId,
+                'distance': distance.isNotEmpty ? distance : ' N/A',
+              },
+            ),
 
         child: Align(
           alignment: Alignment.centerLeft,
@@ -119,35 +118,37 @@ onTap: () => context.pushNamed(
                               ),
                             ),
                             const SizedBox(height: 10),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              spacing: 4,
-                              children: [
-                                Icon(
-                                  Icons.location_on,
-                                  color: SColor.secTextColor,
-                                  size: 16,
-                                ),
-                                Text(
-                                  widget.school.location ?? '-',
-                                  style: STextStyles.s12W600.copyWith(
+                            Expanded(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Icon(
+                                    Icons.location_on,
                                     color: SColor.secTextColor,
-                                    overflow: TextOverflow.visible,
+                                    size: 16,
                                   ),
-                                ),
-                                const SizedBox(width: 20),
-                                Text(
-                                  LocationUtils.getDistanceFromUser(
-                                    widget.school.latitude,
-                                    widget.school.longitude,
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    widget.school.location ?? '-',
+                                    style: STextStyles.s12W600.copyWith(
+                                      color: SColor.secTextColor,
+                                      overflow: TextOverflow.visible,
+                                    ),
                                   ),
-                                  style: STextStyles.s12W600.copyWith(
-                                    color: SColor.secTextColor,
-                                    overflow: TextOverflow.visible,
+                                  Spacer(),
+                                  Text(
+                                    LocationUtils.getDistanceFromUser(
+                                      widget.school.latitude,
+                                      widget.school.longitude,
+                                    ),
+                                    style: STextStyles.s12W600.copyWith(
+                                      color: SColor.secTextColor,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                             const SizedBox(height: 12),
                             Row(
@@ -385,11 +386,7 @@ onTap: () => context.pushNamed(
                                         onTap: () async {
                                           if (appStateProvider.isGuest) {
                                             // ✅ FIX: Corrected toast message
-                                            Toasts.showInfoToast(
-                                              context,
-                                              message:
-                                                  'Please log in to save schools',
-                                            );
+                                            Toasts.showLoginToast(context);
                                           } else {
                                             final bool isAdding = !vIsSaved;
 
