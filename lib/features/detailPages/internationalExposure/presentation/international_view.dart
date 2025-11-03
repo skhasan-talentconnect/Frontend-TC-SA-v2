@@ -105,9 +105,8 @@ void initState(){
                 itemCount: (exchangePrograms.isNotEmpty ? 1 : 0) + exchangePrograms.length + (globalTieUps.isNotEmpty ? 1 : 0) + globalTieUps.length,
                 separatorBuilder: (context, index) {
                   if (index == exchangePrograms.length && globalTieUps.isNotEmpty) {
-                    return const Divider(height: 32, thickness: 1);
                   }
-                  return const SizedBox(height: 12);
+                  return const SizedBox(height: 14);
                 },
                 itemBuilder: (context, index) {
                   // --- Exchange Programs Section ---
@@ -172,7 +171,7 @@ class _ExchangeProgramCard extends StatelessWidget {
                 side: BorderSide(color: Colors.amber.shade200),
                 labelStyle: TextStyle(color: Colors.amber, fontWeight: FontWeight.w500),
               ),
-            const Divider(height: 24),
+           SizedBox(height: 5),
             _InfoRow(icon: Icons.access_time, title: 'Duration', value: program.duration),
             _InfoRow(icon: Icons.people_outline, title: 'Students', value: program.studentsParticipated?.toString()),
             _InfoRow(icon: Icons.calendar_today_outlined, title: 'Active Since', value: program.activeSince?.toString()),

@@ -117,11 +117,11 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
 
   Widget _buildPercentageCard(BuildContext context, double? percentage) {
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 8,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12),side: BorderSide(color: Colors.amber)),
       // --- 4. THEME UPDATE ---
       color: Colors.white,
-      shadowColor: Colors.amber.shade100.withOpacity(0.5),
+      shadowColor: Colors.amber.shade400.withOpacity(0.5),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -166,11 +166,11 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
 
   Widget _buildChipListCard(BuildContext context, List<String> platforms) {
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12),side: BorderSide(color: Colors.amber)),
       // --- 7. THEME UPDATE ---
       color: Colors.white,
-      shadowColor: Colors.amber.shade100.withOpacity(0.5),
+      shadowColor: Colors.amber.shade400.withOpacity(0.5),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

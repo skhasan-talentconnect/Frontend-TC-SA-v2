@@ -99,7 +99,7 @@ class _SchoolsViewState extends State<SchoolsView> {
                                         ),
                               ),
                               NavigatorCard(
-                                title: 'Want the latest insights on colleges?',
+                                title: 'Want the latest insights on Schools?',
                                 buttonText: 'Read Now',
                                 onPressed: () {
                                   context.goNamed(RouteNames.blogs);
@@ -114,12 +114,7 @@ class _SchoolsViewState extends State<SchoolsView> {
                                           schools: schools,
                                         ),
                               ),
-                              NavigatorCard(
-                                title:
-                                    'Want colleges based on your references?',
-                                buttonText: 'Edit Now',
-                                onPressed: () {},
-                              ),
+                              
                             ],
                           ),
                         ),

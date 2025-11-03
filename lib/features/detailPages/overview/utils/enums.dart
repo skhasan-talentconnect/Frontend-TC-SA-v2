@@ -13,6 +13,7 @@ enum DetailTabEnum {
   aluminis,
   reviews,
   otherDetails,
+  photos,
 }
 
 extension DetailTabEnumExtension on DetailTabEnum {
@@ -45,7 +46,9 @@ extension DetailTabEnumExtension on DetailTabEnum {
       case DetailTabEnum.reviews:
         return 'Reviews';
       case DetailTabEnum.otherDetails:
-        return 'Other Details';
+        return 'Gender Distribution';
+      case DetailTabEnum.photos:
+       return 'Media';
     }
   }
 }

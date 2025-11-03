@@ -116,11 +116,11 @@ void initState(){
 
   Widget _buildCctvCard(BuildContext context, double? percentage) {
     return Card(
-      elevation: 2,
+      elevation: 6,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       // --- THEME UPDATE ---
       color: Colors.white,
-      shadowColor: Colors.amber.shade100.withOpacity(0.5),
+      shadowColor: Colors.grey.withOpacity(0.8),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

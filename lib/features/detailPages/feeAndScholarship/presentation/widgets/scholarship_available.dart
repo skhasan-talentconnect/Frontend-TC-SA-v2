@@ -56,6 +56,7 @@ class ScholarshipDiversityCard extends StatelessWidget {
               side: BorderSide(color: Colors.amber.shade200),
               labelStyle: const TextStyle(fontWeight: FontWeight.w500, color: Colors.black87),
             )).toList(),
+            
           ),
         ],
       ),

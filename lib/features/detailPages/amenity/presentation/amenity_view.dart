@@ -139,37 +139,9 @@ void initState(){
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (widget.photos.isNotEmpty)
-                          SizedBox(
-                            height: 200,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: widget.photos.length,
-                              separatorBuilder: (_, __) => const SizedBox(width: 10),
-                              itemBuilder: (context, index) {
-                                return ClipRRect(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  child: Image.network(
-                                    widget.photos[index].url?? '',
-                                    fit: BoxFit.cover,
-                                    height: 200,
-                                    width: 300,
-                                    errorBuilder: (_, __, ___) => Container(
-                                      width: 300,
-                                      height: 200,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[200],
-                                        borderRadius: BorderRadius.circular(12.0),
-                                      ),
-                                      child: const Icon(Icons.broken_image, size: 50, color: Colors.grey),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                  
                         
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 10),
 
                         _TitledCard(
                           title: "School Amenities",

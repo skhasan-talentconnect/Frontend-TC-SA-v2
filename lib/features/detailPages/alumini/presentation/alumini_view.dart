@@ -56,16 +56,8 @@ class _AlumniViewState extends State<AlumniView> {
    
             final model = vm.alumni;
 
-            const String bannerFallback = "https://example.com/college.jpg";
 
-            final displayName =
-                model?.schoolName ?? widget.schoolName ?? "School";
-            final location = [
-              model?.schoolCity,
-              model?.schoolState,
-            ].where((e) => (e ?? '').isNotEmpty).join(", ");
-            final displayAddress = location.isEmpty ? "—" : location;
-
+          
             final famous = model?.famousAlumnies ?? const [];
             final top = model?.topAlumnis ?? const [];
             final others = model?.alumnis ?? const [];
@@ -95,66 +87,14 @@ class _AlumniViewState extends State<AlumniView> {
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: Column(
                       children: [
-                        // Banner
-                        Container(
-                          height: 150,
-                          // --- 4. THEME UPDATE ---
-                          color: Colors.amber.shade100,
-                          child: Center(
-                            child: Image.network(
-                              bannerFallback,
-                              height: 180,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  // --- 4. THEME UPDATE ---
-                                  color: Colors.amber.shade50,
-                                  child: Icon(
-                                    Icons.school,
-                                    size: 50,
-                                    color: Colors.amber.shade800,
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-
-                        // Info section
+                     
                         Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                displayName,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Icon(Icons.location_on, size: 18),
-                                  const SizedBox(width: 4),
-                                  Expanded(
-                                    child: Text(
-                                      displayAddress,
-                                      style: const TextStyle(
-                                        // --- 5. THEME UPDATE (using a different color for links) ---
-                                        color: Colors.blue,
-                                        fontSize: 15,
-                                      ),
-                                      softWrap: true,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 16),
-                              const SizedBox(height: 22),
+                              
+                              const SizedBox(height: 10),
 
                               // Famous Alumni
                               if (famous.isNotEmpty) ...[
