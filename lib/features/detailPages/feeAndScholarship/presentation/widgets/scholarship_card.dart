@@ -13,7 +13,7 @@ class ScholarshipCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         // --- THEME UPDATE: Yellow border and shadow ---
-        border: Border.all(color: Colors.amber.shade300, width: 1),
+        border: Border.all(color: Colors.yellow.shade200, width: 1),
         boxShadow: [
           BoxShadow(
             blurRadius: 6,

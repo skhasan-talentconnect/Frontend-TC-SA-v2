@@ -120,7 +120,7 @@ void initState(){
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       // --- THEME UPDATE ---
       color: Colors.white,
-      shadowColor: Colors.grey.withOpacity(0.8),
+      shadowColor: Colors.yellow.withOpacity(0.8),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -136,7 +136,7 @@ void initState(){
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                       // --- THEME UPDATE ---
-                      color: Colors.amber
+                      color: Colors.yellow
                     ),
                   ),
               ],
@@ -236,10 +236,10 @@ class _TitledCard extends StatelessWidget {
       elevation: 2,
       // --- THEME UPDATE ---
       color: Colors.white,
-      shadowColor: Colors.grey.withOpacity(0.1),
+      shadowColor: Colors.yellow.withOpacity(0.1),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: Colors.grey.shade200, width: 1) // Softer border
+        side: BorderSide(color: Colors.yellow.shade200, width: 1) // Softer border
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),

@@ -36,7 +36,7 @@ decoration: BoxDecoration(
 color: Colors.white, // Always white background for simplicity and white/amber theme
  borderRadius: BorderRadius.circular(8),
 // Border should be a subtle grey when neutral, and a light amber when positive
- border: Border.all(color: hasStaff ? chipBorder : Colors.grey.shade300),
+ border: Border.all(color: hasStaff ? chipBorder : Colors.yellow.shade300),
  ),
  child: Row(
  children: [

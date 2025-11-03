@@ -92,7 +92,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
           final titleFont = isSmall ? 20.0 : (isMed ? 24.0 : 26.0);
           final infoFont = isSmall ? 16.0 : (isMed ? 18.0 : 20.0);
           final tabFont = isSmall ? 14.0 : (isMed ? 16.0 : 18.0);
-          final pad = isSmall ? 6.0 : (isMed ? 8.0 : 10.0);
+          final pad = isSmall ? 14.0 : (isMed ? 16.0 : 16.0);
 
           if (vm.isLoading) {
             return Scaffold(body: Center(child: SLoadingIndicator()));
@@ -262,9 +262,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                                         style: TextStyle(
                                           fontSize: infoFont,
                                           color: Colors.blue,
-                                          decoration:
-                                              TextDecoration
-                                                  .underline, // makes it look clickable
+                                          
                                         ),
                                       ),
                                     ),
@@ -274,7 +272,6 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
 
                                       const SizedBox(width: 6),
 
-                                      // ✅ Distance Text
                                       Text(
                                         "${widget.distance!} km away",
                                         style: TextStyle(
@@ -305,7 +302,9 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                                         style: OutlinedButton.styleFrom(
                                           backgroundColor: Colors.green,
                                           padding: const EdgeInsets.symmetric(
-                                            vertical: 14,
+                                            vertical: 15
+                                            ,
+                                     
                                           ),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(

@@ -322,7 +322,7 @@ Future<void> _fetchFromGoogleLocation() async {
                               ),
 
                               SButton(
-  label: "Fetch from Google Location (to see schools near you)",
+  label: "Fetch From Google Locations for seeing schools near you",
   onPressed: _fetchFromGoogleLocation,
 ),
                             ],

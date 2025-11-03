@@ -76,7 +76,7 @@ class _SchoolCardState extends State<SchoolCard> {
             decoration: BoxDecoration(
               color: Colors.grey,
               border: Border.all(color: SColor.primaryColor),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Stack(
               children: [
@@ -87,8 +87,8 @@ class _SchoolCardState extends State<SchoolCard> {
                     Container(
                       height: 200,
                       decoration: BoxDecoration(
-                        border: Border.all(color: SColor.primaryColor),
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(8),topRight: Radius.circular(8)),
+                    
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(12),topRight: Radius.circular(12)),
                       ),
                       clipBehavior: Clip.none,
                       width: double.infinity,
