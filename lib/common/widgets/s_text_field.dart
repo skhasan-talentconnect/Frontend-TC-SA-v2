@@ -278,7 +278,7 @@ class _STextFieldState extends State<STextField> {
                                         Expanded(
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(
-                                              vertical: 4,
+                                              vertical: 6,
                                             ),
                                             child: Text(
                                               item,

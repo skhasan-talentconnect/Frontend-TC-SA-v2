@@ -175,39 +175,44 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                         Container(
-  height: bannerHeight,
-  
- child: (school.photos != null && school.photos!.isNotEmpty)
-    ? ClipRRect(
-        borderRadius: BorderRadius.circular(2.0),
-        child: Image.network(
-          school.photos!.first.url ?? '',
-          fit: BoxFit.fill,
-          height: double.infinity,
-          width: double.infinity,
-          errorBuilder: (_, __, ___) => Container(
-            width: 300,
-            height: bannerHeight,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(2.0),
-            ),
-            child: const Icon(
-              Icons.broken_image,
-              size: 50,
-              color: Colors.grey,
-            ),
-          ),
-        ),
-      )
-    : const Center(
-        child: Icon(
-          Icons.school,
-          size: 80,
-          color: Colors.blue,
-        ),
-      ),),
+                          Container(
+                            height: bannerHeight,
+
+                            child:
+                                (school.photos != null &&
+                                        school.photos!.isNotEmpty)
+                                    ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(2.0),
+                                      child: Image.network(
+                                        school.photos!.first.url ?? '',
+                                        fit: BoxFit.fill,
+                                        height: double.infinity,
+                                        width: double.infinity,
+                                        errorBuilder:
+                                            (_, __, ___) => Container(
+                                              width: 300,
+                                              height: bannerHeight,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[200],
+                                                borderRadius:
+                                                    BorderRadius.circular(2.0),
+                                              ),
+                                              child: const Icon(
+                                                Icons.broken_image,
+                                                size: 50,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                      ),
+                                    )
+                                    : const Center(
+                                      child: Icon(
+                                        Icons.school,
+                                        size: 80,
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                          ),
 
                           // Title + location + buttons
                           Padding(
@@ -262,7 +267,6 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                                         style: TextStyle(
                                           fontSize: infoFont,
                                           color: Colors.blue,
-                                          
                                         ),
                                       ),
                                     ),
@@ -302,9 +306,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                                         style: OutlinedButton.styleFrom(
                                           backgroundColor: Colors.green,
                                           padding: const EdgeInsets.symmetric(
-                                            vertical: 15
-                                            ,
-                                     
+                                            vertical: 15,
                                           ),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(
@@ -433,7 +435,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                                       }
                                       return InfoChip(
                                         topText: "$matchPercentage%",
-                                        bottomText: "Choice Match",
+                                        bottomText: "Preferences",
                                         fontSize: infoFont,
                                         isSmallScreen: isSmall,
                                       );
@@ -530,11 +532,14 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                   InternationalExposureView(schoolId: widget.schoolId),
                   FeesAndScholarshipsView(schoolId: widget.schoolId),
                   AdmissionTimelineView(schoolId: widget.schoolId),
-                  AmenitiesView(schoolId: widget.schoolId,photos:school.photos?? []),
+                  AmenitiesView(
+                    schoolId: widget.schoolId,
+                    photos: school.photos ?? [],
+                  ),
                   AlumniView(schoolId: widget.schoolId),
                   ReviewsView(schoolId: widget.schoolId),
                   OtherDetailsView(schoolId: widget.schoolId),
-                   PhotosView(photos: vm.school?.photos ?? []),
+                  PhotosView(photos: vm.school?.photos ?? []),
                 ],
               ),
             ),

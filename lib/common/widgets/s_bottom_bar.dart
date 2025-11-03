@@ -37,17 +37,17 @@ class SBottomBar extends StatelessWidget {
 
             // Conditionally create the icon widget
             Widget iconWidget = Icon(
-              item.index == currentIndex ? item.selectedIcon : item.unSelectedIcon,
+              item.index == currentIndex
+                  ? item.selectedIcon
+                  : item.unSelectedIcon,
               color: SColor.secTextColor,
             );
 
             // If it's the shortlist item AND there's a notification, wrap the icon in a Badge
             if (isShortlistItem && hasNewShortlist) {
-              iconWidget = Badge(
-                child: iconWidget,
-              );
+              iconWidget = Badge(child: iconWidget);
             }
-            
+
             // Return the final BottomBarItem
             return BottomBarItem(
               icon: iconWidget,
@@ -58,7 +58,7 @@ class SBottomBar extends StatelessWidget {
             );
           }),
         ],
-        option: AnimatedBarOptions(iconStyle: IconStyle.animated),
+        option: AnimatedBarOptions(iconStyle: IconStyle.Default),
       ),
     );
   }

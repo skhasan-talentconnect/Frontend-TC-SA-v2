@@ -97,14 +97,18 @@ class _FormDetailsViewState extends State<FormDetailsView> {
                                       ),
                                     ),
                                     Text(
-  formDetailsViewModel.form?.createdAt != null
-      ? formDetailsViewModel.form!.createdAt!.toEEEEDDMMMYYYY ?? '-'
-      : '-',
-  style: STextStyles.s12W600.copyWith(
-    color: SColor.secTextColor,
-  ),
-),
-
+                                      formDetailsViewModel.form?.createdAt !=
+                                              null
+                                          ? formDetailsViewModel
+                                                  .form!
+                                                  .createdAt!
+                                                  .toEEEEDDMMMYYYY ??
+                                              '-'
+                                          : '-',
+                                      style: STextStyles.s12W600.copyWith(
+                                        color: SColor.secTextColor,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ],
@@ -319,8 +323,7 @@ class _FormDetailsViewState extends State<FormDetailsView> {
                                             formDetailsViewModel
                                                     .form
                                                     ?.user
-                                                    ?.dateOfBirth
-                                                     ??
+                                                    ?.dateOfBirth ??
                                                 'Sacred Heart Boys High School',
                                             style: STextStyles.s12W600.copyWith(
                                               color: SColor.secTextColor,
@@ -396,102 +399,462 @@ class _FormDetailsViewState extends State<FormDetailsView> {
                                 ),
                                 const SizedBox(height: 24),
 
-// 🟢 STATUS DETAILS SECTION
-Container(
-  width: double.infinity,
-  padding: const EdgeInsets.all(16),
-  decoration: BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(12),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black12,
-        blurRadius: 4,
-        offset: Offset(0, 2),
-      ),
-    ],
-  ),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'Status Details',
-        style: STextStyles.s14W400.copyWith(color: SColor.primaryColor),
-      ),
-      const Divider(height: 16),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Current Status:',
-            style: STextStyles.s12W400.copyWith(color: SColor.secTextColor),
-          ),
-          Text(
-            formDetailsViewModel.form?.status?.label ?? '-',
-            style: STextStyles.s12W600.copyWith(
-              color: formDetailsViewModel.form?.status?.color ??
-                  SColor.secTextColor,
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 8),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Created On:',
-            style: STextStyles.s12W400.copyWith(color: SColor.secTextColor),
-          ),
-          Text(
-            formDetailsViewModel.form?.createdAt?.toEEEEDDMMMYYYY ?? '-',
-            style: STextStyles.s12W600.copyWith(color: SColor.secTextColor),
-          ),
-        ],
-      ),
-      const SizedBox(height: 8),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Last Updated:',
-            style: STextStyles.s12W400.copyWith(color: SColor.secTextColor),
-          ),
-          Text(
-            formDetailsViewModel.form?.updatedAt?.toEEEEDDMMMYYYY ?? '-',
-            style: STextStyles.s12W600.copyWith(color: SColor.secTextColor),
-          ),
-        ],
-      ),
-      const SizedBox(height: 8),
+                                // 🟢 STATUS DETAILS SECTION
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius: 4,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Status Details',
+                                        style: STextStyles.s14W400.copyWith(
+                                          color: SColor.primaryColor,
+                                        ),
+                                      ),
+                                      const Divider(height: 16),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Current Status:',
+                                            style: STextStyles.s12W400.copyWith(
+                                              color: SColor.secTextColor,
+                                            ),
+                                          ),
+                                          Text(
+                                            formDetailsViewModel
+                                                    .form
+                                                    ?.status
+                                                    ?.label ??
+                                                '-',
+                                            style: STextStyles.s12W600.copyWith(
+                                              color:
+                                                  formDetailsViewModel
+                                                      .form
+                                                      ?.status
+                                                      ?.color ??
+                                                  SColor.secTextColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Created On:',
+                                            style: STextStyles.s12W400.copyWith(
+                                              color: SColor.secTextColor,
+                                            ),
+                                          ),
+                                          Text(
+                                            formDetailsViewModel
+                                                    .form
+                                                    ?.createdAt
+                                                    ?.toEEEEDDMMMYYYY ??
+                                                '-',
+                                            style: STextStyles.s12W600.copyWith(
+                                              color: SColor.secTextColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Last Updated:',
+                                            style: STextStyles.s12W400.copyWith(
+                                              color: SColor.secTextColor,
+                                            ),
+                                          ),
+                                          Text(
+                                            formDetailsViewModel
+                                                    .form
+                                                    ?.updatedAt
+                                                    ?.toEEEEDDMMMYYYY ??
+                                                '-',
+                                            style: STextStyles.s12W600.copyWith(
+                                              color: SColor.secTextColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
 
-      // 🗒️ Optional Note
-      if ((formDetailsViewModel.form?.interviewNote ?? '').isNotEmpty) ...[
-  const SizedBox(height: 12),
-  Text(
-    'Interview Note:',
-    style: STextStyles.s12W400.copyWith(color: SColor.secTextColor),
-  ),
-  const SizedBox(height: 4),
-  Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(10),
-    decoration: BoxDecoration(
-      color: SColor.backgroundColor.withOpacity(0.3),
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: Text(
-      formDetailsViewModel.form!.interviewNote!,
-      style: STextStyles.s12W400.copyWith(color: SColor.secTextColor),
-    ),
-  ),
-
-
-      ],
-    ],
-  ),
-),
-
+                                      // 🗒️ Optional Note
+                                      if ((formDetailsViewModel
+                                                  .form
+                                                  ?.interviewNote ??
+                                              '')
+                                          .isNotEmpty) ...[
+                                        const SizedBox(height: 12),
+                                        Text(
+                                          'Interview Note:',
+                                          style: STextStyles.s12W400.copyWith(
+                                            color: SColor.secTextColor,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Container(
+                                          width: double.infinity,
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: SColor.backgroundColor
+                                                .withOpacity(0.3),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            formDetailsViewModel
+                                                .form!
+                                                .interviewNote!,
+                                            style: STextStyles.s12W600.copyWith(
+                                              color: SColor.secTextColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                                //
+                                // Container(
+                                //   width: double.infinity,
+                                //   padding: const EdgeInsets.all(16),
+                                //   decoration: BoxDecoration(
+                                //     color: Colors.white,
+                                //     borderRadius: BorderRadius.circular(12),
+                                //     boxShadow: [
+                                //       BoxShadow(
+                                //         color: Colors.black12,
+                                //         blurRadius: 4,
+                                //         offset: Offset(0, 2),
+                                //       ),
+                                //     ],
+                                //   ),
+                                //   child: Column(
+                                //     mainAxisSize: MainAxisSize.min,
+                                //     crossAxisAlignment:
+                                //         CrossAxisAlignment.start,
+                                //     spacing: 8,
+                                //     children: [
+                                //       Text(
+                                //         'Applied By: ',
+                                //         style: STextStyles.s12W600.copyWith(
+                                //           color: SColor.secTextColor,
+                                //         ),
+                                //       ),
+                                //       Divider(),
+                                //       Text(
+                                //         formDetailsViewModel.form?.user?.name ??
+                                //             '-',
+                                //         style: STextStyles.s12W600.copyWith(
+                                //           color: SColor.secTextColor,
+                                //         ),
+                                //       ),
+                                //       Row(
+                                //         crossAxisAlignment:
+                                //             CrossAxisAlignment.start,
+                                //         children: [
+                                //           Expanded(
+                                //             child: Column(
+                                //               crossAxisAlignment:
+                                //                   CrossAxisAlignment.start,
+                                //               children: [
+                                //                 Column(
+                                //                   crossAxisAlignment:
+                                //                       CrossAxisAlignment.start,
+                                //                   children: [
+                                //                     Text(
+                                //                       'Gender: ',
+                                //                       style: STextStyles.s12W400
+                                //                           .copyWith(
+                                //                             color:
+                                //                                 SColor
+                                //                                     .secTextColor,
+                                //                           ),
+                                //                     ),
+                                //                     Text(
+                                //                       formDetailsViewModel
+                                //                               .form
+                                //                               ?.user
+                                //                               ?.gender
+                                //                               ?.toCapitalise ??
+                                //                           '-',
+                                //                       style: STextStyles.s12W600
+                                //                           .copyWith(
+                                //                             color:
+                                //                                 SColor
+                                //                                     .secTextColor,
+                                //                           ),
+                                //                     ),
+                                //                   ],
+                                //                 ),
+                                //               ],
+                                //             ),
+                                //           ),
+                                //           Expanded(
+                                //             child: Column(
+                                //               crossAxisAlignment:
+                                //                   CrossAxisAlignment.start,
+                                //               children: [
+                                //                 Text(
+                                //                   'Date of Birth: ',
+                                //                   style: STextStyles.s12W400
+                                //                       .copyWith(
+                                //                         color:
+                                //                             SColor.secTextColor,
+                                //                       ),
+                                //                 ),
+                                //                 Text(
+                                //                   formDetailsViewModel
+                                //                           .form
+                                //                           ?.user
+                                //                           ?.dateOfBirth ??
+                                //                       'Sacred Heart Boys High School',
+                                //                   style: STextStyles.s12W600
+                                //                       .copyWith(
+                                //                         color:
+                                //                             SColor.secTextColor,
+                                //                       ),
+                                //                 ),
+                                //               ],
+                                //             ),
+                                //           ),
+                                //         ],
+                                //       ),
+                                //       Row(
+                                //         crossAxisAlignment:
+                                //             CrossAxisAlignment.start,
+                                //         children: [
+                                //           Expanded(
+                                //             child: Column(
+                                //               crossAxisAlignment:
+                                //                   CrossAxisAlignment.start,
+                                //               children: [
+                                //                 Column(
+                                //                   crossAxisAlignment:
+                                //                       CrossAxisAlignment.start,
+                                //                   children: [
+                                //                     Text(
+                                //                       'Contact No: ',
+                                //                       style: STextStyles.s12W400
+                                //                           .copyWith(
+                                //                             color:
+                                //                                 SColor
+                                //                                     .secTextColor,
+                                //                           ),
+                                //                     ),
+                                //                     Text(
+                                //                       formDetailsViewModel
+                                //                               .form
+                                //                               ?.user
+                                //                               ?.contactNo ??
+                                //                           '-',
+                                //                       style: STextStyles.s12W600
+                                //                           .copyWith(
+                                //                             color:
+                                //                                 SColor
+                                //                                     .secTextColor,
+                                //                           ),
+                                //                     ),
+                                //                   ],
+                                //                 ),
+                                //               ],
+                                //             ),
+                                //           ),
+                                //           Expanded(
+                                //             child: Column(
+                                //               crossAxisAlignment:
+                                //                   CrossAxisAlignment.start,
+                                //               children: [
+                                //                 Text(
+                                //                   'Email: ',
+                                //                   style: STextStyles.s12W400
+                                //                       .copyWith(
+                                //                         color:
+                                //                             SColor.secTextColor,
+                                //                       ),
+                                //                 ),
+                                //                 Text(
+                                //                   formDetailsViewModel
+                                //                           .form
+                                //                           ?.user
+                                //                           ?.email ??
+                                //                       '',
+                                //                   style: STextStyles.s12W600
+                                //                       .copyWith(
+                                //                         color:
+                                //                             SColor.secTextColor,
+                                //                       ),
+                                //                 ),
+                                //               ],
+                                //             ),
+                                //           ),
+                                //         ],
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
+                                //
+                                // const SizedBox(height: 24),
+                                // Container(
+                                //   width: double.infinity,
+                                //   padding: const EdgeInsets.all(16),
+                                //   decoration: BoxDecoration(
+                                //     color: Colors.white,
+                                //     borderRadius: BorderRadius.circular(12),
+                                //     boxShadow: [
+                                //       BoxShadow(
+                                //         color: Colors.black12,
+                                //         blurRadius: 4,
+                                //         offset: Offset(0, 2),
+                                //       ),
+                                //     ],
+                                //   ),
+                                //   child: Column(
+                                //     crossAxisAlignment:
+                                //         CrossAxisAlignment.start,
+                                //     children: [
+                                //       Text(
+                                //         'Status Details',
+                                //         style: STextStyles.s14W400.copyWith(
+                                //           color: SColor.primaryColor,
+                                //         ),
+                                //       ),
+                                //       const Divider(height: 16),
+                                //       Row(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.spaceBetween,
+                                //         children: [
+                                //           Text(
+                                //             'Current Status:',
+                                //             style: STextStyles.s12W400.copyWith(
+                                //               color: SColor.secTextColor,
+                                //             ),
+                                //           ),
+                                //           Text(
+                                //             formDetailsViewModel
+                                //                     .form
+                                //                     ?.status
+                                //                     ?.label ??
+                                //                 '-',
+                                //             style: STextStyles.s12W600.copyWith(
+                                //               color:
+                                //                   formDetailsViewModel
+                                //                       .form
+                                //                       ?.status
+                                //                       ?.color ??
+                                //                   SColor.secTextColor,
+                                //             ),
+                                //           ),
+                                //         ],
+                                //       ),
+                                //       const SizedBox(height: 8),
+                                //       Row(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.spaceBetween,
+                                //         children: [
+                                //           Text(
+                                //             'Created On:',
+                                //             style: STextStyles.s12W400.copyWith(
+                                //               color: SColor.secTextColor,
+                                //             ),
+                                //           ),
+                                //           Text(
+                                //             formDetailsViewModel
+                                //                     .form
+                                //                     ?.createdAt
+                                //                     ?.toEEEEDDMMMYYYY ??
+                                //                 '-',
+                                //             style: STextStyles.s12W600.copyWith(
+                                //               color: SColor.secTextColor,
+                                //             ),
+                                //           ),
+                                //         ],
+                                //       ),
+                                //       const SizedBox(height: 8),
+                                //       Row(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.spaceBetween,
+                                //         children: [
+                                //           Text(
+                                //             'Last Updated:',
+                                //             style: STextStyles.s12W400.copyWith(
+                                //               color: SColor.secTextColor,
+                                //             ),
+                                //           ),
+                                //           Text(
+                                //             formDetailsViewModel
+                                //                     .form
+                                //                     ?.updatedAt
+                                //                     ?.toEEEEDDMMMYYYY ??
+                                //                 '-',
+                                //             style: STextStyles.s12W600.copyWith(
+                                //               color: SColor.secTextColor,
+                                //             ),
+                                //           ),
+                                //         ],
+                                //       ),
+                                //       const SizedBox(height: 8),
+                                //
+                                //       // 🗒️ Optional Note
+                                //       if ((formDetailsViewModel
+                                //                   .form
+                                //                   ?.interviewNote ??
+                                //               '')
+                                //           .isNotEmpty) ...[
+                                //         const SizedBox(height: 12),
+                                //         Text(
+                                //           'Interview Note:',
+                                //           style: STextStyles.s12W400.copyWith(
+                                //             color: SColor.secTextColor,
+                                //           ),
+                                //         ),
+                                //         const SizedBox(height: 4),
+                                //         Container(
+                                //           width: double.infinity,
+                                //           padding: const EdgeInsets.all(10),
+                                //           decoration: BoxDecoration(
+                                //             color: SColor.backgroundColor
+                                //                 .withOpacity(0.3),
+                                //             borderRadius: BorderRadius.circular(
+                                //               8,
+                                //             ),
+                                //           ),
+                                //           child: Text(
+                                //             formDetailsViewModel
+                                //                 .form!
+                                //                 .interviewNote!,
+                                //             style: STextStyles.s12W600.copyWith(
+                                //               color: SColor.secTextColor,
+                                //             ),
+                                //           ),
+                                //         ),
+                                //       ],
+                                //     ],
+                                //   ),
+                                // ),
                               ],
                             ),
                           ],
