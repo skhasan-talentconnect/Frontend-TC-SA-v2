@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tc_sa/common/index.dart'; // Assuming SAppBar and SIcon are here
+import 'package:tc_sa/common/index.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactUsView extends StatelessWidget {
   const ContactUsView({super.key});
 
-  // Helper method to launch URLs (mailto, maps, etc.)
   Future<void> _launchUrl(String url) async {
     final Uri uri = Uri.parse(url);
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      // You can show a toast or snackbar here if launching fails
       print('Could not launch $url');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // --- Placeholder Information ---
     const String supportEmail = "synzy2025@gmail.com";
-    const String officeAddress = "Banglore,india";
+    const String officeAddress = "Bangalore, India";
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -33,7 +30,7 @@ class ContactUsView extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          // --- Main Header ---
+          // --- Header ---
           Center(
             child: Icon(
               Icons.contact_mail_outlined,
@@ -100,13 +97,12 @@ class ContactUsView extends StatelessWidget {
             iconColor: Colors.blueGrey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
+              children: const [
+                Text(
                   officeAddress,
                   style: TextStyle(fontSize: 16, height: 1.5),
                 ),
-                const SizedBox(height: 20),
-          
+                SizedBox(height: 20),
               ],
             ),
           ),
@@ -122,14 +118,29 @@ class ContactUsView extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
+
+          // --- Social Icons with Labels ---
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 20,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-      
-              _SocialIcon(icon: Icons.link_outlined, onTap: () => _launchUrl('https://www.linkedin.com/company/talentsconnectss/')),
+              _SocialIconWithLabel(
+                icon: Icons.linked_camera_outlined,
+                label: 'LinkedIn',
+                onTap: () => _launchUrl('https://www.linkedin.com/company/talentsconnectss/'),
+              ),
+              _SocialIconWithLabel(
+                icon: Icons.camera_alt_outlined,
+                label: 'Instagram',
+                onTap: () => _launchUrl('https://www.instagram.com/'),
+              ),
+              _SocialIconWithLabel(
+                icon: Icons.facebook_outlined,
+                label: 'Facebook',
+                onTap: () => _launchUrl('https://www.facebook.com/'),
+              ),
             ],
           ),
+          const SizedBox(height: 40),
         ],
       ),
     );
@@ -143,7 +154,12 @@ class _TitledCard extends StatelessWidget {
   final IconData icon;
   final Widget child;
   final Color iconColor;
-  const _TitledCard({required this.title, required this.icon, required this.child, this.iconColor = Colors.black});
+  const _TitledCard({
+    required this.title,
+    required this.icon,
+    required this.child,
+    this.iconColor = Colors.black,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -180,19 +196,37 @@ class _TitledCard extends StatelessWidget {
   }
 }
 
-class _SocialIcon extends StatelessWidget {
+class _SocialIconWithLabel extends StatelessWidget {
   final IconData icon;
+  final String label;
   final VoidCallback onTap;
-  const _SocialIcon({required this.icon, required this.onTap});
+  const _SocialIconWithLabel({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: onTap,
-      icon: Icon(icon),
-      iconSize: 32,
-      color: Colors.grey.shade700,
-      splashRadius: 24,
+    return Column(
+      children: [
+        IconButton(
+          onPressed: onTap,
+          icon: Icon(icon),
+          iconSize: 36,
+          color: Colors.grey.shade800,
+          splashRadius: 28,
+        ),
+        const SizedBox(height: 6),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey.shade700,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 }

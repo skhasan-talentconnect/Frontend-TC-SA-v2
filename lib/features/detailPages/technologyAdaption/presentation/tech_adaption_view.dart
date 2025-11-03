@@ -75,7 +75,7 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy) {
               // --- 2. THEME UPDATE ---
-              return const Center(child: SLoadingIndicator(color: Colors.amber));
+              return const Center(child: SLoadingIndicator(color: Colors.yellow));
             }
 
             final model = vm.techAdoption;
@@ -99,7 +99,7 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
             return RefreshIndicator(
               onRefresh: _refresh,
               // --- 3. THEME UPDATE ---
-              color: Colors.amber,
+              color: Colors.yellow,
               child: ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
@@ -117,11 +117,11 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
 
   Widget _buildPercentageCard(BuildContext context, double? percentage) {
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 8,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12),side: BorderSide(color: Colors.yellow)),
       // --- 4. THEME UPDATE ---
       color: Colors.white,
-      shadowColor: Colors.amber.shade100.withOpacity(0.5),
+      shadowColor: Colors.yellow.shade400.withOpacity(0.5),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -138,7 +138,7 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                       // --- 5. THEME UPDATE ---
-                      color: Colors.amber.shade800
+                      color: Colors.yellow.shade800
                     ),
                   )
                 else
@@ -153,8 +153,8 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
                   value: percentage / 100,
                   minHeight: 12,
                   // --- 6. THEME UPDATE ---
-                  backgroundColor: Colors.amber.shade100,
-                  color: Colors.amber.shade700,
+                  backgroundColor: Colors.yellow.shade100,
+                  color: Colors.yellow.shade700,
                 ),
               ),
             ],
@@ -166,11 +166,11 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
 
   Widget _buildChipListCard(BuildContext context, List<String> platforms) {
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12),side: BorderSide(color: Colors.yellow)),
       // --- 7. THEME UPDATE ---
       color: Colors.white,
-      shadowColor: Colors.amber.shade100.withOpacity(0.5),
+      shadowColor: Colors.yellow.shade400.withOpacity(0.5),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -179,7 +179,7 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
             Row(
               children: [
                 // --- 8. THEME UPDATE ---
-                Icon(Icons.cast_for_education, color: Colors.amber.shade800, size: 28),
+                Icon(Icons.cast_for_education, color: Colors.yellow.shade800, size: 28),
                 const SizedBox(width: 10),
                 Text('E-learning Platforms', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
               ],
@@ -199,9 +199,9 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
                   children: platforms.map((platform) => Chip(
                     label: Text(platform),
                     // --- 9. THEME UPDATE ---
-                    backgroundColor: Colors.amber.withOpacity(0.1),
-                    side: BorderSide(color: Colors.amber.withOpacity(0.3)),
-                    labelStyle: TextStyle(color: Colors.amber.shade900, fontWeight: FontWeight.w500),
+                    backgroundColor: Colors.yellow.withOpacity(0.1),
+                    side: BorderSide(color: Colors.yellow.withOpacity(0.3)),
+                    labelStyle: TextStyle(color: Colors.yellow.shade900, fontWeight: FontWeight.w500),
                   )).toList(),
                 ),
               ),

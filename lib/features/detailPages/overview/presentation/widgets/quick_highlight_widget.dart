@@ -12,6 +12,12 @@ class QuickHighlights extends StatelessWidget {
     required this.value,
   });
 
+  // Helper function to capitalize the first letter
+  String capitalize(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,7 +28,7 @@ class QuickHighlights extends StatelessWidget {
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05), // Softer shadow
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -32,10 +38,10 @@ class QuickHighlights extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 28.0, color: Colors.amber), // Updated color
+          Icon(icon, size: 28.0, color: Colors.amber),
           const SizedBox(height: 8),
           Text(
-            title,
+            capitalize(title),
             style: const TextStyle(
               fontSize: 15.0,
               color: Colors.black54,
@@ -46,7 +52,7 @@ class QuickHighlights extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            value,
+            capitalize(value),
             style: const TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,

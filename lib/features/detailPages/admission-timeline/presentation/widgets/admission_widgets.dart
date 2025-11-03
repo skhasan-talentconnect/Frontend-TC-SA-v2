@@ -99,7 +99,7 @@ class InfoRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: Colors.grey.shade700),
+          Icon(icon, size: 20, color: Colors.yellow.shade700),
           const SizedBox(width: 12),
           Text('$title: ', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
           Expanded(child: Text(value ?? 'N/A', style: const TextStyle(fontSize: 15))),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
@@ -98,11 +97,14 @@ class _FacultyViewState extends State<FacultyView> {
                   const SizedBox(height: 16.0), 
 
                   ...facultyMembers.map((member) {
-                    return FacultyMemberCard(member: member);
-                  }).toList(),
-                ],
-              ),
-            );
+                    return Padding(
+          padding: const EdgeInsets.only(bottom: 12.0), // 👈 space between cards
+          child: FacultyMemberCard(member: member),
+        );
+      }).toList(),
+    ],
+  ),
+);
           },
         ),
       ),

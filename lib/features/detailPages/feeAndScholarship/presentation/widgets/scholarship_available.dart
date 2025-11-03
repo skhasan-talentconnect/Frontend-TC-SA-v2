@@ -38,11 +38,11 @@ class ScholarshipDiversityCard extends StatelessWidget {
               value: percentage / 100,
               minHeight: 12,
               // --- THEME UPDATE: Progress bar colors ---
-              backgroundColor: Colors.amber.shade100,
-              color: Colors.amber.shade700,
+              backgroundColor: Colors.yellow,
+              color: Colors.yellow,
             ),
           ),
-          // --- UI POLISH: Added a divider ---
+
          SizedBox(height: 20,),
           const Text('Types Offered', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
           const SizedBox(height: 8),
@@ -56,6 +56,7 @@ class ScholarshipDiversityCard extends StatelessWidget {
               side: BorderSide(color: Colors.amber.shade200),
               labelStyle: const TextStyle(fontWeight: FontWeight.w500, color: Colors.black87),
             )).toList(),
+            
           ),
         ],
       ),

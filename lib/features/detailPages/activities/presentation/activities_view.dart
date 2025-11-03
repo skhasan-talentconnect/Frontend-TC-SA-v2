@@ -91,7 +91,6 @@ void initState(){
             // ),
             body: RefreshIndicator(
               onRefresh: _refresh,
-              // --- THEME UPDATE ---
               color: Colors.amber, 
               child: Builder(
                 builder: (_) {
@@ -103,7 +102,6 @@ void initState(){
                   }
 
                   if (model == null) {
-                    // --- UI POLISH: More modern 'Not Found' message ---
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -125,14 +123,12 @@ void initState(){
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: Column(
                       children: [
-                        // --- THEME UPDATE: Banner color and icon color ---
                      
                         Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // --- UI POLISH: Title styling ---
                               Text(
                                 "Activity Focus Areas",
                                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),

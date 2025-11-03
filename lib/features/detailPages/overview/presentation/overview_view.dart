@@ -796,7 +796,7 @@ class OverviewTab extends StatelessWidget {
                 QuickHighlights(
                   icon: Icons.label_outline,
                   title: "Type",
-                  value: school.tags?.join(", ") ?? "-",
+                  value: school.tags?.join(", ") ?? "---",
                 ),
               ],
             ),
@@ -940,11 +940,15 @@ class SocialPresenceRow extends StatelessWidget {
   }
 }
 
+
+
 class FeeRangeDisplay extends StatelessWidget {
   final String feeLow;
   final String feeHigh;
   final String feeRange;
+
   const FeeRangeDisplay({
+    super.key,
     required this.feeLow,
     required this.feeHigh,
     required this.feeRange,
@@ -958,10 +962,22 @@ class FeeRangeDisplay extends StatelessWidget {
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // 🔼 Move "Full Range" line to the top
+            Text(
+              'Full Range: $feeRange',
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey.shade600,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // ↓ Min/Max section
             Row(
               children: [
                 Expanded(
@@ -973,7 +989,7 @@ class FeeRangeDisplay extends StatelessWidget {
                       ),
                       Text(
                         feeLow,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
@@ -1001,15 +1017,6 @@ class FeeRangeDisplay extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Full Range: $feeRange',
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.grey.shade600,
-                fontStyle: FontStyle.italic,
-              ),
             ),
           ],
         ),

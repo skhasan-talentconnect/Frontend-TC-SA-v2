@@ -318,7 +318,7 @@ void _setPrefDefaults() {
                                         controller: genderController,
                                         label: 'Gender*',
                                         hint: 'Select',
-                                        prefixIcon: Icon(Icons.male),
+                                        prefixIcon: Icon(Icons.person),
                                       ),
 
                                       // --------------------
@@ -415,7 +415,7 @@ void _setPrefDefaults() {
           [
 
                           SButton(
-            label: "Fetch from Google Location (to see schools near you)",
+            label: "Fetch From G-Locations for seeing schools near you",
             onPressed: _fetchFromGoogleLocation,
           ),
           ],

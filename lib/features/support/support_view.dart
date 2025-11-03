@@ -7,13 +7,24 @@ class SupportView extends StatelessWidget {
   const SupportView({super.key});
 
   // Helper method to launch URLs
-  Future<void> _launchUrl(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (!await launchUrl(uri)) {
-      // You can show a toast or snackbar here if it fails
-      print('Could not launch $url');
-    }
+ Future<void> _launchUrl(String url) async {
+  Uri uri;
+
+  if (url.contains('@') && !url.startsWith('mailto:')) {
+    // 📧 If it's an email address, convert to mailto link
+    uri = Uri(
+      scheme: 'mailto',
+      path: url,
+    );
+  } else {
+    // 🌐 For normal URLs
+    uri = Uri.parse(url);
   }
+
+  if (!await launchUrl(uri)) {
+    print('Could not launch $url');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +87,13 @@ class SupportView extends StatelessWidget {
                   text: '+91 84314 72672',
                   onTap: () => _launchUrl('tel:+918431472672'),
                 ),
+                  const SizedBox(height: 20),
+                // --- EMAIL ROW REMOVED ---
+               _ContactRow(
+  icon: Icons.email,
+  text: 'synzy2025@gmail.com',
+  onTap: () => _launchUrl('synzy2025@gmail.com'),
+),
               ],
             ),
           ),

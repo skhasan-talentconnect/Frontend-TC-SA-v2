@@ -18,6 +18,7 @@ class NavigatorCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
         border: Border.all(color: Colors.orange.shade700),
         color: Colors.yellow.shade100,
       ),

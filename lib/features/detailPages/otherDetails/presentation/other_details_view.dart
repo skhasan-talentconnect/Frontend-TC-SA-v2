@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/detailPages/otherDetails/presentation/view_models/otherDetails_view_model.dart';
 import 'package:tc_sa/features/detailPages/otherDetails/presentation/widgets/gender_ratio_card.dart';
-import 'package:tc_sa/features/detailPages/otherDetails/presentation/widgets/scholarship_available.dart';
-import 'package:tc_sa/features/detailPages/otherDetails/presentation/widgets/special_needs_card.dart';
 
 class OtherDetailsView extends StatefulWidget {
   const OtherDetailsView({super.key, required this.schoolId});
@@ -89,13 +86,7 @@ void initState(){
                   
                   const SizedBox(height: 20),
                   
-                  if (model.scholarshipDiversity != null)
-                    ScholarshipDiversityCard(diversityData: model.scholarshipDiversity!),
-                  
-                  const SizedBox(height: 20),
-
-                  if (model.specialNeedsSupport != null)
-                    SpecialNeedsCard(supportData: model.specialNeedsSupport!),
+            
                 ],
               ),
             );
