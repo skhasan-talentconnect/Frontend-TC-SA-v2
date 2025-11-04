@@ -18,7 +18,7 @@ class ScholarshipCard extends StatelessWidget {
             blurRadius: 6,
             spreadRadius: 1,
             offset: const Offset(0, 3),
-            color: Colors.amber.shade100.withOpacity(0.5),
+            color: Colors.grey,
           ),
         ],
       ),
@@ -76,8 +76,9 @@ class ScholarshipCard extends StatelessWidget {
                 children: scholarship.documentsRequired
                     .map(
                       (doc) => Chip(
-                        backgroundColor: Colors.grey.shade100,
+                        backgroundColor: Colors.amber.shade50,
                         label: Text(doc),
+                         side: BorderSide(color: Colors.amber.shade200),
                       ),
                     )
                     .toList(),

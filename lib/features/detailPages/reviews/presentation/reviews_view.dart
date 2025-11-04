@@ -169,8 +169,8 @@ class _ReviewsViewState extends State<ReviewsView> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.yellow.shade100.withOpacity(0.5),
-            blurRadius: 6,
+            color: Colors.grey,
+            blurRadius: 4,
             offset: const Offset(0, 3),
           ),
         ],

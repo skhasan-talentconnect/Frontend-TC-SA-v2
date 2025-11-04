@@ -27,8 +27,8 @@ class ReviewCard extends StatelessWidget {
         border: Border.all(color: Colors.yellow.shade200, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.yellow.shade100.withOpacity(0.5),
-            blurRadius: 6,
+            color: Colors.grey,
+            blurRadius: 4,
             spreadRadius: 1,
             offset: const Offset(0, 3),
           ),

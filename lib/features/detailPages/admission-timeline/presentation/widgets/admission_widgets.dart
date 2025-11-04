@@ -36,10 +36,10 @@ class TimelineCard extends StatelessWidget {
         border: Border.all(color: Colors.yellow.shade200, width: 1),
         boxShadow: [
           BoxShadow(
-            blurRadius: 6,
+            blurRadius: 4,
             spreadRadius: 1,
             offset: const Offset(0, 3),
-            color: Colors.amber.shade100.withOpacity(0.5),
+            color: Colors.grey,
           ),
         ],
       ),

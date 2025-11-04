@@ -27,21 +27,27 @@ class ScholarshipDiversityCard extends StatelessWidget {
               // --- THEME UPDATE: Set text color ---
               Text(
                 '${percentage.toStringAsFixed(0)}%',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.amber.shade800),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.amber),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: LinearProgressIndicator(
-              value: percentage / 100,
-              minHeight: 12,
-              // --- THEME UPDATE: Progress bar colors ---
-              backgroundColor: Colors.yellow,
-              color: Colors.yellow,
-            ),
-          ),
+Container(
+  decoration: BoxDecoration(
+
+    borderRadius: BorderRadius.circular(10),
+  ),
+  child: ClipRRect(
+    borderRadius: BorderRadius.circular(9), // slightly smaller to fit inside border
+    child: LinearProgressIndicator(
+      value: percentage / 100,
+      minHeight: 12,
+  backgroundColor: Colors.yellow.shade100,
+                                    color: Colors.yellow.shade700,
+    ),
+  ),
+),
+
 
          SizedBox(height: 20,),
           const Text('Types Offered', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),

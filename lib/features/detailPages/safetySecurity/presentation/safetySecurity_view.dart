@@ -121,7 +121,7 @@ void initState(){
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: Colors.yellow.shade200),),
       // --- THEME UPDATE ---
       color: Colors.white,
-      shadowColor: Colors.yellow.withOpacity(0.6),
+      shadowColor: Colors.grey,
       
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -238,7 +238,7 @@ class _TitledCard extends StatelessWidget {
       elevation: 6,
       // --- THEME UPDATE ---
       color: Colors.white,
-      shadowColor: Colors.yellow.withOpacity(0.1),
+      shadowColor: Colors.grey,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(color: Colors.yellow.shade200, width: 1) // Softer border

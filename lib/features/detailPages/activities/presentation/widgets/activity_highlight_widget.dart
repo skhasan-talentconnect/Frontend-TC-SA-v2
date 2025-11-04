@@ -20,13 +20,13 @@ class ActivityHighlightWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.yellow.shade200, width: 1),
+        border: Border.all(color: Colors.yellow.shade200, width: 1.5),
         boxShadow: [
           BoxShadow(
-            blurRadius: 6,
+            blurRadius: 4,
             spreadRadius: 1,
             offset: const Offset(0, 3),
-            color: Colors.amber.shade100.withOpacity(0.5),
+            color: Colors.grey.shade400,
           ),
         ],
       ),

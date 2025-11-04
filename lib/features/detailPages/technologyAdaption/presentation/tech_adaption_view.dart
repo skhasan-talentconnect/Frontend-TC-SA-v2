@@ -166,11 +166,11 @@ class _TechnologyAdoptionViewState extends State<TechnologyAdoptionView> {
 
   Widget _buildChipListCard(BuildContext context, List<String> platforms) {
     return Card(
-      elevation: 6,
+      elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12),side: BorderSide(color: Colors.yellow)),
       // --- 7. THEME UPDATE ---
       color: Colors.white,
-      shadowColor: Colors.yellow.shade400.withOpacity(0.5),
+      shadowColor: Colors.grey,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

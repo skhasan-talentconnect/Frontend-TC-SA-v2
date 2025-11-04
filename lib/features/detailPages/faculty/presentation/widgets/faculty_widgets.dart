@@ -26,7 +26,7 @@ class FacultyMemberCard extends StatelessWidget {
     final initials = getInitials(member.name);
 
     return Card(
-      elevation: 2,
+      elevation: 3,
       margin: EdgeInsets.zero, // Margin is handled by ListView.separated
       color: Colors.white,
       shape: RoundedRectangleBorder(

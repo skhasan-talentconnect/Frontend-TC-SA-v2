@@ -842,8 +842,6 @@ class OverviewTab extends StatelessWidget {
   }
 }
 
-
-
 class FeeRangeDisplay extends StatelessWidget {
   final String feeLow;
   final String feeHigh;
@@ -858,91 +856,87 @@ class FeeRangeDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.yellow.shade200, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.yellow.shade100.withOpacity(0.4),
-            blurRadius: 6,
-            spreadRadius: 1,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Full Range text
-          Text(
-            'Full Range: $feeRange',
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey.shade600,
-              fontStyle: FontStyle.italic,
+    return Material(
+      elevation: 4,
+      shadowColor: Colors.grey.withOpacity(0.4), // ✅ grey shadow
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.yellow.shade200, width: 1),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Full Range text
+            Text(
+              'Full Range: $feeRange',
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.amber,
+                fontStyle: FontStyle.normal,
+              ),
             ),
-          ),
-          const SizedBox(height: 10),
+            const SizedBox(height: 10),
 
-          // Min/Max section
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    const Text(
-                      'MINIMUM',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                    Text(
-                      feeLow,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+            // Min/Max section
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      const Text(
+                        'MINIMUM',
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
                       ),
-                    ),
-                  ],
+                      Text(
+                        feeLow,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                width: 1,
-                height: 32,
-                color: Colors.grey.shade300,
-              ),
-              Expanded(
-                child: Column(
-                  children: [
-                    Text(
-                      'MAXIMUM',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.yellow.shade800,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      feeHigh,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.yellow.shade800,
-                      ),
-                    ),
-                  ],
+                Container(
+                  width: 1,
+                  height: 32,
+                  color: Colors.grey.shade300,
                 ),
-              ),
-            ],
-          ),
-        ],
+                Expanded(
+                  child: Column(
+                    children: [
+                      const Text(
+                        'MAXIMUM',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        feeHigh,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-
 
 
 class TitledCard extends StatelessWidget {
@@ -956,45 +950,42 @@ class TitledCard extends StatelessWidget {
     required this.title,
     required this.icon,
     required this.child,
-    this.iconColor = Colors.yellow,
+    this.iconColor = Colors.amber,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.yellow.shade200, width: 1),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.yellow.shade100.withOpacity(0.4),
-            blurRadius: 6,
-            spreadRadius: 1,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: Colors.yellow.shade800, size: 18),
-              const SizedBox(width: 12),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          child,
-        ],
+    return Material(
+      elevation: 6,
+      shadowColor: Colors.grey.withOpacity(0.4), // ✅ grey shadow
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.yellow.shade200, width: 1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(icon, color: Colors.grey.shade800, size: 20),
+                const SizedBox(width: 12),
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.amber,
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            child,
+          ],
+        ),
       ),
     );
   }
