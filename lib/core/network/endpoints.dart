@@ -1,5 +1,6 @@
 class Endpoints {
-  static const String baseUrl = 'https://backend-tc-sa-v2.onrender.com/api/';
+  // static const String baseUrl = 'https://backend-tc-sa-v2.onrender.com/api/';
+  static const String baseUrl = 'https://api.synzy.in/api/';
 
   //Authentication Endpoints
   static const String auth = 'auth';
