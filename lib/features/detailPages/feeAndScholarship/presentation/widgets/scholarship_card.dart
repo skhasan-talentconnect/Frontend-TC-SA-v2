@@ -12,13 +12,12 @@ class ScholarshipCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        // --- THEME UPDATE: Yellow border and shadow ---
         border: Border.all(color: Colors.yellow.shade200, width: 1),
         boxShadow: [
           BoxShadow(
             blurRadius: 6,
             spreadRadius: 1,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
             color: Colors.amber.shade100.withOpacity(0.5),
           ),
         ],
@@ -29,19 +28,20 @@ class ScholarshipCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // --- Scholarship Name ---
             Text(
               scholarship.name ?? 'Unnamed Scholarship',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
 
-            // Only show the chip if a type exists
+            // --- Type Chip (if available) ---
             if (scholarship.type != null)
               Chip(
                 label: Text(scholarship.type!),
-                // --- THEME UPDATE: Yellow chip ---
                 backgroundColor: Colors.amber.shade100,
                 avatar: Icon(
                   Icons.category_outlined,
@@ -50,37 +50,37 @@ class ScholarshipCard extends StatelessWidget {
                 labelStyle: TextStyle(color: Colors.amber.shade900),
                 side: BorderSide(color: Colors.amber.shade300),
               ),
-            
-           SizedBox(height: 20),
 
+            const SizedBox(height: 20),
+
+            // --- Amount ---
             Text(
               'Amount: ₹${scholarship.amount ?? 0}',
               style: Theme.of(context).textTheme.titleMedium,
             ),
 
-            // Only show the "Documents" section if the list is not empty
+            // --- Documents Section ---
             if (scholarship.documentsRequired.isNotEmpty) ...[
               const SizedBox(height: 16),
               Text(
                 'Documents Required:',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8.0,
                 runSpacing: 4.0,
-                children:
-                    scholarship.documentsRequired
-                        .map(
-                          (doc) => Chip(
-                            // --- THEME UPDATE: Lighter chip ---
-                            backgroundColor: Colors.grey.shade100,
-                            label: Text(doc),
-                          ),
-                        )
-                        .toList(),
+                children: scholarship.documentsRequired
+                    .map(
+                      (doc) => Chip(
+                        backgroundColor: Colors.grey.shade100,
+                        label: Text(doc),
+                      ),
+                    )
+                    .toList(),
               ),
             ],
           ],

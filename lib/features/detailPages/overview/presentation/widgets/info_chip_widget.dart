@@ -17,11 +17,22 @@ class InfoChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Increased vertical padding
+      padding: EdgeInsets.symmetric(
+        horizontal: isSmallScreen ? 10 : 12,
+        vertical: isSmallScreen ? 6 : 8,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Colors.amber.shade200), // Updated color
-        borderRadius: BorderRadius.circular(8), // Softer corners
+        border: Border.all(color: Colors.yellow.shade200, width: 1),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.yellow.shade100.withOpacity(0.5),
+            blurRadius: 6,
+            spreadRadius: 1,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -31,15 +42,15 @@ class InfoChip extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: fontSize,
-              color: Colors.amber, // Updated color
+              color: Colors.yellow.shade800,
             ),
           ),
-          const SizedBox(height: 2), // Added spacing
+          const SizedBox(height: 2),
           Text(
             bottomText,
             style: TextStyle(
-              fontSize: fontSize * 0.8, // Slightly smaller
-              color: Colors.grey.shade600, // Softer text color
+              fontSize: fontSize * 0.8,
+              color: Colors.grey.shade700,
             ),
           ),
         ],

@@ -111,10 +111,7 @@ class _AlumniViewState extends State<AlumniView> {
                                     name: fa.name ?? "-",
                                     profession: fa.profession,
                                     // --- 6. THEME UPDATE ---
-                                    backgroundGradient: const [
-                                      Color(0xFFFFF8E1), // yellow-50
-                                      Color(0xFFFFFFFF), // white
-                                    ],
+                                  
                                   ),
                                 ),
                                 const SizedBox(height: 22),
@@ -138,10 +135,7 @@ class _AlumniViewState extends State<AlumniView> {
                                             ? null
                                             : "${ta.percentage!.toStringAsFixed(1)}%",
                                     // --- 6. THEME UPDATE ---
-                                    backgroundGradient: const [
-                                      Color(0xFFFFF3E0), // orange-50
-                                      Color(0xFFFFFFFF),
-                                    ],
+                                   
                                   ),
                                 ),
                                 const SizedBox(height: 22),
@@ -165,8 +159,7 @@ class _AlumniViewState extends State<AlumniView> {
                                             ? null
                                             : "${al.percentage!.toStringAsFixed(1)}%",
                                     // --- 6. THEME UPDATE ---
-                                    backgroundColor:
-                                        Colors.white, // Plain white
+                                   
                                   ),
                                 ),
                               ],

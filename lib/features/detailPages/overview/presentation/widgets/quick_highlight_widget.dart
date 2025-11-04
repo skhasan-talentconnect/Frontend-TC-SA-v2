@@ -23,14 +23,15 @@ class QuickHighlights extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
         color: Colors.white,
-        border: Border.all(color: Colors.grey.shade200),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.yellow.shade200, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
+            color: Colors.yellow.shade100.withOpacity(0.5),
+            blurRadius: 6,
+            spreadRadius: 1,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -38,7 +39,7 @@ class QuickHighlights extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 28.0, color: Colors.amber),
+          Icon(icon, size: 28.0, color: Colors.yellow.shade800),
           const SizedBox(height: 8),
           Text(
             capitalize(title),

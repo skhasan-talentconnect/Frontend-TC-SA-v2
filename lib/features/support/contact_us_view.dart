@@ -119,24 +119,24 @@ class ContactUsView extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          // --- Social Icons with Labels ---
+          // --- Social Icons with custom asset images ---
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _SocialIconWithLabel(
-                icon: Icons.linked_camera_outlined,
+                assetPath: 'assets/icons/linkedIn.png',
                 label: 'LinkedIn',
                 onTap: () => _launchUrl('https://www.linkedin.com/company/talentsconnectss/'),
               ),
               _SocialIconWithLabel(
-                icon: Icons.camera_alt_outlined,
+                assetPath: 'assets/icons/insta.png',
                 label: 'Instagram',
-                onTap: () => _launchUrl('https://www.instagram.com/'),
+                onTap: () => _launchUrl('https://www.instagram.com/synzy_ai/'),
               ),
               _SocialIconWithLabel(
-                icon: Icons.facebook_outlined,
-                label: 'Facebook',
-                onTap: () => _launchUrl('https://www.facebook.com/'),
+                assetPath: 'assets/icons/facebook.png',
+                label: 'Facecook',
+                onTap: () => _launchUrl('https://www.facebook.com/people/SYNZY/61583168018071/'),
               ),
             ],
           ),
@@ -183,7 +183,10 @@ class _TitledCard extends StatelessWidget {
                 const SizedBox(width: 10),
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -196,12 +199,14 @@ class _TitledCard extends StatelessWidget {
   }
 }
 
+// --- UPDATED SOCIAL ICON WIDGET ---
 class _SocialIconWithLabel extends StatelessWidget {
-  final IconData icon;
+  final String assetPath;
   final String label;
   final VoidCallback onTap;
+
   const _SocialIconWithLabel({
-    required this.icon,
+    required this.assetPath,
     required this.label,
     required this.onTap,
   });
@@ -210,12 +215,15 @@ class _SocialIconWithLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        IconButton(
-          onPressed: onTap,
-          icon: Icon(icon),
-          iconSize: 36,
-          color: Colors.grey.shade800,
-          splashRadius: 28,
+        InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(100),
+          child: Image.asset(
+            assetPath,
+            width: 40,
+            height: 40,
+            fit: BoxFit.cover,
+          ),
         ),
         const SizedBox(height: 6),
         Text(

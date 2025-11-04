@@ -11,7 +11,7 @@ class TitledCard extends StatelessWidget {
     required this.title,
     required this.icon,
     required this.child,
-    this.iconColor = Colors.black,
+    this.iconColor = Colors.amber,
   });
 
   @override
@@ -19,15 +19,15 @@ class TitledCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white, // 🌟 Light yellow background
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.amber.shade200, width: 1.5),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.yellow.shade200, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.amber.shade200.withOpacity(0.4), // soft yellow shadow
-            blurRadius: 12, // 🌟 Increased for higher elevation
-            spreadRadius: 2,
-            offset: const Offset(0, 6), // Deeper shadow
+            blurRadius: 6,
+            spreadRadius: 1,
+            offset: const Offset(0, 3),
+            color: Colors.amber.shade100.withOpacity(0.5),
           ),
         ],
       ),
@@ -39,14 +39,17 @@ class TitledCard extends StatelessWidget {
             // --- Header Row ---
             Row(
               children: [
-                Icon(icon, color: Colors.amber.shade800, size: 28),
+                Icon(icon, color: Colors.amber.shade800, size: 26),
                 const SizedBox(width: 10),
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),

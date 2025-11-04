@@ -40,6 +40,22 @@ class _PrefViewState extends State<PrefView> {
   "Station Road",
   "Market"
 ];
+// 🧩 Mapping of frontend (short) values to backend (enum) strings
+final Map<String, String> interestMap = {
+  'Academics': 'Focusing on Academics',
+  'Practical Learning': 'Focuses on Practical Learning',
+  'Theoretical Learning': 'Focuses on Theoretical Learning',
+  'Sports': 'Empowering in Sports',
+  'Arts': 'Empowering in Arts',
+  'Mathematics': 'Special Focus on Mathematics',
+  'Science': 'Special Focus on Science',
+  'Physical Education': 'Special Focus on Physical Education',
+  'Leadership Development': 'Leadership Development',
+  'STEM Activities': 'STEM Activities',
+  'Cultural Education': 'Cultural Education',
+  'Technology Integration': 'Technology Integration',
+  'Environmental Awareness': 'Environmental Awareness',
+};
 
 
   @override
@@ -82,7 +98,15 @@ void _setPrefDefaults() {
   setState(() {
     boardController.text = pref.boards ?? '';
     standardController.text = pref.preferredStandard?.toCapitalise ?? '';
-    interestController.text = pref.interests ?? '';
+    final backendInterest = pref.interests ?? '';
+final frontendInterest = interestMap.entries
+    .firstWhere(
+      (entry) => entry.value == backendInterest,
+      orElse: () => const MapEntry('', ''),
+    )
+    .key;
+interestController.text = frontendInterest.isNotEmpty ? frontendInterest : backendInterest;
+
     schoolTypeController.text = pref.schoolType?.toCapitalise ?? '';
     shiftController.text = pref.shift?.toCapitalise ?? '';
   });
@@ -272,26 +296,18 @@ void _setPrefDefaults() {
                                       label: 'Preferred Standard',
                                       hint: 'Select Standard',
                                     ),
-                                    STextField.dropdown(
-                                      controller: interestController,
-                                      items: [
-                                        'Focusing on Academics',
-                                        'Focuses on Practical Learning',
-                                        'Focuses on Theoretical Learning',
-                                        'Empowering in Sports',
-                                        'Empowering in Arts',
-                                        'Special Focus on Mathematics',
-                                        'Special Focus on Science',
-                                        'Special Focus on Physical Education',
-                                        'Leadership Development',
-                                        'STEM Activities',
-                                        'Cultural Education',
-                                        'Technology Integration',
-                                        'Environmental Awareness',
-                                      ],
-                                      label: 'Interests',
-                                      hint: 'Select Interest',
-                                    ),
+                                   STextField.dropdown(
+  controller: interestController,
+  items: interestMap.keys.toList(), // show short values only
+  label: 'Interests',
+  hint: 'Focuses On',
+  onChanged: (value) {
+    if (value != null && interestMap.containsKey(value)) {
+      interestController.text = value; // frontend text
+    }
+  },
+),
+
                                     STextField.dropdown(
                                       controller: schoolTypeController,
                                       items: [
@@ -425,8 +441,9 @@ void _setPrefDefaults() {
                                   String boards = boardController.text.trim();
                                   String standard =
                                       standardController.text.trim();
-                                  String interest =
-                                      interestController.text.trim();
+String frontendInterest = interestController.text.trim();
+String interest = interestMap[frontendInterest] ?? frontendInterest;
+
                                   String schoolType =
                                       schoolTypeController.text.trim();
                                   String shifts = shiftController.text.trim();

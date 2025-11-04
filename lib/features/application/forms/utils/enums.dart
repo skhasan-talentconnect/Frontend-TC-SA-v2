@@ -29,7 +29,7 @@ extension FormStatusExt on FormStatus {
       case FormStatus.rejected:
         return Colors.red;
       case FormStatus.interview:
-       return Colors.orange;
+       return Colors.orange.shade700;
     }
   }
 

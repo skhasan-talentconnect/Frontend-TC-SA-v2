@@ -8,48 +8,26 @@ import 'package:tc_sa/features/detailPages/reviews/presentation/widgets/review_f
 import 'package:tc_sa/features/detailPages/reviews/presentation/widgets/reviews_card.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-
 class ReviewsView extends StatefulWidget {
   const ReviewsView({super.key, required this.schoolId});
   final String schoolId;
+
   @override
   State<ReviewsView> createState() => _ReviewsViewState();
 }
 
 class _ReviewsViewState extends State<ReviewsView> {
   final ReviewViewModel _vm = ReviewViewModel();
-  // String _schoolId = '';
-  // String _schoolName = 'Reviews';
-  // bool _isInitialized = false;
-
-  // Get the global AppStateProvider instance
   final appStateProvider = getIt<AppStateProvider>();
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   if (_isInitialized) return;
-  //   _isInitialized = true;
-
-  //   final extra = GoRouterState.of(context).extra;
-  //   if (extra is Map) {
-  //     _schoolId = extra['schoolId'] as String? ?? '';
-  //     _schoolName = extra['schoolName'] as String? ?? 'Reviews';
-  //   }
-
-  //   if (_schoolId.isNotEmpty) {
-  //     WidgetsBinding.instance.addPostFrameCallback((_) {
-  //       _vm.getReviews(schoolId: _schoolId);
-  //     });
-  //   }
-  // }
   @override
-void initState(){
+  void initState() {
     super.initState();
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-        _vm.getReviews(schoolId: widget.schoolId);
-      });
-}
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _vm.getReviews(schoolId: widget.schoolId);
+    });
+  }
+
   Future<void> _refresh() async {
     if (widget.schoolId.isNotEmpty) {
       await _vm.getReviews(schoolId: widget.schoolId);
@@ -88,10 +66,9 @@ void initState(){
               rating: rating,
               text: text,
             );
-            
+
             if (mounted) {
-              Navigator.of(context).pop(); // Close the bottom sheet
-              
+              Navigator.of(context).pop();
               final snackBar = SnackBar(
                 content: Text(success
                     ? 'Review submitted! It will appear after approval.'
@@ -106,34 +83,30 @@ void initState(){
     );
   }
 
- 
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
-        // appBar: SAppBar(
-        //   title: _schoolName,
-        //   leading: SIcon(icon: Icons.keyboard_arrow_left, onTap: () => context.pop()),
-        // ),
+        backgroundColor: Colors.white,
         body: Consumer<ReviewViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy && vm.reviews.isEmpty) {
-              return const Center(child: SLoadingIndicator());
+              return const Center(child: SLoadingIndicator(color: Colors.yellow));
             }
 
             return RefreshIndicator(
               onRefresh: _refresh,
+              color: Colors.yellow.shade700,
               child: ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
                   _buildHeader(context, vm.averageRating),
                   const SizedBox(height: 24),
-                  if(vm.reviews.isNotEmpty)
+                  if (vm.reviews.isNotEmpty)
                     _buildRatingDistribution(context, vm.ratingPercentages),
                   const SizedBox(height: 24),
-                  const Divider(),
+                  const Divider(thickness: 1, color: Color(0xFFEFEFEF)),
                   const SizedBox(height: 24),
                   _buildReviewList(context, vm),
                 ],
@@ -158,12 +131,14 @@ void initState(){
             Row(
               children: List.generate(5, (index) {
                 return Icon(
-                  index < avgRating.round() ? Icons.star : Icons.star_border,
-                  color: Colors.amber,
+                  index < avgRating.round()
+                      ? Icons.star
+                      : Icons.star_border,
+                  color: Colors.yellow.shade700,
                   size: 24,
                 );
               }),
-            )
+            ),
           ],
         ),
         const Spacer(),
@@ -173,10 +148,13 @@ void initState(){
             icon: const Icon(Icons.edit_outlined),
             label: const Text('Write a Review'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Colors.yellow.shade700,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              elevation: 2,
             ),
           ),
       ],
@@ -184,39 +162,48 @@ void initState(){
   }
 
   Widget _buildRatingDistribution(BuildContext context, List<double> percentages) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: List.generate(5, (index) {
-            final star = 5 - index;
-            final percent = percentages[index];
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: Row(
-                children: [
-                  Text('$star star'),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: LinearProgressIndicator(
-                        value: percent / 100,
-                        minHeight: 8,
-                        backgroundColor: Colors.grey.shade200,
-                        color: Colors.amber,
-                      ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.yellow.shade200),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.yellow.shade100.withOpacity(0.5),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: List.generate(5, (index) {
+          final star = 5 - index;
+          final percent = percentages[index];
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0),
+            child: Row(
+              children: [
+                Text('$star ★', style: TextStyle(color: Colors.grey.shade700)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: LinearProgressIndicator(
+                      value: percent / 100,
+                      minHeight: 8,
+                      backgroundColor: Colors.grey.shade200,
+                      color: Colors.yellow.shade700,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Text('${percent.toStringAsFixed(0)}%'),
-                ],
-              ),
-            );
-          }),
-        ),
+                ),
+                const SizedBox(width: 8),
+                Text('${percent.toStringAsFixed(0)}%',
+                    style: const TextStyle(fontWeight: FontWeight.w500)),
+              ],
+            ),
+          );
+        }),
       ),
     );
   }
@@ -228,11 +215,15 @@ void initState(){
           padding: const EdgeInsets.symmetric(vertical: 48.0),
           child: Column(
             children: [
-              Icon(Icons.rate_review_outlined, size: 60, color: Colors.grey.shade400),
+              Icon(Icons.rate_review_outlined,
+                  size: 60, color: Colors.grey.shade400),
               const SizedBox(height: 16),
               Text(
                 vm.message ?? 'Be the first to review this school!',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(color: Colors.grey.shade600),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -240,10 +231,11 @@ void initState(){
         ),
       );
     }
-    
+
     return Column(
       children: vm.reviews.map((review) {
-        final time = review.createdAt != null ? timeago.format(review.createdAt!) : '...';
+        final time =
+            review.createdAt != null ? timeago.format(review.createdAt!) : '...';
         return ReviewCard(
           name: review.student?.name ?? 'Anonymous',
           reviewText: review.text ?? '',

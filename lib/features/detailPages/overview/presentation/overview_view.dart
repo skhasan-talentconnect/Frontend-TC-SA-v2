@@ -753,8 +753,8 @@ class OverviewTab extends StatelessWidget {
       child: Column(
         children: [
           // --- SOCIAL MEDIA PRESENCE SECTION AT TOP ---
-          SocialPresenceRow(school: school),
-          const SizedBox(height: 16),
+         
+          const SizedBox(height: 5),
 
           // Quick Highlights Section
           TitledCard(
@@ -812,7 +812,7 @@ class OverviewTab extends StatelessWidget {
           const SizedBox(height: 20),
 
           // Top Amenities Section
-          _TitledCard(
+          TitledCard(
             title: "Top Tags",
             icon: Icons.widgets_outlined,
             iconColor: Colors.amber,
@@ -842,104 +842,6 @@ class OverviewTab extends StatelessWidget {
   }
 }
 
-class SocialPresenceRow extends StatelessWidget {
-  const SocialPresenceRow({required this.school});
-  final SchoolModel school;
-
-  Future<void> _launch(String url) async {
-    final uri = Uri.parse(url);
-    try {
-      if (!await launchUrl(uri, mode: LaunchMode.platformDefault)) {
-        debugPrint('Could not launch $url');
-      }
-    } catch (e) {
-      debugPrint('Launch failed: $e');
-    }
-  }
-
-  Widget _buildSocial({
-    required IconData icon,
-    required String name,
-    required String? url,
-    required Color color,
-  }) {
-    if (url == null || url.isEmpty) return SizedBox.shrink();
-
-    return GestureDetector(
-      onTap: () => _launch(url),
-      child: Row(
-        children: [
-          Icon(icon, color: color, size: 22),
-          const SizedBox(width: 6),
-          Text(
-            name,
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.w600,
-              fontSize: 15,
-              decoration: TextDecoration.underline,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final items =
-        [
-          _buildSocial(
-            icon: Icons.public_outlined,
-            name: 'Website',
-            url: school.website,
-
-            color: Colors.yellow.shade700,
-          ),
-          _buildSocial(
-            icon: Icons.camera_alt_outlined,
-            name: 'Instagram',
-            url: school.instagramHandle,
-            color: Colors.pink,
-          ),
-          _buildSocial(
-            icon: Icons.alternate_email_outlined,
-            name: 'Twitter',
-            url: school.twitterHandle,
-            color: Colors.blue,
-          ),
-          _buildSocial(
-            icon: Icons.business_outlined,
-            name: 'LinkedIn',
-            url: school.linkedinHandle,
-            color: Colors.indigo,
-          ),
-        ].where((w) => w is! SizedBox).toList(); // Remove empty items
-
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (items.length > 0) items[0],
-            if (items.length > 1) const SizedBox(width: 18),
-            if (items.length > 1) items[1],
-          ],
-        ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (items.length > 2) items[2],
-            if (items.length > 3) const SizedBox(width: 18),
-            if (items.length > 3) items[3],
-          ],
-        ),
-      ],
-    );
-  }
-}
-
 
 
 class FeeRangeDisplay extends StatelessWidget {
@@ -956,114 +858,143 @@ class FeeRangeDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      margin: EdgeInsets.zero,
-      elevation: 1,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // 🔼 Move "Full Range" line to the top
-            Text(
-              'Full Range: $feeRange',
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.grey.shade600,
-                fontStyle: FontStyle.italic,
-              ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.yellow.shade200, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.yellow.shade100.withOpacity(0.4),
+            blurRadius: 6,
+            spreadRadius: 1,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Full Range text
+          Text(
+            'Full Range: $feeRange',
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.grey.shade600,
+              fontStyle: FontStyle.italic,
             ),
-            const SizedBox(height: 10),
+          ),
+          const SizedBox(height: 10),
 
-            // ↓ Min/Max section
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        'MINIMUM',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+          // Min/Max section
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    const Text(
+                      'MINIMUM',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                    Text(
+                      feeLow,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
-                      Text(
-                        feeLow,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Container(width: 1, height: 32, color: Colors.grey.shade300),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        'MAXIMUM',
-                        style: TextStyle(fontSize: 12, color: Colors.amber),
+              ),
+              Container(
+                width: 1,
+                height: 32,
+                color: Colors.grey.shade300,
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      'MAXIMUM',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.yellow.shade800,
+                        fontWeight: FontWeight.w500,
                       ),
-                      Text(
-                        feeHigh,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.amber.shade700,
-                        ),
+                    ),
+                    Text(
+                      feeHigh,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.yellow.shade800,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 }
 
-class _TitledCard extends StatelessWidget {
+
+
+class TitledCard extends StatelessWidget {
   final String title;
   final IconData icon;
   final Widget child;
   final Color iconColor;
-  const _TitledCard({
+
+  const TitledCard({
+    super.key,
     required this.title,
     required this.icon,
     required this.child,
-    required this.iconColor,
+    this.iconColor = Colors.yellow,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: iconColor, size: 28),
-                const SizedBox(width: 10),
-                Text(
-                  title,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-
-            child,
-          ],
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.yellow.shade200, width: 1),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.yellow.shade100.withOpacity(0.4),
+            blurRadius: 6,
+            spreadRadius: 1,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: Colors.yellow.shade800, size: 18),
+              const SizedBox(width: 12),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          child,
+        ],
       ),
     );
   }

@@ -15,7 +15,7 @@ class DetailTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(icon, color: Colors.yellow.shade600), // Slightly lighter icon
+      leading: Icon(icon, color: Colors.amber.shade800), // Slightly lighter icon
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
       trailing: Text(
         value,

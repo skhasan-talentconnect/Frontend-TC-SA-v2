@@ -36,6 +36,27 @@ class PrefViewModel extends ViewStateProvider {
 
     return failure;
   }
+Future<Failure?> fetchPreferences() async {
+  Failure? failure;
+
+  setViewState(ViewState.busy);
+
+  final result = await prefDataSourceImpl.getPreferences();
+
+  result.fold(
+    (exception) {
+      failure = APIFailure.fromException(exception: exception);
+    },
+    (res) {
+      if (res != null) {
+        getIt<AppStateProvider>().userPref = res;
+      }
+    },
+  );
+
+  setViewState(ViewState.complete);
+  return failure;
+}
 
   Future<Failure?> updatePreferences({
     required String boards,

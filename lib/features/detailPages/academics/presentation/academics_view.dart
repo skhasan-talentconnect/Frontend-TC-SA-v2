@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
-// Assuming TitledCard is imported from here or defined locally
 import 'package:tc_sa/features/detailPages/infrastructure/presentation/widgets/title_card.dart';
-
 import 'view_models/academics_view_model.dart';
 
 class AcademicsView extends StatefulWidget {
@@ -17,28 +15,7 @@ class AcademicsView extends StatefulWidget {
 
 class _AcademicsViewState extends State<AcademicsView> {
   final AcademicsViewModel _vm = AcademicsViewModel();
-  // String _schoolId = '';
   String _schoolName = 'Academics';
-  // bool _isInitialized = false;
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   if (_isInitialized) return;
-  //   _isInitialized = true;
-  //
-  //   final extra = GoRouterState.of(context).extra;
-  //   if (extra is Map) {
-  //     _schoolId = extra['schoolId'] as String? ?? '';
-  //     _schoolName = extra['schoolName'] as String? ?? 'Academics';
-  //   }
-  //
-  //   if (_schoolId.isNotEmpty) {
-  //     WidgetsBinding.instance.addPostFrameCallback((_) {
-  //       _vm.getAcademicsBySchoolId(schoolId: _schoolId);
-  //     });
-  //   }
-  // }
 
   @override
   void initState() {
@@ -65,15 +42,7 @@ class _AcademicsViewState extends State<AcademicsView> {
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
-        // --- 1. SET SCAFFOLD BACKGROUND TO WHITE ---
         backgroundColor: Colors.white,
-        // appBar: SAppBar(
-        //   title: _schoolName,
-        //   leading: SIcon(
-        //     icon: Icons.keyboard_arrow_left,
-        //     onTap: () => context.pop(),
-        //   ),
-        // ),
         body: Consumer<AcademicsViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy) {
@@ -81,7 +50,6 @@ class _AcademicsViewState extends State<AcademicsView> {
             }
 
             final model = vm.academics;
-
             if (model == null) {
               return Center(
                 child: Text(vm.message ?? "No academic data found."),
@@ -101,7 +69,6 @@ class _AcademicsViewState extends State<AcademicsView> {
                   const SizedBox(height: 20),
                   _buildOverallMarksCard(context, model.averageSchoolMarks),
                   const SizedBox(height: 20),
-                  // --- 2. UPDATED CHIP COLORS ---
                   _buildChipListCard(
                     context,
                     'Special Exam Training',
@@ -115,7 +82,7 @@ class _AcademicsViewState extends State<AcademicsView> {
                     'Extra-Curricular Activities',
                     Icons.palette_outlined,
                     model.extraCurricularActivities,
-                    Colors.orange,
+                    Colors.amber,
                   ),
                 ],
               ),
@@ -134,12 +101,12 @@ class _AcademicsViewState extends State<AcademicsView> {
     return TitledCard(
       title: 'Average Board Results',
       icon: Icons.leaderboard,
+      iconColor: Colors.amber,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // --- 3. UPDATED INDICATOR COLORS ---
             if (class10 != null)
               _buildResultIndicator('Class 10', class10, Colors.amber.shade700),
             if (class12 != null)
@@ -189,54 +156,53 @@ class _AcademicsViewState extends State<AcademicsView> {
     );
   }
 
-  // --- 4. THIS WIDGET ALREADY USES AMBER, SO NO CHANGES NEEDED ---
   Widget _buildOverallMarksCard(BuildContext context, double? marks) {
     return TitledCard(
       title: 'Overall School Average',
       icon: Icons.workspace_premium,
-      child:
-          (marks == null)
-              ? const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text('Data not available.'),
-              )
-              : Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'All Standards',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
+      iconColor: Colors.amber,
+      child: (marks == null)
+          ? const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text('Data not available.'),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'All Standards',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
                         ),
-                        Text(
-                          '${marks.toStringAsFixed(1)}%',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Colors.amber,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: LinearProgressIndicator(
-                        value: marks / 100,
-                        minHeight: 12,
-                        backgroundColor: Colors.amber.shade100,
-                        color: Colors.amber,
                       ),
+                      Text(
+                        '${marks.toStringAsFixed(1)}%',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.amber,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: LinearProgressIndicator(
+                      value: marks / 100,
+                      minHeight: 12,
+                      backgroundColor: Colors.amber.shade100,
+                      color: Colors.amber,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ),
     );
   }
 
@@ -250,29 +216,28 @@ class _AcademicsViewState extends State<AcademicsView> {
     return TitledCard(
       title: title,
       icon: icon,
-      child:
-          (items.isEmpty)
-              ? const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                child: Text('No data available for this section.'),
-              )
-              : Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Wrap(
-                  spacing: 8.0,
-                  runSpacing: 4.0,
-                  children:
-                      items
-                          .map(
-                            (item) => Chip(
-                              label: Text(item),
-                              backgroundColor: color.withOpacity(0.1),
-                              side: BorderSide(color: color.withOpacity(0.3)),
-                            ),
-                          )
-                          .toList(),
-                ),
+      iconColor: color,
+      child: (items.isEmpty)
+          ? const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
+              child: Text('No data available for this section.'),
+            )
+          : Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Wrap(
+                spacing: 8.0,
+                runSpacing: 4.0,
+                children: items
+                    .map(
+                      (item) => Chip(
+                        label: Text(item),
+                        backgroundColor: color.withOpacity(0.1),
+                        side: BorderSide(color: color.withOpacity(0.3)),
+                      ),
+                    )
+                    .toList(),
               ),
+            ),
     );
   }
 }
