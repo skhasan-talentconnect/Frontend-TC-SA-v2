@@ -49,13 +49,13 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
       ],
       child: Scaffold(
         backgroundColor: Colors.white,
-        body:
-            Consumer2<FeesAndScholarshipsViewModel, OtherDetailsViewModel>(
+        body: Consumer2<FeesAndScholarshipsViewModel, OtherDetailsViewModel>(
           builder: (context, feeVm, otherVm, _) {
             if (feeVm.viewState == ViewState.busy ||
                 otherVm.viewState == ViewState.busy) {
               return const Center(
-                  child: SLoadingIndicator(color: Colors.yellow));
+                child: SLoadingIndicator(color: Colors.yellow),
+              );
             }
 
             final feeModel = feeVm.feesAndScholarships;
@@ -79,7 +79,7 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
               child: ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
-                  /// 🟡 Fee Transparency Section
+                  /// 🟡 Fee Transparency
                   Text(
                     'Fee Details',
                     style: Theme.of(context)
@@ -142,86 +142,138 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
 
                   /// 🟡 Fee Table
                   if (feeModel?.classFees.isNotEmpty ?? false)
-                    Card(
-                      color: Colors.white,
-                      clipBehavior: Clip.antiAlias,
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(color: Colors.yellow.shade200),
-                      ),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.symmetric(vertical: 8),
-                          child: DataTable(
-                            headingRowHeight: 42,
-                            dataRowHeight: 40,
-                            headingRowColor:
-                                MaterialStateProperty.all(
-                                    Colors.yellow.shade50),
-                            columns: const [
-                              DataColumn(
-                                label: Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 8),
-                                  child: Text(
-                                    'Class',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 8),
-                                  child: Text(
-                                    'Tuition',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                numeric: true,
-                              ),
-                              DataColumn(
-                                label: Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 8),
-                                  child: Text(
-                                    'Total',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                numeric: true,
-                              ),
-                            ],
-                            rows: feeModel!.classFees.map((fee) {
-                              final total = (fee.tuition ?? 0) +
-                                  (fee.activity ?? 0) +
-                                  (fee.transport ?? 0) +
-                                  (fee.misc ?? 0);
-
-                              return DataRow(cells: [
-                                DataCell(Text(fee.className ?? '-')),
-                                DataCell(Text('₹${fee.tuition ?? 0}')),
-                                DataCell(Text(
-                                  '₹$total',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                )),
-                              ]);
-                            }).toList(),
-                          ),
-                        ),
+Card(
+  color: Colors.white,
+  elevation: 4,
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(12),
+    side: BorderSide(color: Colors.yellow.shade200),
+  ),
+  child: ClipRRect(
+    borderRadius: BorderRadius.circular(12),
+    child: Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 4,
+            spreadRadius: 1,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Table header
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.yellow.shade50,
+              border: Border(
+                bottom: BorderSide(color: Colors.yellow.shade200, width: 1),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+              child: Row(
+                children: const [
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      'Class',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
                       ),
                     ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      'Tuition',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                      textAlign: TextAlign.right,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      'Total',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                      textAlign: TextAlign.right,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
 
-                  const SizedBox(height: 28),
+          // Table body
+          Column(
+            children: feeModel!.classFees.map((fee) {
+              final total = (fee.tuition ?? 0) +
+                  (fee.activity ?? 0) +
+                  (fee.transport ?? 0) +
+                  (fee.misc ?? 0);
+              return Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: Colors.yellow.shade100, width: 1),
+                  ),
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          fee.className ?? '-',
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          '₹${fee.tuition ?? 0}',
+                          style: const TextStyle(fontSize: 14),
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          '₹$total',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    ),
+  ),
+),
+               const SizedBox(height: 28),
 
-                  /// 🟡 Scholarships
+                  /// 🟡 Scholarships & Concessions
                   Text(
                     'Scholarships & Concessions',
                     style: Theme.of(context)
@@ -234,34 +286,27 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                   if (feeModel?.scholarships.isEmpty ?? true)
                     const Text('No scholarships listed for this school.')
                   else
-                    ListView.separated(
+                    // ✅ FIXED: Removed outer Card to avoid double border/shadow
+                    ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: feeModel!.scholarships.length,
-                      separatorBuilder: (_, __) =>
-                          const SizedBox(height: 16),
                       itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0),
-                          child: Card(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(
-                                  color: Colors.yellow.shade200),
-                            ),
-                            elevation: 2,
-                            child: ScholarshipCard(
-                              scholarship:
-                                  feeModel.scholarships[index],
-                            ),
-                          ),
+                        return ScholarshipCard(
+                          scholarship: feeModel.scholarships[index],
                         );
                       },
                     ),
 
                   const SizedBox(height: 2),
+ Text(
+                    'Scholarship Diversity',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
 
                   /// 🟢 Scholarship Diversity
                   if (otherModel?.scholarshipDiversity != null)
@@ -273,8 +318,7 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                       ),
                       elevation: 3,
                       child: ScholarshipDiversityCard(
-                        diversityData:
-                            otherModel!.scholarshipDiversity!,
+                        diversityData: otherModel!.scholarshipDiversity!,
                       ),
                     ),
 

@@ -6,54 +6,35 @@ class AlumniItemWidget extends StatelessWidget {
   final String? profession;
   final String? percentage;
 
-  /// Use either backgroundGradient OR backgroundColor (gradient takes precedence)
-  final List<Color>? backgroundGradient;
-  final Color? backgroundColor;
-
   const AlumniItemWidget({
     super.key,
     required this.name,
     this.profession,
     this.percentage,
-    this.backgroundGradient,
-    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    final hasGradient = backgroundGradient != null && backgroundGradient!.isNotEmpty;
-
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: hasGradient ? null : (backgroundColor ?? const Color(0xFFF7F9FC)),
-        gradient: hasGradient
-            ? LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: backgroundGradient!,
-              )
-            : null,
-        borderRadius: BorderRadius.circular(10),
-        // --- 1. THEME UPDATE ---
-        border: Border.all(
-          color: Colors.amber.shade300,
-          width: 1,
-        ),
-        // --- 2. THEME UPDATE ---
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.yellow.shade200, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.amber.shade100.withOpacity(0.5),
-            blurRadius: 6,
+            blurRadius: 4,
+            spreadRadius: 1,
             offset: const Offset(0, 3),
+            color: Colors.grey,
           ),
         ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // left
+          // --- Left Side: Name & Profession ---
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,6 +44,7 @@ class AlumniItemWidget extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
+                    color: Colors.black87,
                   ),
                 ),
                 if (profession != null && profession!.isNotEmpty) ...[
@@ -71,21 +53,21 @@ class AlumniItemWidget extends StatelessWidget {
                     profession!,
                     style: const TextStyle(
                       fontSize: 14,
-                      color: Color(0xFF64748B), // slate-500ish
+                      color: Color(0xFF64748B), // subtle grey tone
                     ),
                   ),
                 ],
               ],
             ),
           ),
-          // right
+
+          // --- Right Side: Percentage ---
           if (percentage != null && percentage!.isNotEmpty)
             Text(
               percentage!,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                // --- 3. THEME UPDATE ---
                 color: Colors.amber.shade800,
               ),
             ),

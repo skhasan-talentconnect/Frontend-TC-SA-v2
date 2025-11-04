@@ -16,12 +16,13 @@ class RecruiterChip extends StatelessWidget {
     return Chip(
       label: Text(label),
       // --- THEME UPDATE ---
-      backgroundColor: Colors.white.withOpacity(0.1), // Kept blue for this section
-      side: BorderSide(color: Colors.amber.withOpacity(0.3)),
+      backgroundColor: Colors.white, // Kept blue for this section
+      side: BorderSide(color: Colors.yellow.shade400),
+      elevation: 10,
       labelStyle: TextStyle(
         fontSize: isSmallScreen ? 12.0 : 14.0,
         fontWeight: FontWeight.w500,
-        color: Colors.blue.shade900,
+        color: Colors.black,
       ),
       padding: EdgeInsets.symmetric(
         horizontal: isSmallScreen ? 10.0 : 12.0,

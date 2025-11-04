@@ -175,45 +175,72 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Container(
-                            height: bannerHeight,
+                         Stack(
+  children: [
+    // 📸 Background banner image
+    Container(
+      height: bannerHeight,
+      width: double.infinity,
+      child: (school.photos != null && school.photos!.isNotEmpty)
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(2.0),
+              child: Image.network(
+                school.photos!.first.url ?? '',
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  color: Colors.grey[200],
+                  child: const Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                ),
+              ),
+            )
+          : Container(
+              color: Colors.grey[200],
+              child: const Center(
+                child: Icon(Icons.school, size: 80, color: Colors.blue),
+              ),
+            ),
+    ),
 
-                            child:
-                                (school.photos != null &&
-                                        school.photos!.isNotEmpty)
-                                    ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(2.0),
-                                      child: Image.network(
-                                        school.photos!.first.url ?? '',
-                                        fit: BoxFit.fill,
-                                        height: double.infinity,
-                                        width: double.infinity,
-                                        errorBuilder:
-                                            (_, __, ___) => Container(
-                                              width: 300,
-                                              height: bannerHeight,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[200],
-                                                borderRadius:
-                                                    BorderRadius.circular(2.0),
-                                              ),
-                                              child: const Icon(
-                                                Icons.broken_image,
-                                                size: 50,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                      ),
-                                    )
-                                    : const Center(
-                                      child: Icon(
-                                        Icons.school,
-                                        size: 80,
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                          ),
+    // 🎯 Positioned social media icons
+  // 🎯 Positioned social media icons (VERTICAL)
+// 🎯 Positioned social media icons (VERTICAL with glow)
+Positioned(
+  top: 8,
+  right: 18,
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.end,
+    children: [
+      if (school.website != null && school.website!.isNotEmpty)
+        _buildSocialIcon(
+          assetPath: 'assets/icons/web.png',
+          url: school.website!,
+          // glowColor: Colors.yellow,
+        ),
+      if (school.instagramHandle != null && school.instagramHandle!.isNotEmpty)
+        _buildSocialIcon(
+          assetPath: 'assets/icons/insta.png',
+          url: school.instagramHandle!,
+          // glowColor: Colors.yellow,
+        ),
+      if (school.twitterHandle != null && school.twitterHandle!.isNotEmpty)
+        _buildSocialIcon(
+          assetPath: 'assets/icons/twitter.png',
+          url: school.twitterHandle!,
+          //  glowColor: Colors.yellow,
+        ),
+      if (school.linkedinHandle != null && school.linkedinHandle!.isNotEmpty)
+        _buildSocialIcon(
+          assetPath: 'assets/icons/linkedIn.png',
+          url: school.linkedinHandle!,
+          //  glowColor: Colors.yellow,
+        ),
+    ].expand((widget) => [const SizedBox(height: 8), widget]).skip(1).toList(),
+  ),
+),
 
+  ],
+)
+,
                           // Title + location + buttons
                           Padding(
                             padding: EdgeInsets.all(pad),
@@ -548,6 +575,61 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
       ),
     );
   }
+Widget _buildSocialIcon({
+  required String assetPath,
+  required String url,
+  double size = 32,
+  //Color glowColor = Colors.yellow,
+}) {
+  // 🚫 Don’t render if the link is missing or invalid
+  if (url.isEmpty) return const SizedBox.shrink();
+
+  return InkWell(
+    onTap: () async {
+      try {
+        final uri = Uri.parse(url);
+        if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Could not open link')),
+            );
+          }
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Invalid link')),
+          );
+        }
+      }
+    },
+    child: Container(
+      // decoration: BoxDecoration(
+      //   shape: BoxShape.circle,
+      //   boxShadow: [
+      //     BoxShadow(
+      //      // color: glowColor.withOpacity(0.7),
+      //       blurRadius: 10,
+      //       spreadRadius: 2,
+      //     ),
+      //   ],
+      // ),
+      child: ClipOval(
+        child: Image.asset(
+          assetPath,
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => const Icon(
+            Icons.broken_image,
+            color: Colors.grey,
+            size: 28,
+          ),
+        ),
+      ),
+    ),
+  );
+}
 
   void _scrollToTab(int index) {
     final keyContext = _tabKeys[index].currentContext;

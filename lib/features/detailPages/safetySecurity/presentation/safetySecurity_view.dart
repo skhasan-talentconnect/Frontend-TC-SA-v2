@@ -116,11 +116,13 @@ void initState(){
 
   Widget _buildCctvCard(BuildContext context, double? percentage) {
     return Card(
-      elevation: 6,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 4,
+      
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: Colors.yellow.shade200),),
       // --- THEME UPDATE ---
       color: Colors.white,
-      shadowColor: Colors.yellow.withOpacity(0.8),
+      shadowColor: Colors.grey,
+      
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -233,10 +235,10 @@ class _TitledCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
+      elevation: 6,
       // --- THEME UPDATE ---
       color: Colors.white,
-      shadowColor: Colors.yellow.withOpacity(0.1),
+      shadowColor: Colors.grey,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(color: Colors.yellow.shade200, width: 1) // Softer border

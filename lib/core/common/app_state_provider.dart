@@ -120,4 +120,23 @@ class AppStateProvider extends ViewStateProvider {
 
     return failure;
   }
+
+  Future<void> loadAllUserData() async {
+  try {
+    setViewState(ViewState.busy);
+
+    print("🚀 Loading user details...");
+    await getUserDetails();
+
+    print("📚 Loading user preferences...");
+    await getUserPrefDetails();
+
+    print("✅ All user data loaded successfully");
+  } catch (e) {
+    print("❌ Error loading user data: $e");
+  } finally {
+    setViewState(ViewState.complete);
+  }
+}
+
 }

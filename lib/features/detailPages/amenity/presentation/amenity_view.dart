@@ -1,72 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/models/photo.dart';
-
 import 'package:tc_sa/common/widgets/s_loading_indicator.dart';
 import 'package:tc_sa/core/common/view_state_provider.dart';
-
 import 'package:tc_sa/features/detailPages/amenity/presentation/view_models/amenity_view_model.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/recruiter_chip_widget.dart';
 
 class AmenitiesView extends StatefulWidget {
-  const AmenitiesView({super.key, required this.schoolId,required this.photos});
+  const AmenitiesView({super.key, required this.schoolId, required this.photos});
   final String schoolId;
   final List<Photo> photos;
-    @override
+
+  @override
   State<AmenitiesView> createState() => _AmenitiesViewState();
 }
 
 class _AmenitiesViewState extends State<AmenitiesView> {
   final AmenitiesViewModel _vm = AmenitiesViewModel();
-  // String _schoolId = '';
-  // String _schoolName = 'School';
-  // bool _parsed = false;
+
   @override
-void initState(){
+  void initState() {
     super.initState();
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-        _vm.getAmenitiesBySchoolId(schoolId: widget.schoolId);
-      });
-}
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   if (_parsed) return;
-  //   _parsed = true;
-
-  //   final state = GoRouterState.of(context);
-  //   final extra = state.extra;
-    
-  //   if (extra is Map) {
-  //     final id = (extra['schoolId'] ?? '').toString();
-  //     final name = (extra['schoolName'] ?? '').toString();
-  //     if (id.isNotEmpty) _schoolId = id;
-  //     if (name.trim().isNotEmpty) _schoolName = name.trim();
-  //   } else if (extra is String && extra.trim().isNotEmpty) {
-  //     _schoolId = extra.trim();
-  //     _schoolName = 'Amenities';
-  //   }
-
-  //   if (_schoolId.isEmpty) {
-  //     _schoolId = (state.pathParameters['id'] ?? '').toString();
-  //   }
-  //   if (_schoolId.isEmpty) {
-  //     _schoolId = (state.uri.queryParameters['id'] ?? '').toString();
-  //   }
-    
-  //   if (_schoolName == 'School' || _schoolName == 'Amenities') {
-  //      final qpName = (state.uri.queryParameters['name'] ?? '').toString();
-  //      if (qpName.trim().isNotEmpty) _schoolName = qpName.trim();
-  //   }
-
-  //   if (_schoolId.isNotEmpty) {
-  //     WidgetsBinding.instance.addPostFrameCallback((_) {
-  //       _vm.getAmenitiesBySchoolId(schoolId: _schoolId);
-  //     });
-  //   } else {
-  //     _vm.setViewState(ViewState.complete);
-  //   }
-  // }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _vm.getAmenitiesBySchoolId(schoolId: widget.schoolId);
+    });
+  }
 
   Future<void> _refresh() async {
     if (widget.schoolId.isEmpty) return;
@@ -83,7 +41,6 @@ void initState(){
           final model = vm.amenities;
           final isSmallScreen = MediaQuery.of(context).size.width < 600;
 
-         
           const String schoolInfo =
               "Sacred Heart Boys School provides excellent facilities and a supportive learning environment for students. Our campus features modern amenities, spacious classrooms, and dedicated staff who prioritize student development and well-being. We offer a comprehensive education with a focus on academic excellence, character building, and extracurricular activities.";
 
@@ -95,16 +52,8 @@ void initState(){
 
           return Scaffold(
             backgroundColor: Colors.white,
-            // appBar: SAppBar(
-            //   leading: SIcon(
-            //     icon: Icons.keyboard_arrow_left,
-            //     onTap: () => context.pop(),
-            //   ),
-            //   title: _schoolName, // Use the dynamic school name
-            // ),
             body: RefreshIndicator(
               onRefresh: _refresh,
-              // --- THEME UPDATE ---
               color: Colors.amber,
               child: Builder(
                 builder: (_) {
@@ -115,9 +64,8 @@ void initState(){
                   if (state == ViewState.busy) {
                     return const Center(child: SLoadingIndicator(color: Colors.amber));
                   }
-                  
+
                   if (model == null) {
-                    // --- UI POLISH: More modern 'Not Found' message ---
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -126,7 +74,10 @@ void initState(){
                           const SizedBox(height: 16),
                           Text(
                             vm.message ?? "No amenities found",
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(color: Colors.grey.shade600),
                           ),
                         ],
                       ),
@@ -139,19 +90,18 @@ void initState(){
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                  
-                        
                         const SizedBox(height: 10),
 
                         _TitledCard(
                           title: "School Amenities",
                           icon: Icons.widgets_outlined,
-                          // --- THEME UPDATE ---
                           iconColor: Colors.amber.shade700,
                           child: (amenityChips.isEmpty)
                               ? Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                  child: Text(vm.message ?? "No amenities found for this school."),
+                                  child: Text(
+                                    vm.message ?? "No amenities found for this school.",
+                                  ),
                                 )
                               : Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -167,13 +117,13 @@ void initState(){
                                   ),
                                 ),
                         ),
-                        
+
                         const SizedBox(height: 24),
 
                         _TitledCard(
                           title: "School Information",
                           icon: Icons.info_outline,
-                          iconColor: Colors.blueGrey,
+                          iconColor: Colors.amber.shade700,
                           child: const Padding(
                             padding: EdgeInsets.symmetric(vertical: 8.0),
                             child: Text(
@@ -183,6 +133,7 @@ void initState(){
                             ),
                           ),
                         ),
+
                         const SizedBox(height: 24),
                       ],
                     ),
@@ -213,32 +164,42 @@ class _TitledCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      // --- THEME UPDATE ---
-      color: Colors.white,
-      shadowColor: Colors.grey.withOpacity(0.1),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: iconColor, size: 28),
-                const SizedBox(width: 10),
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          
-            child,
-          ],
-        ),
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.yellow.shade200, width: 1),
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 4,
+            spreadRadius: 1,
+            offset: const Offset(0, 3),
+            color: Colors.grey,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: iconColor, size: 28),
+              const SizedBox(width: 10),
+              Text(
+                title,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          child,
+        ],
       ),
     );
   }

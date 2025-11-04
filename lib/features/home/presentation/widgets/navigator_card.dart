@@ -36,7 +36,7 @@ class NavigatorCard extends StatelessWidget {
           SButton(
             label: buttonText,
             onPressed: onPressed,
-            radius: 0,
+            radius: 12,
             backgroundColor: Colors.yellow.shade700,
           ),
         ],
