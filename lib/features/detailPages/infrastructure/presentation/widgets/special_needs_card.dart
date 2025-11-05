@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tc_sa/features/detailPages/infrastructure/presentation/widgets/title_card.dart'
     show TitledCard;
-
 import 'package:tc_sa/features/detailPages/otherDetails/data/entities/otherDetails_model.dart';
 
 class SpecialNeedsCard extends StatelessWidget {
@@ -34,7 +33,8 @@ class SpecialNeedsCard extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: hasStaff ? Colors.amber.shade200 : Colors.yellow.shade300,
+                color:
+                    hasStaff ? Colors.amber.shade200 : Colors.yellow.shade300,
               ),
               boxShadow: [
                 BoxShadow(
@@ -106,25 +106,20 @@ class SpecialNeedsCard extends StatelessWidget {
           Wrap(
             spacing: 8.0,
             runSpacing: 4.0,
-            children: supportData.facilitiesAvailable.map((item) {
-              return Chip(
-                label: Text(item),
-                backgroundColor: Colors.white,
-                side: BorderSide(
-                  color: Colors.yellow.shade200.withOpacity(0.3),
-                ),
-                elevation: 4,
-                shadowColor: Colors.amber.shade100.withOpacity(0.4),
-                labelStyle: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF0D47A1), // dark blue text
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10.0,
-                  vertical: 6.0,
-                ),
-              );
-            }).toList(),
+            children:
+                supportData.facilitiesAvailable.map((item) {
+                  return Chip(
+                    label: Text(item),
+                    backgroundColor: Colors.amber.shade100,
+                    side: BorderSide(color: Colors.amber.shade800, width: 0.5),
+                    elevation: 4,
+                    labelStyle: const TextStyle(fontWeight: FontWeight.w500),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0,
+                      vertical: 6.0,
+                    ),
+                  );
+                }).toList(),
           ),
         ],
       ),

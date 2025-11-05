@@ -48,11 +48,11 @@ class _MyFormViewsState extends State<MyFormViews> {
                               children: [
                                 SizedBox.shrink(),
                                 Text(
-                                  'Applied Forms',
+                                  'Application Tracker',
                                   style: STextStyles.s20W600,
                                 ),
                                 Text(
-                                  'All the applied forms.',
+                                  'Status of all your applications.',
                                   style: STextStyles.s16W400,
                                 ),
                               ],

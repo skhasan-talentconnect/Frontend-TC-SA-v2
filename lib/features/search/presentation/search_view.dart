@@ -55,35 +55,27 @@ class _SearchPageState extends State<SearchPage> {
     'OTHER',
   ];
 
-  final List<String> genders = [
-    "boy",
-    "girl",
-    "co-ed",
-  ];
+  final List<String> genders = ["boy", "girl", "co-ed"];
 
-  final List<String> schoolModes = [
-    "government",
-    "private",
-    "convent",
-  ];
+  final List<String> schoolModes = ["government", "private", "convent"];
 
   final List<String> feeRanges = [
-  "1000 - 10000",
-      "10000 - 25000",
-      "25000 - 50000",
-      "50000 - 75000",
-      "75000 - 100000",
-      "1 Lakh - 2 Lakh",
-      "2 Lakh - 3 Lakh",
-      "3 Lakh - 4 Lakh",
-      "4 Lakh - 5 Lakh",
-      "More than 5 Lakh"
+    "1000 - 10000",
+    "10000 - 25000",
+    "25000 - 50000",
+    "50000 - 75000",
+    "75000 - 100000",
+    "1 Lakh - 2 Lakh",
+    "2 Lakh - 3 Lakh",
+    "3 Lakh - 4 Lakh",
+    "4 Lakh - 5 Lakh",
+    "More than 5 Lakh",
   ];
 
   // Mapping of states to their cities
   final Map<String, List<String>> stateCities = {
     'Maharashtra': ['Mumbai', 'Pune', 'Navi Mumbai', "Nagpur"],
-    'Karnataka': ['Mangaluru', "Kalaburagi", 'Bangalore', 'Udupi'],
+    'Karnataka': ['Mangaluru', "Kalaburagi", 'Bengaluru', 'Udupi'],
     'Delhi': ['Jamia Nagar', 'Dwarka', 'Rohini', 'New Delhi'],
     'Kerala': ['Thiruvananthapuram', 'Kochi', 'Kottayam', 'Palakkad'],
     'Gujarat': ['Surat', 'Ahmedabad', 'Gandhinagar', 'Anand'],
@@ -142,39 +134,36 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
- @override
-Widget build(BuildContext context) {
-  final filterSelectedColor = SColor.primaryColor;
+  @override
+  Widget build(BuildContext context) {
+    final filterSelectedColor = SColor.primaryColor;
 
-  return Scaffold(
-    appBar: SAppBar(
-      leading: SIcon(
-        icon: Icons.keyboard_arrow_left,
-        onTap: () => context.pop(),
-      ),
-      title: 'Search',
-    ),
-
-    // 🔍 floating search button
-    floatingActionButton: FloatingActionButton(
-      backgroundColor: SColor.primaryColor,
-      onPressed: _handleSearch,
-      child: const Icon(
-        Icons.search,
-        color: Colors.white,
-      ),
-    ),
-
-    body: ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      children: [
-        SearchTextField(
-          controller: searchCtrl,
-          cursorColor: filterSelectedColor,
-          onSearchPressed: _handleSearch,
+    return Scaffold(
+      appBar: SAppBar(
+        leading: SIcon(
+          icon: Icons.keyboard_arrow_left,
+          onTap: () => context.pop(),
         ),
+        title: 'Search',
+      ),
 
-        const SizedBox(height: 12),
+      // 🔍 floating search button
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: SColor.primaryColor,
+        onPressed: _handleSearch,
+        child: const Icon(Icons.search, color: Colors.white),
+      ),
+
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        children: [
+          SearchTextField(
+            controller: searchCtrl,
+            cursorColor: filterSelectedColor,
+            onSearchPressed: _handleSearch,
+          ),
+
+          const SizedBox(height: 12),
           // States
           Container(
             padding: const EdgeInsets.all(12),
@@ -268,23 +257,24 @@ Widget build(BuildContext context) {
           const SizedBox(height: 24),
 
           // Fee Range
-         Container(
-  padding: const EdgeInsets.all(12),
-  decoration: BoxDecoration(
-    color: Colors.grey[100],
-    borderRadius: BorderRadius.circular(6),
-  ),
-  child: SearchGridSection(
-    title: "Search by Fee Range",
-    items: feeRanges,
-    selectedItems: controller.selectedFeeRange,
-    onTap: controller.toggleFeeRange, // make sure this exists in your controller
-    selectedColor: filterSelectedColor,
-    isGreyBox: true,
-  )
-),
-const SizedBox(height: 24),
-       
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: SearchGridSection(
+              title: "Search by Fee Range",
+              items: feeRanges,
+              selectedItems: controller.selectedFeeRange,
+              onTap:
+                  controller
+                      .toggleFeeRange, // make sure this exists in your controller
+              selectedColor: filterSelectedColor,
+              isGreyBox: true,
+            ),
+          ),
+          const SizedBox(height: 24),
         ],
       ),
     );
