@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum FormStatus { pending, reviewed, accepted, rejected,interview }
+enum FormStatus { pending, reviewed, accepted, rejected, interview }
 
 extension FormStatusExt on FormStatus {
   String get label {
@@ -14,7 +14,7 @@ extension FormStatusExt on FormStatus {
       case FormStatus.rejected:
         return 'Rejected';
       case FormStatus.interview:
-       return 'Interview';
+        return 'Interview';
     }
   }
 
@@ -29,7 +29,7 @@ extension FormStatusExt on FormStatus {
       case FormStatus.rejected:
         return Colors.red;
       case FormStatus.interview:
-       return Colors.orange.shade700;
+        return Colors.blue.shade700;
     }
   }
 
@@ -41,8 +41,8 @@ extension FormStatusExt on FormStatus {
         return FormStatus.accepted;
       case 'Rejected':
         return FormStatus.rejected;
-      case 'Interview' :
-       return FormStatus.interview;
+      case 'Interview':
+        return FormStatus.interview;
       case 'Pending':
       default:
         return FormStatus.pending;
