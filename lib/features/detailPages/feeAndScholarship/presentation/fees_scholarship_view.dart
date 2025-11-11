@@ -142,135 +142,106 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
 
                   /// 🟡 Fee Table
                   if (feeModel?.classFees.isNotEmpty ?? false)
-Card(
-  color: Colors.white,
-  elevation: 4,
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(12),
-    side: BorderSide(color: Colors.yellow.shade200),
-  ),
-  child: ClipRRect(
-    borderRadius: BorderRadius.circular(12),
-    child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 4,
-            spreadRadius: 1,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Table header
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.yellow.shade50,
-              border: Border(
-                bottom: BorderSide(color: Colors.yellow.shade200, width: 1),
+/// 🟡 Fee Table
+if (feeModel?.classFees.isNotEmpty ?? false)
+  Card(
+    color: Colors.white,
+    elevation: 4,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+      side: BorderSide(color: Colors.yellow.shade200),
+    ),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              blurRadius: 4,
+              spreadRadius: 1,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Table header
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.yellow.shade50,
+                border: Border(
+                  bottom: BorderSide(color: Colors.yellow.shade200, width: 1),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                child: Row(
+                  children: const [
+                    Expanded(flex: 2, child: Text('Class', style: TextStyle(fontWeight: FontWeight.bold))),
+                    Expanded(flex: 2, child: Text('Tuition', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
+                    Expanded(flex: 2, child: Text('Activity', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
+                    Expanded(flex: 2, child: Text('Transport', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
+                    Expanded(flex: 2, child: Text('Hostel', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
+                    Expanded(flex: 2, child: Text('Misc', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
+                    Expanded(flex: 2, child: Text('Total', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
+                  ],
+                ),
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-              child: Row(
-                children: const [
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      'Class',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      'Tuition',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      'Total',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
 
-          // Table body
-          Column(
-            children: feeModel!.classFees.map((fee) {
-              final total = (fee.tuition ?? 0) +
-                  (fee.activity ?? 0) +
-                  (fee.transport ?? 0) +
-                  (fee.misc ?? 0);
-              return Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Colors.yellow.shade100, width: 1),
+            // Table body
+            Column(
+              children: feeModel!.classFees.map((fee) {
+                final tuition = fee.tuition ?? 0;
+                final activity = fee.activity ?? 0;
+                final transport = fee.transport ?? 0;
+                final hostel = fee.hostel ?? 0;
+                final misc = fee.misc ?? 0;
+                final total = tuition + activity + transport + hostel + misc;
+
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.yellow.shade100, width: 1),
+                    ),
                   ),
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          fee.className ?? '-',
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          '₹${fee.tuition ?? 0}',
-                          style: const TextStyle(fontSize: 14),
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          '₹$total',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                    child: Row(
+                      children: [
+                        Expanded(flex: 2, child: Text(fee.className ?? '-', style: const TextStyle(fontSize: 14))),
+                        Expanded(flex: 2, child: Text('₹$tuition', textAlign: TextAlign.right, style: const TextStyle(fontSize: 14))),
+                        Expanded(flex: 2, child: Text('₹$activity', textAlign: TextAlign.right, style: const TextStyle(fontSize: 14))),
+                        Expanded(flex: 2, child: Text('₹$transport', textAlign: TextAlign.right, style: const TextStyle(fontSize: 14))),
+                        Expanded(flex: 2, child: Text('₹$hostel', textAlign: TextAlign.right, style: const TextStyle(fontSize: 14))),
+                        Expanded(flex: 2, child: Text('₹$misc', textAlign: TextAlign.right, style: const TextStyle(fontSize: 14))),
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            '₹$total',
+                            textAlign: TextAlign.right,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
                           ),
-                          textAlign: TextAlign.right,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
+                );
+              }).toList(),
+            ),
+          ],
+        ),
       ),
     ),
   ),
-),
+
                const SizedBox(height: 28),
 
                   /// 🟡 Scholarships & Concessions

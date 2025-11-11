@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tc_sa/common/models/photo.dart';
 
-class PhotosView extends StatelessWidget {
+class PhotosView extends StatefulWidget {
   final List<Photo> photos;
 
   const PhotosView({
@@ -10,8 +10,35 @@ class PhotosView extends StatelessWidget {
   });
 
   @override
+  State<PhotosView> createState() => _PhotosViewState();
+}
+
+class _PhotosViewState extends State<PhotosView> {
+  final List<String> _validUrls = [];
+
+  @override
+  void initState() {
+    super.initState();    
+    _filterValidPhotos();
+  }
+
+  Future<void> _filterValidPhotos() async {
+    _validUrls.clear();
+    for (final photo in widget.photos) {
+      if (photo.url != null && photo.url!.isNotEmpty) {
+        _validUrls.add(photo.url!);
+      }
+    }
+    setState(() {});
+  }
+
+  Future<void> _onRefresh() async {
+    await _filterValidPhotos();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (photos.isEmpty) {
+    if (_validUrls.isEmpty) {
       return const Center(
         child: Text(
           'No photos available.',
@@ -21,34 +48,36 @@ class PhotosView extends StatelessWidget {
     }
 
     return RefreshIndicator(
-      onRefresh: () async {
-      
-        return;
-      },
+      onRefresh: _onRefresh,
       color: Colors.amber,
       child: GridView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: photos.length,
+        itemCount: _validUrls.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 1, 
+          crossAxisCount: 2, // you can change to 1 or 3 depending on layout
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
         itemBuilder: (context, index) {
-          final photo = photos[index];
+          final url = _validUrls[index];
           return ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.network(
-              photo.url ?? '',
+              url,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                color: Colors.grey[200],
-                child: const Icon(
-                  Icons.broken_image,
-                  size: 40,
-                  color: Colors.grey,
-                ),
-              ),
+              loadingBuilder: (context, child, progress) {
+                if (progress == null) return child;
+                return const Center(
+                  child: CircularProgressIndicator(color: Colors.amber),
+                );
+              },
+              errorBuilder: (context, error, stackTrace) {
+                // Skip broken images entirely by returning SizedBox.shrink
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  setState(() => _validUrls.remove(url));
+                });
+                return const SizedBox.shrink();
+              },
             ),
           );
         },
@@ -56,31 +85,4 @@ class PhotosView extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

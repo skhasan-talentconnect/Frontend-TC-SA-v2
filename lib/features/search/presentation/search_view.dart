@@ -83,7 +83,7 @@ class _SearchPageState extends State<SearchPage> {
   // Mapping of states to their cities
   final Map<String, List<String>> stateCities = {
     'Maharashtra': ['Mumbai', 'Pune', 'Navi Mumbai', "Nagpur"],
-    'Karnataka': ['Mangaluru', "Kalaburagi", 'Bangalore', 'Udupi'],
+    'Karnataka': ['Mangaluru', "Kalaburagi", 'Bengaluru', 'Udupi'],
     'Delhi': ['Jamia Nagar', 'Dwarka', 'Rohini', 'New Delhi'],
     'Kerala': ['Thiruvananthapuram', 'Kochi', 'Kottayam', 'Palakkad'],
     'Gujarat': ['Surat', 'Ahmedabad', 'Gandhinagar', 'Anand'],
