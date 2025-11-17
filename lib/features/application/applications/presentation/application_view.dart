@@ -9,31 +9,148 @@ import 'package:tc_sa/features/application/applications/data/entities/applicatio
 import 'package:tc_sa/features/application/applications/presentation/view_models/application_view_model.dart';
 
 class ApplicationFormView extends StatefulWidget {
-  const ApplicationFormView({super.key});
+  const ApplicationFormView({super.key, this.forceNew = false, this.initialApplication,});
+
+  final bool forceNew;
+  final StudentApplication? initialApplication;
 
   @override
   State<ApplicationFormView> createState() => _ApplicationFormViewState();
 }
 
+
 class _ApplicationFormViewState extends State<ApplicationFormView> {
   final _vm = ApplicationViewModel();
   final _formKey = GlobalKey<FormState>();
-  bool _checkingExisting = true; // NEW
+  bool _checkingExisting = true;
+  StudentApplication? _application;
 
-  @override
-  void initState() {
-    super.initState();
-    _checkExisting();
-  }
+@override
+void initState() {
+  super.initState();
 
-  Future<void> _checkExisting() async {
-    final studId = getIt<AppStateProvider>().user?.sId;
-    // If we have a logged-in user, ask the backend if they already filled
-    if (studId != null && studId.isNotEmpty) {
-      await _vm.getApplicationByStudId(studId: studId);
+  // Run after first frame so context & provider are ready.
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    if (!mounted) return;
+
+    // Case 1: If initialApplication provided, prefill and skip backend call
+    if (widget.initialApplication != null) {
+      _vm.setApplication(widget.initialApplication);
+      _application = widget.initialApplication;
+      _populateFromApplication(_application!);
+      _checkingExisting = false;
+      setState(() {});
+      return;
     }
-    if (mounted) setState(() => _checkingExisting = false);
+
+    // Case 2: Force new blank form (skip backend)
+    if (widget.forceNew) {
+      _checkingExisting = false;
+      setState(() {});
+      return;
+    }
+
+    // Case 3: Normal case — fetch applications list for this student
+    await _checkExisting();
+
+    // if we fetched an existing application and want to prefill the form
+    if (_application != null) {
+      _populateFromApplication(_application!);
+    }
+  });
+}
+
+
+Future<void> _checkExisting() async {
+  final studId = getIt<AppStateProvider>().user?.sId;
+  if (studId != null && studId.isNotEmpty) {
+    final failure = await _vm.getApplicationsByStudId(studId: studId);
+    // if single application prefilling is still desired, you can pick the latest:
+    if (_vm.applications.isNotEmpty) {
+      _application = _vm.applications.first;
+    }
   }
+  if (mounted) setState(() => _checkingExisting = false);
+}
+
+
+void _populateFromApplication(StudentApplication app) {
+  // basic fields (add more fields if your model has them)
+  _nameCtrl.text = app.name ?? '';
+  _locationCtrl.text = app.location ?? '';
+  _dobCtrl.text = app.dob != null ? app.dob!.toIso8601String().split('T').first : '';
+  _gender = app.gender ?? _gender;
+  _motherTongueCtrl.text = app.motherTongue ?? '';
+  _placeOfBirthCtrl.text = app.placeOfBirth ?? '';
+  _speciallyAbled = app.speciallyAbled ?? false;
+  _speciallyAbledTypeCtrl.text = app.speciallyAbledType ?? '';
+  _nationalityCtrl.text = app.nationality ?? '';
+  _religionCtrl.text = app.religion ?? '';
+  _casteCtrl.text = app.caste ?? '';
+  _subcasteCtrl.text = app.subcaste ?? '';
+  _aadharCtrl.text = app.aadharNo ?? '';
+  _bloodGroupCtrl.text = app.bloodGroup ?? '';
+  _allergicToCtrl.text = app.allergicTo ?? '';
+  _interestCtrl.text = app.interest ?? '';
+
+  _lastSchoolNameCtrl.text = app.lastSchoolName ?? '';
+  _classCompletedCtrl.text = app.classCompleted ?? '';
+  _lastAcademicYearCtrl.text = app.lastAcademicYear ?? '';
+  _reasonForLeavingCtrl.text = app.reasonForLeaving ?? '';
+  _lastBoard = app.board;
+
+  _fatherNameCtrl.text = app.fatherName ?? '';
+  _fatherAgeCtrl.text = app.fatherAge?.toString() ?? '';
+  _fatherQualCtrl.text = app.fatherQualification ?? '';
+  _fatherProfCtrl.text = app.fatherProfession ?? '';
+  _fatherIncomeCtrl.text = app.fatherAnnualIncome ?? '';
+  _fatherPhoneCtrl.text = app.fatherPhoneNo ?? '';
+  _fatherAadharCtrl.text = app.fatherAadharNo ?? '';
+  _fatherEmailCtrl.text = app.fatherEmail ?? '';
+
+  _motherNameCtrl.text = app.motherName ?? '';
+  _motherAgeCtrl.text = app.motherAge?.toString() ?? '';
+  _motherQualCtrl.text = app.motherQualification ?? '';
+  _motherProfCtrl.text = app.motherProfession ?? '';
+  _motherIncomeCtrl.text = app.motherAnnualIncome ?? '';
+  _motherPhoneCtrl.text = app.motherPhoneNo ?? '';
+  _motherAadharCtrl.text = app.motherAadharNo ?? '';
+  _motherEmailCtrl.text = app.motherEmail ?? '';
+
+  _relationshipStatus = app.relationshipStatus ?? _relationshipStatus;
+  _guardianNameCtrl.text = app.guardianName ?? '';
+  _guardianContactNoCtrl.text = app.guardianContactNo ?? '';
+  _guardianRelationCtrl.text = app.guardianRelationToStudent ?? '';
+  _guardianQualificationCtrl.text = app.guardianQualification ?? '';
+  _guardianProfessionCtrl.text = app.guardianProfession ?? '';
+  _guardianEmailCtrl.text = app.guardianEmail ?? '';
+  _guardianAadharNoCtrl.text = app.guardianAadharNo ?? '';
+
+  _presentAddressCtrl.text = app.presentAddress ?? '';
+  _permanentAddressCtrl.text = app.permanentAddress ?? '';
+
+  // siblings (clear and rebuild)
+  for (final s in _siblings) s.dispose();
+  _siblings.clear();
+  if (app.siblings != null) {
+    for (final s in app.siblings!) {
+      final field = _SiblingField();
+      field.name.text = s.name ?? '';
+      field.age.text = s.age?.toString() ?? '';
+      field.sex.text = s.sex ?? '';
+      field.institute.text = s.nameOfInstitute ?? '';
+      field.className.text = s.className ?? '';
+      _siblings.add(field);
+    }
+  }
+
+  _homeLanguageCtrl.text = app.homeLanguage ?? '';
+  _yearlyBudgetCtrl.text = app.yearlyBudget ?? '';
+
+  // trigger rebuild so UI reflects values
+  if (mounted) setState(() {});
+}
+
 
   // -----------------------
   // Student core
@@ -52,6 +169,8 @@ class _ApplicationFormViewState extends State<ApplicationFormView> {
   final _subcasteCtrl = TextEditingController();
   final _aadharCtrl = TextEditingController();
   final _bloodGroupCtrl = TextEditingController();
+  final _standardCtrl = TextEditingController();
+
   final _allergicToCtrl = TextEditingController();
   final _interestCtrl = TextEditingController();
 
@@ -138,6 +257,8 @@ class _ApplicationFormViewState extends State<ApplicationFormView> {
     _classCompletedCtrl.dispose();
     _lastAcademicYearCtrl.dispose();
     _reasonForLeavingCtrl.dispose();
+    _standardCtrl.dispose();
+
 
     _fatherNameCtrl.dispose();
     _fatherAgeCtrl.dispose();
@@ -262,6 +383,8 @@ class _ApplicationFormViewState extends State<ApplicationFormView> {
       dob: dob,
       gender: _gender,
       motherTongue: _motherTongueCtrl.text.trim(),
+      standard: _standardCtrl.text.trim(),
+
       placeOfBirth:
           _placeOfBirthCtrl.text.trim().isEmpty
               ? null
@@ -380,23 +503,35 @@ class _ApplicationFormViewState extends State<ApplicationFormView> {
       yearlyBudget: _yearlyBudgetCtrl.text.trim(),
     );
 
-    final failure = await _vm.addApplication(payload);
-    if (!mounted) return;
+  final failure = await _vm.addApplication(payload);
+if (!mounted) return;
 
-    if (failure != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(failure.message ?? "Something went wrong")),
-      );
-      return;
-    }
+if (failure != null) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(failure.message ?? "Something went wrong")),
+  );
+  return;
+}
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Application submitted successfully!")),
-    );
-    Navigator.of(context).pop(); // go back after success (optional)
-  }
+// Resolve id from returned model (try multiple fields)
+final created = _vm.application;
+final createdAppId =
+    created?.applicationId ??
+    created?.applicationId ??
+    created?.applicationId;
 
-  bool _needsGuardian() =>
+ScaffoldMessenger.of(context).showSnackBar(
+  const SnackBar(content: Text("Application submitted successfully!")),
+);
+
+if (!mounted) return;
+
+context.pushNamed(
+  RouteNames.applicationSuccess,
+  extra: {'applicationId': createdAppId}, // createdAppId may be null -> handled by route
+);
+
+    }  bool _needsGuardian() =>
       _relationshipStatus != null && _relationshipStatus != 'Married';
 
   @override
@@ -415,19 +550,18 @@ class _ApplicationFormViewState extends State<ApplicationFormView> {
               ),
             ),
 
-            body:
-                _checkingExisting
-                    ? const Center(child: SLoadingIndicator())
-                    : (vm.application != null)
-                    ? _AlreadyFilledMessage() // <— show this instead of the form
-                    : SafeArea(
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+          body: _checkingExisting
+  ? const Center(child: SLoadingIndicator())
+  : (vm.applications.isNotEmpty && !widget.forceNew)
+      ? _AlreadyFilledMessage(applications: vm.applications)
+      : SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                               // ---------------- Student ----------------
                               Text(
                                 "Student Details",
@@ -437,6 +571,8 @@ class _ApplicationFormViewState extends State<ApplicationFormView> {
                               ),
                               const SizedBox(height: 8),
                               _input("Full Name", _nameCtrl, req: true),
+                              _input("Standard / Class Applying For", _standardCtrl, req: true),
+
                               _input("Location", _locationCtrl, req: true),
                               _dateInput(
                                 "DOB (yyyy-MM-dd)",
@@ -886,70 +1022,123 @@ class _ApplicationFormViewState extends State<ApplicationFormView> {
 }
 
 class _AlreadyFilledMessage extends StatelessWidget {
-  const _AlreadyFilledMessage();
+  final List<StudentApplication> applications;
+  const _AlreadyFilledMessage({required this.applications});
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.check_circle, size: 64, color: Colors.green),
             const SizedBox(height: 12),
             Text(
-              "You’ve already submitted this application.",
+              "You’ve already submitted ${applications.length} application(s).",
               textAlign: TextAlign.center,
               style: STextStyles.s16W600.copyWith(color: SColor.secTextColor),
             ),
             const SizedBox(height: 8),
             Text(
-              "If you need changes, contact support or open the edit flow.",
+              "Choose an application to view or download its PDF, or add another application.",
               textAlign: TextAlign.center,
               style: STextStyles.s12W400.copyWith(color: Colors.black54),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
-            // Go Back button
-            SizedBox(
-              width: 180,
-              child: ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: SColor.primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                ),
-                child: Text(
-                  "Go Back",
-                  style: STextStyles.s14W600.copyWith(color: Colors.white),
-                ),
+            // List of existing applications (compact)
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 260),
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: applications.length,
+                separatorBuilder: (_, __) => const Divider(),
+                itemBuilder: (context, i) {
+                  final app = applications[i];
+                  final title = (app.name?.isNotEmpty == true) ? app.name! : (app.studId ?? 'Application ${i+1}');
+                  final subtitle = app.createdAt != null ? app.createdAt.toString().split('T').first : '';
+                  return ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    title: Text(title, style: STextStyles.s14W600),
+                    subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          tooltip: "View PDF",
+                          icon: const Icon(Icons.picture_as_pdf),
+                          onPressed: () {
+                            // Navigate to PDF view and pass applicationId
+                            context.pushNamed(
+                              RouteNames.applicationPdf,
+                              extra: {'applicationId': app.applicationId},
+                            );
+                          },
+                        ),
+                        IconButton(
+                          tooltip: "Download PDF",
+                          icon: const Icon(Icons.download),
+                          onPressed: () {
+                            // Navigate to same route but with download intent OR call a download helper.
+                            // We'll push route and pass download flag — implement handling in pdf screen.
+                            context.pushNamed(
+                              RouteNames.applicationPdf,
+                              extra: {'applicationId': app.applicationId, 'download': true},
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      // quick tap opens view
+                      context.pushNamed(
+                        RouteNames.applicationPdf,
+                        extra: {'applicationId': app.applicationId},
+                      );
+                    },
+                  );
+                },
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
 
-            // New View PDF button
-            // SButton.outlined(
-            //   label: 'View PDF',
-            //   text: Text("View PDF"),
-            //   onPressed: () => context.pushNamed(RouteNames.applicationPdf),
-            // ),
-            SizedBox(
-              width: 180,
-              child: OutlinedButton.icon(
-                onPressed: () => context.pushNamed(RouteNames.applicationPdf),
-                icon: Icon(Icons.picture_as_pdf, color: Colors.black),
-                label: Text(
-                  "View PDF",
-                  style: STextStyles.s14W600.copyWith(
-                    color: SColor.secTextColor,
+            // Actions row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Add Another Application
+                SizedBox(
+                  width: 160,
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      // open form page in force-new mode
+                      context.pushNamed(RouteNames.addApplication, extra: {'forceNew': true});
+                    },
+                    icon: const Icon(Icons.add, color: Colors.black),
+                    label: Text(
+                      "Add another",
+                      style: STextStyles.s14W600.copyWith(color: SColor.secTextColor),
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(width: 12),
+                // Go Back
+                SizedBox(
+                  width: 120,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: SColor.primaryColor,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: Text("Go Back", style: STextStyles.s14W600.copyWith(color: Colors.white)),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -957,6 +1146,7 @@ class _AlreadyFilledMessage extends StatelessWidget {
     );
   }
 }
+
 
 class _SiblingField {
   final name = TextEditingController();

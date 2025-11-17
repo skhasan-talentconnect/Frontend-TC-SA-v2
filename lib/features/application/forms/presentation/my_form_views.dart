@@ -57,18 +57,29 @@ class _MyFormViewsState extends State<MyFormViews> {
                                 ),
                               ],
                             ),
-                            ListView.separated(
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return FormCard(
-                                  appliedForm: myFormViewModel.forms[index],
-                                );
-                              },
-                              separatorBuilder:
-                                  (_, __) => const SizedBox(height: 16),
-                              itemCount: myFormViewModel.forms.length,
-                            ),
+                            ListView.builder(
+  physics: const NeverScrollableScrollPhysics(),
+  shrinkWrap: true,
+  itemCount: myFormViewModel.forms.length,
+  itemBuilder: (context, index) {
+    final form = myFormViewModel.forms[index];
+    final applicantName = form.application?.name ?? "Unknown Applicant";
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          applicantName,
+          style: STextStyles.s16W600.copyWith(color: SColor.secTextColor),
+        ),
+        const SizedBox(height: 8),
+        FormCard(appliedForm: form),
+        const Divider(thickness: 1, height: 24),
+      ],
+    );
+  },
+),
+
                           ],
                         ),
                       ),

@@ -1,4 +1,4 @@
-// lib/features/applications/presentation/view_models/application_view_model.dart
+// lib/features/application/applications/presentation/view_models/application_view_model.dart
 import 'package:tc_sa/core/index.dart' show ViewState, ViewStateProvider, Failure, getIt, APIFailure;
 import 'package:tc_sa/features/application/applications/data/data_source/application_data_source.dart';
 import 'package:tc_sa/features/application/applications/data/data_source/application_data_source_impl.dart';
@@ -9,6 +9,10 @@ class ApplicationViewModel extends ViewStateProvider {
 
   StudentApplication? _application;
   StudentApplication? get application => _application;
+  void setApplication(StudentApplication? val) {
+    _application = val;
+    notifyListeners();
+  }
 
   List<StudentApplication> _applications = const [];
   List<StudentApplication> get applications => _applications;
@@ -21,8 +25,8 @@ class ApplicationViewModel extends ViewStateProvider {
     Failure? failure;
 
     final result = await _ds.addApplication(payload: payload);
-   
-result.fold(
+
+    result.fold(
       (exception) {
         failure = APIFailure.fromException(exception: exception);
       },
@@ -30,6 +34,7 @@ result.fold(
         _application = res;
       },
     );
+
     setViewState(ViewState.complete);
     notifyListeners();
     return failure;
@@ -42,7 +47,7 @@ result.fold(
 
     final result = await _ds.getAllApplications();
     result.fold(
-      (err) => failure = err as Failure?,
+      (exception) => failure = APIFailure.fromException(exception: exception),
       (res) => _applications = res,
     );
 
@@ -51,21 +56,41 @@ result.fold(
     return failure;
   }
 
-  // GET BY studId (defaults to logged-in)
-  Future<Failure?> getApplicationByStudId({String? studId}) async {
+  // GET by studId -> returns list of applications
+  Future<Failure?> getApplicationsByStudId({required String studId}) async {
     setViewState(ViewState.busy);
     Failure? failure;
 
-    final result = await _ds.getApplicationByStudId(studId: studId);
-       
-result.fold(
-      (exception) {
-        failure = APIFailure.fromException(exception: exception);
+    final result = await _ds.getStudApplicationsByStudId(studId: studId);
+    result.fold(
+      (exception) => failure = APIFailure.fromException(exception: exception),
+      (res) {
+        _applications = res;
       },
+    );
+
+    if (_applications.isEmpty) {
+      message = 'No applications found';
+    }
+
+    setViewState(ViewState.complete);
+    notifyListeners();
+    return failure;
+  }
+
+  // GET single by applicationId
+  Future<Failure?> getApplicationById({required String applicationId}) async {
+    setViewState(ViewState.busy);
+    Failure? failure;
+
+    final result = await _ds.getApplicationById(applicationId: applicationId);
+    result.fold(
+      (exception) => failure = APIFailure.fromException(exception: exception),
       (res) {
         _application = res;
       },
     );
+
     if (_application == null) {
       message = 'No application found';
     }
@@ -75,14 +100,17 @@ result.fold(
     return failure;
   }
 
-  // UPDATE (by studId)
-  Future<Failure?> updateApplication(StudentApplication payload, {String? studId}) async {
+  // UPDATE by applicationId
+  Future<Failure?> updateApplication({
+    required String applicationId,
+    required StudentApplication payload,
+  }) async {
     setViewState(ViewState.busy);
     Failure? failure;
 
-    final result = await _ds.updateApplication(payload: payload, studId: studId);
+    final result = await _ds.updateApplication(applicationId: applicationId, payload: payload);
     result.fold(
-      (err) => failure = err as Failure?,
+      (exception) => failure = APIFailure.fromException(exception: exception),
       (res) => _application = res,
     );
 
@@ -91,14 +119,14 @@ result.fold(
     return failure;
   }
 
-  // DELETE (by studId)
-  Future<Failure?> deleteApplication({String? studId}) async {
+  // DELETE by applicationId
+  Future<Failure?> deleteApplication({required String applicationId}) async {
     setViewState(ViewState.busy);
     Failure? failure;
 
-    final result = await _ds.deleteApplication(studId: studId);
+    final result = await _ds.deleteApplication(applicationId: applicationId);
     result.fold(
-      (err) => failure = err as Failure?,
+      (exception) => failure = APIFailure.fromException(exception: exception),
       (ok) {
         if (ok) _application = null;
       },

@@ -390,84 +390,136 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                                       ),
                                     ),
                                     const SizedBox(width: 8),
-                                    Expanded(
-                                      child: ChangeNotifierProvider.value(
-                                        value: myFormViewModel,
-                                        child: Selector<MyFormViewModel, bool>(
-                                          selector: (_, vm) => vm.isLoading,
-                                          builder:
-                                              (_, isLoading, __) =>
-                                                  isLoading
-                                                      ? Center(
-                                                        child:
-                                                            SLoadingIndicator(
-                                                              color:
-                                                                  Colors.blue,
-                                                            ),
-                                                      )
-                                                      : SButton(
-                                                        onPressed: () async {
-                                                          if (appStateProvider
-                                                              .isGuest) {
-                                                            Toasts.showLoginToast(
-                                                              context,
-                                                            );
-                                                          } else {
-                                                            if (vm.isApplied) {
-                                                              return;
-                                                            }
-                                                            final failure = await myFormViewModel
-                                                                .submitForm(
-                                                                  applicationId:
-                                                                      '', // You may need to provide a valid ID here
-                                                                  schoolId:
-                                                                      widget
-                                                                          .schoolId,
-                                                                );
-                                                            Toasts.showSuccessOrFailureToast(
-                                                              context,
-                                                              failure: failure,
-                                                              popOnSuccess:
-                                                                  false,
-                                                              hideSuccess: true,
-                                                              successCallback: () {
-                                                                vm.appliedFormModel =
-                                                                    AppliedFormModel(
-                                                                      status:
-                                                                          FormStatus
-                                                                              .pending,
-                                                                      isApplied:
-                                                                          true,
-                                                                    );
-                                                              },
-                                                            );
-                                                          }
-                                                        }, // <-- This brace closes the onPressed callback
-                                                        backgroundColor:
-                                                            vm.isApplied
-                                                                ? Colors.grey
-                                                                : Colors.blue,
-                                                        padding:
-                                                            const EdgeInsets.symmetric(
-                                                              vertical: 14,
-                                                            ),
-                                                        label: '',
-                                                        max: true,
-                                                        text: Text(
-                                                          vm.isApplied
-                                                              ? 'Applied'
-                                                              : "Apply",
-                                                          style: TextStyle(
-                                                            fontSize: infoFont,
-                                                            color: Colors.white,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ), // <-- This parenthesis closes the SButton widget
-                                        ),
-                                      ),
-                                    ),
+                                Expanded(
+  child: ChangeNotifierProvider.value(
+    value: myFormViewModel,
+    child: Selector<MyFormViewModel, bool>(
+      selector: (_, vm) => vm.isLoading,
+      builder: (_, isLoading, __) {
+        if (isLoading) {
+          return const Center(child: SLoadingIndicator(color: Colors.blue));
+        }
+
+        return SButton(
+          onPressed: () async {
+            if (appStateProvider.isGuest) {
+              Toasts.showLoginToast(context);
+              return;
+            }
+
+            final studId = getIt<AppStateProvider>().user?.sId;
+            if (studId == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Missing student ID.")),
+              );
+              return;
+            }
+
+            // STEP 1: fetch PDFs
+            final pdfResult = await myFormViewModel.fetchStudentPdfs(studId: studId);
+            if (pdfResult != null) {
+              Toasts.showErrorToast(context, message: pdfResult.message ?? "Failed to fetch PDFs");
+              return;
+            }
+
+            final pdfs = myFormViewModel.availablePdfs;
+            if (pdfs == null || pdfs.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("No generated PDFs available. Generate first.")),
+              );
+              return;
+            }
+
+            // STEP 2: pick desired application PDF
+            final chosenPdfIndex = await showModalBottomSheet<int?>(
+              context: context,
+              isScrollControlled: true,
+              builder: (ctx) {
+                return SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text("Select Application", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                        const SizedBox(height: 10),
+                        ConstrainedBox(
+                          constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.6),
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            itemCount: pdfs.length,
+                            separatorBuilder: (_, __) => const Divider(height: 1),
+                            itemBuilder: (_, i) {
+                              final p = pdfs[i];
+                              final title = p['applicationName'] ?? 'Application ${i + 1}';
+                              final subtitle = p['createdAt']?.toString().split('T').first ?? '';
+
+                              return ListTile(
+                                title: Text(title.toString()),
+                                subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
+                                onTap: () => Navigator.of(ctx).pop(i),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        TextButton(
+                          onPressed: () => Navigator.of(ctx).pop(null),
+                          child: const Text("Cancel"),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+
+            if (chosenPdfIndex == null) return;
+
+            final chosen = pdfs[chosenPdfIndex];
+
+            final formId = chosen['_id']?.toString() ?? "";
+            final applicationId = chosen['applicationId']?.toString() ?? "";
+
+            if (formId.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Invalid PDF selected.")),
+              );
+              return;
+            }
+
+            // STEP 3: submit form
+            final failure = await myFormViewModel.submitForm(
+              schoolId: widget.schoolId,
+              applicationId: applicationId,
+              formId: formId,
+            );
+
+            Toasts.showSuccessOrFailureToast(
+              context,
+              failure: failure,
+              hideSuccess: true,
+            );
+          },
+
+          backgroundColor: Colors.blue,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          label: '',
+          max: true,
+          text: Text(
+            "Apply",
+            style: TextStyle(
+              fontSize: infoFont,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
+      },
+    ),
+  ),
+),
+
                                   ],
                                 ),
                               ],

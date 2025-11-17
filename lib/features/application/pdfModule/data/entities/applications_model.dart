@@ -6,6 +6,7 @@ class StudentApplication {
   final String? name;
   final String? location;
   final DateTime? dob;
+final String? applicationId;
   final int? age;
   final String? gender; // Male | Female | Other
   final String? motherTongue;
@@ -82,6 +83,8 @@ class StudentApplication {
     this.placeOfBirth,
     this.speciallyAbled,
     this.speciallyAbledType,
+    this.applicationId,
+
     this.nationality,
     this.religion,
     this.caste,
@@ -131,6 +134,8 @@ class StudentApplication {
     return StudentApplication(
       studId: json['studId']?.toString(),
       name: json['name']?.toString(),
+      applicationId: json['_id']?.toString(),
+
       location: json['location']?.toString(),
       dob: json['dob'] != null ? DateTime.tryParse(json['dob'].toString()) : null,
       age: json['age'] is int ? json['age'] as int : (json['age'] is num ? (json['age'] as num).toInt() : null),
@@ -199,6 +204,8 @@ class StudentApplication {
       "gender": gender,
       "motherTongue": motherTongue,
       "placeOfBirth": placeOfBirth,
+      "_id": applicationId,
+
       "speciallyAbled": speciallyAbled,
       "speciallyAbledType": speciallyAbledType,
       "nationality": nationality,
@@ -253,6 +260,7 @@ class StudentApplication {
 
   StudentApplication copyWith({
     String? studId,
+    String? applicationId,
     String? name,
     String? location,
     DateTime? dob,
@@ -323,6 +331,7 @@ class StudentApplication {
       aadharNo: aadharNo ?? this.aadharNo,
       bloodGroup: bloodGroup ?? this.bloodGroup,
       allergicTo: allergicTo ?? this.allergicTo,
+      applicationId: applicationId ?? this.applicationId,
       interest: interest ?? this.interest,
       lastSchoolName: lastSchoolName ?? this.lastSchoolName,
       classCompleted: classCompleted ?? this.classCompleted,

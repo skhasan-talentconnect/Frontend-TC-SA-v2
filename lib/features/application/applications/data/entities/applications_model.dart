@@ -13,6 +13,9 @@ class StudentApplication {
   final bool? speciallyAbled;
   final String? speciallyAbledType;
   final String? nationality;
+  final String? standard;
+
+
   final String? religion;
   final String? caste;
   final String? subcaste;
@@ -21,6 +24,8 @@ class StudentApplication {
   final String? allergicTo;
   final String? interest;
 
+  DateTime? createdAt;
+  DateTime? updatedAt;
   // Last school
   final String? lastSchoolName;
   final String? classCompleted;
@@ -37,6 +42,8 @@ class StudentApplication {
   final String? fatherPhoneNo;
   final String? fatherAadharNo;
   final String? fatherEmail;
+
+final String? applicationId;   // APPLICATION ID
 
   // Mother
   final String? motherName;
@@ -77,12 +84,14 @@ class StudentApplication {
     this.location,
     this.dob,
     this.age,
+    this.standard,
     this.gender,
     this.motherTongue,
     this.placeOfBirth,
     this.speciallyAbled,
     this.speciallyAbledType,
     this.nationality,
+    this.applicationId,
     this.religion,
     this.caste,
     this.subcaste,
@@ -90,6 +99,8 @@ class StudentApplication {
     this.bloodGroup,
     this.allergicTo,
     this.interest,
+    this.createdAt,
+    this.updatedAt,
     this.lastSchoolName,
     this.classCompleted,
     this.lastAcademicYear,
@@ -130,8 +141,11 @@ class StudentApplication {
   factory StudentApplication.fromJson(Map<String, dynamic> json) {
     return StudentApplication(
       studId: json['studId']?.toString(),
+      applicationId: json['_id']?.toString(),
+
       name: json['name']?.toString(),
       location: json['location']?.toString(),
+      standard: json['standard']?.toString(),
       dob: json['dob'] != null ? DateTime.tryParse(json['dob'].toString()) : null,
       age: json['age'] is int ? json['age'] as int : (json['age'] is num ? (json['age'] as num).toInt() : null),
       gender: json['gender']?.toString(),
@@ -145,6 +159,15 @@ class StudentApplication {
       subcaste: json['subcaste']?.toString(),
       aadharNo: json['aadharNo']?.toString(),
       bloodGroup: json['bloodGroup']?.toString(),
+
+          createdAt: json['createdAt'] != null
+        ? DateTime.tryParse(json['createdAt'])
+        : null,
+    updatedAt: json['updatedAt'] != null
+        ? DateTime.tryParse(json['updatedAt'])
+        : null,
+
+
       allergicTo: json['allergicTo']?.toString(),
       interest: json['interest']?.toString(),
       lastSchoolName: json['lastSchoolName']?.toString(),
@@ -201,7 +224,15 @@ class StudentApplication {
       "placeOfBirth": placeOfBirth,
       "speciallyAbled": speciallyAbled,
       "speciallyAbledType": speciallyAbledType,
+      "standard":standard,
       "nationality": nationality,
+
+'_id': applicationId,
+
+          'createdAt': createdAt?.toIso8601String(),
+    'updatedAt': updatedAt?.toIso8601String(),
+
+
       "religion": religion,
       "caste": caste,
       "subcaste": subcaste,
@@ -256,6 +287,8 @@ class StudentApplication {
     String? name,
     String? location,
     DateTime? dob,
+    String? standard,
+    String? applicationId,
     int? age,
     String? gender,
     String? motherTongue,
@@ -307,6 +340,7 @@ class StudentApplication {
   }) {
     return StudentApplication(
       studId: studId ?? this.studId,
+      applicationId: applicationId ?? this.applicationId,
       name: name ?? this.name,
       location: location ?? this.location,
       dob: dob ?? this.dob,
@@ -321,6 +355,7 @@ class StudentApplication {
       caste: caste ?? this.caste,
       subcaste: subcaste ?? this.subcaste,
       aadharNo: aadharNo ?? this.aadharNo,
+      standard: standard ?? this.standard,
       bloodGroup: bloodGroup ?? this.bloodGroup,
       allergicTo: allergicTo ?? this.allergicTo,
       interest: interest ?? this.interest,
