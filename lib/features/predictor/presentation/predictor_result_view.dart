@@ -36,6 +36,8 @@ class _SchoolResultPageState extends State<SchoolResultsPage> {
 
   @override
   Widget build(BuildContext context) {
+                    final colors = context.watch<ThemeProvider>().colors;
+
     return ChangeNotifierProvider.value(
       value: prefViewModel,
       child: Scaffold(
@@ -65,21 +67,21 @@ class _SchoolResultPageState extends State<SchoolResultsPage> {
                               Text(
                                 "Predict Your Rank. Find Your School.",
                                 style: STextStyles.s14W400.copyWith(
-                                  color: SColor.primaryColor,
+                                  color: colors.primaryColor,
                                 ),
                               ),
                               const SizedBox(height: 6),
                               Text(
                                 "School Predictor",
                                 style: STextStyles.s28W800.copyWith(
-                                  color: SColor.primaryColor,
+                                  color: colors.primaryColor,
                                 ),
                               ),
                               const SizedBox(height: 10),
                               Text(
                                 "Your personalized School recommendations based on your preferences.",
                                 style: STextStyles.s14W400.copyWith(
-                                  color: SColor.secTextColor,
+                                  color: colors.secTextColor,
                                 ),
                               ),
                               const SizedBox(height: 24),
@@ -90,7 +92,7 @@ class _SchoolResultPageState extends State<SchoolResultsPage> {
                                   child: Text(
                                     "No schools found matching your criteria",
                                     style: STextStyles.s16W400.copyWith(
-                                      color: SColor.secTextColor,
+                                      color: colors.secTextColor,
                                     ),
                                   ),
                                 )

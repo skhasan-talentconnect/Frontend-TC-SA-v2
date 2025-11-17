@@ -734,6 +734,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
 class OverviewTab extends StatelessWidget {
   const OverviewTab({required this.school});
   final SchoolModel school;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -856,15 +857,16 @@ class FeeRangeDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final colors = context.watch<ThemeProvider>().colors;
     return Material(
       elevation: 4,
-      shadowColor: Colors.grey.withOpacity(0.4), // ✅ grey shadow
+      shadowColor: colors.greyShadowColor, // ✅ grey shadow
       borderRadius: BorderRadius.circular(12),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.yellow.shade200, width: 1),
+          border: Border.all(color: colors.amberColor, width: 1),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
@@ -875,7 +877,7 @@ class FeeRangeDisplay extends StatelessWidget {
               'Full Range: $feeRange',
               style: TextStyle(
                 fontSize: 13,
-                color: Colors.amber,
+                color: colors.amberColor,
                 fontStyle: FontStyle.normal,
               ),
             ),
@@ -887,9 +889,9 @@ class FeeRangeDisplay extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: [
-                      const Text(
+                  Text(
                         'MINIMUM',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                        style: TextStyle(fontSize: 12, color: colors.greyShadowColor),
                       ),
                       Text(
                         feeLow,
@@ -905,7 +907,7 @@ class FeeRangeDisplay extends StatelessWidget {
                 Container(
                   width: 1,
                   height: 32,
-                  color: Colors.grey.shade300,
+                  color: colors.greyShadowColor,
                 ),
                 Expanded(
                   child: Column(
@@ -940,6 +942,7 @@ class FeeRangeDisplay extends StatelessWidget {
 
 
 class TitledCard extends StatelessWidget {
+  
   final String title;
   final IconData icon;
   final Widget child;
@@ -955,14 +958,15 @@ class TitledCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final colors = context.watch<ThemeProvider>().colors;
     return Material(
       elevation: 6,
-      shadowColor: Colors.grey.withOpacity(0.4), // ✅ grey shadow
+      shadowColor: colors.greyShadowColor, // ✅ grey shadow
       borderRadius: BorderRadius.circular(12),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(color: Colors.yellow.shade200, width: 1),
+          border: Border.all(color: colors.borderColor, width: 1),
           borderRadius: BorderRadius.circular(12),
         ),
         padding: const EdgeInsets.all(16.0),
@@ -977,7 +981,7 @@ class TitledCard extends StatelessWidget {
                   title,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: Colors.amber,
+                        color: colors.amberColor,
                       ),
                 ),
               ],

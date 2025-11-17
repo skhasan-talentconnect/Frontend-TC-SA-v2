@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:tc_sa/common/widgets/s_loading_indicator.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 import 'package:tc_sa/core/common/view_state_provider.dart';
 
 import 'package:tc_sa/features/detailPages/activities/presentation/view_models/activities_view_model.dart';
@@ -69,6 +70,7 @@ void initState(){
 
   @override
   Widget build(BuildContext context) {
+     final colors = context.watch<ThemeProvider>().colors;
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Consumer<ActivitiesViewModel>(
@@ -91,7 +93,7 @@ void initState(){
             // ),
             body: RefreshIndicator(
               onRefresh: _refresh,
-              color: Colors.amber, 
+              color: colors.amberColor, 
               child: Builder(
                 builder: (_) {
                   if (widget.schoolId.isEmpty) {

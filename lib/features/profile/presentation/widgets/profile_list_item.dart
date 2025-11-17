@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 import 'package:tc_sa/core/navigation/index.dart';
 
 class ProfileListItem extends StatelessWidget {
@@ -55,9 +57,11 @@ class ProfileListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+                    final colors = context.watch<ThemeProvider>().colors;
+
     return ListTile(
       dense: isDense,
-      tileColor: SColor.backgroundColor,
+      tileColor: colors.secTextColor,
       leading: leading,
       contentPadding: contentPadding,
       title:

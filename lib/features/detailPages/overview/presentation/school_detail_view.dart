@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 import 'package:tc_sa/core/extensions/failure_ext.dart';
 import 'package:tc_sa/core/navigation/not_found_view.dart';
 import 'package:tc_sa/features/detailPages/academics/presentation/academics_view.dart';
@@ -79,6 +80,7 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
 
   @override
   Widget build(BuildContext context) {
+     final colors = context.watch<ThemeProvider>().colors;
     return ChangeNotifierProvider<OverviewViewModel>.value(
       value: overviewViewModel,
       child: Consumer<OverviewViewModel>(

@@ -33,6 +33,8 @@ class _SchoolsViewState extends State<SchoolsView> {
 
   @override
   Widget build(BuildContext context) {
+                    final colors = context.watch<ThemeProvider>().colors;
+
     return ChangeNotifierProvider.value(
       value: schoolViewModel,
       child: Scaffold(
@@ -43,7 +45,7 @@ class _SchoolsViewState extends State<SchoolsView> {
                   isLoading
                       ? Center(child: SLoadingIndicator())
                       : RefreshIndicator(
-                        color: SColor.primaryColor,
+                        color: colors.primaryColor,
                         onRefresh: () async {
                           final failure =
                               await schoolViewModel.getStateSchools();

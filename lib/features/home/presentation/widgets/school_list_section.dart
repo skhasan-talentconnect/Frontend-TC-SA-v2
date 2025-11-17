@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 import 'package:tc_sa/core/navigation/route_name.dart';
 
 class SchoolListSection extends StatefulWidget {
@@ -22,6 +24,8 @@ class _SchoolListSectionState extends State<SchoolListSection> {
 
   @override
   Widget build(BuildContext context) {
+                    final colors = context.watch<ThemeProvider>().colors;
+
     return widget.schools.isNotEmpty
         ? Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,7 +72,7 @@ class _SchoolListSectionState extends State<SchoolListSection> {
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     shape: const CircleBorder(),
-                    side: BorderSide(color: SColor.borderColor),
+                    side: BorderSide(color: colors.borderColor),
                     padding: const EdgeInsets.all(10),
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
@@ -86,14 +90,14 @@ class _SchoolListSectionState extends State<SchoolListSection> {
                   child: Icon(
                     Icons.arrow_back_ios_new,
                     size: 18,
-                    color: SColor.secTextColor,
+                    color: colors.secTextColor,
                   ),
                 ),
                 const SizedBox(width: 12),
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     shape: const CircleBorder(),
-                    side: BorderSide(color: SColor.borderColor),
+                    side: BorderSide(color: colors.borderColor),
                     padding: const EdgeInsets.all(10),
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
@@ -111,7 +115,7 @@ class _SchoolListSectionState extends State<SchoolListSection> {
                   child: Icon(
                     Icons.arrow_forward_ios,
                     size: 18,
-                    color: SColor.primaryColor,
+                    color: colors.primaryColor,
                   ),
                 ),
               ],

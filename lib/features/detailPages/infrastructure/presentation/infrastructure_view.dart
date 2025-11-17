@@ -48,6 +48,8 @@ class _InfrastructureViewState extends State<InfrastructureView> {
 
   @override
   Widget build(BuildContext context) {
+            final colors = context.watch<ThemeProvider>().colors;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _infraVm),
@@ -59,8 +61,8 @@ class _InfrastructureViewState extends State<InfrastructureView> {
           builder: (context, infraVm, otherVm, _) {
             if (infraVm.viewState == ViewState.busy ||
                 otherVm.viewState == ViewState.busy) {
-              return const Center(
-                  child: SLoadingIndicator(color: Colors.amber));
+              return  Center(
+                  child: SLoadingIndicator(color: colors.amberColor));
             }
 
             final infraModel = infraVm.infrastructure;
@@ -76,7 +78,7 @@ class _InfrastructureViewState extends State<InfrastructureView> {
 
             return RefreshIndicator(
               onRefresh: _refresh,
-              color: Colors.amber,
+              color: colors.amberColor,
               child: ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
@@ -96,7 +98,7 @@ class _InfrastructureViewState extends State<InfrastructureView> {
                     TitledCard(
                       title: "Facilities",
                       icon: Icons.business_outlined,
-                      iconColor: Colors.amber.shade700,
+                      iconColor: colors.amberDarkColor,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Column(
@@ -124,8 +126,8 @@ class _InfrastructureViewState extends State<InfrastructureView> {
                       title: 'Laboratories',
                       icon: Icons.science_outlined,
                       items: infraModel!.labs,
-                      chipColor: Colors.amber.shade100,
-                      iconColor: Colors.amber.shade800,
+                      chipColor: colors.amberLightColor,
+                      iconColor: colors.amberDarkColor,
                     ),
 
                   const SizedBox(height: 20),
@@ -135,8 +137,8 @@ class _InfrastructureViewState extends State<InfrastructureView> {
                       title: 'Sports Grounds',
                       icon: Icons.sports_soccer_outlined,
                       items: infraModel!.sportsGrounds,
-                      chipColor: Colors.amber.shade100,
-                      iconColor: Colors.amber.shade800,
+                      chipColor: colors.amberLightColor,
+                      iconColor: colors.amberDarkColor,
                     ),
 
                   const SizedBox(height: 20),

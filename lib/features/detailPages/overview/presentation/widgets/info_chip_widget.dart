@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tc_sa/core/common/index.dart';
 
 class InfoChip extends StatelessWidget {
   final String topText;
@@ -16,6 +18,7 @@ class InfoChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: isSmallScreen ? 10 : 12,
@@ -27,7 +30,7 @@ class InfoChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.yellow.shade100.withOpacity(0.5),
+            color: colors.boxShadowColor,
             blurRadius: 6,
             spreadRadius: 1,
             offset: const Offset(0, 3),
@@ -42,7 +45,7 @@ class InfoChip extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: fontSize,
-              color: Colors.yellow.shade800,
+              color: colors.topTextColor,
             ),
           ),
           const SizedBox(height: 2),
@@ -50,7 +53,7 @@ class InfoChip extends StatelessWidget {
             bottomText,
             style: TextStyle(
               fontSize: fontSize * 0.8,
-              color: Colors.grey.shade700,
+              color: colors.bottomTextColor,
             ),
           ),
         ],

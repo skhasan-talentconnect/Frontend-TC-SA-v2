@@ -9,7 +9,9 @@ class ChatbotWidgets {
     required bool isLoading,
     required int selectedCount,
     required VoidCallback onClearAll,
+    
   }) {
+    
     return Container(
       color: SColor.backgroundColor,
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 10),

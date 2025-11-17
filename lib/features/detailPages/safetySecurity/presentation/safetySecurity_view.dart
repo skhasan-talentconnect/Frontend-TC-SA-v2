@@ -55,6 +55,8 @@ void initState(){
 
   @override
   Widget build(BuildContext context) {
+                final colors = context.watch<ThemeProvider>().colors;
+
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
@@ -70,7 +72,8 @@ void initState(){
         body: Consumer<SafetyAndSecurityViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy) {
-              return const Center(child: SLoadingIndicator(color: Colors.amber));
+              return 
+               Center(child: SLoadingIndicator(color: colors.amberColor));
             }
 
             final model = vm.safetyAndSecurity;
@@ -94,7 +97,7 @@ void initState(){
             return RefreshIndicator(
               onRefresh: _refresh,
               // --- THEME UPDATE ---
-              color: Colors.amber,
+              color: colors.amberColor,
               child: ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
@@ -115,10 +118,12 @@ void initState(){
   }
 
   Widget _buildCctvCard(BuildContext context, double? percentage) {
+                final colors = context.watch<ThemeProvider>().colors;
+
     return Card(
       elevation: 4,
       
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: Colors.yellow.shade200),),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: colors.borderColor)),
       // --- THEME UPDATE ---
       color: Colors.white,
       shadowColor: Colors.grey,
@@ -138,7 +143,7 @@ void initState(){
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                       // --- THEME UPDATE ---
-                      color: Colors.yellow
+                      color: colors.amberColor,
                     ),
                   ),
               ],
@@ -151,8 +156,8 @@ void initState(){
                   value: percentage / 100,
                   minHeight: 12,
                   // --- THEME UPDATE ---
-                  backgroundColor: Colors.orange.shade100,
-                  color: Colors.amber,
+                  backgroundColor: colors.amberLightColor,
+                  color: colors.amberColor,
                 ),
               ),
             ],
@@ -163,12 +168,14 @@ void initState(){
   }
 
   Widget _buildMedicalCard(BuildContext context, MedicalFacilityModel? medicalFacility) {
+                final colors = context.watch<ThemeProvider>().colors;
+
     if (medicalFacility == null) return const SizedBox.shrink();
     return _TitledCard(
       title: 'Medical Facility',
       icon: Icons.medical_services_outlined,
       // --- THEME UPDATE ---
-      iconColor: Colors.amber,
+      iconColor: colors.amberColor,
       children: [
         _InfoTile(
           title: 'Doctor Availability',
@@ -181,12 +188,14 @@ void initState(){
   }
 
   Widget _buildTransportCard(BuildContext context, TransportSafetyModel? transportSafety) {
+                final colors = context.watch<ThemeProvider>().colors;
+
      if (transportSafety == null) return const SizedBox.shrink();
     return _TitledCard(
       title: 'Transport Safety',
       icon: Icons.directions_bus_outlined,
       // --- THEME UPDATE ---
-      iconColor: Colors.amber,
+      iconColor:colors.amberColor,
       children: [
         _CheckTile(title: 'GPS Trackers in Buses', isAvailable: transportSafety.gpsTrackerAvailable),
         _CheckTile(title: 'Verified Drivers', isAvailable: transportSafety.driversVerified),
@@ -195,11 +204,13 @@ void initState(){
   }
 
   Widget _buildGeneralSafetyCard(BuildContext context, List<String> fireMeasures, bool? visitorManagement) {
+                final colors = context.watch<ThemeProvider>().colors;
+
     return _TitledCard(
       title: 'General Safety',
       icon: Icons.health_and_safety_outlined,
       // --- THEME UPDATE ---
-      iconColor: Colors.amber,
+      iconColor: colors.amberColor,
       children: [
         _CheckTile(title: 'Visitor Management System', isAvailable: visitorManagement),
         const SizedBox(height: 8),
@@ -212,8 +223,8 @@ void initState(){
             children: fireMeasures.map((measure) => Chip(
               label: Text(measure),
               // --- THEME UPDATE ---
-              backgroundColor: Colors.amber.withOpacity(0.1),
-              side: BorderSide(color: Colors.amber.withOpacity(0.3)),
+              backgroundColor: colors.amberColor.withValues(alpha:0.1),
+              side: BorderSide(color:colors.amberColor.withValues(alpha:0.3)),
             )).toList(),
           )
         ],
@@ -234,6 +245,8 @@ class _TitledCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+                final colors = context.watch<ThemeProvider>().colors;
+
     return Card(
       elevation: 6,
       // --- THEME UPDATE ---
@@ -241,7 +254,7 @@ class _TitledCard extends StatelessWidget {
       shadowColor: Colors.grey,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: Colors.yellow.shade200, width: 1) // Softer border
+        side: BorderSide(color: colors.borderColor, width: 1) // Softer border
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),

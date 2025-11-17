@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tc_sa/common/index.dart' show SColor, SButton, STextStyles;
+import 'package:provider/provider.dart';
+import 'package:tc_sa/common/index.dart' show colors, SButton, STextStyles;
+import 'package:tc_sa/core/common/theme_provider.dart';
 
 class NavigatorCard extends StatelessWidget {
   const NavigatorCard({
@@ -15,11 +17,13 @@ class NavigatorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+                    final colors = context.watch<ThemeProvider>().colors;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
-        border: Border.all(color: Colors.orange.shade700),
+        border: Border.all(color: colors.amberDarkColor),
         color: Colors.yellow.shade100,
       ),
       padding: const EdgeInsets.all(24),
@@ -29,7 +33,7 @@ class NavigatorCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: STextStyles.s22W600.copyWith(color: SColor.secTextColor),
+            style: STextStyles.s22W600.copyWith(color: colors.secTextColor),
             softWrap: true,
           ),
           const SizedBox(height: 20),
@@ -37,7 +41,7 @@ class NavigatorCard extends StatelessWidget {
             label: buttonText,
             onPressed: onPressed,
             radius: 12,
-            backgroundColor: Colors.yellow.shade700,
+            backgroundColor: colors.amberDarkColor,
           ),
         ],
       ),

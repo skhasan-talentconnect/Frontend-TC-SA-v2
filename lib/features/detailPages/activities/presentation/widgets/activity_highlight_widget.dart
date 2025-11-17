@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 
 class ActivityHighlightWidget extends StatelessWidget {
   final IconData icon;
@@ -14,13 +16,13 @@ class ActivityHighlightWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
     final textTheme = Theme.of(context).textTheme;
-
+ final colors = context.watch<ThemeProvider>().colors;
     return Container(
       padding: EdgeInsets.all(isSmallScreen ? 14.0 : 18.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.yellow.shade200, width: 1.5),
+        border: Border.all(color: colors.borderColor, width: 1.5),
         boxShadow: [
           BoxShadow(
             blurRadius: 4,
@@ -36,7 +38,7 @@ class ActivityHighlightWidget extends StatelessWidget {
           Icon(
             icon,
             size: isSmallScreen ? 36.0 : 42.0,
-            color: Colors.amber.shade800,
+            color:colors.amberDarkColor,
           ),
           const SizedBox(height: 12),
           Text(

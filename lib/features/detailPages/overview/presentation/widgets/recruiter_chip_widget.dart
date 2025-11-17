@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 
 class RecruiterChip extends StatelessWidget {
   final String label;
@@ -12,12 +14,13 @@ class RecruiterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
     // Using Flutter's built-in Chip widget for a modern look
     return Chip(
       label: Text(label),
       // --- THEME UPDATE ---
       backgroundColor: Colors.white, // Kept blue for this section
-      side: BorderSide(color: Colors.yellow.shade400),
+      side: BorderSide(color: colors.borderSideColor),
       elevation: 10,
       labelStyle: TextStyle(
         fontSize: isSmallScreen ? 12.0 : 14.0,

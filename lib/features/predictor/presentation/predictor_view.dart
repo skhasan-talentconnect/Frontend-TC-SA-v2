@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart'
-    show SColor, STextStyles, STextField, SButton, SAppBar, SIcon;
+    show colors, STextStyles, STextField, SButton, SAppBar, SIcon;
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/predictor/presentation/view_models/predictor_view_model.dart';
 
@@ -24,6 +24,8 @@ class _PredictorPageState extends State<PredictorPage> {
 
   @override
   Widget build(BuildContext context) {
+                    final colors = context.watch<ThemeProvider>().colors;
+
     return ChangeNotifierProvider.value(
       value: viewModel,
       child: Scaffold(
@@ -45,21 +47,21 @@ class _PredictorPageState extends State<PredictorPage> {
                 Text(
                   "Your Options. Your School.",
                   style: STextStyles.s18W600.copyWith(
-                    color: SColor.primaryColor,
+                    color: colors.primaryColor,
                   ),
                 ),
                 const SizedBox(height: 10),
                 Text(
                   "School Predictor",
                   style: STextStyles.s30W900.copyWith(
-                    color: SColor.primaryColor,
+                    color: colors.primaryColor,
                   ),
                 ),
                 const SizedBox(height: 12),
                 Text(
                   "Discover the schools that matches the exact requirement for your kid.",
                   style: STextStyles.s15W400.copyWith(
-                    color: SColor.primaryColor,
+                    color: colors.primaryColor,
                   ),
                 ),
                 const SizedBox(height: 23),
@@ -197,7 +199,7 @@ class _PredictorPageState extends State<PredictorPage> {
                 Text(
                   "Predictions are based on available data and may not reflect actual outcomes",
                   style: STextStyles.s10W400.copyWith(
-                    color: SColor.terTextColor,
+                    color: colors.terTextColor,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -210,9 +212,11 @@ class _PredictorPageState extends State<PredictorPage> {
   }
 
   Widget _buildLabel(String label) {
+                    final colors = context.watch<ThemeProvider>().colors;
+
     return Text(
       label,
-      style: STextStyles.s16W400.copyWith(color: SColor.primaryColor),
+      style: STextStyles.s16W400.copyWith(color: colors.primaryColor),
     );
   }
 }

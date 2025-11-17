@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 import 'package:tc_sa/features/detailPages/feeAndScholarship/data/entities/feeAndScholarship_model.dart';
 
 class ScholarshipCard extends StatelessWidget {
@@ -8,11 +10,13 @@ class ScholarshipCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+        final colors = context.watch<ThemeProvider>().colors;
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.yellow.shade200, width: 1),
+        border: Border.all(color: colors.borderColor, width: 1),
         boxShadow: [
           BoxShadow(
             blurRadius: 6,
@@ -42,13 +46,13 @@ class ScholarshipCard extends StatelessWidget {
             if (scholarship.type != null)
               Chip(
                 label: Text(scholarship.type!),
-                backgroundColor: Colors.amber.shade100,
+                backgroundColor: colors.amberLightColor,
                 avatar: Icon(
                   Icons.category_outlined,
-                  color: Colors.amber.shade800,
+                  color: colors.amberDarkColor,
                 ),
-                labelStyle: TextStyle(color: Colors.amber.shade900),
-                side: BorderSide(color: Colors.amber.shade300),
+                labelStyle: TextStyle(color: colors.amberDarkColor),
+                side: BorderSide(color: colors.amberMedColor),
               ),
 
             const SizedBox(height: 20),
@@ -76,9 +80,9 @@ class ScholarshipCard extends StatelessWidget {
                 children: scholarship.documentsRequired
                     .map(
                       (doc) => Chip(
-                        backgroundColor: Colors.amber.shade50,
+                        backgroundColor: colors.amberLightColor,
                         label: Text(doc),
-                         side: BorderSide(color: Colors.amber.shade200),
+                         side: BorderSide(color: colors.amberMedColor),
                       ),
                     )
                     .toList(),

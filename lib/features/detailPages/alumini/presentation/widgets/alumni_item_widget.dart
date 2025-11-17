@@ -1,5 +1,7 @@
 // features/detailPages/alumini/presentation/widgets/alumni_item_widget.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 
 class AlumniItemWidget extends StatelessWidget {
   final String name;
@@ -15,13 +17,14 @@ class AlumniItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final colors = context.watch<ThemeProvider>().colors;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.yellow.shade200, width: 1.5),
+        border: Border.all(color: colors.borderColor, width: 1.5),
         boxShadow: [
           BoxShadow(
             blurRadius: 4,
@@ -68,7 +71,7 @@ class AlumniItemWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.amber.shade800,
+                color: colors.amberDarkColor,
               ),
             ),
         ],

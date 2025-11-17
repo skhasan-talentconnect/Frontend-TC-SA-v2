@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 
 class ReviewCard extends StatelessWidget {
   final String name;
@@ -18,13 +20,15 @@ class ReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+                final colors = context.watch<ThemeProvider>().colors;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16.0),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.yellow.shade200, width: 1),
+        border: Border.all(color: colors.borderColor, width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.grey,
@@ -41,7 +45,7 @@ class ReviewCard extends StatelessWidget {
           Row(
             children: [
               CircleAvatar(
-                backgroundColor: Colors.yellow.shade800,
+                backgroundColor: colors.amberDarkColor,
                 child: Text(
                   name.isNotEmpty ? name.substring(0, 1).toUpperCase() : 'A',
                   style: const TextStyle(
@@ -71,7 +75,7 @@ class ReviewCard extends StatelessWidget {
                             index < rating.round()
                                 ? Icons.star
                                 : Icons.star_border,
-                            color: Colors.yellow.shade700,
+                            color: colors.topTextColor,
                             size: 16,
                           ),
                         ),
@@ -111,7 +115,7 @@ class ReviewCard extends StatelessWidget {
               Icon(
                 Icons.thumb_up_alt_outlined,
                 size: 18,
-                color: Colors.yellow.shade700,
+                color: colors.topTextColor,
               ),
               const SizedBox(width: 4),
               Text(
@@ -125,7 +129,7 @@ class ReviewCard extends StatelessWidget {
               TextButton(
                 onPressed: () {},
                 style: TextButton.styleFrom(
-                  foregroundColor: Colors.yellow.shade800,
+                  foregroundColor: colors.topTextColor,
                 ),
                 child: const Text(
                   'Reply',

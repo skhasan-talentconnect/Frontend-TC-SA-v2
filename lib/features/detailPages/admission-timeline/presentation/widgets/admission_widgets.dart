@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 import 'package:tc_sa/features/detailPages/admission-timeline/data/entities/admission-model.dart';
 
 class TimelineCard extends StatelessWidget {
@@ -27,13 +29,14 @@ class TimelineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final colors = context.watch<ThemeProvider>().colors;
     return Container(
       margin: const EdgeInsets.only(bottom: 16.0),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.yellow.shade200, width: 1),
+        border: Border.all(color: colors.borderColor, width: 1),
         boxShadow: [
           BoxShadow(
             blurRadius: 4,
@@ -61,7 +64,7 @@ class TimelineCard extends StatelessWidget {
               ),
               Chip(
                 label: Text(timeline.status ?? 'N/A'),
-                backgroundColor: _getStatusColor(timeline.status).withOpacity(0.1),
+                backgroundColor: _getStatusColor(timeline.status).withValues(alpha:0.1),
                 labelStyle: TextStyle(
                   color: _getStatusColor(timeline.status),
                   fontWeight: FontWeight.bold,
@@ -119,8 +122,8 @@ class TimelineCard extends StatelessWidget {
                   .map(
                     (doc) => Chip(
                       label: Text(doc),
-                      backgroundColor: Colors.amber.shade50,
-                      side: BorderSide(color: Colors.amber.shade200),
+                      backgroundColor: colors.amberLightColor,
+                      side: BorderSide(color: colors.amberMedColor),
                     ),
                   )
                   .toList(),
@@ -145,12 +148,13 @@ class InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final colors = context.watch<ThemeProvider>().colors;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: Colors.yellow.shade700),
+          Icon(icon, size: 20, color: colors.topTextColor),
           const SizedBox(width: 12),
           Text(
             '$title: ',

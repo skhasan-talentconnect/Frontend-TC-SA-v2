@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 
 class DetailTile extends StatelessWidget {
   final IconData icon;
@@ -14,8 +16,10 @@ class DetailTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+        final colors = context.watch<ThemeProvider>().colors;
+
     return ListTile(
-      leading: Icon(icon, color: Colors.amber.shade800), // Slightly lighter icon
+      leading: Icon(icon, color: colors.amberDarkColor), // Slightly lighter icon
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
       trailing: Text(
         value,

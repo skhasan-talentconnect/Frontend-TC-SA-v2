@@ -33,6 +33,8 @@ class _InternationalExposureViewState extends State<InternationalExposureView> {
 
   @override
   Widget build(BuildContext context) {
+                final colors = context.watch<ThemeProvider>().colors;
+
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
@@ -40,7 +42,7 @@ class _InternationalExposureViewState extends State<InternationalExposureView> {
         body: Consumer<InternationalExposureViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy) {
-              return const Center(child: SLoadingIndicator(color: Colors.amber));
+              return Center(child: SLoadingIndicator(color: colors.amberColor));
             }
 
             final model = vm.exposure;
@@ -69,7 +71,7 @@ class _InternationalExposureViewState extends State<InternationalExposureView> {
 
             return RefreshIndicator(
               onRefresh: _refresh,
-              color: Colors.amber,
+              color: colors.amberColor,
               child: ListView.separated(
                 padding: const EdgeInsets.all(16.0),
                 itemCount: (exchangePrograms.isNotEmpty ? 1 : 0) +
@@ -124,11 +126,13 @@ class _ExchangeProgramCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+                final colors = context.watch<ThemeProvider>().colors;
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.yellow.shade200, width: 1),
+        border: Border.all(color: colors.borderColor, width: 1),
         boxShadow: [
           BoxShadow(
             blurRadius: 4,
@@ -154,9 +158,9 @@ class _ExchangeProgramCard extends StatelessWidget {
           if (program.programType != null)
             Chip(
               label: Text(program.programType!),
-              backgroundColor: Colors.amber.shade50,
-              side: BorderSide(color: Colors.amber.shade200),
-              labelStyle: TextStyle(color: Colors.amber, fontWeight: FontWeight.w500),
+              backgroundColor: colors.amberLightColor,
+              side: BorderSide(color: colors.amberMedColor),
+              labelStyle: TextStyle(color: colors.amberColor, fontWeight: FontWeight.w500),
             ),
           const SizedBox(height: 5),
           _InfoRow(icon: Icons.access_time, title: 'Duration', value: program.duration),
@@ -180,11 +184,13 @@ class _GlobalTieUpCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+                final colors = context.watch<ThemeProvider>().colors;
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.yellow.shade200, width: 1),
+        border: Border.all(color: colors.borderColor, width: 1),
         boxShadow: [
           BoxShadow(
             blurRadius: 4,
@@ -210,9 +216,9 @@ class _GlobalTieUpCard extends StatelessWidget {
           if (tieUp.natureOfTieUp != null)
             Chip(
               label: Text(tieUp.natureOfTieUp!),
-              backgroundColor: Colors.orange.shade50,
-              side: BorderSide(color: Colors.orange.shade200),
-              labelStyle: TextStyle(color: Colors.orange, fontWeight: FontWeight.w500),
+              backgroundColor: colors.amberLightColor,
+              side: BorderSide(color: colors.amberMedColor),
+              labelStyle: TextStyle(color: colors.amberColor, fontWeight: FontWeight.w500),
             ),
           const SizedBox(height: 10),
           _InfoRow(
@@ -242,12 +248,14 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+                final colors = context.watch<ThemeProvider>().colors;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: Colors.amber.shade800),
+          Icon(icon, size: 20, color: colors.amberDarkColor),
           const SizedBox(width: 12),
           Text(
             '$title: ',
