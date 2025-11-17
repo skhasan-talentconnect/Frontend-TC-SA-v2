@@ -1,13 +1,18 @@
-// lib/features/application/pdfModule/data/data_source/pdf_data_source.dart
-import 'package:tc_sa/core/index.dart' show ResultFuture;
+import 'package:tc_sa/core/network/typedef.dart';
 
 abstract class StudentPdfDataSource {
-  /// POST /pdf/generate/:studId -> { message, pdfId }
-  ResultFuture<bool> generatePdf({String? studId});
+  ResultFuture<bool> generatePdf({
+    required String studId,
+    required String applicationId,
+  });
 
-  /// GET /pdf/view/:studId -> bytes (inline pdf)
-  ResultFuture<List<int>?> viewPdfBytes({String? studId});
+  ResultFuture<List<int>?> viewPdfBytes({
+    required String studId,
+    required String applicationId,
+  });
 
-  /// GET /pdf/download/:studId -> bytes (attachment)
-  ResultFuture<List<int>?> downloadPdfBytes({String? studId});
+  ResultFuture<List<int>?> downloadPdfBytes({
+    required String studId,
+    required String applicationId,
+  });
 }

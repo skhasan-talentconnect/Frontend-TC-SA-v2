@@ -1,29 +1,33 @@
+// lib/features/application/applications/data/data_source/application_data_source.dart
 import 'package:dartz/dartz.dart';
 import 'package:tc_sa/core/index.dart' show APIException;
 import 'package:tc_sa/features/application/applications/data/entities/applications_model.dart';
 
 abstract class ApplicationDataSource {
-  /// POST /applications
   Future<Either<APIException, StudentApplication?>> addApplication({
     required StudentApplication payload,
   });
 
-  /// GET /applications
   Future<Either<APIException, List<StudentApplication>>> getAllApplications();
 
-  /// GET /applications/:studId
-  Future<Either<APIException, StudentApplication?>> getApplicationByStudId({
-    String? studId,
+  /// Return all applications for a given studId
+  Future<Either<APIException, List<StudentApplication>>> getStudApplicationsByStudId({
+    required String studId,
   });
 
-  /// PUT /applications/:studId
+  /// Get single application by its applicationId
+  Future<Either<APIException, StudentApplication?>> getApplicationById({
+    required String applicationId,
+  });
+
+  /// Update by applicationId
   Future<Either<APIException, StudentApplication?>> updateApplication({
+    required String applicationId,
     required StudentApplication payload,
-    String? studId,
   });
 
-  /// DELETE /applications/:studId
+  /// Delete by applicationId
   Future<Either<APIException, bool>> deleteApplication({
-    String? studId,
+    required String applicationId,
   });
 }

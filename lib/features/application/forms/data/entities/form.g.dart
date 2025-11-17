@@ -21,6 +21,12 @@ _Form _$FormFromJson(Map<String, dynamic> json) => _Form(
     json['status'],
     const FormStatusConverter().fromJson,
   ),
+  application:
+      json['applicationId'] == null
+          ? null
+          : StudentApplication.fromJson(
+            json['applicationId'] as Map<String, dynamic>,
+          ),
   iV: (json['__v'] as num?)?.toInt(),
   createdAt: const DateTimeConverter().fromJson(json['createdAt']),
   updatedAt: const DateTimeConverter().fromJson(json['updatedAt']),
@@ -35,6 +41,7 @@ Map<String, dynamic> _$FormToJson(_Form instance) => <String, dynamic>{
     instance.status,
     const FormStatusConverter().toJson,
   ),
+  'applicationId': instance.application,
   '__v': instance.iV,
   'createdAt': const DateTimeConverter().toJson(instance.createdAt),
   'updatedAt': const DateTimeConverter().toJson(instance.updatedAt),

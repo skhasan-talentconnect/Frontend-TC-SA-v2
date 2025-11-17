@@ -521,86 +521,86 @@ class _SchoolDetailViewState extends State<SchoolDetailView>
                                     ),
                                   ),
                                   const SizedBox(width: 8),
-                                  Expanded(
-                                    child: ChangeNotifierProvider.value(
-                                      value: myFormViewModel,
-                                      child: Selector<MyFormViewModel, bool>(
-                                        selector: (_, vm) => vm.isLoading,
-                                        builder:
-                                            (_, isLoading, __) =>
-                                                isLoading
-                                                    ? Center(
-                                                      child: SLoadingIndicator(
-                                                        color: Colors.blue,
-                                                      ),
-                                                    )
-                                                    : SButton(
-                                                      onPressed: () async {
-                                                        if (appStateProvider
-                                                            .isGuest) {
-                                                          Toasts.showInfoToast(
-                                                            context,
-                                                            message:
-                                                                'Please log in to apply',
-                                                          );
-                                                        } else {
-                                                          if (_vm.isApplied) {
-                                                            return;
-                                                          }
-                                                          final failure =
-                                                              await myFormViewModel
-                                                                  .submitForm(
-                                                                    applicationId:
-                                                                        '', // You may need to provide a valid ID here
-                                                                    schoolId:
-                                                                        widget
-                                                                            .schoolId,
-                                                                  );
-                                                          Toasts.showSuccessOrFailureToast(
-                                                            context,
-                                                            failure: failure,
-                                                            popOnSuccess: false,
-                                                            hideSuccess: true,
-                                                            successCallback: () {
-                                                              _vm.appliedFormModel =
-                                                                  AppliedFormModel(
-                                                                    status:
-                                                                        FormStatus
-                                                                            .pending,
-                                                                    isApplied:
-                                                                        true,
-                                                                  );
-                                                            },
-                                                          );
-                                                        }
-                                                      }, // <-- This brace closes the onPressed callback
-                                                      backgroundColor:
-                                                          _vm.isApplied
-                                                              ? Colors.grey
-                                                              : Colors.blue,
-                                                      padding:
-                                                          const EdgeInsets.symmetric(
-                                                            vertical: 14,
-                                                          ),
-                                                      label: '',
-                                                      max: true,
-                                                      text: Text(
-                                                        _vm.isApplied
-                                                            ? 'Applied'
-                                                            : "Apply",
-                                                        style: TextStyle(
-                                                          fontSize: infoFont,
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ), // <-- This parenthesis closes the SButton widget
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                //  
+                                //     child: ChangeNotifierProvider.value(
+                                //       value: myFormViewModel,
+                                //       child: Selector<MyFormViewModel, bool>(
+                                //         selector: (_, vm) => vm.isLoading,
+                                //         builder:
+                                //             (_, isLoading, __) =>
+                                //                 isLoading
+                                //                     ? Center(
+                                //                       child: SLoadingIndicator(
+                                //                         color: Colors.blue,
+                                //                       ),
+                                //                     )
+                                //                     : SButton(
+                                //                       onPressed: () async {
+                                //                         if (appStateProvider
+                                //                             .isGuest) {
+                                //                           Toasts.showInfoToast(
+                                //                             context,
+                                //                             message:
+                                //                                 'Please log in to apply',
+                                //                           );
+                                //                         } else {
+                                //                           if (_vm.isApplied) {
+                                //                             return;
+                                //                           }
+                                //                           final failure =
+                                //                               await myFormViewModel
+                                //                                   .submitForm(
+                                //                                     applicationId:
+                                //                                         '', // You may need to provide a valid ID here
+                                //                                     schoolId:
+                                //                                         widget
+                                //                                             .schoolId,
+                                //                                   );
+                                //                           Toasts.showSuccessOrFailureToast(
+                                //                             context,
+                                //                             failure: failure,
+                                //                             popOnSuccess: false,
+                                //                             hideSuccess: true,
+                                //                             successCallback: () {
+                                //                               _vm.appliedFormModel =
+                                //                                   AppliedFormModel(
+                                //                                     status:
+                                //                                         FormStatus
+                                //                                             .pending,
+                                //                                     isApplied:
+                                //                                         true,
+                                //                                   );
+                                //                             },
+                                //                           );
+                                //                         }
+                                //                       }, // <-- This brace closes the onPressed callback
+                                //                       backgroundColor:
+                                //                           _vm.isApplied
+                                //                               ? Colors.grey
+                                //                               : Colors.blue,
+                                //                       padding:
+                                //                           const EdgeInsets.symmetric(
+                                //                             vertical: 14,
+                                //                           ),
+                                //                       label: '',
+                                //                       max: true,
+                                //                       text: Text(
+                                //                         _vm.isApplied
+                                //                             ? 'Applied'
+                                //                             : "Apply",
+                                //                         style: TextStyle(
+                                //                           fontSize: infoFont,
+                                //                           color: Colors.white,
+                                //                           fontWeight:
+                                //                               FontWeight.bold,
+                                //                         ),
+                                //                       ),
+                                //                     ), // <-- This parenthesis closes the SButton widget
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ],
+                            ],),
                             ],
                           ),
                         ),

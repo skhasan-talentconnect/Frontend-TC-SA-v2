@@ -33,8 +33,32 @@ class $AssetsIconsGen {
   /// File path: assets/icons/.gitkeep
   String get aGitkeep => 'assets/icons/.gitkeep';
 
+  /// File path: assets/icons/facebook.png
+  AssetGenImage get facebook =>
+      const AssetGenImage('assets/icons/facebook.png');
+
+  /// File path: assets/icons/insta.png
+  AssetGenImage get insta => const AssetGenImage('assets/icons/insta.png');
+
+  /// File path: assets/icons/linkedIn.png
+  AssetGenImage get linkedIn =>
+      const AssetGenImage('assets/icons/linkedIn.png');
+
+  /// File path: assets/icons/twitter.png
+  AssetGenImage get twitter => const AssetGenImage('assets/icons/twitter.png');
+
+  /// File path: assets/icons/web.png
+  AssetGenImage get web => const AssetGenImage('assets/icons/web.png');
+
   /// List of all assets
-  List<String> get values => [aGitkeep];
+  List<dynamic> get values => [
+    aGitkeep,
+    facebook,
+    insta,
+    linkedIn,
+    twitter,
+    web,
+  ];
 }
 
 class $AssetsImagesGen {

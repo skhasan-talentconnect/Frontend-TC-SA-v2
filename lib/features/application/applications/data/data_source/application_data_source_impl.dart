@@ -1,5 +1,4 @@
-import 'dart:math';
-
+// lib/features/application/applications/data/data_source/application_data_source_impl.dart
 import 'package:dartz/dartz.dart';
 import 'package:tc_sa/core/index.dart'
     show
@@ -17,26 +16,25 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
   final NetworkService _network = getIt<NetworkService>();
   final AppStateProvider _app = getIt<AppStateProvider>();
 
-  /// Base: Endpoints.applications (e.g. "/applications")
-  String get _base => Endpoints.studentApplications;
+  // Use the base URL provided
+  String get _base => 'https://backend-tc-sa-v2.onrender.com/api/applications';
 
-  /// Resolve studId. If not provided, fallback to logged-in user.sId
-  String? _resolveStudId(String? studId) => studId?.isNotEmpty == true ? studId : _app.user?.sId;
+  String? _resolveStudId(String? studId) =>
+      (studId != null && studId.isNotEmpty) ? studId : _app.user?.sId;
 
   @override
   Future<Either<APIException, StudentApplication?>> addApplication({
     required StudentApplication payload,
   }) async {
     try {
-      // Ensure studId set from logged-in user if missing
       final effectivePayload = payload.studId?.isNotEmpty == true
           ? payload
           : payload.copyWith(studId: _app.user?.sId);
 
       final req = Request(
         method: RequestMethod.post,
-        endpoint: _base, // "/applications"
-        body: effectivePayload.toJson(), // dob -> ISO handled by model
+        endpoint: "$_base/",
+        body: effectivePayload.toJson(),
       );
 
       final resp = await _network.request(req);
@@ -53,7 +51,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
     try {
       final req = Request(
         method: RequestMethod.get,
-        endpoint: _base, // "/applications"
+        endpoint: _base,
       );
       final resp = await _network.request(req);
       final map = (resp.data as Map<String, dynamic>);
@@ -69,18 +67,40 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
   }
 
   @override
-  Future<Either<APIException, StudentApplication?>> getApplicationByStudId({
-    String? studId,
+  Future<Either<APIException, List<StudentApplication>>> getStudApplicationsByStudId({
+    required String studId,
   }) async {
     try {
-      final id = _resolveStudId(studId);
+      final id = _resolveStudId(studId) ?? studId;
       if (id == null || id.isEmpty) {
-          return Left(APIException.from(e));
+        return Left(APIException.from("Missing studId"));
       }
-
       final req = Request(
         method: RequestMethod.get,
-        endpoint: "$_base/$id", // "/applications/:studId"
+        endpoint: "$_base/stud/$id",
+      );
+      final resp = await _network.request(req);
+      final map = (resp.data as Map<String, dynamic>);
+      final list = (map['data'] as List?) ?? const [];
+      final apps = list
+          .whereType<Map<String, dynamic>>()
+          .map(StudentApplication.fromJson)
+          .toList();
+      return Right(apps);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
+
+  @override
+  Future<Either<APIException, StudentApplication?>> getApplicationById({
+    required String applicationId,
+  }) async {
+    try {
+      if (applicationId.isEmpty) return Left(APIException.from("Missing applicationId"));
+      final req = Request(
+        method: RequestMethod.get,
+        endpoint: "$_base/$applicationId",
       );
       final resp = await _network.request(req);
       final map = (resp.data as Map<String, dynamic>);
@@ -93,20 +113,15 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
 
   @override
   Future<Either<APIException, StudentApplication?>> updateApplication({
+    required String applicationId,
     required StudentApplication payload,
-    String? studId,
   }) async {
     try {
-      final id = _resolveStudId(studId) ?? payload.studId;
-      if (id == null || id.isEmpty) {
-      
-           return Left(APIException.from(e));
-      }
-
+      if (applicationId.isEmpty) return Left(APIException.from("Missing applicationId"));
       final req = Request(
         method: RequestMethod.put,
-        endpoint: "$_base/$id", // "/applications/:studId"
-        body: payload.copyWith(studId: id).toJson(), // ensure correct id in body
+        endpoint: "$_base/$applicationId",
+        body: payload.toJson(),
       );
       final resp = await _network.request(req);
       final map = (resp.data as Map<String, dynamic>);
@@ -119,17 +134,13 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
 
   @override
   Future<Either<APIException, bool>> deleteApplication({
-    String? studId,
+    required String applicationId,
   }) async {
     try {
-      final id = _resolveStudId(studId);
-      if (id == null || id.isEmpty) {
-           return Left(APIException.from(e));
-      }
-
+      if (applicationId.isEmpty) return Left(APIException.from("Missing applicationId"));
       final req = Request(
         method: RequestMethod.delete,
-        endpoint: "$_base/$id", // "/applications/:studId"
+        endpoint: "$_base/$applicationId",
       );
       await _network.request(req);
       return const Right(true);
