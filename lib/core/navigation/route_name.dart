@@ -51,17 +51,18 @@ class RouteNames {
   static const String aiPredictor = 'ai-predictor';
   static const String apply = 'apply';
 
-  static const String notificationDetails='notificationDetails';
+  static const String notificationDetails = 'notificationDetails';
 
   //applications
   static const String myForms = 'my-forms';
   static const String formDetails = 'form-details';
   static const String applicationPdf = 'applicationPdf';
   static const String addApplication = 'addApplication';
-static const String applicationSuccess='applicationSuccess';
+  static const String applicationSuccess = 'applicationSuccess';
   static const String registerSchool = 'registerSchool';
   static const String addNumber = 'addNumber';
   static const String addOtp = 'addOtp';
 
   static const String noViewFound = 'no-view-found';
+  static const String themes = 'themes';
 }

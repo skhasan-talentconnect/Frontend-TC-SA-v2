@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/application/applications/data/data_source/index.dart';
 import 'package:tc_sa/features/application/forms/data/data_source/form_data_source_impl.dart';
@@ -17,6 +18,7 @@ void initServiceLocator() {
   getIt
     ..registerLazySingleton<NetworkService>(NetworkService.new)
     ..registerLazySingleton<ConnectivityProvider>(ConnectivityProvider.new)
+    ..registerLazySingleton<ThemeProvider>(ThemeProvider.new)
     ..registerLazySingleton<AppStateProvider>(AppStateProvider.new)
     ..registerFactory<ProfileDataSourceImpl>(ProfileDataSourceImpl.new)
     ..registerFactory<PrefDataSourceImpl>(PrefDataSourceImpl.new)

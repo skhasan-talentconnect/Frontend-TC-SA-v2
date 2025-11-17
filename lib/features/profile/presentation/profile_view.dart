@@ -280,9 +280,37 @@ class _ProfileViewState extends State<ProfileView> {
                         padding: EdgeInsets.symmetric(vertical: 8),
                         shrinkWrap: true,
                         children: [
-                          ProfileListItem(
+                          ProfileListItem.navigator(
                             label: vm.routes[4].name,
                             leading: vm.routes[4].icon,
+                            path: vm.routes[4].path,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(height: 12),
+                    Container(
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                            offset: Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                      child: ListView(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        shrinkWrap: true,
+                        children: [
+                          ProfileListItem(
+                            label: vm.routes[5].name,
+                            leading: vm.routes[5].icon,
                             onTap: () async {
                               await SecretRepo.remove('auth_token');
                               getIt<AppStateProvider>().authModel = null;

@@ -21,9 +21,9 @@ import 'package:tc_sa/features/detailPages/alumini/presentation/alumini_view.dar
 import 'package:tc_sa/features/detailPages/alumini/presentation/view_models/alumini_view_model.dart';
 import 'package:tc_sa/features/home/index.dart';
 import 'package:tc_sa/features/home/presentation/landing_page.dart';
-import 'package:tc_sa/features/notifications/presentation/notification_detail_view.dart';
 import 'package:tc_sa/features/notifications/data/entities/notification.dart'
     as app;
+import 'package:tc_sa/features/notifications/presentation/notification_detail_view.dart';
 import 'package:tc_sa/features/notifications/presentation/notification_view.dart';
 import 'package:tc_sa/features/predictor/index.dart';
 import 'package:tc_sa/features/predictor/presentation/view_models/predictor_view_model.dart';
@@ -38,6 +38,7 @@ import 'package:tc_sa/features/support/contact_us_view.dart';
 import 'package:tc_sa/features/support/support_view.dart';
 import 'package:tc_sa/features/users/shortlist/index.dart';
 
+import '../../common/theme/theme_view.dart';
 import '../../features/detailPages/overview/presentation/school_detail_view.dart';
 
 class AppRouter {
@@ -222,13 +223,13 @@ class AppRouter {
       //   builder: (context, state) => const AmenitiesView(),
       // ),
       GoRoute(
-  path: '/notification-detail',
-  name: RouteNames.notificationDetails,
-  builder: (context, state) {
-    final notification = state.extra as app.Notification;
-return NotificationDetailView(notification: notification);
-  },
-),
+        path: '/notification-detail',
+        name: RouteNames.notificationDetails,
+        builder: (context, state) {
+          final notification = state.extra as app.Notification;
+          return NotificationDetailView(notification: notification);
+        },
+      ),
 
       GoRoute(
         path: '/support',
@@ -342,85 +343,83 @@ return NotificationDetailView(notification: notification);
         path: '/form-details',
         name: RouteNames.formDetails,
         builder: (context, state) {
-          
           final formId = state.extra as String;
           return FormDetailsView(formId: formId);
         },
       ),
-      
-GoRoute(
-  path: '/application-success',
-  name: RouteNames.applicationSuccess,
-  builder: (context, state) {
-    final extra = state.extra;
-    String? applicationId;
 
-    if (extra is Map<String, dynamic>) {
-      applicationId = (extra['applicationId'] ??
-          extra['application_id'] ??
-          extra['_id'] ??
-          extra['id'])?.toString();
-      // normalize empty -> null
-      if (applicationId != null && applicationId.trim().isEmpty) {
-        applicationId = null;
-      }
-    }
+      GoRoute(
+        path: '/application-success',
+        name: RouteNames.applicationSuccess,
+        builder: (context, state) {
+          final extra = state.extra;
+          String? applicationId;
 
-    return ApplicationSuccessView(applicationId: applicationId);
-  },
-),
-
-
-
-     GoRoute(
-  path: '/addApplication',
-  name: RouteNames.addApplication,
-  builder: (context, state) {
-    final extra = state.extra;
-    bool forceNew = false;
-    StudentApplication? initialApplication;
-
-    if (extra is Map) {
-      // allow passing either a Map<String, dynamic> or a typed Map
-      if (extra.containsKey('forceNew')) {
-        final val = extra['forceNew'];
-        if (val is bool) forceNew = val;
-        if (val is String) forceNew = val.toLowerCase() == 'true';
-      }
-      if (extra.containsKey('initialApplication')) {
-        final val = extra['initialApplication'];
-        if (val is StudentApplication) {
-          initialApplication = val;
-        }
-        // If you sometimes pass JSON here (Map), try to convert:
-        else if (val is Map<String, dynamic>) {
-          try {
-            initialApplication = StudentApplication.fromJson(val);
-          } catch (_) {
-            initialApplication = null;
+          if (extra is Map<String, dynamic>) {
+            applicationId =
+                (extra['applicationId'] ??
+                        extra['application_id'] ??
+                        extra['_id'] ??
+                        extra['id'])
+                    ?.toString();
+            // normalize empty -> null
+            if (applicationId != null && applicationId.trim().isEmpty) {
+              applicationId = null;
+            }
           }
-        }
-      }
-    }
 
-    return ApplicationFormView(
-      forceNew: forceNew,
-      initialApplication: initialApplication,
-    );
-  },
-),
+          return ApplicationSuccessView(applicationId: applicationId);
+        },
+      ),
 
-     GoRoute(
-  path: '/application-pdf',
-  name: RouteNames.applicationPdf,
-  builder: (context, state) {
-    final extras = state.extra as Map<String, dynamic>?;
-    final appId = extras?['applicationId'] as String?;
-    final download = extras?['download'] as bool? ?? false;
-    return StudentPdfScreen(applicationId: appId, download: download);
-  },
-),
+      GoRoute(
+        path: '/addApplication',
+        name: RouteNames.addApplication,
+        builder: (context, state) {
+          final extra = state.extra;
+          bool forceNew = false;
+          StudentApplication? initialApplication;
 
+          if (extra is Map) {
+            // allow passing either a Map<String, dynamic> or a typed Map
+            if (extra.containsKey('forceNew')) {
+              final val = extra['forceNew'];
+              if (val is bool) forceNew = val;
+              if (val is String) forceNew = val.toLowerCase() == 'true';
+            }
+            if (extra.containsKey('initialApplication')) {
+              final val = extra['initialApplication'];
+              if (val is StudentApplication) {
+                initialApplication = val;
+              }
+              // If you sometimes pass JSON here (Map), try to convert:
+              else if (val is Map<String, dynamic>) {
+                try {
+                  initialApplication = StudentApplication.fromJson(val);
+                } catch (_) {
+                  initialApplication = null;
+                }
+              }
+            }
+          }
+
+          return ApplicationFormView(
+            forceNew: forceNew,
+            initialApplication: initialApplication,
+          );
+        },
+      ),
+
+      GoRoute(
+        path: '/application-pdf',
+        name: RouteNames.applicationPdf,
+        builder: (context, state) {
+          final extras = state.extra as Map<String, dynamic>?;
+          final appId = extras?['applicationId'] as String?;
+          final download = extras?['download'] as bool? ?? false;
+          return StudentPdfScreen(applicationId: appId, download: download);
+        },
+      ),
       GoRoute(
         path: '/registerSchool',
         name: RouteNames.registerSchool,
@@ -438,6 +437,11 @@ GoRoute(
             (context, state) => VerifyOtpView(phone: state.extra as String),
       ),
       GoRoute(
+        name: RouteNames.themes,
+        path: '/themes',
+        builder: (context, state) => ThemeView(),
+      ),
+      GoRoute(
         name: RouteNames.noViewFound,
         path: '/no-view-found',
         builder: (context, state) => NotFoundView(),
@@ -446,7 +450,3 @@ GoRoute(
     errorBuilder: (_, __) => NotFoundView(),
   );
 }
-
-/*
-
-*/

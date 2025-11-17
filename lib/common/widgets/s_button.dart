@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart' show SColor, STextStyles;
+import 'package:tc_sa/core/common/index.dart';
 
 class SButton extends StatelessWidget {
   const SButton({
@@ -38,6 +40,8 @@ class SButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment:
@@ -51,12 +55,12 @@ class SButton extends StatelessWidget {
                 const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             backgroundColor:
                 backgroundColor ??
-                (_isOutlined ? SColor.backgroundColor : SColor.primaryColor),
+                (_isOutlined ? colors.backgroundColor : colors.primaryColor),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(max ? 8 : (radius ?? 12)),
               side:
                   _isOutlined
-                      ? BorderSide(color: SColor.primaryColor)
+                      ? BorderSide(color: colors.primaryColor)
                       : BorderSide.none,
             ),
           ),
