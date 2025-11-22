@@ -7,6 +7,7 @@ import 'package:tc_sa/common/index.dart'
 import 'package:tc_sa/core/index.dart' show getIt, AppStateProvider, RouteNames;
 import 'package:tc_sa/features/application/applications/data/entities/applications_model.dart';
 import 'package:tc_sa/features/application/applications/presentation/view_models/application_view_model.dart';
+import 'package:tc_sa/features/application/pdfModule/presentation/view_models/pdf_view_model.dart';
 
 class ApplicationFormView extends StatefulWidget {
   const ApplicationFormView({super.key, this.forceNew = false, this.initialApplication,});
@@ -20,6 +21,37 @@ class ApplicationFormView extends StatefulWidget {
 
 
 class _ApplicationFormViewState extends State<ApplicationFormView> {
+
+  void _prefillParentAndAddress(StudentApplication app) {
+  // Father
+  _fatherNameCtrl.text = app.fatherName ?? '';
+  _fatherAgeCtrl.text = app.fatherAge?.toString() ?? '';
+  _fatherQualCtrl.text = app.fatherQualification ?? '';
+  _fatherProfCtrl.text = app.fatherProfession ?? '';
+  _fatherIncomeCtrl.text = app.fatherAnnualIncome ?? '';
+  _fatherPhoneCtrl.text = app.fatherPhoneNo ?? '';
+  _fatherAadharCtrl.text = app.fatherAadharNo ?? '';
+  _fatherEmailCtrl.text = app.fatherEmail ?? '';
+
+  // Mother
+  _motherNameCtrl.text = app.motherName ?? '';
+  _motherAgeCtrl.text = app.motherAge?.toString() ?? '';
+  _motherQualCtrl.text = app.motherQualification ?? '';
+  _motherProfCtrl.text = app.motherProfession ?? '';
+  _motherIncomeCtrl.text = app.motherAnnualIncome ?? '';
+  _motherPhoneCtrl.text = app.motherPhoneNo ?? '';
+  _motherAadharCtrl.text = app.motherAadharNo ?? '';
+  _motherEmailCtrl.text = app.motherEmail ?? '';
+
+  // Addresses
+  _presentAddressCtrl.text = app.presentAddress ?? '';
+  _permanentAddressCtrl.text = app.permanentAddress ?? '';
+
+  // If relationship/guardian fields are relevant, you may decide to prefill them too.
+  // Currently we keep guardian fields untouched so the user can explicitly provide them when needed.
+
+  if (mounted) setState(() {});
+}
   final _vm = ApplicationViewModel();
   final _formKey = GlobalKey<FormState>();
   bool _checkingExisting = true;
@@ -31,33 +63,43 @@ void initState() {
 
   // Run after first frame so context & provider are ready.
   WidgetsBinding.instance.addPostFrameCallback((_) async {
-    if (!mounted) return;
+  if (!mounted) return;
 
-    // Case 1: If initialApplication provided, prefill and skip backend call
-    if (widget.initialApplication != null) {
-      _vm.setApplication(widget.initialApplication);
-      _application = widget.initialApplication;
-      _populateFromApplication(_application!);
-      _checkingExisting = false;
-      setState(() {});
-      return;
-    }
+  // Case 1: If initialApplication provided, prefill and skip backend call
+  if (widget.initialApplication != null) {
+    _vm.setApplication(widget.initialApplication);
+    _application = widget.initialApplication;
+    _populateFromApplication(_application!);
+    _checkingExisting = false;
+    setState(() {});
+    return;
+  }
 
-    // Case 2: Force new blank form (skip backend)
-    if (widget.forceNew) {
-      _checkingExisting = false;
-      setState(() {});
-      return;
-    }
-
-    // Case 3: Normal case — fetch applications list for this student
+  // Case 2: Force new blank form BUT if user already has saved applications,
+  // prefill parent & address sections from the first saved application.
+  if (widget.forceNew) {
+    // attempt to fetch existing applications (non-blocking for user, but we await here)
     await _checkExisting();
 
-    // if we fetched an existing application and want to prefill the form
     if (_application != null) {
-      _populateFromApplication(_application!);
+      // prefill only father, mother and address sections (fields remain editable)
+      _prefillParentAndAddress(_application!);
     }
-  });
+
+    _checkingExisting = false;
+    setState(() {});
+    return;
+  }
+
+  // Case 3: Normal case — fetch applications list for this student
+  await _checkExisting();
+
+  // if we fetched an existing application and want to prefill the form
+  if (_application != null) {
+    _populateFromApplication(_application!);
+  }
+});
+
 }
 
 
@@ -502,8 +544,7 @@ void _populateFromApplication(StudentApplication app) {
       homeLanguage: _homeLanguageCtrl.text.trim(),
       yearlyBudget: _yearlyBudgetCtrl.text.trim(),
     );
-
-  final failure = await _vm.addApplication(payload);
+final failure = await _vm.addApplication(payload);
 if (!mounted) return;
 
 if (failure != null) {
@@ -513,25 +554,98 @@ if (failure != null) {
   return;
 }
 
-// Resolve id from returned model (try multiple fields)
+// Try to get the created application id from the returned model
 final created = _vm.application;
-final createdAppId =
-    created?.applicationId ??
-    created?.applicationId ??
-    created?.applicationId;
+String createdAppId = created?.applicationId?.toString() ?? '';
+
+// Debug log for visibility
+debugPrint('[ApplicationFormView] vm.application after add: $created');
+debugPrint('[ApplicationFormView] initial createdAppId="$createdAppId" studId="$studId"');
 
 ScaffoldMessenger.of(context).showSnackBar(
   const SnackBar(content: Text("Application submitted successfully!")),
 );
 
+// If the backend didn't return applicationId, fetch user's applications as a fallback
+if (createdAppId.isEmpty) {
+  try {
+    debugPrint('[ApplicationFormView] createdAppId empty. Fetching applications for studId: $studId');
+
+    // ensure studId exists
+    if (studId != null && studId.isNotEmpty) {
+      final fallbackFailure = await _vm.getApplicationsByStudId(studId: studId);
+
+      if (fallbackFailure != null) {
+        debugPrint('[ApplicationFormView] getApplicationsByStudId failed: ${fallbackFailure.message}');
+      } else {
+        if (_vm.applications.isNotEmpty) {
+          final mostRecent = _vm.applications.first;
+          createdAppId = mostRecent.applicationId?.toString() ??
+              mostRecent.applicationId?.toString() ??
+              mostRecent.applicationId?.toString() ??
+              '';
+          debugPrint('[ApplicationFormView] fallback found createdAppId="$createdAppId" from applications list');
+        } else {
+          debugPrint('[ApplicationFormView] fallback: no applications returned for studId');
+        }
+      }
+    } else {
+      debugPrint('[ApplicationFormView] studId missing; cannot run fallback fetch');
+    }
+  } catch (e, st) {
+    debugPrint('[ApplicationFormView] exception during fallback fetch: $e\n$st');
+  }
+}
+
+// Now attempt PDF generation if we have an applicationId
+if (createdAppId.isNotEmpty && studId != null && studId.isNotEmpty) {
+  try {
+    final StudentPdfViewModel pdfVm = getIt.isRegistered<StudentPdfViewModel>()
+        ? getIt<StudentPdfViewModel>()
+        : StudentPdfViewModel();
+
+    debugPrint('[ApplicationFormView] calling pdfVm.generate(studId=$studId, applicationId=$createdAppId)');
+
+    final pdfFailure = await pdfVm.generate(
+      context: context,
+      studId: studId,
+      applicationId: createdAppId,
+    );
+
+    if (pdfFailure != null) {
+      debugPrint('[ApplicationFormView] PDF generation failed: ${pdfFailure.message}');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(pdfFailure.message ?? "PDF generation failed")),
+        );
+      }
+    } else {
+      debugPrint('[ApplicationFormView] PDF generated successfully for applicationId=$createdAppId');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("PDF generated successfully!")),
+        );
+      }
+    }
+  } catch (e, st) {
+    debugPrint('[ApplicationFormView] Exception during pdf generation: $e\n$st');
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("PDF generation encountered an error.")),
+      );
+    }
+  }
+} else {
+  debugPrint('❌ Skipping PDF generation — missing createdAppId or studId. createdAppId="$createdAppId", studId="$studId"');
+}
+
+// navigate to success page regardless (you can change this if you want to wait for PDF)
 if (!mounted) return;
 
 context.pushNamed(
   RouteNames.applicationSuccess,
-  extra: {'applicationId': createdAppId}, // createdAppId may be null -> handled by route
-);
-
-    }  bool _needsGuardian() =>
+  extra: {'applicationId': createdAppId},
+);    }  bool _needsGuardian() =>
       _relationshipStatus != null && _relationshipStatus != 'Married';
 
   @override

@@ -63,18 +63,39 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
   late List<GlobalKey> _tabKeys;
 
   final ValueNotifier<bool> isSaved = ValueNotifier(false);
+    int _userApplicationCount = 0;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final failure = await overviewViewModel.getSchoolsById(
-        id: widget.schoolId,
-      );
-      failure?.showError(context);
-      await overviewViewModel.getIsAppliedSchool(schoolId: widget.schoolId);
-      isSaved.value = getIt<AppStateProvider>().isSaved(widget.schoolId);
-    });
+   WidgetsBinding.instance.addPostFrameCallback((_) async {
+  final failure = await overviewViewModel.getSchoolsById(
+    id: widget.schoolId,
+  );
+  failure?.showError(context);
+
+  await overviewViewModel.getIsAppliedSchool(schoolId: widget.schoolId);
+  isSaved.value = getIt<AppStateProvider>().isSaved(widget.schoolId);
+
+  // --- NEW: prefetch student's generated PDFs so we know how many applications they have
+  try {
+    final studId = getIt<AppStateProvider>().user?.sId;
+    if (studId != null && studId.isNotEmpty) {
+      final pdfFailure = await myFormViewModel.fetchStudentPdfs(studId: studId);
+      if (pdfFailure == null) {
+        final pdfs = myFormViewModel.availablePdfs;
+        if (pdfs != null) {
+          setState(() {
+            _userApplicationCount = pdfs.length;
+          });
+        }
+      }
+    }
+  } catch (_) {
+    // ignore prefetch errors — we'll fetch again when user presses Apply
+  }
+});
+
     _tabKeys = List.generate(DetailTabEnum.values.length, (_) => GlobalKey());
   }
 
@@ -401,122 +422,207 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
         if (isLoading) {
           return const Center(child: SLoadingIndicator(color: Colors.blue));
         }
+final isSingleAndApplied = (_userApplicationCount == 1) && (vm.isApplied == true);
+       
+return SButton(
+  onPressed: () async {
+    if (isSingleAndApplied) {
+      // Show dialog that prompts user to add a new application (force new)
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('No additional application available'),
+            content: const Text('You have already applied using the only available application. Would you like to add a new application?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  context.pushNamed(
+                    RouteNames.addApplication,
+                    extra: {'forceNew': true},
+                  );
+                },
+                child: const Text('Fill form'),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
 
-        return SButton(
-          onPressed: () async {
-            if (appStateProvider.isGuest) {
-              Toasts.showLoginToast(context);
-              return;
-            }
+    // --- original Apply flow (unchanged) ---
+    if (appStateProvider.isGuest) {
+      Toasts.showLoginToast(context);
+      return;
+    }
 
-            final studId = getIt<AppStateProvider>().user?.sId;
-            if (studId == null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Missing student ID.")),
-              );
-              return;
-            }
+    final studId = getIt<AppStateProvider>().user?.sId;
+    if (studId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Missing student ID.")),
+      );
+      return;
+    }
 
-            // STEP 1: fetch PDFs
-            final pdfResult = await myFormViewModel.fetchStudentPdfs(studId: studId);
-            if (pdfResult != null) {
-              Toasts.showErrorToast(context, message: pdfResult.message ?? "Failed to fetch PDFs");
-              return;
-            }
+    // STEP 1: fetch PDFs
+    final pdfResult = await myFormViewModel.fetchStudentPdfs(studId: studId);
+    if (pdfResult != null) {
+      Toasts.showErrorToast(context, message: pdfResult.message ?? "Failed to fetch PDFs");
+      return;
+    }
 
-            final pdfs = myFormViewModel.availablePdfs;
-            if (pdfs == null || pdfs.isEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("No generated PDFs available. Generate first.")),
-              );
-              return;
-            }
+    final pdfs = myFormViewModel.availablePdfs;
+    if (pdfs == null || pdfs.isEmpty) {
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('No form available'),
+            content: const Text('No generated PDFs available. Please fill the form first.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
 
-            // STEP 2: pick desired application PDF
-            final chosenPdfIndex = await showModalBottomSheet<int?>(
-              context: context,
-              isScrollControlled: true,
-              builder: (ctx) {
-                return SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text("Select Application", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 10),
-                        ConstrainedBox(
-                          constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.6),
-                          child: ListView.separated(
-                            shrinkWrap: true,
-                            itemCount: pdfs.length,
-                            separatorBuilder: (_, __) => const Divider(height: 1),
-                            itemBuilder: (_, i) {
-                              final p = pdfs[i];
-                              final title = p['applicationName'] ?? 'Application ${i + 1}';
-                              final subtitle = p['createdAt']?.toString().split('T').first ?? '';
+                  context.pushNamed(
+                    RouteNames.addApplication,
+                    extra: {
+                      'forceNew': true,
+                    },
+                  );
+                },
+                child: const Text('Fill form'),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
 
-                              return ListTile(
-                                title: Text(title.toString()),
-                                subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
-                                onTap: () => Navigator.of(ctx).pop(i),
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        TextButton(
-                          onPressed: () => Navigator.of(ctx).pop(null),
-                          child: const Text("Cancel"),
-                        ),
-                      ],
-                    ),
+    // STEP 2: pick desired application PDF
+    final chosenPdfIndex = await showModalBottomSheet<int?>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text("Select Application", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 10),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.6),
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: pdfs.length,
+                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    itemBuilder: (_, i) {
+                      final p = pdfs[i];
+                      final title = p['applicationName'] ?? 'Application ${i + 1}';
+                      final subtitle = p['createdAt']?.toString().split('T').first ?? '';
+
+                      return ListTile(
+                        title: Text(title.toString()),
+                        subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
+                        onTap: () => Navigator.of(ctx).pop(i),
+                      );
+                    },
                   ),
-                );
-              },
-            );
-
-            if (chosenPdfIndex == null) return;
-
-            final chosen = pdfs[chosenPdfIndex];
-
-            final formId = chosen['_id']?.toString() ?? "";
-            final applicationId = chosen['applicationId']?.toString() ?? "";
-
-            if (formId.isEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Invalid PDF selected.")),
-              );
-              return;
-            }
-
-            // STEP 3: submit form
-            final failure = await myFormViewModel.submitForm(
-              schoolId: widget.schoolId,
-              applicationId: applicationId,
-              formId: formId,
-            );
-
-            Toasts.showSuccessOrFailureToast(
-              context,
-              failure: failure,
-              hideSuccess: true,
-            );
-          },
-
-          backgroundColor: Colors.blue,
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          label: '',
-          max: true,
-          text: Text(
-            "Apply",
-            style: TextStyle(
-              fontSize: infoFont,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+                ),
+                const SizedBox(height: 12),
+                TextButton(
+                  onPressed: () => Navigator.of(ctx).pop(null),
+                  child: const Text("Cancel"),
+                ),
+              ],
             ),
           ),
         );
+      },
+    );
+
+    if (chosenPdfIndex == null) return;
+
+    final chosen = pdfs[chosenPdfIndex];
+
+    final formId = chosen['_id']?.toString() ?? "";
+    final applicationId = chosen['applicationId']?.toString() ?? "";
+
+    if (formId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Invalid PDF selected.")),
+      );
+      return;
+    }
+
+    // STEP 3: submit form
+   final failure = await myFormViewModel.submitForm(
+  schoolId: widget.schoolId,
+  applicationId: applicationId,
+  formId: formId,
+);
+
+// Debug: check whether this page is still current / mounted
+// (works regardless of go_router version)
+try {
+  final isCurrent = ModalRoute.of(context)?.isCurrent ?? false;
+  // ignore: avoid_print
+  print('[Apply] after submit: ModalRoute.isCurrent = $isCurrent');
+
+  final canPop = Navigator.of(context).canPop();
+  // ignore: avoid_print
+  print('[Apply] after submit: Navigator.canPop = $canPop');
+} catch (e) {
+  // ignore: avoid_print
+  print('[Apply] debug check failed: $e');
+}
+
+// Only show UI when still mounted
+if (!context.mounted) {
+  // ignore: avoid_print
+  print('[Apply] context not mounted after submit — page may have been popped.');
+  return;
+}
+
+if (failure == null) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text('Application submitted successfully')),
+  );
+} else {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(failure.message ?? 'Failed to submit application')),
+  );
+}
+
+  },
+  backgroundColor: Colors.blue,
+  padding: const EdgeInsets.symmetric(vertical: 14),
+  label: '',
+  max: true,
+  text: Text(
+    isSingleAndApplied ? "Apply for other" : "Apply",
+    style: TextStyle(
+      fontSize: infoFont,
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+);
       },
     ),
   ),

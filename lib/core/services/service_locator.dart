@@ -5,6 +5,7 @@ import 'package:tc_sa/features/application/applications/data/data_source/index.d
 import 'package:tc_sa/features/application/forms/data/data_source/form_data_source_impl.dart';
 import 'package:tc_sa/features/application/forms/presentation/view_models/my_form_view_model.dart';
 import 'package:tc_sa/features/application/pdfModule/data/data_source/pdf_data_source_impl.dart';
+import 'package:tc_sa/features/application/pdfModule/presentation/view_models/pdf_view_model.dart'; // <-- ADDED
 import 'package:tc_sa/features/auth/authentication/data/data_source/data_source_impl.dart';
 import 'package:tc_sa/features/auth/mobileOtp/data/data_source/data_source_impl.dart';
 import 'package:tc_sa/features/auth/mobileOtp/presentation/view_model/otp_view_model.dart';
@@ -30,5 +31,8 @@ void initServiceLocator() {
     ..registerFactory<MyFormViewModel>(MyFormViewModel.new)
     ..registerFactory<ShortlistViewModel>(ShortlistViewModel.new)
     ..registerFactory<StudentPdfDataSourceImpl>(StudentPdfDataSourceImpl.new)
-    ..registerFactory<ApplicationDataSourceImpl>(ApplicationDataSourceImpl.new);
+    ..registerFactory<ApplicationDataSourceImpl>(ApplicationDataSourceImpl.new)
+    // Register PDF view model as a lazy singleton so getIt<StudentPdfViewModel>() works
+    ..registerLazySingleton<StudentPdfViewModel>(() => StudentPdfViewModel());
+    
 }

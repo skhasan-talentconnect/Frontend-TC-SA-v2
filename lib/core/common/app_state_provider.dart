@@ -6,6 +6,8 @@ import 'package:tc_sa/features/auth/authentication/data/data_source/data_source_
 import 'package:tc_sa/features/auth/authentication/data/entities/auth_model.dart';
 import 'package:tc_sa/features/preferences/data/data_source/data_source_impl.dart';
 import 'package:tc_sa/features/profile/data/data_source/data_source_impl.dart';
+// Added import for the PDF VM
+import 'package:tc_sa/features/application/pdfModule/presentation/view_models/pdf_view_model.dart';
 
 class AppStateProvider extends ViewStateProvider {
   String get userEmail => user?.email ?? authModel?.email ?? '';
@@ -121,22 +123,44 @@ class AppStateProvider extends ViewStateProvider {
     return failure;
   }
 
-  Future<void> loadAllUserData() async {
-  try {
-    setViewState(ViewState.busy);
-
-    print("🚀 Loading user details...");
-    await getUserDetails();
-
-    print("📚 Loading user preferences...");
-    await getUserPrefDetails();
-
-    print("✅ All user data loaded successfully");
-  } catch (e) {
-    print("❌ Error loading user data: $e");
-  } finally {
-    setViewState(ViewState.complete);
+  /// Ensure StudentPdfViewModel is registered in GetIt.
+  /// If not registered, register a lazy singleton so calls to getIt<StudentPdfViewModel>()
+  /// won't throw. Update registration if the view model later requires deps.
+  void ensureStudentPdfViewModelRegistered() {
+    try {
+      if (!getIt.isRegistered<StudentPdfViewModel>()) {
+        getIt.registerLazySingleton<StudentPdfViewModel>(
+          () => StudentPdfViewModel(),
+        );
+      }
+    } catch (e) {
+      // avoid crashing on hot-reload duplicate registrations; log for debugging
+      log('ensureStudentPdfViewModelRegistered error: $e');
+    }
   }
-}
 
+  Future<void> loadAllUserData() async {
+    try {
+      setViewState(ViewState.busy);
+
+      print("🚀 Loading user details...");
+      await getUserDetails();
+
+      print("📚 Loading user preferences...");
+      await getUserPrefDetails();
+
+      print("✅ All user data loaded successfully");
+
+      // ensure StudentPdfViewModel registration so consumers can safely call getIt<StudentPdfViewModel>()
+      try {
+        ensureStudentPdfViewModelRegistered();
+      } catch (e) {
+        log('Failed to register StudentPdfViewModel: $e');
+      }
+    } catch (e) {
+      print("❌ Error loading user data: $e");
+    } finally {
+      setViewState(ViewState.complete);
+    }
+  }
 }

@@ -201,7 +201,7 @@ class _AcademicsViewState extends State<AcademicsView> {
                     child: LinearProgressIndicator(
                       value: marks / 100,
                       minHeight: 12,
-                      backgroundColor: Colors.amber.shade100,
+                      backgroundColor: Colors.white,
                       color: colors.amberColor,
                     ),
                   ),

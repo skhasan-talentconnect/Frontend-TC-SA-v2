@@ -24,7 +24,7 @@ class NavigatorCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
         border: Border.all(color: colors.amberDarkColor),
-        color: Colors.yellow.shade100,
+        color: colors.secTextColor,
       ),
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -33,7 +33,7 @@ class NavigatorCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: STextStyles.s22W600.copyWith(color: colors.secTextColor),
+            style: STextStyles.s22W600.copyWith(color: colors.amberColor),
             softWrap: true,
           ),
           const SizedBox(height: 20),

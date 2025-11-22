@@ -122,20 +122,7 @@ class _AmenitiesViewState extends State<AmenitiesView> {
 
                         const SizedBox(height: 24),
 
-                        _TitledCard(
-                          title: "School Information",
-                          icon: Icons.info_outline,
-                          iconColor: colors.amberDarkColor,
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                            child: Text(
-                              schoolInfo,
-                              style: TextStyle(fontSize: 16, height: 1.5),
-                              textAlign: TextAlign.justify,
-                            ),
-                          ),
-                        ),
-
+                       
                         const SizedBox(height: 24),
                       ],
                     ),

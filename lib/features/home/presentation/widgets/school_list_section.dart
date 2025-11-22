@@ -34,7 +34,7 @@ class _SchoolListSectionState extends State<SchoolListSection> {
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                color: Colors.blue.shade50,
+                color: colors.amberLightColor,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
