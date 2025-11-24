@@ -6,7 +6,9 @@ import 'package:tc_sa/core/extensions/failure_ext.dart';
 import 'package:tc_sa/core/navigation/not_found_view.dart';
 import 'package:tc_sa/features/detailPages/academics/presentation/academics_view.dart';
 import 'package:tc_sa/features/detailPages/activities/presentation/activities_view.dart';
+import 'package:tc_sa/features/detailPages/admission-timeline/data/entities/admission-model.dart';
 import 'package:tc_sa/features/detailPages/admission-timeline/presentation/admission_timeline_view.dart';
+import 'package:tc_sa/features/detailPages/admission-timeline/presentation/view_models/admission_view_model.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/alumini_view.dart';
 import 'package:tc_sa/features/detailPages/amenity/presentation/amenity_view.dart';
 import 'package:tc_sa/features/detailPages/faculty/presentation/faculty_view.dart';
@@ -56,6 +58,9 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
   final MyFormViewModel myFormViewModel = MyFormViewModel();
   final ShortlistViewModel shortlistViewModel = ShortlistViewModel();
   final appStateProvider = getIt<AppStateProvider>();
+final AdmissionTimelineViewModel admissionVm = AdmissionTimelineViewModel();
+// keep listener so we can remove it in dispose
+VoidCallback? _admissionVmListener;
 
   final PageController pageController = PageController();
 
@@ -64,17 +69,42 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
 
   final ValueNotifier<bool> isSaved = ValueNotifier(false);
     int _userApplicationCount = 0;
+@override
+void dispose() {
+  // remove admissionVm listener if attached
+  try {
+    if (_admissionVmListener != null) {
+      admissionVm.removeListener(_admissionVmListener!);
+      _admissionVmListener = null;
+    }
+  } catch (_) {}
+
+  // dispose admission view model
+  try {
+    admissionVm.dispose();
+  } catch (_) {}
+
+  // existing controllers
+  _tabScrollController.dispose();
+  pageController.dispose();
+
+  super.dispose();
+}
 
   @override
   void initState() {
     super.initState();
-   WidgetsBinding.instance.addPostFrameCallback((_) async {
+WidgetsBinding.instance.addPostFrameCallback((_) async {
+  // 1) load school
   final failure = await overviewViewModel.getSchoolsById(
     id: widget.schoolId,
   );
   failure?.showError(context);
 
+  // 2) check if user already applied to this school
   await overviewViewModel.getIsAppliedSchool(schoolId: widget.schoolId);
+
+  // 3) shortlist state
   isSaved.value = getIt<AppStateProvider>().isSaved(widget.schoolId);
 
   // --- NEW: prefetch student's generated PDFs so we know how many applications they have
@@ -94,7 +124,22 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
   } catch (_) {
     // ignore prefetch errors — we'll fetch again when user presses Apply
   }
+
+  // --- NEW: fetch admission timeline for this school so we can show application fees
+  try {
+    // start fetch
+    admissionVm.getAdmissionTimelineBySchoolId(schoolId: widget.schoolId);
+
+    // attach a listener so UI refreshes when timeline finishes loading
+    _admissionVmListener = () {
+      if (mounted) setState(() {});
+    };
+    admissionVm.addListener(_admissionVmListener!);
+  } catch (_) {
+    // ignore timeline fetch errors; UI will show '-' for fees
+  }
 });
+
 
     _tabKeys = List.generate(DetailTabEnum.values.length, (_) => GlobalKey());
   }
@@ -102,10 +147,15 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
   @override
   Widget build(BuildContext context) {
      final colors = context.watch<ThemeProvider>().colors;
-    return ChangeNotifierProvider<OverviewViewModel>.value(
-      value: overviewViewModel,
-      child: Consumer<OverviewViewModel>(
-        builder: (vmContext, vm, _) {
+  return MultiProvider(
+  providers: [
+    ChangeNotifierProvider<OverviewViewModel>.value(value: overviewViewModel),
+    ChangeNotifierProvider<MyFormViewModel>.value(value: myFormViewModel),
+    ChangeNotifierProvider<ShortlistViewModel>.value(value: shortlistViewModel),
+    // you can add more providers here if needed
+  ],
+  child: Consumer<OverviewViewModel>(
+    builder: (vmContext, vm, _) {
           final school = vm.school;
 
           final size = MediaQuery.of(context).size;
@@ -471,15 +521,14 @@ return SButton(
       return;
     }
 
-    // STEP 1: fetch PDFs
     final pdfResult = await myFormViewModel.fetchStudentPdfs(studId: studId);
-    if (pdfResult != null) {
-      Toasts.showErrorToast(context, message: pdfResult.message ?? "Failed to fetch PDFs");
-      return;
-    }
+if (pdfResult != null) {
+  Toasts.showErrorToast(context, message: pdfResult.message ?? "Failed to fetch PDFs");
+  return;
+}
 
-    final pdfs = myFormViewModel.availablePdfs;
-    if (pdfs == null || pdfs.isEmpty) {
+final pdfs = myFormViewModel.availablePdfs;
+if (pdfs == null || pdfs.isEmpty) {
       showDialog(
         context: context,
         barrierDismissible: true,
@@ -511,51 +560,112 @@ return SButton(
       );
       return;
     }
+    await myFormViewModel.prefetchApplicationsForPdfs(pdfs);
 
     // STEP 2: pick desired application PDF
-    final chosenPdfIndex = await showModalBottomSheet<int?>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text("Select Application", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 10),
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.6),
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: pdfs.length,
-                    separatorBuilder: (_, __) => const Divider(height: 1),
-                    itemBuilder: (_, i) {
-                      final p = pdfs[i];
-                      final title = p['applicationName'] ?? 'Application ${i + 1}';
-                      final subtitle = p['createdAt']?.toString().split('T').first ?? '';
+   final chosenPdfIndex = await showModalBottomSheet<int?>(
+  context: context,
+  isScrollControlled: true,
+  builder: (ctx) {
+    // <<< PROVIDE myFormViewModel to the modal subtree so Consumer finds it >>>
+    return ChangeNotifierProvider<MyFormViewModel>.value(
+  value: myFormViewModel,
+  child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text("Select Application", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 10),
+              ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.6),
+                child: Consumer<MyFormViewModel>(
+                  builder: (cCtx, mfvm, __) {
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: pdfs.length,
+                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      itemBuilder: (_, i) {
+                        final p = pdfs[i] as Map<String, dynamic>;
+                        final title = p['applicationName'] ?? 'Application ${i + 1}';
+                        final subtitle = p['createdAt']?.toString().split('T').first ?? '';
 
-                      return ListTile(
-                        title: Text(title.toString()),
-                        subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
-                        onTap: () => Navigator.of(ctx).pop(i),
-                      );
-                    },
-                  ),
+                        // 1) obtain applicationId from pdf object
+                        final applicationId = (p['applicationId'] ?? p['_id'] ?? p['formId'] ?? '').toString();
+
+                        // 2) get cached StudentApplication if available
+                        final app = applicationId.isNotEmpty ? mfvm.applicationCache[applicationId] : null;
+
+                        // 3) read the standard from StudentApplication
+                        final pdfStandard = (app?.standard ?? '').toString().trim();
+
+                        // 4) get timelines from admissionVm (typed TimelineEntryModel list)
+                        final timelines = admissionVm.admissionTimeline?.timelines ?? <TimelineEntryModel>[];
+
+                        // 5) compute feeText by matching admissionLevel == pdfStandard
+                        String feeText = '-';
+                        try {
+                          if (pdfStandard.isNotEmpty && timelines.isNotEmpty) {
+                            TimelineEntryModel? matched;
+                            for (final t in timelines) {
+                              final level = (t.eligibility?.admissionLevel ?? '').toLowerCase();
+                              if (level.isNotEmpty && level == pdfStandard.toLowerCase()) {
+                                matched = t;
+                                break;
+                              }
+                            }
+                            final feeNum = matched?.applicationFee;
+                            if (feeNum != null) {
+                              if (feeNum % 1 == 0) {
+                                feeText = '₹${feeNum.toInt()}';
+                              } else {
+                                feeText = '₹${feeNum}';
+                              }
+                            }
+                          }
+                        } catch (_) {
+                          feeText = '-';
+                        }
+
+                        final loading = applicationId.isNotEmpty && mfvm.isAppLoading(applicationId);
+
+                        return ListTile(
+                          title: Text(title.toString()),
+                          subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
+                          trailing: loading
+                              ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
+                              : Text(feeText, style: const TextStyle(fontWeight: FontWeight.w600)),
+                          onTap: () async {
+                            if (applicationId.isNotEmpty && mfvm.applicationCache[applicationId] == null) {
+                              final err = await mfvm.fetchApplicationById(applicationId: applicationId);
+                              if (err != null) {
+                                if (ctx.mounted) {
+                                  Toasts.showErrorToast(ctx, message: err.message ?? "Failed to load application");
+                                }
+                                return;
+                              }
+                            }
+                            Navigator.of(ctx).pop(i);
+                          },
+                        );
+                      },
+                    );
+                  },
                 ),
-                const SizedBox(height: 12),
-                TextButton(
-                  onPressed: () => Navigator.of(ctx).pop(null),
-                  child: const Text("Cancel"),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(null),
+                child: const Text("Cancel"),
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
-
+  },
+);
     if (chosenPdfIndex == null) return;
 
     final chosen = pdfs[chosenPdfIndex];
@@ -710,7 +820,7 @@ if (failure == null) {
                                     return GestureDetector(
                                       key:
                                           _tabKeys[tab
-                                              .index], // 👈 Assign GlobalKey here
+                                              .index], 
 
                                       onTap: () {
                                         vm.currentPageIndex = tab.index;

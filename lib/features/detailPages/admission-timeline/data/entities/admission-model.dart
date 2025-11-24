@@ -27,6 +27,7 @@ class TimelineEntryModel {
   final String? status;
   final List<String> documentsRequired;
   final EligibilityModel? eligibility;
+  final num? applicationFee;
 
   TimelineEntryModel({
     this.admissionStartDate,
@@ -34,12 +35,18 @@ class TimelineEntryModel {
     this.status,
     this.documentsRequired = const [],
     this.eligibility,
+        this.applicationFee,
   });
 
   factory TimelineEntryModel.fromJson(Map<String, dynamic> json) {
     return TimelineEntryModel(
       admissionStartDate: DateTime.tryParse(json['admissionStartDate'] ?? ''),
+      applicationFee: json['applicationFee'] is num
+          ? json['applicationFee'] as num
+          : (json['applicationFee'] != null ? num.tryParse(json['applicationFee'].toString()) : null),
+    
       admissionEndDate: DateTime.tryParse(json['admissionEndDate'] ?? ''),
+      
       status: json['status'] as String?,
       documentsRequired: (json['documentsRequired'] as List<dynamic>?)
               ?.map((e) => e.toString())
