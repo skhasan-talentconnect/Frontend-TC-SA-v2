@@ -17,6 +17,7 @@ class CompareSchoolsWidgets {
   }
 
   static Widget sectionTitle(String text) {
+    
     return Text(
       text,
       style: TextStyle(
@@ -28,6 +29,7 @@ class CompareSchoolsWidgets {
   }
 
   static Widget sectionSubtitle(String text) {
+    
     return Text(
       text,
       style: const TextStyle(fontSize: 15, color: Colors.black87),

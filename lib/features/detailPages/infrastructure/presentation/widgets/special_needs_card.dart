@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 import 'package:tc_sa/features/detailPages/infrastructure/presentation/widgets/title_card.dart'
     show TitledCard;
 import 'package:tc_sa/features/detailPages/otherDetails/data/entities/otherDetails_model.dart';
@@ -13,11 +15,12 @@ class SpecialNeedsCard extends StatelessWidget {
     final bool hasStaff = supportData.dedicatedStaff ?? false;
     final double percentage =
         (supportData.studentsSupportedPercentage ?? 0).toDouble();
+        final colors = context.watch<ThemeProvider>().colors;
 
     // Amber theme colors
-    final Color primaryAmber = Colors.amber.shade700;
-    final Color lightAmber = Colors.amber.shade100;
-    final Color darkAmber = Colors.amber.shade800;
+    final Color primaryAmber = colors.amberDarkColor;
+    final Color lightAmber = colors.amberLightColor;
+    final Color darkAmber = colors.amberMedColor;
 
     return TitledCard(
       title: 'Special Needs Support',
@@ -34,11 +37,11 @@ class SpecialNeedsCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color:
-                    hasStaff ? Colors.amber.shade200 : Colors.yellow.shade300,
+                    hasStaff ? colors.amberMedColor: colors.borderColor,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.amber.shade100.withOpacity(0.4),
+                  color: colors.amberLightColor,
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -110,8 +113,8 @@ class SpecialNeedsCard extends StatelessWidget {
                 supportData.facilitiesAvailable.map((item) {
                   return Chip(
                     label: Text(item),
-                    backgroundColor: Colors.amber.shade100,
-                    side: BorderSide(color: Colors.amber.shade800, width: 0.5),
+                    backgroundColor: colors.amberLightColor,
+                    side: BorderSide(color: colors.amberDarkColor, width: 0.5),
                     elevation: 4,
                     labelStyle: const TextStyle(fontWeight: FontWeight.w500),
                     padding: const EdgeInsets.symmetric(

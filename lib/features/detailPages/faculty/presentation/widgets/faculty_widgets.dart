@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 import 'package:tc_sa/features/detailPages/faculty/data/entities/faculty-model.dart';
 
 
@@ -24,6 +26,7 @@ class FacultyMemberCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final initials = getInitials(member.name);
+    final colors = context.watch<ThemeProvider>().colors;
 
     return Card(
       elevation: 3,
@@ -31,7 +34,7 @@ class FacultyMemberCard extends StatelessWidget {
       color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: Colors.yellow.shade200, width: 1),
+        side: BorderSide(color: colors.borderColor, width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
@@ -41,7 +44,7 @@ class FacultyMemberCard extends StatelessWidget {
             // --- Avatar with Initials (Yellow Theme) ---
             CircleAvatar(
               radius: 28,
-              backgroundColor: Colors.amber.shade700, // Yellow background
+              backgroundColor: colors.amberDarkColor, // Yellow background
               child: Text(
                 initials,
                 style: textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
@@ -74,11 +77,11 @@ class FacultyMemberCard extends StatelessWidget {
                       // Experience Chip
                       if (member.experience != null && member.experience! > 0)
                         Chip(
-                          avatar: Icon(Icons.work_history_outlined, size: 16, color: Colors.amber.shade800),
+                          avatar: Icon(Icons.work_history_outlined, size: 16, color: colors.amberDarkColor),
                           label: Text('${member.experience} years exp.'),
-                          labelStyle: textTheme.labelMedium?.copyWith(color: Colors.amber.shade900),
-                          backgroundColor: Colors.amber.shade50,
-                          side: BorderSide(color: Colors.amber.shade200),
+                          labelStyle: textTheme.labelMedium?.copyWith(color: colors.amberDarkColor),
+                          backgroundColor: colors.amberLightColor,
+                          side: BorderSide(color: colors.amberMedColor),
                           visualDensity: VisualDensity.compact,
                           padding: const EdgeInsets.all(4),
                           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -87,11 +90,11 @@ class FacultyMemberCard extends StatelessWidget {
                       // Awards Chip (if any)
                       if (member.awards.isNotEmpty)
                         Chip(
-                          avatar: Icon(Icons.emoji_events_outlined, size: 16, color: Colors.orange.shade800),
+                          avatar: Icon(Icons.emoji_events_outlined, size: 16, color: colors.amberDarkColor),
                           label: Text(member.awards.length == 1 ? member.awards.first : '${member.awards.length} Awards'),
-                          labelStyle: textTheme.labelMedium?.copyWith(color: Colors.orange.shade900),
-                          backgroundColor: Colors.orange.shade50,
-                          side: BorderSide(color: Colors.orange.shade200),
+                          labelStyle: textTheme.labelMedium?.copyWith(color: colors.amberDarkColor),
+                          backgroundColor: colors.amberLightColor,
+                          side: BorderSide(color: colors.amberMedColor),
                           visualDensity: VisualDensity.compact,
                           padding: const EdgeInsets.all(4),
                           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

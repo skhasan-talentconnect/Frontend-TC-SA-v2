@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart'; // STextStyles, SColor
+import 'package:tc_sa/core/common/theme_provider.dart';
 import 'package:tc_sa/core/common/view_state_provider.dart';
 import 'package:tc_sa/core/navigation/route_name.dart';
 import 'package:tc_sa/features/blogs/data/entities/blog_model.dart';
@@ -30,6 +31,7 @@ class _BlogPageBody extends StatelessWidget {
 
     // Use a fixed padding for the content area
     const contentPadding = EdgeInsets.symmetric(horizontal: 10.0);
+                final colors = context.watch<ThemeProvider>().colors;
 
     return Scaffold(
       // 1. THEME UPDATE: White background
@@ -38,7 +40,7 @@ class _BlogPageBody extends StatelessWidget {
         child: RefreshIndicator(
           onRefresh: () => context.read<BlogViewModel>().getAllBlogs(),
           // 2. THEME UPDATE: Refresh color
-          color: Colors.amber.shade700,
+          color: colors.amberDarkColor,
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
@@ -68,7 +70,7 @@ class _BlogPageBody extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 60),
                       // 3. THEME UPDATE: Loader color
-                      child: CircularProgressIndicator(color: Colors.amber.shade700),
+                      child: CircularProgressIndicator(color: colors.amberDarkColor),
                     ),
                   )
                 else if (blogs.isEmpty)
@@ -124,7 +126,7 @@ class _BlogCard extends StatelessWidget {
     final description = blog.description ?? '';
     
     // Define a consistent dark amber color
-    final Color darkAmber = Colors.amber.shade800;
+    final Color darkAmber = Colors.black;
 
     return GestureDetector(
       onTap: () {

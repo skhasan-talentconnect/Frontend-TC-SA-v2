@@ -85,6 +85,8 @@ class _ReviewsViewState extends State<ReviewsView> {
 
   @override
   Widget build(BuildContext context) {
+                final colors = context.watch<ThemeProvider>().colors;
+
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
@@ -92,12 +94,12 @@ class _ReviewsViewState extends State<ReviewsView> {
         body: Consumer<ReviewViewModel>(
           builder: (context, vm, _) {
             if (vm.viewState == ViewState.busy && vm.reviews.isEmpty) {
-              return const Center(child: SLoadingIndicator(color: Colors.yellow));
+              return Center(child: SLoadingIndicator(color: colors.amberColor));
             }
 
             return RefreshIndicator(
               onRefresh: _refresh,
-              color: Colors.yellow.shade700,
+              color: colors.topTextColor,
               child: ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
@@ -119,6 +121,8 @@ class _ReviewsViewState extends State<ReviewsView> {
   }
 
   Widget _buildHeader(BuildContext context, double avgRating) {
+                final colors = context.watch<ThemeProvider>().colors;
+
     return Row(
       children: [
         Column(
@@ -134,7 +138,7 @@ class _ReviewsViewState extends State<ReviewsView> {
                   index < avgRating.round()
                       ? Icons.star
                       : Icons.star_border,
-                  color: Colors.yellow.shade700,
+                  color: colors.topTextColor,
                   size: 24,
                 );
               }),
@@ -146,9 +150,9 @@ class _ReviewsViewState extends State<ReviewsView> {
           ElevatedButton.icon(
             onPressed: _showWriteReviewForm,
             icon: const Icon(Icons.edit_outlined),
-            label: const Text('Write a Review'),
+            label:  Text('Write a Review'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.yellow.shade700,
+              backgroundColor: colors.topTextColor,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               shape: RoundedRectangleBorder(
@@ -162,10 +166,12 @@ class _ReviewsViewState extends State<ReviewsView> {
   }
 
   Widget _buildRatingDistribution(BuildContext context, List<double> percentages) {
+                final colors = context.watch<ThemeProvider>().colors;
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Colors.yellow.shade200),
+        border: Border.all(color: colors.borderColor),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -193,7 +199,7 @@ class _ReviewsViewState extends State<ReviewsView> {
                       value: percent / 100,
                       minHeight: 8,
                       backgroundColor: Colors.grey.shade200,
-                      color: Colors.yellow.shade700,
+                      color: colors.topTextColor,
                     ),
                   ),
                 ),

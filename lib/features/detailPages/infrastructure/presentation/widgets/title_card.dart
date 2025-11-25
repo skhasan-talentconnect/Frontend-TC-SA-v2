@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 
 class TitledCard extends StatelessWidget {
   final String title;
@@ -16,12 +18,14 @@ class TitledCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+            final colors = context.watch<ThemeProvider>().colors;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.yellow.shade200, width: 1),
+        border: Border.all(color: colors.borderColor, width: 1),
         boxShadow: [
           BoxShadow(
             blurRadius: 2,
@@ -39,7 +43,7 @@ class TitledCard extends StatelessWidget {
             // --- Header Row ---
             Row(
               children: [
-                Icon(icon, color: Colors.amber.shade800, size: 26),
+                Icon(icon, color: colors.amberDarkColor, size: 26),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(

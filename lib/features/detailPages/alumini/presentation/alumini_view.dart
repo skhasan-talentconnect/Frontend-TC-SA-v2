@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:tc_sa/common/widgets/s_loading_indicator.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 import 'package:tc_sa/core/common/view_state_provider.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/view_models/alumini_view_model.dart';
 import 'package:tc_sa/features/detailPages/alumini/presentation/widgets/alumni_item_widget.dart';
@@ -37,6 +38,7 @@ class _AlumniViewState extends State<AlumniView> {
 
   @override
   Widget build(BuildContext context) {
+     final colors = context.watch<ThemeProvider>().colors;
     return ChangeNotifierProvider.value(
       value: vm,
       child: Scaffold(
@@ -64,12 +66,12 @@ class _AlumniViewState extends State<AlumniView> {
             return RefreshIndicator(
               onRefresh: () => _refresh(context),
               // --- 3. THEME UPDATE ---
-              color: Colors.amber,
+              color: colors.amberColor,
               child: Builder(
                 builder: (_) {
                   if (vm.isLoading) {
-                    return const Center(
-                      child: SLoadingIndicator(color: Colors.amber),
+                    return  Center(
+                      child: SLoadingIndicator(color: colors.amberColor),
                     );
                   }
                   if (model == null) {

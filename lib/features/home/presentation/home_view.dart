@@ -49,6 +49,8 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+                    final colors = context.watch<ThemeProvider>().colors;
+
     final currentIndex = _calculateIndex(context);
 
     // ✅ Wrap the Scaffold with PopScope
@@ -87,7 +89,7 @@ class _HomeViewState extends State<HomeView> {
           onPressed: () {
             context.pushNamed(RouteNames.chatbot);
           },
-          backgroundColor: Colors.orange.shade300,
+          backgroundColor: colors.amberLightColor,
           child: const Icon(Icons.chat, color: Colors.black),
         ),
         body: Padding(

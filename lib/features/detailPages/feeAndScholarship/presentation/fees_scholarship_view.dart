@@ -42,6 +42,7 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
 
   @override
   Widget build(BuildContext context) {
+        final colors = context.watch<ThemeProvider>().colors;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _feesVm),
@@ -53,8 +54,8 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
           builder: (context, feeVm, otherVm, _) {
             if (feeVm.viewState == ViewState.busy ||
                 otherVm.viewState == ViewState.busy) {
-              return const Center(
-                child: SLoadingIndicator(color: Colors.yellow),
+              return Center(
+                child: SLoadingIndicator(color: colors.primaryColor),
               );
             }
 
@@ -75,7 +76,7 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
 
             return RefreshIndicator(
               onRefresh: _refresh,
-              color: Colors.yellow,
+              color: colors.primaryColor,
               child: ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
@@ -95,7 +96,7 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                           elevation: 4,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
-                            side: BorderSide(color: Colors.yellow.shade200),
+                            side: BorderSide(color: colors.borderColor),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
@@ -114,10 +115,10 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                                     ),
                                     Text(
                                       '${feeModel!.feesTransparency!.toStringAsFixed(0)}%',
-                                      style: const TextStyle(
+                                      style:  TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
-                                        color: Colors.amber,
+                                        color: colors.amberColor,
                                       ),
                                     ),
                                   ],
@@ -129,7 +130,7 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                                     value: feeModel.feesTransparency! / 100,
                                     minHeight: 12,
                                     backgroundColor: Colors.yellow.shade100,
-                                    color: Colors.yellow.shade700,
+                                    color: colors.topTextColor,
                                   ),
                                 ),
                               ],
@@ -149,7 +150,7 @@ if (feeModel?.classFees.isNotEmpty ?? false)
     elevation: 4,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(12),
-      side: BorderSide(color: Colors.yellow.shade200),
+      side: BorderSide(color: colors.borderColor),
     ),
     child: ClipRRect(
       borderRadius: BorderRadius.circular(12),
@@ -174,7 +175,7 @@ if (feeModel?.classFees.isNotEmpty ?? false)
               decoration: BoxDecoration(
                 color: Colors.yellow.shade50,
                 border: Border(
-                  bottom: BorderSide(color: Colors.yellow.shade200, width: 1),
+                  bottom: BorderSide(color: colors.borderColor, width: 1),
                 ),
               ),
               child: Padding(
@@ -206,7 +207,7 @@ if (feeModel?.classFees.isNotEmpty ?? false)
                 return Container(
                   decoration: BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(color: Colors.yellow.shade100, width: 1),
+                      bottom: BorderSide(color: colors.boxShadowColor, width: 1),
                     ),
                   ),
                   child: Padding(
@@ -285,7 +286,7 @@ if (feeModel?.classFees.isNotEmpty ?? false)
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(color: Colors.yellow.shade200),
+                        side: BorderSide(color: colors.borderColor),
                       ),
                       elevation: 3,
                       child: ScholarshipDiversityCard(

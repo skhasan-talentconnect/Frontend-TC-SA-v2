@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 import 'package:tc_sa/features/detailPages/infrastructure/presentation/widgets/title_card.dart';
 
 import 'package:tc_sa/features/detailPages/otherDetails/data/entities/otherDetails_model.dart';
@@ -10,12 +12,14 @@ class GenderRatioCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+                final colors = context.watch<ThemeProvider>().colors;
+
     return TitledCard(
       title: 'Gender Distribution',
       // --- UI UPDATE: More modern and inclusive icon ---
       icon: Icons.people_alt_outlined,
       // --- THEME UPDATE: Set icon color ---
-      iconColor: Colors.amber.shade700,
+      iconColor: colors.amberDarkColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Row(
@@ -43,7 +47,7 @@ class GenderRatioCard extends StatelessWidget {
               CircularProgressIndicator(
                 value: value / 100,
                 strokeWidth: 8,
-                backgroundColor: color.withOpacity(0.1),
+                backgroundColor: color.withValues(alpha:0.1),
                 color: color,
               ),
               Center(

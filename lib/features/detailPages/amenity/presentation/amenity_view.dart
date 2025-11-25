@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/models/photo.dart';
 import 'package:tc_sa/common/widgets/s_loading_indicator.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 import 'package:tc_sa/core/common/view_state_provider.dart';
 import 'package:tc_sa/features/detailPages/amenity/presentation/view_models/amenity_view_model.dart';
 import 'package:tc_sa/features/detailPages/overview/presentation/widgets/recruiter_chip_widget.dart';
@@ -33,6 +34,7 @@ class _AmenitiesViewState extends State<AmenitiesView> {
 
   @override
   Widget build(BuildContext context) {
+     final colors = context.watch<ThemeProvider>().colors;
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Consumer<AmenitiesViewModel>(
@@ -54,7 +56,7 @@ class _AmenitiesViewState extends State<AmenitiesView> {
             backgroundColor: Colors.white,
             body: RefreshIndicator(
               onRefresh: _refresh,
-              color: Colors.amber,
+              color: colors.amberColor,
               child: Builder(
                 builder: (_) {
                   if (widget.schoolId.isEmpty) {
@@ -62,7 +64,7 @@ class _AmenitiesViewState extends State<AmenitiesView> {
                   }
 
                   if (state == ViewState.busy) {
-                    return const Center(child: SLoadingIndicator(color: Colors.amber));
+                    return  Center(child: SLoadingIndicator(color: colors.amberColor));
                   }
 
                   if (model == null) {
@@ -95,7 +97,7 @@ class _AmenitiesViewState extends State<AmenitiesView> {
                         _TitledCard(
                           title: "School Amenities",
                           icon: Icons.widgets_outlined,
-                          iconColor: Colors.amber.shade700,
+                          iconColor: colors.amberDarkColor,
                           child: (amenityChips.isEmpty)
                               ? Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -120,20 +122,7 @@ class _AmenitiesViewState extends State<AmenitiesView> {
 
                         const SizedBox(height: 24),
 
-                        _TitledCard(
-                          title: "School Information",
-                          icon: Icons.info_outline,
-                          iconColor: Colors.amber.shade700,
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                            child: Text(
-                              schoolInfo,
-                              style: TextStyle(fontSize: 16, height: 1.5),
-                              textAlign: TextAlign.justify,
-                            ),
-                          ),
-                        ),
-
+                       
                         const SizedBox(height: 24),
                       ],
                     ),
@@ -164,6 +153,7 @@ class _TitledCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final colors = context.watch<ThemeProvider>().colors;
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 12),
@@ -171,7 +161,7 @@ class _TitledCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.yellow.shade200, width: 1),
+        border: Border.all(color: colors.borderColor, width: 1),
         boxShadow: [
           BoxShadow(
             blurRadius: 4,

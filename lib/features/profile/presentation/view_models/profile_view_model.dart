@@ -31,6 +31,11 @@ class ProfileViewModel extends ViewStateProvider {
       icon: Icon(Icons.support_agent, color: Colors.black),
     ),
     ProfileTileModel(
+      path: RouteNames.themes,
+      name: 'Themes',
+      icon: Icon(Icons.brightness_4, color: Colors.black),
+    ),
+    ProfileTileModel(
       name: 'Logout',
       icon: Icon(Icons.logout, color: Colors.black),
     ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 
 class QuickHighlights extends StatelessWidget {
   final IconData icon;
@@ -22,22 +24,23 @@ class QuickHighlights extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+        final colors = context.watch<ThemeProvider>().colors;
     return Material(
       elevation: elevation,
       borderRadius: BorderRadius.circular(12),
-      shadowColor: Colors.grey.withOpacity(0.5), // ✅ grey shadow
+      shadowColor: colors.greyShadowColor, // ✅ grey shadow
       child: Container(
         padding: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.yellow.shade200, width: 1), // subtle border
+          border: Border.all(color: colors.borderColor, width: 1), // subtle border
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 28.0, color: Colors.amber), // consistent tone
+            Icon(icon, size: 28.0, color: colors.amberColor), // consistent tone
             const SizedBox(height: 8),
             Text(
               capitalize(title),

@@ -39,6 +39,7 @@ class _AcademicsViewState extends State<AcademicsView> {
 
   @override
   Widget build(BuildContext context) {
+     final colors = context.watch<ThemeProvider>().colors;
     return ChangeNotifierProvider.value(
       value: _vm,
       child: Scaffold(
@@ -74,7 +75,7 @@ class _AcademicsViewState extends State<AcademicsView> {
                     'Special Exam Training',
                     Icons.model_training,
                     model.specialExamsTraining,
-                    Colors.amber,
+                    colors.amberColor,
                   ),
                   const SizedBox(height: 20),
                   _buildChipListCard(
@@ -82,7 +83,8 @@ class _AcademicsViewState extends State<AcademicsView> {
                     'Extra-Curricular Activities',
                     Icons.palette_outlined,
                     model.extraCurricularActivities,
-                    Colors.amber,
+                        colors.amberColor,
+
                   ),
                 ],
               ),
@@ -97,20 +99,22 @@ class _AcademicsViewState extends State<AcademicsView> {
     BuildContext context,
     double? class10,
     double? class12,
-  ) {
+  ) 
+  
+  {
+     final colors = context.watch<ThemeProvider>().colors;
     return TitledCard(
       title: 'Average Board Results',
       icon: Icons.leaderboard,
-      iconColor: Colors.amber,
+      iconColor:      colors.amberColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             if (class10 != null)
-              _buildResultIndicator('Class 10', class10, Colors.amber.shade700),
             if (class12 != null)
-              _buildResultIndicator('Class 12', class12, Colors.amber),
+              _buildResultIndicator('Class 12', class12,colors.amberColor),
             if (class10 == null && class12 == null)
               const Text('No board result data available.'),
           ],
@@ -131,7 +135,7 @@ class _AcademicsViewState extends State<AcademicsView> {
               CircularProgressIndicator(
                 value: value / 100,
                 strokeWidth: 9,
-                backgroundColor: color.withOpacity(0.15),
+                backgroundColor: color.withValues(alpha:0.15),
                 color: color,
               ),
               Center(
@@ -157,10 +161,11 @@ class _AcademicsViewState extends State<AcademicsView> {
   }
 
   Widget _buildOverallMarksCard(BuildContext context, double? marks) {
+     final colors = context.watch<ThemeProvider>().colors;
     return TitledCard(
       title: 'Overall School Average',
       icon: Icons.workspace_premium,
-      iconColor: Colors.amber,
+      iconColor: colors.amberColor,
       child: (marks == null)
           ? const Padding(
               padding: EdgeInsets.all(16.0),
@@ -182,10 +187,10 @@ class _AcademicsViewState extends State<AcademicsView> {
                       ),
                       Text(
                         '${marks.toStringAsFixed(1)}%',
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          color: Colors.amber,
+                          color: colors.amberColor,
                         ),
                       ),
                     ],
@@ -196,8 +201,8 @@ class _AcademicsViewState extends State<AcademicsView> {
                     child: LinearProgressIndicator(
                       value: marks / 100,
                       minHeight: 12,
-                      backgroundColor: Colors.amber.shade100,
-                      color: Colors.amber,
+                      backgroundColor: Colors.white,
+                      color: colors.amberColor,
                     ),
                   ),
                 ],

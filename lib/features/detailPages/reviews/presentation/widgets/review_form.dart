@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tc_sa/core/common/theme_provider.dart';
 
 class WriteReviewForm extends StatefulWidget {
   final Function(double rating, String text) onSubmit;
@@ -16,8 +18,9 @@ class _WriteReviewFormState extends State<WriteReviewForm> {
 
   @override
   Widget build(BuildContext context) {
-    // --- THEME UPDATE: Define yellow theme color ---
-    final Color primaryColor = Colors.amber.shade700;
+    final colors = context.watch<ThemeProvider>().colors;
+
+    final Color primaryColor = colors.amberDarkColor;
 
     return Container(
       // --- THEME UPDATE: Set background to white ---
@@ -29,9 +32,15 @@ class _WriteReviewFormState extends State<WriteReviewForm> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Write a Review', style: Theme.of(context).textTheme.headlineSmall),
+            Text(
+              'Write a Review',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
             const SizedBox(height: 16),
-            const Text('Your Rating', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              'Your Rating',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(5, (index) {
@@ -39,7 +48,7 @@ class _WriteReviewFormState extends State<WriteReviewForm> {
                   onPressed: () => setState(() => _rating = index + 1.0),
                   icon: Icon(
                     index < _rating ? Icons.star : Icons.star_border,
-                    color: Colors.amber,
+                    color: colors.amberColor,
                     size: 40,
                   ),
                 );
@@ -82,7 +91,10 @@ class _WriteReviewFormState extends State<WriteReviewForm> {
                     widget.onSubmit(_rating, _textController.text.trim());
                   }
                 },
-                child: const Text('Submit Review', style: TextStyle(fontSize: 16)),
+                child: const Text(
+                  'Submit Review',
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
             ),
           ],

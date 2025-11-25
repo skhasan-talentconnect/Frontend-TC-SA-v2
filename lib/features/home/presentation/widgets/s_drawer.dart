@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/gen/assets.gen.dart';
@@ -15,10 +16,12 @@ class _SDrawerState extends State<SDrawer> {
   
   @override
   Widget build(BuildContext context) {
+                    final colors = context.watch<ThemeProvider>().colors;
+
     return Drawer(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: Container(
-        color: SColor.backgroundColor,
+        color: colors.backgroundColor,
         child: SafeArea(
           child: Column(
             children: [
@@ -78,12 +81,12 @@ class _SDrawerState extends State<SDrawer> {
                     //     padding: EdgeInsets.all(8),
                     //     decoration: BoxDecoration(
                     //       shape: BoxShape.circle,
-                    //       color: SColor.primaryColor,
+                    //       color: colors.primaryColor,
                     //     ),
                     //     child: Text(
                     //       '${getIt<AppStateProvider>().shortlistSchools.length}',
                     //       style: STextStyles.s12W600.copyWith(
-                    //         color: SColor.textColor,
+                    //         color: colors.textColor,
                     //       ),
                     //     ),
                     //   ),
@@ -117,14 +120,14 @@ class _SDrawerState extends State<SDrawer> {
                   height: 40,
                   width: 40,
                   decoration: BoxDecoration(
-                    border: Border.all(color: SColor.secTextColor),
+                    border: Border.all(color: colors.secTextColor),
                     shape: BoxShape.circle,
                   ),
                   child: Center(
                     child: Icon(
                       Icons.person,
                       size: 22,
-                      color: SColor.secTextColor,
+                      color: colors.secTextColor,
                     ),
                   ),
                 ),
@@ -138,8 +141,8 @@ class _SDrawerState extends State<SDrawer> {
                   overflow: TextOverflow.ellipsis,
                 ),
                 border: Border(
-                  top: BorderSide(color: SColor.secTextColor, width: 0.25),
-                  bottom: BorderSide(color: SColor.secTextColor, width: 0.5),
+                  top: BorderSide(color: colors.secTextColor, width: 0.25),
+                  bottom: BorderSide(color: colors.secTextColor, width: 0.5),
                 ),
               ),
             ],
