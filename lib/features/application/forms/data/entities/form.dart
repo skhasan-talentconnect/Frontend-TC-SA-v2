@@ -2,13 +2,14 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/features/application/applications/data/entities/applications_model.dart';
 import 'package:tc_sa/features/application/forms/index.dart';
-
 import 'package:tc_sa/features/application/forms/presentation/widgets/date_time_converter.dart';
 import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';
+import 'package:tc_sa/features/payments/data/entities/payment.dart';
+import 'package:tc_sa/features/payments/utils/convertor.dart';
+import 'package:tc_sa/features/payments/utils/enum.dart';
 
 part 'form.freezed.dart';
 part 'form.g.dart';
-
 
 @freezed
 abstract class Form with _$Form {
@@ -16,12 +17,14 @@ abstract class Form with _$Form {
     @JsonKey(name: '_id') String? sId,
     @JsonKey(name: 'schoolId') SchoolModel? school,
     @JsonKey(name: 'studId') User? user,
-@JsonKey(name: 'interviewNote') String? interviewNote,
+    @JsonKey(name: 'interviewNote') String? interviewNote,
     @FormStatusConverter() FormStatus? status,
-        @JsonKey(name: 'applicationId') StudentApplication? application,
-
+    @JsonKey(name: 'applicationId') StudentApplication? application,
     @JsonKey(name: '__v') int? iV,
-  @DateTimeConverter() DateTime? createdAt,
+    int? amount,
+    @StringOrPaymentStatusConverter() PaymentStatus? payment,
+    Payment? paymentInfo,
+    @DateTimeConverter() DateTime? createdAt,
     @DateTimeConverter() DateTime? updatedAt,
   }) = _Form;
 

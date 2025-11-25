@@ -1,6 +1,6 @@
 class Endpoints {
-  // static const String baseUrl = 'https://backend-tc-sa-v2.onrender.com/api/';
-  static const String baseUrl = 'https://api.synzy.in/api/';
+  static const String baseUrl = 'https://backend-tc-sa-v2.onrender.com/api/';
+  // static const String baseUrl ='https://api.synzy.in/api/';
 
   //Authentication Endpoints
   static const String auth = 'auth';
@@ -73,4 +73,8 @@ class Endpoints {
   static const String formTrack = 'form/track';
   static const String formIsApplied = 'form/is-applied';
   static const String form = 'form';
+
+  //payments
+  static const String paymentCreateOrder = 'payments/create-order';
+  static const String paymentVerify = 'payments/verify';
 }

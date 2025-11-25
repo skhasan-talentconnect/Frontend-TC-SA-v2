@@ -65,4 +65,5 @@ class RouteNames {
 
   static const String noViewFound = 'no-view-found';
   static const String themes = 'themes';
+  static const String payments = 'payments';
 }

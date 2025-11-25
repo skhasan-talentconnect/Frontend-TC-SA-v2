@@ -25,6 +25,7 @@ import 'package:tc_sa/features/notifications/data/entities/notification.dart'
     as app;
 import 'package:tc_sa/features/notifications/presentation/notification_detail_view.dart';
 import 'package:tc_sa/features/notifications/presentation/notification_view.dart';
+import 'package:tc_sa/features/payments/presentation/payment_view.dart';
 import 'package:tc_sa/features/predictor/index.dart';
 import 'package:tc_sa/features/predictor/presentation/view_models/predictor_view_model.dart';
 import 'package:tc_sa/features/preferences/presentation/pref_view.dart';
@@ -445,6 +446,11 @@ class AppRouter {
         name: RouteNames.noViewFound,
         path: '/no-view-found',
         builder: (context, state) => NotFoundView(),
+      ),
+      GoRoute(
+        name: RouteNames.payments,
+        path: '/payments',
+        builder: (context, state) => PaymentView(),
       ),
     ],
     errorBuilder: (_, __) => NotFoundView(),

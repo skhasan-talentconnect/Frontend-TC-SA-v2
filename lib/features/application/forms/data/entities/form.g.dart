@@ -28,6 +28,15 @@ _Form _$FormFromJson(Map<String, dynamic> json) => _Form(
             json['applicationId'] as Map<String, dynamic>,
           ),
   iV: (json['__v'] as num?)?.toInt(),
+  amount: (json['amount'] as num?)?.toInt(),
+  payment: _$JsonConverterFromJson<String, PaymentStatus>(
+    json['payment'],
+    const StringOrPaymentStatusConverter().fromJson,
+  ),
+  paymentInfo:
+      json['paymentInfo'] == null
+          ? null
+          : Payment.fromJson(json['paymentInfo'] as Map<String, dynamic>),
   createdAt: const DateTimeConverter().fromJson(json['createdAt']),
   updatedAt: const DateTimeConverter().fromJson(json['updatedAt']),
 );
@@ -43,6 +52,12 @@ Map<String, dynamic> _$FormToJson(_Form instance) => <String, dynamic>{
   ),
   'applicationId': instance.application,
   '__v': instance.iV,
+  'amount': instance.amount,
+  'payment': _$JsonConverterToJson<String, PaymentStatus>(
+    instance.payment,
+    const StringOrPaymentStatusConverter().toJson,
+  ),
+  'paymentInfo': instance.paymentInfo,
   'createdAt': const DateTimeConverter().toJson(instance.createdAt),
   'updatedAt': const DateTimeConverter().toJson(instance.updatedAt),
 };

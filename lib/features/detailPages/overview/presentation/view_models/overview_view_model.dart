@@ -1,5 +1,4 @@
-import 'package:tc_sa/core/common/view_state_provider.dart';
-import 'package:tc_sa/core/network/app_failure.dart';
+import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/detailPages/overview/data/data_source/data_source_impl.dart';
 import 'package:tc_sa/features/detailPages/overview/data/entities/applied_form_model.dart';
 import 'package:tc_sa/features/detailPages/overview/data/entities/overview_model.dart';

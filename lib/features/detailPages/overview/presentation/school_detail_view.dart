@@ -25,6 +25,7 @@ import 'package:tc_sa/features/detailPages/photos/photos_view.dart';
 import 'package:tc_sa/features/detailPages/reviews/presentation/reviews_view.dart';
 import 'package:tc_sa/features/detailPages/safetySecurity/presentation/safetySecurity_view.dart';
 import 'package:tc_sa/features/detailPages/technologyAdaption/presentation/tech_adaption_view.dart';
+import 'package:tc_sa/features/payments/presentation/view_model/payment_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../common/models/user_pref.dart';
@@ -38,9 +39,7 @@ import '../../../../core/navigation/route_name.dart';
 import '../../../../core/services/service_locator.dart';
 import '../../../../core/utils/toast.dart';
 import '../../../application/forms/presentation/view_models/my_form_view_model.dart';
-import '../../../application/forms/utils/enums.dart';
 import '../../../users/shortlist/presentation/view_models/shortlist_view_model.dart';
-import '../data/entities/applied_form_model.dart';
 import '../data/entities/overview_model.dart';
 
 class SchoolDetailView2 extends StatefulWidget {
@@ -55,12 +54,12 @@ class SchoolDetailView2 extends StatefulWidget {
 
 class _SchoolDetailViewState extends State<SchoolDetailView2> {
   final OverviewViewModel overviewViewModel = OverviewViewModel();
-  final MyFormViewModel myFormViewModel = MyFormViewModel();
+  final MyFormViewModel myFormViewModel = getIt<MyFormViewModel>();
   final ShortlistViewModel shortlistViewModel = ShortlistViewModel();
   final appStateProvider = getIt<AppStateProvider>();
-final AdmissionTimelineViewModel admissionVm = AdmissionTimelineViewModel();
-// keep listener so we can remove it in dispose
-VoidCallback? _admissionVmListener;
+  final AdmissionTimelineViewModel admissionVm = AdmissionTimelineViewModel();
+  // keep listener so we can remove it in dispose
+  VoidCallback? _admissionVmListener;
 
   final PageController pageController = PageController();
 
@@ -68,94 +67,101 @@ VoidCallback? _admissionVmListener;
   late List<GlobalKey> _tabKeys;
 
   final ValueNotifier<bool> isSaved = ValueNotifier(false);
-    int _userApplicationCount = 0;
-@override
-void dispose() {
-  // remove admissionVm listener if attached
-  try {
-    if (_admissionVmListener != null) {
-      admissionVm.removeListener(_admissionVmListener!);
-      _admissionVmListener = null;
-    }
-  } catch (_) {}
+  int _userApplicationCount = 0;
+  @override
+  void dispose() {
+    // remove admissionVm listener if attached
+    try {
+      if (_admissionVmListener != null) {
+        admissionVm.removeListener(_admissionVmListener!);
+        _admissionVmListener = null;
+      }
+    } catch (_) {}
 
-  // dispose admission view model
-  try {
-    admissionVm.dispose();
-  } catch (_) {}
+    // dispose admission view model
+    try {
+      admissionVm.dispose();
+    } catch (_) {}
 
-  // existing controllers
-  _tabScrollController.dispose();
-  pageController.dispose();
+    // existing controllers
+    _tabScrollController.dispose();
+    pageController.dispose();
 
-  super.dispose();
-}
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
-WidgetsBinding.instance.addPostFrameCallback((_) async {
-  // 1) load school
-  final failure = await overviewViewModel.getSchoolsById(
-    id: widget.schoolId,
-  );
-  failure?.showError(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // 1) load school
+      final failure = await overviewViewModel.getSchoolsById(
+        id: widget.schoolId,
+      );
+      failure?.showError(context);
 
-  // 2) check if user already applied to this school
-  await overviewViewModel.getIsAppliedSchool(schoolId: widget.schoolId);
+      // 2) check if user already applied to this school
+      await overviewViewModel.getIsAppliedSchool(schoolId: widget.schoolId);
 
-  // 3) shortlist state
-  isSaved.value = getIt<AppStateProvider>().isSaved(widget.schoolId);
+      // 3) shortlist state
+      isSaved.value = getIt<AppStateProvider>().isSaved(widget.schoolId);
 
-  // --- NEW: prefetch student's generated PDFs so we know how many applications they have
-  try {
-    final studId = getIt<AppStateProvider>().user?.sId;
-    if (studId != null && studId.isNotEmpty) {
-      final pdfFailure = await myFormViewModel.fetchStudentPdfs(studId: studId);
-      if (pdfFailure == null) {
-        final pdfs = myFormViewModel.availablePdfs;
-        if (pdfs != null) {
-          setState(() {
-            _userApplicationCount = pdfs.length;
-          });
+      // --- NEW: prefetch student's generated PDFs so we know how many applications they have
+      try {
+        final studId = getIt<AppStateProvider>().user?.sId;
+        if (studId != null && studId.isNotEmpty) {
+          final pdfFailure = await myFormViewModel.fetchStudentPdfs(
+            studId: studId,
+          );
+          if (pdfFailure == null) {
+            final pdfs = myFormViewModel.availablePdfs;
+            if (pdfs != null) {
+              setState(() {
+                _userApplicationCount = pdfs.length;
+              });
+            }
+          }
         }
+      } catch (_) {
+        // ignore prefetch errors — we'll fetch again when user presses Apply
       }
-    }
-  } catch (_) {
-    // ignore prefetch errors — we'll fetch again when user presses Apply
-  }
 
-  // --- NEW: fetch admission timeline for this school so we can show application fees
-  try {
-    // start fetch
-    admissionVm.getAdmissionTimelineBySchoolId(schoolId: widget.schoolId);
+      // --- NEW: fetch admission timeline for this school so we can show application fees
+      try {
+        // start fetch
+        admissionVm.getAdmissionTimelineBySchoolId(schoolId: widget.schoolId);
 
-    // attach a listener so UI refreshes when timeline finishes loading
-    _admissionVmListener = () {
-      if (mounted) setState(() {});
-    };
-    admissionVm.addListener(_admissionVmListener!);
-  } catch (_) {
-    // ignore timeline fetch errors; UI will show '-' for fees
-  }
-});
-
+        // attach a listener so UI refreshes when timeline finishes loading
+        _admissionVmListener = () {
+          if (mounted) setState(() {});
+        };
+        admissionVm.addListener(_admissionVmListener!);
+      } catch (_) {
+        // ignore timeline fetch errors; UI will show '-' for fees
+      }
+    });
 
     _tabKeys = List.generate(DetailTabEnum.values.length, (_) => GlobalKey());
   }
 
+  String feeText = '-';
+
   @override
   Widget build(BuildContext context) {
-     final colors = context.watch<ThemeProvider>().colors;
-  return MultiProvider(
-  providers: [
-    ChangeNotifierProvider<OverviewViewModel>.value(value: overviewViewModel),
-    ChangeNotifierProvider<MyFormViewModel>.value(value: myFormViewModel),
-    ChangeNotifierProvider<ShortlistViewModel>.value(value: shortlistViewModel),
-    // you can add more providers here if needed
-  ],
-  child: Consumer<OverviewViewModel>(
-    builder: (vmContext, vm, _) {
+    final colors = context.watch<ThemeProvider>().colors;
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<OverviewViewModel>.value(
+          value: overviewViewModel,
+        ),
+        ChangeNotifierProvider<MyFormViewModel>.value(value: myFormViewModel),
+        ChangeNotifierProvider<ShortlistViewModel>.value(
+          value: shortlistViewModel,
+        ),
+        // you can add more providers here if needed
+      ],
+      child: Consumer<OverviewViewModel>(
+        builder: (vmContext, vm, _) {
           final school = vm.school;
 
           final size = MediaQuery.of(context).size;
@@ -463,281 +469,543 @@ WidgetsBinding.instance.addPostFrameCallback((_) async {
                                       ),
                                     ),
                                     const SizedBox(width: 8),
-                                Expanded(
-  child: ChangeNotifierProvider.value(
-    value: myFormViewModel,
-    child: Selector<MyFormViewModel, bool>(
-      selector: (_, vm) => vm.isLoading,
-      builder: (_, isLoading, __) {
-        if (isLoading) {
-          return const Center(child: SLoadingIndicator(color: Colors.blue));
-        }
-final isSingleAndApplied = (_userApplicationCount == 1) && (vm.isApplied == true);
-       
-return SButton(
-  onPressed: () async {
-    if (isSingleAndApplied) {
-      // Show dialog that prompts user to add a new application (force new)
-      showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('No additional application available'),
-            content: const Text('You have already applied using the only available application. Would you like to add a new application?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  context.pushNamed(
-                    RouteNames.addApplication,
-                    extra: {'forceNew': true},
-                  );
-                },
-                child: const Text('Fill form'),
-              ),
-            ],
-          );
-        },
-      );
-      return;
-    }
+                                    Expanded(
+                                      child: ChangeNotifierProvider.value(
+                                        value: myFormViewModel,
+                                        child: Selector<MyFormViewModel, bool>(
+                                          selector: (_, vm) => vm.isLoading,
+                                          builder: (_, isLoading, __) {
+                                            if (isLoading) {
+                                              return const Center(
+                                                child: SLoadingIndicator(
+                                                  color: Colors.blue,
+                                                ),
+                                              );
+                                            }
+                                            final isSingleAndApplied =
+                                                (_userApplicationCount == 1) &&
+                                                (vm.isApplied == true);
 
-    // --- original Apply flow (unchanged) ---
-    if (appStateProvider.isGuest) {
-      Toasts.showLoginToast(context);
-      return;
-    }
+                                            return SButton(
+                                              onPressed: () async {
+                                                if (isSingleAndApplied) {
+                                                  // Show dialog that prompts user to add a new application (force new)
+                                                  showDialog(
+                                                    context: context,
+                                                    barrierDismissible: true,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                          'No additional application available',
+                                                        ),
+                                                        content: const Text(
+                                                          'You have already applied using the only available application. Would you like to add a new application?',
+                                                        ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed:
+                                                                () =>
+                                                                    Navigator.of(
+                                                                      context,
+                                                                    ).pop(),
+                                                            child: const Text(
+                                                              'Cancel',
+                                                            ),
+                                                          ),
+                                                          ElevatedButton(
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                context,
+                                                              ).pop();
+                                                              context.pushNamed(
+                                                                RouteNames
+                                                                    .addApplication,
+                                                                extra: {
+                                                                  'forceNew':
+                                                                      true,
+                                                                },
+                                                              );
+                                                            },
+                                                            child: const Text(
+                                                              'Fill form',
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                  return;
+                                                }
 
-    final studId = getIt<AppStateProvider>().user?.sId;
-    if (studId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Missing student ID.")),
-      );
-      return;
-    }
+                                                // --- original Apply flow (unchanged) ---
+                                                if (appStateProvider.isGuest) {
+                                                  Toasts.showLoginToast(
+                                                    context,
+                                                  );
+                                                  return;
+                                                }
 
-    final pdfResult = await myFormViewModel.fetchStudentPdfs(studId: studId);
-if (pdfResult != null) {
-  Toasts.showErrorToast(context, message: pdfResult.message ?? "Failed to fetch PDFs");
-  return;
-}
+                                                final studId =
+                                                    getIt<AppStateProvider>()
+                                                        .user
+                                                        ?.sId;
+                                                if (studId == null) {
+                                                  ScaffoldMessenger.of(
+                                                    context,
+                                                  ).showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                        "Missing student ID.",
+                                                      ),
+                                                    ),
+                                                  );
+                                                  return;
+                                                }
 
-final pdfs = myFormViewModel.availablePdfs;
-if (pdfs == null || pdfs.isEmpty) {
-      showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('No form available'),
-            content: const Text('No generated PDFs available. Please fill the form first.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
+                                                final pdfResult =
+                                                    await myFormViewModel
+                                                        .fetchStudentPdfs(
+                                                          studId: studId,
+                                                        );
+                                                if (pdfResult != null) {
+                                                  Toasts.showErrorToast(
+                                                    context,
+                                                    message:
+                                                        pdfResult.message ??
+                                                        "Failed to fetch PDFs",
+                                                  );
+                                                  return;
+                                                }
 
-                  context.pushNamed(
-                    RouteNames.addApplication,
-                    extra: {
-                      'forceNew': true,
-                    },
-                  );
-                },
-                child: const Text('Fill form'),
-              ),
-            ],
-          );
-        },
-      );
-      return;
-    }
-    await myFormViewModel.prefetchApplicationsForPdfs(pdfs);
+                                                final pdfs =
+                                                    myFormViewModel
+                                                        .availablePdfs;
+                                                if (pdfs == null ||
+                                                    pdfs.isEmpty) {
+                                                  showDialog(
+                                                    context: context,
+                                                    barrierDismissible: true,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                          'No form available',
+                                                        ),
+                                                        content: const Text(
+                                                          'No generated PDFs available. Please fill the form first.',
+                                                        ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed:
+                                                                () =>
+                                                                    Navigator.of(
+                                                                      context,
+                                                                    ).pop(),
+                                                            child: const Text(
+                                                              'Cancel',
+                                                            ),
+                                                          ),
+                                                          ElevatedButton(
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                context,
+                                                              ).pop();
 
-    // STEP 2: pick desired application PDF
-   final chosenPdfIndex = await showModalBottomSheet<int?>(
-  context: context,
-  isScrollControlled: true,
-  builder: (ctx) {
-    // <<< PROVIDE myFormViewModel to the modal subtree so Consumer finds it >>>
-    return ChangeNotifierProvider<MyFormViewModel>.value(
-  value: myFormViewModel,
-  child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text("Select Application", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-              const SizedBox(height: 10),
-              ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.6),
-                child: Consumer<MyFormViewModel>(
-                  builder: (cCtx, mfvm, __) {
-                    return ListView.separated(
-                      shrinkWrap: true,
-                      itemCount: pdfs.length,
-                      separatorBuilder: (_, __) => const Divider(height: 1),
-                      itemBuilder: (_, i) {
-                        final p = pdfs[i] as Map<String, dynamic>;
-                        final title = p['applicationName'] ?? 'Application ${i + 1}';
-                        final subtitle = p['createdAt']?.toString().split('T').first ?? '';
+                                                              context.pushNamed(
+                                                                RouteNames
+                                                                    .addApplication,
+                                                                extra: {
+                                                                  'forceNew':
+                                                                      true,
+                                                                },
+                                                              );
+                                                            },
+                                                            child: const Text(
+                                                              'Fill form',
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                  return;
+                                                }
+                                                await myFormViewModel
+                                                    .prefetchApplicationsForPdfs(
+                                                      pdfs,
+                                                    );
 
-                        // 1) obtain applicationId from pdf object
-                        final applicationId = (p['applicationId'] ?? p['_id'] ?? p['formId'] ?? '').toString();
+                                                // STEP 2: pick desired application PDF
+                                                final chosenPdfIndex = await showModalBottomSheet<
+                                                  int?
+                                                >(
+                                                  context: context,
+                                                  isScrollControlled: true,
+                                                  builder: (ctx) {
+                                                    // <<< PROVIDE myFormViewModel to the modal subtree so Consumer finds it >>>
+                                                    return ChangeNotifierProvider<
+                                                      MyFormViewModel
+                                                    >.value(
+                                                      value: myFormViewModel,
+                                                      child: SafeArea(
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets.all(
+                                                                12,
+                                                              ),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              const Text(
+                                                                "Select Application",
+                                                                style: TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 10,
+                                                              ),
+                                                              ConstrainedBox(
+                                                                constraints: BoxConstraints(
+                                                                  maxHeight:
+                                                                      MediaQuery.of(
+                                                                            ctx,
+                                                                          )
+                                                                          .size
+                                                                          .height *
+                                                                      0.6,
+                                                                ),
+                                                                child: Consumer<
+                                                                  MyFormViewModel
+                                                                >(
+                                                                  builder: (
+                                                                    cCtx,
+                                                                    mfvm,
+                                                                    __,
+                                                                  ) {
+                                                                    return ListView.separated(
+                                                                      shrinkWrap:
+                                                                          true,
+                                                                      itemCount:
+                                                                          pdfs.length,
+                                                                      separatorBuilder:
+                                                                          (
+                                                                            _,
+                                                                            __,
+                                                                          ) => const Divider(
+                                                                            height:
+                                                                                1,
+                                                                          ),
+                                                                      itemBuilder: (
+                                                                        _,
+                                                                        i,
+                                                                      ) {
+                                                                        final p =
+                                                                            pdfs[i]
+                                                                                as Map<
+                                                                                  String,
+                                                                                  dynamic
+                                                                                >;
+                                                                        final title =
+                                                                            p['applicationName'] ??
+                                                                            'Application ${i + 1}';
+                                                                        final subtitle =
+                                                                            p['createdAt']?.toString().split('T').first ??
+                                                                            '';
 
-                        // 2) get cached StudentApplication if available
-                        final app = applicationId.isNotEmpty ? mfvm.applicationCache[applicationId] : null;
+                                                                        // 1) obtain applicationId from pdf object
+                                                                        final applicationId =
+                                                                            (p['applicationId'] ??
+                                                                                    p['_id'] ??
+                                                                                    p['formId'] ??
+                                                                                    '')
+                                                                                .toString();
 
-                        // 3) read the standard from StudentApplication
-                        final pdfStandard = (app?.standard ?? '').toString().trim();
+                                                                        // 2) get cached StudentApplication if available
+                                                                        final app =
+                                                                            applicationId.isNotEmpty
+                                                                                ? mfvm.applicationCache[applicationId]
+                                                                                : null;
 
-                        // 4) get timelines from admissionVm (typed TimelineEntryModel list)
-                        final timelines = admissionVm.admissionTimeline?.timelines ?? <TimelineEntryModel>[];
+                                                                        // 3) read the standard from StudentApplication
+                                                                        final pdfStandard =
+                                                                            (app?.standard ??
+                                                                                    '')
+                                                                                .toString()
+                                                                                .trim();
 
-                        // 5) compute feeText by matching admissionLevel == pdfStandard
-                        String feeText = '-';
-                        try {
-                          if (pdfStandard.isNotEmpty && timelines.isNotEmpty) {
-                            TimelineEntryModel? matched;
-                            for (final t in timelines) {
-                              final level = (t.eligibility?.admissionLevel ?? '').toLowerCase();
-                              if (level.isNotEmpty && level == pdfStandard.toLowerCase()) {
-                                matched = t;
-                                break;
-                              }
-                            }
-                            final feeNum = matched?.applicationFee;
-                            if (feeNum != null) {
-                              if (feeNum % 1 == 0) {
-                                feeText = '₹${feeNum.toInt()}';
-                              } else {
-                                feeText = '₹${feeNum}';
-                              }
-                            }
-                          }
-                        } catch (_) {
-                          feeText = '-';
-                        }
+                                                                        // 4) get timelines from admissionVm (typed TimelineEntryModel list)
+                                                                        final timelines =
+                                                                            admissionVm.admissionTimeline?.timelines ??
+                                                                            <
+                                                                              TimelineEntryModel
+                                                                            >[];
 
-                        final loading = applicationId.isNotEmpty && mfvm.isAppLoading(applicationId);
+                                                                        // 5) compute feeText by matching admissionLevel == pdfStandard
+                                                                        try {
+                                                                          if (pdfStandard.isNotEmpty &&
+                                                                              timelines.isNotEmpty) {
+                                                                            TimelineEntryModel?
+                                                                            matched;
+                                                                            for (final t
+                                                                                in timelines) {
+                                                                              final level =
+                                                                                  (t.eligibility?.admissionLevel ??
+                                                                                          '')
+                                                                                      .toLowerCase();
+                                                                              if (level.isNotEmpty &&
+                                                                                  level ==
+                                                                                      pdfStandard.toLowerCase()) {
+                                                                                matched =
+                                                                                    t;
+                                                                                break;
+                                                                              }
+                                                                            }
+                                                                            final feeNum =
+                                                                                matched?.applicationFee;
+                                                                            if (feeNum !=
+                                                                                null) {
+                                                                              if (feeNum %
+                                                                                      1 ==
+                                                                                  0) {
+                                                                                feeText =
+                                                                                    '₹${feeNum.toInt()}';
+                                                                              } else {
+                                                                                feeText =
+                                                                                    '₹${feeNum}';
+                                                                              }
+                                                                            }
+                                                                          }
+                                                                        } catch (
+                                                                          _
+                                                                        ) {
+                                                                          feeText =
+                                                                              '-';
+                                                                        }
 
-                        return ListTile(
-                          title: Text(title.toString()),
-                          subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
-                          trailing: loading
-                              ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
-                              : Text(feeText, style: const TextStyle(fontWeight: FontWeight.w600)),
-                          onTap: () async {
-                            if (applicationId.isNotEmpty && mfvm.applicationCache[applicationId] == null) {
-                              final err = await mfvm.fetchApplicationById(applicationId: applicationId);
-                              if (err != null) {
-                                if (ctx.mounted) {
-                                  Toasts.showErrorToast(ctx, message: err.message ?? "Failed to load application");
-                                }
-                                return;
-                              }
-                            }
-                            Navigator.of(ctx).pop(i);
-                          },
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 12),
-              TextButton(
-                onPressed: () => Navigator.of(ctx).pop(null),
-                child: const Text("Cancel"),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  },
-);
-    if (chosenPdfIndex == null) return;
+                                                                        final loading =
+                                                                            applicationId.isNotEmpty &&
+                                                                            mfvm.isAppLoading(
+                                                                              applicationId,
+                                                                            );
 
-    final chosen = pdfs[chosenPdfIndex];
+                                                                        return ListTile(
+                                                                          title: Text(
+                                                                            title.toString(),
+                                                                          ),
+                                                                          subtitle:
+                                                                              subtitle.isNotEmpty
+                                                                                  ? Text(
+                                                                                    subtitle,
+                                                                                  )
+                                                                                  : null,
+                                                                          trailing:
+                                                                              loading
+                                                                                  ? const SizedBox(
+                                                                                    width:
+                                                                                        24,
+                                                                                    height:
+                                                                                        24,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      strokeWidth:
+                                                                                          2,
+                                                                                    ),
+                                                                                  )
+                                                                                  : Text(
+                                                                                    feeText,
+                                                                                    style: const TextStyle(
+                                                                                      fontWeight:
+                                                                                          FontWeight.w600,
+                                                                                    ),
+                                                                                  ),
+                                                                          onTap: () async {
+                                                                            if (applicationId.isNotEmpty &&
+                                                                                mfvm.applicationCache[applicationId] ==
+                                                                                    null) {
+                                                                              final err = await mfvm.fetchApplicationById(
+                                                                                applicationId:
+                                                                                    applicationId,
+                                                                              );
+                                                                              if (err !=
+                                                                                  null) {
+                                                                                if (ctx.mounted) {
+                                                                                  Toasts.showErrorToast(
+                                                                                    ctx,
+                                                                                    message:
+                                                                                        err.message ??
+                                                                                        "Failed to load application",
+                                                                                  );
+                                                                                }
+                                                                                return;
+                                                                              }
+                                                                            }
+                                                                            Navigator.of(
+                                                                              ctx,
+                                                                            ).pop(
+                                                                              i,
+                                                                            );
+                                                                          },
+                                                                        );
+                                                                      },
+                                                                    );
+                                                                  },
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 12,
+                                                              ),
+                                                              TextButton(
+                                                                onPressed:
+                                                                    () =>
+                                                                        Navigator.of(
+                                                                          ctx,
+                                                                        ).pop(
+                                                                          null,
+                                                                        ),
+                                                                child:
+                                                                    const Text(
+                                                                      "Cancel",
+                                                                    ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                                if (chosenPdfIndex == null)
+                                                  return;
 
-    final formId = chosen['_id']?.toString() ?? "";
-    final applicationId = chosen['applicationId']?.toString() ?? "";
+                                                final chosen =
+                                                    pdfs[chosenPdfIndex];
 
-    if (formId.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Invalid PDF selected.")),
-      );
-      return;
-    }
+                                                final formId =
+                                                    chosen['_id']?.toString() ??
+                                                    "";
+                                                final applicationId =
+                                                    chosen['applicationId']
+                                                        ?.toString() ??
+                                                    "";
 
-    // STEP 3: submit form
-   final failure = await myFormViewModel.submitForm(
-  schoolId: widget.schoolId,
-  applicationId: applicationId,
-  formId: formId,
-);
+                                                if (formId.isEmpty) {
+                                                  ScaffoldMessenger.of(
+                                                    context,
+                                                  ).showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                        "Invalid PDF selected.",
+                                                      ),
+                                                    ),
+                                                  );
+                                                  return;
+                                                }
 
-// Debug: check whether this page is still current / mounted
-// (works regardless of go_router version)
-try {
-  final isCurrent = ModalRoute.of(context)?.isCurrent ?? false;
-  // ignore: avoid_print
-  print('[Apply] after submit: ModalRoute.isCurrent = $isCurrent');
+                                                // STEP 3: submit form
+                                                final failure =
+                                                    await myFormViewModel
+                                                        .submitForm(
+                                                          schoolId:
+                                                              widget.schoolId,
+                                                          applicationId:
+                                                              applicationId,
+                                                          formId: formId,
+                                                          amount: int.parse(
+                                                            feeText.substring(
+                                                              1,
+                                                            ),
+                                                          ),
+                                                        );
 
-  final canPop = Navigator.of(context).canPop();
-  // ignore: avoid_print
-  print('[Apply] after submit: Navigator.canPop = $canPop');
-} catch (e) {
-  // ignore: avoid_print
-  print('[Apply] debug check failed: $e');
-}
+                                                // Debug: check whether this page is still current / mounted
+                                                // (works regardless of go_router version)
+                                                try {
+                                                  final isCurrent =
+                                                      ModalRoute.of(
+                                                        context,
+                                                      )?.isCurrent ??
+                                                      false;
+                                                  // ignore: avoid_print
+                                                  print(
+                                                    '[Apply] after submit: ModalRoute.isCurrent = $isCurrent',
+                                                  );
 
-// Only show UI when still mounted
-if (!context.mounted) {
-  // ignore: avoid_print
-  print('[Apply] context not mounted after submit — page may have been popped.');
-  return;
-}
+                                                  final canPop =
+                                                      Navigator.of(
+                                                        context,
+                                                      ).canPop();
+                                                  // ignore: avoid_print
+                                                  print(
+                                                    '[Apply] after submit: Navigator.canPop = $canPop',
+                                                  );
+                                                } catch (e) {
+                                                  // ignore: avoid_print
+                                                  print(
+                                                    '[Apply] debug check failed: $e',
+                                                  );
+                                                }
 
-if (failure == null) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(content: Text('Application submitted successfully')),
-  );
-} else {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(failure.message ?? 'Failed to submit application')),
-  );
-}
+                                                // Only show UI when still mounted
+                                                if (!context.mounted) {
+                                                  // ignore: avoid_print
+                                                  print(
+                                                    '[Apply] context not mounted after submit — page may have been popped.',
+                                                  );
+                                                  return;
+                                                }
 
-  },
-  backgroundColor: Colors.blue,
-  padding: const EdgeInsets.symmetric(vertical: 14),
-  label: '',
-  max: true,
-  text: Text(
-    isSingleAndApplied ? "Apply for other" : "Apply",
-    style: TextStyle(
-      fontSize: infoFont,
-      color: Colors.white,
-      fontWeight: FontWeight.bold,
-    ),
-  ),
-);
-      },
-    ),
-  ),
-),
+                                                final paymentVM =
+                                                    getIt<PaymentViewModel>();
 
+                                                Toasts.showSuccessOrFailureToast(
+                                                  context,
+                                                  failure: failure,
+                                                  hideSuccess: true,
+                                                  popOnSuccess: false,
+                                                  successCallback: () async {
+                                                    final failure =
+                                                        await paymentVM
+                                                            .createOrder();
+                                                    Toasts.showSuccessOrFailureToast(
+                                                      context,
+                                                      failure: failure,
+                                                      popOnSuccess: false,
+                                                      hideSuccess: true,
+                                                      successCallback: () {
+                                                        context.pushNamed(
+                                                          RouteNames.payments,
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              backgroundColor: Colors.blue,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    vertical: 14,
+                                                  ),
+                                              label: '',
+                                              max: true,
+                                              text: Text(
+                                                isSingleAndApplied
+                                                    ? "Apply for other"
+                                                    : "Apply",
+                                                style: TextStyle(
+                                                  fontSize: infoFont,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ],
@@ -818,9 +1086,7 @@ if (failure == null) {
                                 children: [
                                   ...DetailTabEnum.values.map((tab) {
                                     return GestureDetector(
-                                      key:
-                                          _tabKeys[tab
-                                              .index], 
+                                      key: _tabKeys[tab.index],
 
                                       onTap: () {
                                         vm.currentPageIndex = tab.index;
