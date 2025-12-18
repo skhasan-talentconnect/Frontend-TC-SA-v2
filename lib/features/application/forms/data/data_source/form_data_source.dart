@@ -13,5 +13,6 @@ abstract class FormDataSource {
     required String applicationId,
     required String schoolId,
     required String formId,
+    required int amount,
   });
 }

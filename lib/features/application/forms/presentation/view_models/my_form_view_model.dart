@@ -1,16 +1,14 @@
 // lib/features/application/forms/presentation/view_models/my_form_view_model.dart
-import 'package:dartz/dartz.dart';
 import 'package:tc_sa/core/index.dart';
-import 'package:tc_sa/features/application/applications/data/entities/applications_model.dart';
-import 'package:tc_sa/features/application/forms/data/entities/form.dart';
-import 'package:tc_sa/features/application/forms/data/data_source/form_data_source_impl.dart';
-import 'package:tc_sa/features/application/forms/utils/enums.dart';
-import 'package:tc_sa/features/detailPages/overview/data/entities/applied_form_model.dart';
 import 'package:tc_sa/features/application/applications/data/data_source/application_data_source_impl.dart'; // <-- new
+import 'package:tc_sa/features/application/applications/data/entities/applications_model.dart';
+import 'package:tc_sa/features/application/forms/data/data_source/form_data_source_impl.dart';
+import 'package:tc_sa/features/application/forms/data/entities/form.dart';
 
 class MyFormViewModel extends ViewStateProvider {
   final FormDataSourceImpl formDataSourceImpl = FormDataSourceImpl();
-  final ApplicationDataSourceImpl applicationDataSourceImpl = ApplicationDataSourceImpl(); // <-- new
+  final ApplicationDataSourceImpl applicationDataSourceImpl =
+      ApplicationDataSourceImpl(); // <-- new
   final NetworkService _network = getIt<NetworkService>();
   final AppStateProvider _app = getIt<AppStateProvider>();
 
@@ -67,23 +65,32 @@ class MyFormViewModel extends ViewStateProvider {
 
     try {
       // Use absolute URL to avoid NetworkService base behavior surprises
-      final endpoint = 'https://backend-tc-sa-v2.onrender.com/api/users/list/$id';
-      final req = Request(method: RequestMethod.get, endpoint: endpoint, isSafeRoute: true);
+      final endpoint =
+          'https://backend-tc-sa-v2.onrender.com/api/users/list/$id';
+      final req = Request(
+        method: RequestMethod.get,
+        endpoint: endpoint,
+        isSafeRoute: true,
+      );
       final res = await _network.request(req);
 
       // Expecting backend response: { status: "success", message: "...", data: [ {...}, ... ] }
       final map = res.data as Map<String, dynamic>?;
 
-      final list = (map != null && map['data'] is List) ? (map['data'] as List) : <dynamic>[];
+      final list =
+          (map != null && map['data'] is List)
+              ? (map['data'] as List)
+              : <dynamic>[];
 
-      availablePdfs = list.map((e) {
-        if (e is Map<String, dynamic>) return e;
-        try {
-          return Map<String, dynamic>.from(e as Map);
-        } catch (_) {
-          return <String, dynamic>{};
-        }
-      }).toList();
+      availablePdfs =
+          list.map((e) {
+            if (e is Map<String, dynamic>) return e;
+            try {
+              return Map<String, dynamic>.from(e as Map);
+            } catch (_) {
+              return <String, dynamic>{};
+            }
+          }).toList();
 
       // sort newest first (optional)
       availablePdfs.sort((a, b) {
@@ -115,17 +122,25 @@ class MyFormViewModel extends ViewStateProvider {
     notifyListeners();
 
     try {
-      final res = await applicationDataSourceImpl.getApplicationById(applicationId: applicationId);
-      res.fold((exception) {
-        failure = APIFailure.fromException(exception: exception);
-      }, (app) {
-        if (app != null) {
-          _applicationCache[applicationId] = app;
-        } else {
-          // treat as not found
-          failure = APIFailure(message: "Application not found", statusCode: 404);
-        }
-      });
+      final res = await applicationDataSourceImpl.getApplicationById(
+        applicationId: applicationId,
+      );
+      res.fold(
+        (exception) {
+          failure = APIFailure.fromException(exception: exception);
+        },
+        (app) {
+          if (app != null) {
+            _applicationCache[applicationId] = app;
+          } else {
+            // treat as not found
+            failure = APIFailure(
+              message: "Application not found",
+              statusCode: 404,
+            );
+          }
+        },
+      );
     } catch (e) {
       failure = APIFailure(message: e.toString(), statusCode: 500);
     } finally {
@@ -138,12 +153,15 @@ class MyFormViewModel extends ViewStateProvider {
 
   /// Given the raw `pdfs` list (each item usually contains applicationId/_id),
   /// prefetch missing StudentApplication objects concurrently.
-  Future<void> prefetchApplicationsForPdfs(List<Map<String, dynamic>> pdfs) async {
+  Future<void> prefetchApplicationsForPdfs(
+    List<Map<String, dynamic>> pdfs,
+  ) async {
     if (pdfs.isEmpty) return;
 
     final futures = <Future>[];
     for (final p in pdfs) {
-      final applicationId = (p['applicationId'] ?? p['_id'] ?? p['formId'] ?? '').toString();
+      final applicationId =
+          (p['applicationId'] ?? p['_id'] ?? p['formId'] ?? '').toString();
       if (applicationId.isEmpty) continue;
       if (_applicationCache.containsKey(applicationId)) continue;
 
@@ -156,10 +174,20 @@ class MyFormViewModel extends ViewStateProvider {
     }
   }
 
+  Form? _form;
+
+  Form? get form => _form;
+
+  set form(Form? form) {
+    _form = form;
+    notifyListeners();
+  }
+
   Future<Failure?> submitForm({
     required String schoolId,
     required String applicationId,
     required String formId, // pdf id
+    required int amount,
   }) async {
     Failure? failure;
     setViewState(ViewState.busy);
@@ -168,13 +196,17 @@ class MyFormViewModel extends ViewStateProvider {
       applicationId: applicationId,
       schoolId: schoolId,
       formId: formId,
+      amount: amount,
     );
 
-    result.fold((exception) {
-      failure = APIFailure.fromException(exception: exception);
-    }, (res) {
-      // optionally store or update local state if needed
-    });
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (res) {
+        form = res;
+      },
+    );
 
     setViewState(ViewState.complete);
     return failure;
