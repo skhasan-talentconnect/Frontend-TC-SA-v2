@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:tc_sa/common/index.dart';
@@ -78,5 +79,6 @@ class _PaymentViewState extends State<PaymentView> {
 
   void _handleError(PaymentFailureResponse response) {
     Toasts.showErrorToast(context, message: response.message ?? '');
+    context.pop();
   }
 }

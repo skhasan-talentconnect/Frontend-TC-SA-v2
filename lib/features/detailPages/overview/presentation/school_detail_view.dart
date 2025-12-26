@@ -967,6 +967,18 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                                                   hideSuccess: true,
                                                   popOnSuccess: false,
                                                   successCallback: () async {
+                                                    if (int.parse(
+                                                          feeText.substring(1),
+                                                        ) ==
+                                                        0) {
+                                                      Toasts.showSuccessToast(
+                                                        context,
+                                                        message:
+                                                            'Form submitted successfully',
+                                                      );
+                                                      return;
+                                                    }
+
                                                     final failure =
                                                         await paymentVM
                                                             .createOrder();
