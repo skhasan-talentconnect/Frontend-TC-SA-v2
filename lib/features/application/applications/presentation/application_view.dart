@@ -1156,9 +1156,9 @@ class _AlreadyFilledMessage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "Choose an application to view or download its PDF, or add another application.",
+              "Generate pdf for your application to add it in your eligible applications.Choose an application to generate or download its PDF.",
               textAlign: TextAlign.center,
-              style: STextStyles.s12W400.copyWith(color: Colors.black54),
+              style: STextStyles.s12W400.copyWith(color: Colors.black54,fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
 

@@ -785,6 +785,11 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                                                                         ) {
                                                                           feeText =
                                                                               '-';
+                                                                              AlertDialog(
+                  title: const Text("Not Started"),
+                  content: Text(
+                    "Admissions are not started for your standard ($pdfStandard).",
+                  ),);
                                                                         }
 
                                                                         final loading =

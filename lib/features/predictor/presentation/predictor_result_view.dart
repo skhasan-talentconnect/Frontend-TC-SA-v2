@@ -81,7 +81,7 @@ class _SchoolResultPageState extends State<SchoolResultsPage> {
                               Text(
                                 "Your personalized School recommendations based on your preferences.",
                                 style: STextStyles.s14W400.copyWith(
-                                  color: colors.secTextColor,
+                                  color: colors.amberColor,
                                 ),
                               ),
                               const SizedBox(height: 24),
@@ -92,7 +92,7 @@ class _SchoolResultPageState extends State<SchoolResultsPage> {
                                   child: Text(
                                     "No schools found matching your criteria",
                                     style: STextStyles.s16W400.copyWith(
-                                      color: colors.secTextColor,
+                                      color: colors.amberColor,
                                     ),
                                   ),
                                 )

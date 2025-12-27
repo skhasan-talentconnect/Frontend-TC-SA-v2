@@ -60,14 +60,14 @@ class _ShortlistedCollegesPageState extends State<ShortlistedSchoolsPage> {
                         children: [
                           const SizedBox(height: 8),
                           Text(
-                            "Shortlisted Colleges (${vm.schools.length})", // Use vm.schools here
+                            "Shortlisted Schools (${vm.schools.length})", // Use vm.schools here
                             style: STextStyles.s26W600.copyWith(
                               color: SColor.primaryColor,
                             ),
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            "Explore the colleges you've saved for future reference.",
+                            "Explore the Schools you've saved for future reference.",
                             style: STextStyles.s15W400.copyWith(
                               color: SColor.primaryColor,
                             ),
@@ -106,12 +106,12 @@ class _ShortlistedCollegesPageState extends State<ShortlistedSchoolsPage> {
         Icon(Icons.bookmark_border, size: 64, color: Colors.grey[400]),
         const SizedBox(height: 16),
         Text(
-          "No Colleges Shortlisted",
+          "No Schools Shortlisted",
           style: STextStyles.s18W400.copyWith(color: SColor.secTextColor),
         ),
         const SizedBox(height: 8),
         Text(
-          "Start exploring colleges and save your favorites to see them here.",
+          "Start exploring Schools and save your favorites to see them here.",
           textAlign: TextAlign.center,
           style: STextStyles.s14W400.copyWith(color: SColor.secTextColor),
         ),

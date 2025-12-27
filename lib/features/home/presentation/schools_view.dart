@@ -76,7 +76,7 @@ class _SchoolsViewState extends State<SchoolsView> {
                                         ),
                               ),
                               NavigatorCard(
-                                title: 'Which colleges match your preferences?',
+                                title: 'Which Schools match your preferences?',
                                 buttonText: 'Predict Now',
                                 onPressed: () {
                                   context.pushNamed(RouteNames.services);
