@@ -785,6 +785,11 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                                                                         ) {
                                                                           feeText =
                                                                               '-';
+                                                                              AlertDialog(
+                  title: const Text("Not Started"),
+                  content: Text(
+                    "Admissions are not started for your standard ($pdfStandard).",
+                  ),);
                                                                         }
 
                                                                         final loading =
@@ -967,6 +972,18 @@ class _SchoolDetailViewState extends State<SchoolDetailView2> {
                                                   hideSuccess: true,
                                                   popOnSuccess: false,
                                                   successCallback: () async {
+                                                    if (int.parse(
+                                                          feeText.substring(1),
+                                                        ) ==
+                                                        0) {
+                                                      Toasts.showSuccessToast(
+                                                        context,
+                                                        message:
+                                                            'Form submitted successfully',
+                                                      );
+                                                      return;
+                                                    }
+
                                                     final failure =
                                                         await paymentVM
                                                             .createOrder();
