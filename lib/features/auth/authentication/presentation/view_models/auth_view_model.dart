@@ -1,7 +1,6 @@
 import 'package:tc_sa/core/index.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart'
     show AuthDataSourceImpl;
-import 'package:tc_sa/features/predictor/presentation/view_models/predictor_view_model.dart';
 
 class AuthViewModel extends ViewStateProvider {
   final AuthDataSourceImpl _authDataSource = AuthDataSourceImpl();
@@ -27,38 +26,38 @@ class AuthViewModel extends ViewStateProvider {
   }
 
   Future<Failure?> login({
-  required String email,
-  required String password,
-}) async {
-  Failure? failure;
+    required String email,
+    required String password,
+  }) async {
+    Failure? failure;
 
-  setViewState(ViewState.busy);
+    setViewState(ViewState.busy);
 
-  final result = await _authDataSource.login(
-    email: email,
-    password: password,
-  );
+    final result = await _authDataSource.login(
+      email: email,
+      password: password,
+    );
 
-  result.fold(
-    (exception) {
-      failure = APIFailure.fromException(exception: exception);
-    },
-    (res) async {
-      // ✅ Save auth data in AppStateProvider
-      getIt<AppStateProvider>().authModel = res;
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (res) async {
+        // ✅ Save auth data in AppStateProvider
+        getIt<AppStateProvider>().authModel = res;
 
-       try {
-      await getIt<AppStateProvider>().loadAllUserData();
-    } catch (e) {
-      print("⚠️ Failed to load user data: $e");
-    }
-  },
-);
+        try {
+          await getIt<AppStateProvider>().loadAllUserData();
+        } catch (e) {
+          print("⚠️ Failed to load user data: $e");
+        }
+      },
+    );
 
-  setViewState(ViewState.complete);
+    setViewState(ViewState.complete);
 
-  return failure;
-}
+    return failure;
+  }
 
   Future<Failure?> register({
     required String email,
@@ -89,9 +88,21 @@ class AuthViewModel extends ViewStateProvider {
 
     final result = await _authDataSource.googleLogin(tokenId: tokenId);
 
-    result.fold((exception) {
-      failure = APIFailure.fromException(exception: exception);
-    }, (res) {});
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (res) async {
+        // ✅ Save auth data in AppStateProvider
+        getIt<AppStateProvider>().authModel = res;
+
+        try {
+          await getIt<AppStateProvider>().loadAllUserData();
+        } catch (e) {
+          print("⚠️ Failed to load user data: $e");
+        }
+      },
+    );
 
     setViewState(ViewState.complete);
 

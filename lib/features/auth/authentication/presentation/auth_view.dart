@@ -154,13 +154,17 @@ class _AuthViewState extends State<AuthView> {
                         onGooglePressed: () async {
                           GoogleSignIn googleSignIn = GoogleSignIn.instance;
 
+                          await googleSignIn.signOut();
+
                           await googleSignIn.initialize(
                             serverClientId:
                                 '574038035729-6nlkp4a98fj3jdqkqlkub49asnskcnmh.apps.googleusercontent.com',
                           );
 
                           final GoogleSignInAccount? googleUser =
-                              await googleSignIn.authenticate();
+                              await googleSignIn.authenticate(
+                                scopeHint: ['email'],
+                              );
 
                           if (googleUser == null) {
                             throw FirebaseAuthException(
@@ -180,6 +184,28 @@ class _AuthViewState extends State<AuthView> {
                           Toasts.showSuccessOrFailureToast(
                             context,
                             failure: failure,
+                            popOnSuccess: false,
+                            successMsg:
+                                vm.isLogin
+                                    ? 'Login Successfully'
+                                    : 'Register Successfully, Email verification link sent to your Email.',
+                            successCallback: () async {
+                              if (vm.isLogin) {
+                                await getIt<AppStateProvider>()
+                                    .getUserDetails();
+                                if (getIt<AppStateProvider>().user != null) {
+                                  vm.isLogin = true;
+                                  emailController.text = '';
+                                  passController.text = '';
+                                  context.goNamed(RouteNames.home);
+                                } else {
+                                  context.pushReplacementNamed(
+                                    RouteNames.addEditProfile,
+                                    extra: false,
+                                  );
+                                }
+                              }
+                            },
                           );
                         },
                         move: (isLogin) {

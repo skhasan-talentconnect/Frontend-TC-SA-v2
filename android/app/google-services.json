@@ -12,7 +12,28 @@
           "package_name": "com.TalentConnectExample.tc_sa"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "574038035729-arahri293s0kf91p5qivjpjl13970g7r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.TalentConnectExample.tc_sa",
+            "certificate_hash": "cbd5f4b8c3dfbf975efc2b40fe8353205ff5ee72"
+          }
+        },
+        {
+          "client_id": "574038035729-dvjc50aae7sad5ttpt5c7bregd0vtm0e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.TalentConnectExample.tc_sa",
+            "certificate_hash": "547509a98c0eefdb40741b66bca516e5186a9f5d"
+          }
+        },
+        {
+          "client_id": "574038035729-6nlkp4a98fj3jdqkqlkub49asnskcnmh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB2BXwE10lRSXmBdQYSAeYfyx6DeWOoJzo"
@@ -20,7 +41,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "574038035729-6nlkp4a98fj3jdqkqlkub49asnskcnmh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "574038035729-8i5s2op79clducj2ra90pbh9mt6i4ldf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.TalentConnectExample.tcSa"
+              }
+            }
+          ]
         }
       }
     }

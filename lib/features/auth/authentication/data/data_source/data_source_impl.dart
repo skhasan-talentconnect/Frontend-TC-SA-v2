@@ -16,7 +16,7 @@ import 'package:tc_sa/core/services/secret_repo.dart';
 import 'package:tc_sa/features/auth/authentication/index.dart'
     show AuthModel, AuthDataSource;
 
-class AuthDataSourceImpl  implements AuthDataSource {
+class AuthDataSourceImpl implements AuthDataSource {
   final _networkService = NetworkService();
 
   final String? deviceToken = SharedPrefHelper.getString('deviceToken');
@@ -96,8 +96,8 @@ class AuthDataSourceImpl  implements AuthDataSource {
       endpoint: Endpoints.authGoogle,
       body: {
         "deviceToken": deviceToken,
-        "authProvider": AuthProvider.google,
-        "userType": UserType.student,
+        "authProvider": AuthProvider.google.label,
+        "userType": UserType.student.label,
         "tokenId": tokenId,
       },
     );
@@ -108,8 +108,12 @@ class AuthDataSourceImpl  implements AuthDataSource {
 
       if (response.isNotEmpty) {
         final authModel = AuthModel.fromJson(
-          response['data'] as Map<String, dynamic>,
+          response['data']['auth'] as Map<String, dynamic>,
         );
+
+        await SecretRepo.setString('auth_token', response['data']['token']);
+        print(authModel.sId);
+        await SecretRepo.setString('auth_id', authModel.sId ?? '');
 
         return Right(authModel);
       }
