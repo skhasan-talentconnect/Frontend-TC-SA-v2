@@ -10,7 +10,11 @@ import 'package:tc_sa/features/application/applications/presentation/view_models
 import 'package:tc_sa/features/application/pdfModule/presentation/view_models/pdf_view_model.dart';
 
 class ApplicationFormView extends StatefulWidget {
-  const ApplicationFormView({super.key, this.forceNew = false, this.initialApplication,});
+  const ApplicationFormView({
+    super.key,
+    this.forceNew = false,
+    this.initialApplication,
+  });
 
   final bool forceNew;
   final StudentApplication? initialApplication;
@@ -19,180 +23,178 @@ class ApplicationFormView extends StatefulWidget {
   State<ApplicationFormView> createState() => _ApplicationFormViewState();
 }
 
-
 class _ApplicationFormViewState extends State<ApplicationFormView> {
-
   void _prefillParentAndAddress(StudentApplication app) {
-  // Father
-  _fatherNameCtrl.text = app.fatherName ?? '';
-  _fatherAgeCtrl.text = app.fatherAge?.toString() ?? '';
-  _fatherQualCtrl.text = app.fatherQualification ?? '';
-  _fatherProfCtrl.text = app.fatherProfession ?? '';
-  _fatherIncomeCtrl.text = app.fatherAnnualIncome ?? '';
-  _fatherPhoneCtrl.text = app.fatherPhoneNo ?? '';
-  _fatherAadharCtrl.text = app.fatherAadharNo ?? '';
-  _fatherEmailCtrl.text = app.fatherEmail ?? '';
+    // Father
+    _fatherNameCtrl.text = app.fatherName ?? '';
+    _fatherAgeCtrl.text = app.fatherAge?.toString() ?? '';
+    _fatherQualCtrl.text = app.fatherQualification ?? '';
+    _fatherProfCtrl.text = app.fatherProfession ?? '';
+    _fatherIncomeCtrl.text = app.fatherAnnualIncome ?? '';
+    _fatherPhoneCtrl.text = app.fatherPhoneNo ?? '';
+    _fatherAadharCtrl.text = app.fatherAadharNo ?? '';
+    _fatherEmailCtrl.text = app.fatherEmail ?? '';
 
-  // Mother
-  _motherNameCtrl.text = app.motherName ?? '';
-  _motherAgeCtrl.text = app.motherAge?.toString() ?? '';
-  _motherQualCtrl.text = app.motherQualification ?? '';
-  _motherProfCtrl.text = app.motherProfession ?? '';
-  _motherIncomeCtrl.text = app.motherAnnualIncome ?? '';
-  _motherPhoneCtrl.text = app.motherPhoneNo ?? '';
-  _motherAadharCtrl.text = app.motherAadharNo ?? '';
-  _motherEmailCtrl.text = app.motherEmail ?? '';
+    // Mother
+    _motherNameCtrl.text = app.motherName ?? '';
+    _motherAgeCtrl.text = app.motherAge?.toString() ?? '';
+    _motherQualCtrl.text = app.motherQualification ?? '';
+    _motherProfCtrl.text = app.motherProfession ?? '';
+    _motherIncomeCtrl.text = app.motherAnnualIncome ?? '';
+    _motherPhoneCtrl.text = app.motherPhoneNo ?? '';
+    _motherAadharCtrl.text = app.motherAadharNo ?? '';
+    _motherEmailCtrl.text = app.motherEmail ?? '';
 
-  // Addresses
-  _presentAddressCtrl.text = app.presentAddress ?? '';
-  _permanentAddressCtrl.text = app.permanentAddress ?? '';
+    // Addresses
+    _presentAddressCtrl.text = app.presentAddress ?? '';
+    _permanentAddressCtrl.text = app.permanentAddress ?? '';
 
-  // If relationship/guardian fields are relevant, you may decide to prefill them too.
-  // Currently we keep guardian fields untouched so the user can explicitly provide them when needed.
+    // If relationship/guardian fields are relevant, you may decide to prefill them too.
+    // Currently we keep guardian fields untouched so the user can explicitly provide them when needed.
 
-  if (mounted) setState(() {});
-}
+    if (mounted) setState(() {});
+  }
+
   final _vm = ApplicationViewModel();
   final _formKey = GlobalKey<FormState>();
   bool _checkingExisting = true;
   StudentApplication? _application;
 
-@override
-void initState() {
-  super.initState();
+  String? _selectedStandard;
 
-  // Run after first frame so context & provider are ready.
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
-  if (!mounted) return;
+  @override
+  void initState() {
+    super.initState();
 
-  // Case 1: If initialApplication provided, prefill and skip backend call
-  if (widget.initialApplication != null) {
-    _vm.setApplication(widget.initialApplication);
-    _application = widget.initialApplication;
-    _populateFromApplication(_application!);
-    _checkingExisting = false;
-    setState(() {});
-    return;
+    // Run after first frame so context & provider are ready.
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+
+      // Case 1: If initialApplication provided, prefill and skip backend call
+      if (widget.initialApplication != null) {
+        _vm.setApplication(widget.initialApplication);
+        _application = widget.initialApplication;
+        _populateFromApplication(_application!);
+        _checkingExisting = false;
+        setState(() {});
+        return;
+      }
+
+      // Case 2: Force new blank form BUT if user already has saved applications,
+      // prefill parent & address sections from the first saved application.
+      if (widget.forceNew) {
+        // attempt to fetch existing applications (non-blocking for user, but we await here)
+        await _checkExisting();
+
+        if (_application != null) {
+          // prefill only father, mother and address sections (fields remain editable)
+          _prefillParentAndAddress(_application!);
+        }
+
+        _checkingExisting = false;
+        setState(() {});
+        return;
+      }
+
+      // Case 3: Normal case — fetch applications list for this student
+      await _checkExisting();
+
+      // if we fetched an existing application and want to prefill the form
+      if (_application != null) {
+        _populateFromApplication(_application!);
+      }
+    });
   }
 
-  // Case 2: Force new blank form BUT if user already has saved applications,
-  // prefill parent & address sections from the first saved application.
-  if (widget.forceNew) {
-    // attempt to fetch existing applications (non-blocking for user, but we await here)
-    await _checkExisting();
+  Future<void> _checkExisting() async {
+    final studId = getIt<AppStateProvider>().user?.sId;
+    if (studId != null && studId.isNotEmpty) {
+      final failure = await _vm.getApplicationsByStudId(studId: studId);
+      // if single application prefilling is still desired, you can pick the latest:
+      if (_vm.applications.isNotEmpty) {
+        _application = _vm.applications.first;
+      }
+    }
+    if (mounted) setState(() => _checkingExisting = false);
+  }
 
-    if (_application != null) {
-      // prefill only father, mother and address sections (fields remain editable)
-      _prefillParentAndAddress(_application!);
+  void _populateFromApplication(StudentApplication app) {
+    // basic fields (add more fields if your model has them)
+    _nameCtrl.text = app.name ?? '';
+    _locationCtrl.text = app.location ?? '';
+    _dobCtrl.text =
+        app.dob != null ? app.dob!.toIso8601String().split('T').first : '';
+    _gender = app.gender ?? _gender;
+    _motherTongueCtrl.text = app.motherTongue ?? '';
+    _placeOfBirthCtrl.text = app.placeOfBirth ?? '';
+    _speciallyAbled = app.speciallyAbled ?? false;
+    _speciallyAbledTypeCtrl.text = app.speciallyAbledType ?? '';
+    _nationalityCtrl.text = app.nationality ?? '';
+    _religionCtrl.text = app.religion ?? '';
+    _casteCtrl.text = app.caste ?? '';
+    _subcasteCtrl.text = app.subcaste ?? '';
+    _aadharCtrl.text = app.aadharNo ?? '';
+    _bloodGroupCtrl.text = app.bloodGroup ?? '';
+    _allergicToCtrl.text = app.allergicTo ?? '';
+    _interestCtrl.text = app.interest ?? '';
+
+    _lastSchoolNameCtrl.text = app.lastSchoolName ?? '';
+    _classCompletedCtrl.text = app.classCompleted ?? '';
+    _lastAcademicYearCtrl.text = app.lastAcademicYear ?? '';
+    _reasonForLeavingCtrl.text = app.reasonForLeaving ?? '';
+    _lastBoard = app.board;
+
+    _fatherNameCtrl.text = app.fatherName ?? '';
+    _fatherAgeCtrl.text = app.fatherAge?.toString() ?? '';
+    _fatherQualCtrl.text = app.fatherQualification ?? '';
+    _fatherProfCtrl.text = app.fatherProfession ?? '';
+    _fatherIncomeCtrl.text = app.fatherAnnualIncome ?? '';
+    _fatherPhoneCtrl.text = app.fatherPhoneNo ?? '';
+    _fatherAadharCtrl.text = app.fatherAadharNo ?? '';
+    _fatherEmailCtrl.text = app.fatherEmail ?? '';
+
+    _motherNameCtrl.text = app.motherName ?? '';
+    _motherAgeCtrl.text = app.motherAge?.toString() ?? '';
+    _motherQualCtrl.text = app.motherQualification ?? '';
+    _motherProfCtrl.text = app.motherProfession ?? '';
+    _motherIncomeCtrl.text = app.motherAnnualIncome ?? '';
+    _motherPhoneCtrl.text = app.motherPhoneNo ?? '';
+    _motherAadharCtrl.text = app.motherAadharNo ?? '';
+    _motherEmailCtrl.text = app.motherEmail ?? '';
+
+    _relationshipStatus = app.relationshipStatus ?? _relationshipStatus;
+    _guardianNameCtrl.text = app.guardianName ?? '';
+    _guardianContactNoCtrl.text = app.guardianContactNo ?? '';
+    _guardianRelationCtrl.text = app.guardianRelationToStudent ?? '';
+    _guardianQualificationCtrl.text = app.guardianQualification ?? '';
+    _guardianProfessionCtrl.text = app.guardianProfession ?? '';
+    _guardianEmailCtrl.text = app.guardianEmail ?? '';
+    _guardianAadharNoCtrl.text = app.guardianAadharNo ?? '';
+
+    _presentAddressCtrl.text = app.presentAddress ?? '';
+    _permanentAddressCtrl.text = app.permanentAddress ?? '';
+
+    // siblings (clear and rebuild)
+    for (final s in _siblings) s.dispose();
+    _siblings.clear();
+    if (app.siblings != null) {
+      for (final s in app.siblings!) {
+        final field = _SiblingField();
+        field.name.text = s.name ?? '';
+        field.age.text = s.age?.toString() ?? '';
+        field.sex.text = s.sex ?? '';
+        field.institute.text = s.nameOfInstitute ?? '';
+        field.className.text = s.className ?? '';
+        _siblings.add(field);
+      }
     }
 
-    _checkingExisting = false;
-    setState(() {});
-    return;
+    _homeLanguageCtrl.text = app.homeLanguage ?? '';
+    _yearlyBudgetCtrl.text = app.yearlyBudget ?? '';
+
+    // trigger rebuild so UI reflects values
+    if (mounted) setState(() {});
   }
-
-  // Case 3: Normal case — fetch applications list for this student
-  await _checkExisting();
-
-  // if we fetched an existing application and want to prefill the form
-  if (_application != null) {
-    _populateFromApplication(_application!);
-  }
-});
-
-}
-
-
-Future<void> _checkExisting() async {
-  final studId = getIt<AppStateProvider>().user?.sId;
-  if (studId != null && studId.isNotEmpty) {
-    final failure = await _vm.getApplicationsByStudId(studId: studId);
-    // if single application prefilling is still desired, you can pick the latest:
-    if (_vm.applications.isNotEmpty) {
-      _application = _vm.applications.first;
-    }
-  }
-  if (mounted) setState(() => _checkingExisting = false);
-}
-
-
-void _populateFromApplication(StudentApplication app) {
-  // basic fields (add more fields if your model has them)
-  _nameCtrl.text = app.name ?? '';
-  _locationCtrl.text = app.location ?? '';
-  _dobCtrl.text = app.dob != null ? app.dob!.toIso8601String().split('T').first : '';
-  _gender = app.gender ?? _gender;
-  _motherTongueCtrl.text = app.motherTongue ?? '';
-  _placeOfBirthCtrl.text = app.placeOfBirth ?? '';
-  _speciallyAbled = app.speciallyAbled ?? false;
-  _speciallyAbledTypeCtrl.text = app.speciallyAbledType ?? '';
-  _nationalityCtrl.text = app.nationality ?? '';
-  _religionCtrl.text = app.religion ?? '';
-  _casteCtrl.text = app.caste ?? '';
-  _subcasteCtrl.text = app.subcaste ?? '';
-  _aadharCtrl.text = app.aadharNo ?? '';
-  _bloodGroupCtrl.text = app.bloodGroup ?? '';
-  _allergicToCtrl.text = app.allergicTo ?? '';
-  _interestCtrl.text = app.interest ?? '';
-
-  _lastSchoolNameCtrl.text = app.lastSchoolName ?? '';
-  _classCompletedCtrl.text = app.classCompleted ?? '';
-  _lastAcademicYearCtrl.text = app.lastAcademicYear ?? '';
-  _reasonForLeavingCtrl.text = app.reasonForLeaving ?? '';
-  _lastBoard = app.board;
-
-  _fatherNameCtrl.text = app.fatherName ?? '';
-  _fatherAgeCtrl.text = app.fatherAge?.toString() ?? '';
-  _fatherQualCtrl.text = app.fatherQualification ?? '';
-  _fatherProfCtrl.text = app.fatherProfession ?? '';
-  _fatherIncomeCtrl.text = app.fatherAnnualIncome ?? '';
-  _fatherPhoneCtrl.text = app.fatherPhoneNo ?? '';
-  _fatherAadharCtrl.text = app.fatherAadharNo ?? '';
-  _fatherEmailCtrl.text = app.fatherEmail ?? '';
-
-  _motherNameCtrl.text = app.motherName ?? '';
-  _motherAgeCtrl.text = app.motherAge?.toString() ?? '';
-  _motherQualCtrl.text = app.motherQualification ?? '';
-  _motherProfCtrl.text = app.motherProfession ?? '';
-  _motherIncomeCtrl.text = app.motherAnnualIncome ?? '';
-  _motherPhoneCtrl.text = app.motherPhoneNo ?? '';
-  _motherAadharCtrl.text = app.motherAadharNo ?? '';
-  _motherEmailCtrl.text = app.motherEmail ?? '';
-
-  _relationshipStatus = app.relationshipStatus ?? _relationshipStatus;
-  _guardianNameCtrl.text = app.guardianName ?? '';
-  _guardianContactNoCtrl.text = app.guardianContactNo ?? '';
-  _guardianRelationCtrl.text = app.guardianRelationToStudent ?? '';
-  _guardianQualificationCtrl.text = app.guardianQualification ?? '';
-  _guardianProfessionCtrl.text = app.guardianProfession ?? '';
-  _guardianEmailCtrl.text = app.guardianEmail ?? '';
-  _guardianAadharNoCtrl.text = app.guardianAadharNo ?? '';
-
-  _presentAddressCtrl.text = app.presentAddress ?? '';
-  _permanentAddressCtrl.text = app.permanentAddress ?? '';
-
-  // siblings (clear and rebuild)
-  for (final s in _siblings) s.dispose();
-  _siblings.clear();
-  if (app.siblings != null) {
-    for (final s in app.siblings!) {
-      final field = _SiblingField();
-      field.name.text = s.name ?? '';
-      field.age.text = s.age?.toString() ?? '';
-      field.sex.text = s.sex ?? '';
-      field.institute.text = s.nameOfInstitute ?? '';
-      field.className.text = s.className ?? '';
-      _siblings.add(field);
-    }
-  }
-
-  _homeLanguageCtrl.text = app.homeLanguage ?? '';
-  _yearlyBudgetCtrl.text = app.yearlyBudget ?? '';
-
-  // trigger rebuild so UI reflects values
-  if (mounted) setState(() {});
-}
-
 
   // -----------------------
   // Student core
@@ -300,7 +302,6 @@ void _populateFromApplication(StudentApplication app) {
     _lastAcademicYearCtrl.dispose();
     _reasonForLeavingCtrl.dispose();
     _standardCtrl.dispose();
-
 
     _fatherNameCtrl.dispose();
     _fatherAgeCtrl.dispose();
@@ -544,108 +545,143 @@ void _populateFromApplication(StudentApplication app) {
       homeLanguage: _homeLanguageCtrl.text.trim(),
       yearlyBudget: _yearlyBudgetCtrl.text.trim(),
     );
-final failure = await _vm.addApplication(payload);
-if (!mounted) return;
+    final failure = await _vm.addApplication(payload);
+    if (!mounted) return;
 
-if (failure != null) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(failure.message ?? "Something went wrong")),
-  );
-  return;
-}
+    if (failure != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(failure.message ?? "Something went wrong")),
+      );
+      return;
+    }
 
-// Try to get the created application id from the returned model
-final created = _vm.application;
-String createdAppId = created?.applicationId?.toString() ?? '';
+    // Try to get the created application id from the returned model
+    final created = _vm.application;
+    String createdAppId = created?.applicationId?.toString() ?? '';
 
-// Debug log for visibility
-debugPrint('[ApplicationFormView] vm.application after add: $created');
-debugPrint('[ApplicationFormView] initial createdAppId="$createdAppId" studId="$studId"');
+    // Debug log for visibility
+    debugPrint('[ApplicationFormView] vm.application after add: $created');
+    debugPrint(
+      '[ApplicationFormView] initial createdAppId="$createdAppId" studId="$studId"',
+    );
 
-ScaffoldMessenger.of(context).showSnackBar(
-  const SnackBar(content: Text("Application submitted successfully!")),
-);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Application submitted successfully!")),
+    );
 
-// If the backend didn't return applicationId, fetch user's applications as a fallback
-if (createdAppId.isEmpty) {
-  try {
-    debugPrint('[ApplicationFormView] createdAppId empty. Fetching applications for studId: $studId');
+    // If the backend didn't return applicationId, fetch user's applications as a fallback
+    if (createdAppId.isEmpty) {
+      try {
+        debugPrint(
+          '[ApplicationFormView] createdAppId empty. Fetching applications for studId: $studId',
+        );
 
-    // ensure studId exists
-    if (studId != null && studId.isNotEmpty) {
-      final fallbackFailure = await _vm.getApplicationsByStudId(studId: studId);
+        // ensure studId exists
+        if (studId != null && studId.isNotEmpty) {
+          final fallbackFailure = await _vm.getApplicationsByStudId(
+            studId: studId,
+          );
 
-      if (fallbackFailure != null) {
-        debugPrint('[ApplicationFormView] getApplicationsByStudId failed: ${fallbackFailure.message}');
-      } else {
-        if (_vm.applications.isNotEmpty) {
-          final mostRecent = _vm.applications.first;
-          createdAppId = mostRecent.applicationId?.toString() ??
-              mostRecent.applicationId?.toString() ??
-              mostRecent.applicationId?.toString() ??
-              '';
-          debugPrint('[ApplicationFormView] fallback found createdAppId="$createdAppId" from applications list');
+          if (fallbackFailure != null) {
+            debugPrint(
+              '[ApplicationFormView] getApplicationsByStudId failed: ${fallbackFailure.message}',
+            );
+          } else {
+            if (_vm.applications.isNotEmpty) {
+              final mostRecent = _vm.applications.first;
+              createdAppId =
+                  mostRecent.applicationId?.toString() ??
+                  mostRecent.applicationId?.toString() ??
+                  mostRecent.applicationId?.toString() ??
+                  '';
+              debugPrint(
+                '[ApplicationFormView] fallback found createdAppId="$createdAppId" from applications list',
+              );
+            } else {
+              debugPrint(
+                '[ApplicationFormView] fallback: no applications returned for studId',
+              );
+            }
+          }
         } else {
-          debugPrint('[ApplicationFormView] fallback: no applications returned for studId');
+          debugPrint(
+            '[ApplicationFormView] studId missing; cannot run fallback fetch',
+          );
+        }
+      } catch (e, st) {
+        debugPrint(
+          '[ApplicationFormView] exception during fallback fetch: $e\n$st',
+        );
+      }
+    }
+
+    // Now attempt PDF generation if we have an applicationId
+    if (createdAppId.isNotEmpty && studId != null && studId.isNotEmpty) {
+      try {
+        final StudentPdfViewModel pdfVm =
+            getIt.isRegistered<StudentPdfViewModel>()
+                ? getIt<StudentPdfViewModel>()
+                : StudentPdfViewModel();
+
+        debugPrint(
+          '[ApplicationFormView] calling pdfVm.generate(studId=$studId, applicationId=$createdAppId)',
+        );
+
+        final pdfFailure = await pdfVm.generate(
+          context: context,
+          studId: studId,
+          applicationId: createdAppId,
+        );
+
+        if (pdfFailure != null) {
+          debugPrint(
+            '[ApplicationFormView] PDF generation failed: ${pdfFailure.message}',
+          );
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(pdfFailure.message ?? "PDF generation failed"),
+              ),
+            );
+          }
+        } else {
+          debugPrint(
+            '[ApplicationFormView] PDF generated successfully for applicationId=$createdAppId',
+          );
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("PDF generated successfully!")),
+            );
+          }
+        }
+      } catch (e, st) {
+        debugPrint(
+          '[ApplicationFormView] Exception during pdf generation: $e\n$st',
+        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("PDF generation encountered an error."),
+            ),
+          );
         }
       }
     } else {
-      debugPrint('[ApplicationFormView] studId missing; cannot run fallback fetch');
-    }
-  } catch (e, st) {
-    debugPrint('[ApplicationFormView] exception during fallback fetch: $e\n$st');
-  }
-}
-
-// Now attempt PDF generation if we have an applicationId
-if (createdAppId.isNotEmpty && studId != null && studId.isNotEmpty) {
-  try {
-    final StudentPdfViewModel pdfVm = getIt.isRegistered<StudentPdfViewModel>()
-        ? getIt<StudentPdfViewModel>()
-        : StudentPdfViewModel();
-
-    debugPrint('[ApplicationFormView] calling pdfVm.generate(studId=$studId, applicationId=$createdAppId)');
-
-    final pdfFailure = await pdfVm.generate(
-      context: context,
-      studId: studId,
-      applicationId: createdAppId,
-    );
-
-    if (pdfFailure != null) {
-      debugPrint('[ApplicationFormView] PDF generation failed: ${pdfFailure.message}');
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(pdfFailure.message ?? "PDF generation failed")),
-        );
-      }
-    } else {
-      debugPrint('[ApplicationFormView] PDF generated successfully for applicationId=$createdAppId');
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("PDF generated successfully!")),
-        );
-      }
-    }
-  } catch (e, st) {
-    debugPrint('[ApplicationFormView] Exception during pdf generation: $e\n$st');
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("PDF generation encountered an error.")),
+      debugPrint(
+        '❌ Skipping PDF generation — missing createdAppId or studId. createdAppId="$createdAppId", studId="$studId"',
       );
     }
+
+    // navigate to success page regardless (you can change this if you want to wait for PDF)
+    if (!mounted) return;
+
+    context.pushNamed(
+      RouteNames.applicationSuccess,
+      extra: {'applicationId': createdAppId},
+    );
   }
-} else {
-  debugPrint('❌ Skipping PDF generation — missing createdAppId or studId. createdAppId="$createdAppId", studId="$studId"');
-}
 
-// navigate to success page regardless (you can change this if you want to wait for PDF)
-if (!mounted) return;
-
-context.pushNamed(
-  RouteNames.applicationSuccess,
-  extra: {'applicationId': createdAppId},
-);    }  bool _needsGuardian() =>
+  bool _needsGuardian() =>
       _relationshipStatus != null && _relationshipStatus != 'Married';
 
   @override
@@ -664,18 +700,19 @@ context.pushNamed(
               ),
             ),
 
-          body: _checkingExisting
-  ? const Center(child: SLoadingIndicator())
-  : (vm.applications.isNotEmpty && !widget.forceNew)
-      ? _AlreadyFilledMessage(applications: vm.applications)
-      : SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+            body:
+                _checkingExisting
+                    ? const Center(child: SLoadingIndicator())
+                    : (vm.applications.isNotEmpty && !widget.forceNew)
+                    ? _AlreadyFilledMessage(applications: vm.applications)
+                    : SafeArea(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                               // ---------------- Student ----------------
                               Text(
                                 "Student Details",
@@ -685,7 +722,38 @@ context.pushNamed(
                               ),
                               const SizedBox(height: 8),
                               _input("Full Name", _nameCtrl, req: true),
-                              _input("Standard / Class Applying For", _standardCtrl, req: true),
+                              DropdownButtonFormField<String>(
+                                value: _selectedStandard,
+                                decoration: const InputDecoration(
+                                  labelText: 'Standard / Class Applying For',
+                                  border: OutlineInputBorder(),
+                                ),
+                                items: const [
+                                  DropdownMenuItem(
+                                    value: 'KGs',
+                                    child: Text('KGs'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'Grade 1 - 5',
+                                    child: Text('Grade 1 - 5'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'Grade 6 - 10',
+                                    child: Text('Grade 6 - 10'),
+                                  ),
+                                ],
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedStandard = value;
+                                  });
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select a standard';
+                                  }
+                                  return null;
+                                },
+                              ),
 
                               _input("Location", _locationCtrl, req: true),
                               _dateInput(
@@ -1158,7 +1226,10 @@ class _AlreadyFilledMessage extends StatelessWidget {
             Text(
               "Generate pdf for your application to add it in your eligible applications.Choose an application to generate or download its PDF.",
               textAlign: TextAlign.center,
-              style: STextStyles.s12W400.copyWith(color: Colors.black54,fontWeight: FontWeight.bold),
+              style: STextStyles.s12W400.copyWith(
+                color: Colors.black54,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 16),
 
@@ -1171,10 +1242,19 @@ class _AlreadyFilledMessage extends StatelessWidget {
                 separatorBuilder: (_, __) => const Divider(),
                 itemBuilder: (context, i) {
                   final app = applications[i];
-                  final title = (app.name?.isNotEmpty == true) ? app.name! : (app.studId ?? 'Application ${i+1}');
-                  final subtitle = app.createdAt != null ? app.createdAt.toString().split('T').first : '';
+                  final title =
+                      (app.name?.isNotEmpty == true)
+                          ? app.name!
+                          : (app.studId ?? 'Application ${i + 1}');
+                  final subtitle =
+                      app.createdAt != null
+                          ? app.createdAt.toString().split('T').first
+                          : '';
                   return ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     title: Text(title, style: STextStyles.s14W600),
                     subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
                     trailing: Row(
@@ -1199,7 +1279,10 @@ class _AlreadyFilledMessage extends StatelessWidget {
                             // We'll push route and pass download flag — implement handling in pdf screen.
                             context.pushNamed(
                               RouteNames.applicationPdf,
-                              extra: {'applicationId': app.applicationId, 'download': true},
+                              extra: {
+                                'applicationId': app.applicationId,
+                                'download': true,
+                              },
                             );
                           },
                         ),
@@ -1229,12 +1312,17 @@ class _AlreadyFilledMessage extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: () {
                       // open form page in force-new mode
-                      context.pushNamed(RouteNames.addApplication, extra: {'forceNew': true});
+                      context.pushNamed(
+                        RouteNames.addApplication,
+                        extra: {'forceNew': true},
+                      );
                     },
                     icon: const Icon(Icons.add, color: Colors.black),
                     label: Text(
                       "Add another",
-                      style: STextStyles.s14W600.copyWith(color: SColor.secTextColor),
+                      style: STextStyles.s14W600.copyWith(
+                        color: SColor.secTextColor,
+                      ),
                     ),
                   ),
                 ),
@@ -1246,10 +1334,15 @@ class _AlreadyFilledMessage extends StatelessWidget {
                     onPressed: () => Navigator.of(context).pop(),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: SColor.primaryColor,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: Text("Go Back", style: STextStyles.s14W600.copyWith(color: Colors.white)),
+                    child: Text(
+                      "Go Back",
+                      style: STextStyles.s14W600.copyWith(color: Colors.white),
+                    ),
                   ),
                 ),
               ],
@@ -1260,7 +1353,6 @@ class _AlreadyFilledMessage extends StatelessWidget {
     );
   }
 }
-
 
 class _SiblingField {
   final name = TextEditingController();
