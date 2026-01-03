@@ -1,21 +1,22 @@
-import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-
 import 'package:tc_sa/core/index.dart'
-    show ResultFuture, Request, NetworkService, RequestMethod, getIt, APIException;
-
+    show
+        ResultFuture,
+        Request,
+        NetworkService,
+        RequestMethod,
+        getIt,
+        APIException,
+        Endpoints;
 import 'package:tc_sa/features/application/pdfModule/data/data_source/pdf_data_source.dart';
 
 class StudentPdfDataSourceImpl implements StudentPdfDataSource {
   final NetworkService _network = getIt<NetworkService>();
 
-  // BASE URL
-  static const String _baseUrl = 'https://backend-tc-sa-v2.onrender.com/api/users/';
-
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: _baseUrl,
+      baseUrl: Endpoints.baseUrl,
       responseType: ResponseType.bytes,
       headers: {'Accept': 'application/pdf'},
       receiveDataWhenStatusError: true,
@@ -39,20 +40,17 @@ class StudentPdfDataSourceImpl implements StudentPdfDataSource {
     }
 
     try {
-      final endpoint = "${_baseUrl}pdf/generate/$studId/$applicationId";
+      final endpoint =
+          "${Endpoints.baseUrl}pdf/generate/$studId/$applicationId";
 
-      final r = Request(
-        method: RequestMethod.post,
-        endpoint: endpoint,
-      );
+      final r = Request(method: RequestMethod.post, endpoint: endpoint);
 
       final res = await _network.request(r);
       final map = res.data as Map<String, dynamic>?;
 
-      final ok = (map?["message"] ?? "")
-          .toString()
-          .toLowerCase()
-          .contains("pdf generated");
+      final ok = (map?["message"] ?? "").toString().toLowerCase().contains(
+        "pdf generated",
+      );
 
       return Right(ok);
     } catch (e) {
@@ -73,7 +71,7 @@ class StudentPdfDataSourceImpl implements StudentPdfDataSource {
     }
 
     try {
-      final url = "${_baseUrl}pdf/view/$studId/$applicationId";
+      final url = "${Endpoints.baseUrl}pdf/view/$studId/$applicationId";
       final resp = await _dio.get<List<int>>(url);
       return Right(resp.data);
     } catch (e) {
@@ -94,7 +92,7 @@ class StudentPdfDataSourceImpl implements StudentPdfDataSource {
     }
 
     try {
-      final url = "${_baseUrl}pdf/download/$studId/$applicationId";
+      final url = "${Endpoints.baseUrl}pdf/download/$studId/$applicationId";
       final resp = await _dio.get<List<int>>(url);
       return Right(resp.data);
     } catch (e) {

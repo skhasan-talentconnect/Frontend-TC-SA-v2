@@ -65,8 +65,7 @@ class MyFormViewModel extends ViewStateProvider {
 
     try {
       // Use absolute URL to avoid NetworkService base behavior surprises
-      final endpoint =
-          'https://backend-tc-sa-v2.onrender.com/api/users/list/$id';
+      final endpoint = '${Endpoints.baseUrl}users/list/$id';
       final req = Request(
         method: RequestMethod.get,
         endpoint: endpoint,

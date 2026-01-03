@@ -17,7 +17,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
   final AppStateProvider _app = getIt<AppStateProvider>();
 
   // Use the base URL provided
-  String get _base => 'https://backend-tc-sa-v2.onrender.com/api/applications';
+  String get _base => '${Endpoints.baseUrl}applications';
 
   String? _resolveStudId(String? studId) =>
       (studId != null && studId.isNotEmpty) ? studId : _app.user?.sId;
@@ -27,9 +27,10 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
     required StudentApplication payload,
   }) async {
     try {
-      final effectivePayload = payload.studId?.isNotEmpty == true
-          ? payload
-          : payload.copyWith(studId: _app.user?.sId);
+      final effectivePayload =
+          payload.studId?.isNotEmpty == true
+              ? payload
+              : payload.copyWith(studId: _app.user?.sId);
 
       final req = Request(
         method: RequestMethod.post,
@@ -47,19 +48,18 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
   }
 
   @override
-  Future<Either<APIException, List<StudentApplication>>> getAllApplications() async {
+  Future<Either<APIException, List<StudentApplication>>>
+  getAllApplications() async {
     try {
-      final req = Request(
-        method: RequestMethod.get,
-        endpoint: _base,
-      );
+      final req = Request(method: RequestMethod.get, endpoint: _base);
       final resp = await _network.request(req);
       final map = (resp.data as Map<String, dynamic>);
       final list = (map['data'] as List?) ?? const [];
-      final apps = list
-          .whereType<Map<String, dynamic>>()
-          .map(StudentApplication.fromJson)
-          .toList();
+      final apps =
+          list
+              .whereType<Map<String, dynamic>>()
+              .map(StudentApplication.fromJson)
+              .toList();
       return Right(apps);
     } catch (e) {
       return Left(APIException.from(e));
@@ -67,9 +67,8 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
   }
 
   @override
-  Future<Either<APIException, List<StudentApplication>>> getStudApplicationsByStudId({
-    required String studId,
-  }) async {
+  Future<Either<APIException, List<StudentApplication>>>
+  getStudApplicationsByStudId({required String studId}) async {
     try {
       final id = _resolveStudId(studId) ?? studId;
       if (id == null || id.isEmpty) {
@@ -82,10 +81,11 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
       final resp = await _network.request(req);
       final map = (resp.data as Map<String, dynamic>);
       final list = (map['data'] as List?) ?? const [];
-      final apps = list
-          .whereType<Map<String, dynamic>>()
-          .map(StudentApplication.fromJson)
-          .toList();
+      final apps =
+          list
+              .whereType<Map<String, dynamic>>()
+              .map(StudentApplication.fromJson)
+              .toList();
       return Right(apps);
     } catch (e) {
       return Left(APIException.from(e));
@@ -97,7 +97,8 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
     required String applicationId,
   }) async {
     try {
-      if (applicationId.isEmpty) return Left(APIException.from("Missing applicationId"));
+      if (applicationId.isEmpty)
+        return Left(APIException.from("Missing applicationId"));
       final req = Request(
         method: RequestMethod.get,
         endpoint: "$_base/$applicationId",
@@ -117,7 +118,8 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
     required StudentApplication payload,
   }) async {
     try {
-      if (applicationId.isEmpty) return Left(APIException.from("Missing applicationId"));
+      if (applicationId.isEmpty)
+        return Left(APIException.from("Missing applicationId"));
       final req = Request(
         method: RequestMethod.put,
         endpoint: "$_base/$applicationId",
@@ -137,7 +139,8 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
     required String applicationId,
   }) async {
     try {
-      if (applicationId.isEmpty) return Left(APIException.from("Missing applicationId"));
+      if (applicationId.isEmpty)
+        return Left(APIException.from("Missing applicationId"));
       final req = Request(
         method: RequestMethod.delete,
         endpoint: "$_base/$applicationId",
