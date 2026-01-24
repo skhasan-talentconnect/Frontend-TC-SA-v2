@@ -1,14 +1,12 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tc_sa/common/index.dart';
 import 'package:tc_sa/core/index.dart';
+import 'package:tc_sa/features/preferences/index.dart' show PrefViewModel;
 import 'package:tc_sa/features/profile/presentation/location_fetching.dart';
 import 'package:tc_sa/features/profile/presentation/location_utils.dart';
-import 'package:tc_sa/features/preferences/index.dart' show PrefViewModel;
-
 
 class PrefView extends StatefulWidget {
   const PrefView({required this.isEdit, super.key});
@@ -30,33 +28,32 @@ class _PrefViewState extends State<PrefView> {
   final cityController = TextEditingController();
   final areaController = TextEditingController();
   final genderController = TextEditingController();
-  
+
   double? _latitude;
   double? _longitude;
 
   static const List<String> defaultAreas = [
-  "Main Area",
-  "Central",
-  "Station Road",
-  "Market"
-];
-// 🧩 Mapping of frontend (short) values to backend (enum) strings
-final Map<String, String> interestMap = {
-  'Academics': 'Focusing on Academics',
-  'Practical Learning': 'Focuses on Practical Learning',
-  'Theoretical Learning': 'Focuses on Theoretical Learning',
-  'Sports': 'Empowering in Sports',
-  'Arts': 'Empowering in Arts',
-  'Mathematics': 'Special Focus on Mathematics',
-  'Science': 'Special Focus on Science',
-  'Physical Education': 'Special Focus on Physical Education',
-  'Leadership Development': 'Leadership Development',
-  'STEM Activities': 'STEM Activities',
-  'Cultural Education': 'Cultural Education',
-  'Technology Integration': 'Technology Integration',
-  'Environmental Awareness': 'Environmental Awareness',
-};
-
+    "Main Area",
+    "Central",
+    "Station Road",
+    "Market",
+  ];
+  // 🧩 Mapping of frontend (short) values to backend (enum) strings
+  final Map<String, String> interestMap = {
+    'Academics': 'Focusing on Academics',
+    'Practical Learning': 'Focuses on Practical Learning',
+    'Theoretical Learning': 'Focuses on Theoretical Learning',
+    'Sports': 'Empowering in Sports',
+    'Arts': 'Empowering in Arts',
+    'Mathematics': 'Special Focus on Mathematics',
+    'Science': 'Special Focus on Science',
+    'Physical Education': 'Special Focus on Physical Education',
+    'Leadership Development': 'Leadership Development',
+    'STEM Activities': 'STEM Activities',
+    'Cultural Education': 'Cultural Education',
+    'Technology Integration': 'Technology Integration',
+    'Environmental Awareness': 'Environmental Awareness',
+  };
 
   @override
   void initState() {
@@ -91,39 +88,42 @@ final Map<String, String> interestMap = {
     _setPrefDefaults();
     super.initState();
   }
-void _setPrefDefaults() {
-  final pref = appStateProvider.userPref;
-  if (pref == null) return;
 
-  setState(() {
-    boardController.text = pref.boards ?? '';
-    standardController.text = pref.preferredStandard?.toCapitalise ?? '';
-    final backendInterest = pref.interests ?? '';
-final frontendInterest = interestMap.entries
-    .firstWhere(
-      (entry) => entry.value == backendInterest,
-      orElse: () => const MapEntry('', ''),
-    )
-    .key;
-interestController.text = frontendInterest.isNotEmpty ? frontendInterest : backendInterest;
+  void _setPrefDefaults() {
+    final pref = appStateProvider.userPref;
+    if (pref == null) return;
 
-    schoolTypeController.text = pref.schoolType?.toCapitalise ?? '';
-    shiftController.text = pref.shift?.toCapitalise ?? '';
-  });
+    setState(() {
+      boardController.text = pref.boards ?? '';
+      standardController.text = pref.preferredStandard?.toCapitalise ?? '';
+      final backendInterest = pref.interests ?? '';
+      final frontendInterest =
+          interestMap.entries
+              .firstWhere(
+                (entry) => entry.value == backendInterest,
+                orElse: () => const MapEntry('', ''),
+              )
+              .key;
+      interestController.text =
+          frontendInterest.isNotEmpty ? frontendInterest : backendInterest;
 
-  // Also set guest details if applicable
-  final user = appStateProvider.user;
-  if (user != null) {
-    stateController.text = user.state ?? '';
-    cityController.text = user.city ?? '';
-    areaController.text = user.area ?? '';
-    genderController.text = user.gender ?? '';
+      schoolTypeController.text = pref.schoolType?.toCapitalise ?? '';
+      shiftController.text = pref.shift?.toCapitalise ?? '';
+    });
 
-    selectedState = user.state;
-    selectedCity = user.city;
-    selectedArea = user.area;
+    // Also set guest details if applicable
+    final user = appStateProvider.user;
+    if (user != null) {
+      stateController.text = user.state ?? '';
+      cityController.text = user.city ?? '';
+      areaController.text = user.area ?? '';
+      genderController.text = user.gender ?? '';
+
+      selectedState = user.state;
+      selectedCity = user.city;
+      selectedArea = user.area;
+    }
   }
-}
 
   final PrefViewModel prefViewModel = PrefViewModel();
 
@@ -142,7 +142,7 @@ interestController.text = frontendInterest.isNotEmpty ? frontendInterest : backe
     'Gujarat': ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot'],
     'Rajasthan': ['Jaipur', 'Jodhpur', 'Udaipur'],
     'Punjab': ['Chandigarh', 'Ludhiana', 'Amritsar'],
-        'Delhi': ['Delhi', 'New Delhi'],
+    'Delhi': ['Delhi', 'New Delhi'],
 
     'Haryana': ['Gurugram', 'Faridabad', 'Panipat'],
     'Karnataka': ['Bengaluru', 'Mysore', 'Mangalore'],
@@ -152,10 +152,10 @@ interestController.text = frontendInterest.isNotEmpty ? frontendInterest : backe
 
   final Map<String, List<String>> cityAreas = {
     // Maharashtra
-      'Delhi': ['Connaught Place', 'Karol Bagh', 'Dwarka', 'Saket', 'Rohini'],
+    'Delhi': ['Connaught Place', 'Karol Bagh', 'Dwarka', 'Saket', 'Rohini'],
 
-  'Panaji': ['Altinho', 'Campal', 'Fontainhas'],
-  'Madgaon': ['Fatorda', 'Colva Road', 'Borda'],
+    'Panaji': ['Altinho', 'Campal', 'Fontainhas'],
+    'Madgaon': ['Fatorda', 'Colva Road', 'Borda'],
     'Mumbai': ['Bandra', 'Mahim', 'South Bombay', 'Andheri', 'Juhu', 'Powai'],
     'Pune': [
       'Kothrud',
@@ -296,17 +296,21 @@ interestController.text = frontendInterest.isNotEmpty ? frontendInterest : backe
                                       label: 'Preferred Standard',
                                       hint: 'Select Standard',
                                     ),
-                                   STextField.dropdown(
-  controller: interestController,
-  items: interestMap.keys.toList(), // show short values only
-  label: 'Interests',
-  hint: 'Focuses On',
-  onChanged: (value) {
-    if (value != null && interestMap.containsKey(value)) {
-      interestController.text = value; // frontend text
-    }
-  },
-),
+                                    STextField.dropdown(
+                                      controller: interestController,
+                                      items:
+                                          interestMap.keys
+                                              .toList(), // show short values only
+                                      label: 'Interests',
+                                      hint: 'Focuses On',
+                                      onChanged: (value) {
+                                        if (value != null &&
+                                            interestMap.containsKey(value)) {
+                                          interestController.text =
+                                              value; // frontend text
+                                        }
+                                      },
+                                    ),
 
                                     STextField.dropdown(
                                       controller: schoolTypeController,
@@ -427,22 +431,24 @@ interestController.text = frontendInterest.isNotEmpty ? frontendInterest : backe
                                   ],
                                 ),
                               ),
-        if(appStateProvider.isGuest)...
-          [
-
-                          SButton(
-            label: "Fetch From G-Locations for seeing schools near you",
-            onPressed: _fetchFromGoogleLocation,
-          ),
-          ],
+                              if (appStateProvider.isGuest) ...[
+                                SButton(
+                                  label:
+                                      "Fetch From G-Locations for seeing schools near you",
+                                  onPressed: _fetchFromGoogleLocation,
+                                ),
+                              ],
                               SButton(
                                 label: widget.isEdit ? 'Edit' : 'Submit',
                                 onPressed: () async {
                                   String boards = boardController.text.trim();
                                   String standard =
                                       standardController.text.trim();
-String frontendInterest = interestController.text.trim();
-String interest = interestMap[frontendInterest] ?? frontendInterest;
+                                  String frontendInterest =
+                                      interestController.text.trim();
+                                  String interest =
+                                      interestMap[frontendInterest] ??
+                                      frontendInterest;
 
                                   String schoolType =
                                       schoolTypeController.text.trim();
@@ -478,9 +484,8 @@ String interest = interestMap[frontendInterest] ?? frontendInterest;
                                           city: selectedCity,
                                           area: selectedArea,
                                           gender: gender,
-                                            latitude: _latitude,
-              longitude: _longitude,
-                                          
+                                          latitude: _latitude,
+                                          longitude: _longitude,
                                         );
                                         appStateProvider.userPref = UserPref(
                                           boards: boards,
@@ -499,7 +504,6 @@ String interest = interestMap[frontendInterest] ?? frontendInterest;
                                               interests: interest,
                                               schoolType: schoolType,
                                               shift: shifts,
-                                              
                                             );
                                       } else {
                                         failure = await prefViewModel
@@ -522,24 +526,31 @@ String interest = interestMap[frontendInterest] ?? frontendInterest;
                                         print(
                                           appStateProvider.userPref?.toJson(),
                                         );
-                                       Toasts.showSuccessOrFailureToast(
-  context,
-  failure: failure,
-  successMsg: 'Preferences ${widget.isEdit ? 'Updated' : 'Added'}',
-  popOnSuccess: false,
-  successCallback: () {
-    print(appStateProvider.userPref?.toJson());
+                                        Toasts.showSuccessOrFailureToast(
+                                          context,
+                                          failure: failure,
+                                          successMsg:
+                                              'Preferences ${widget.isEdit ? 'Updated' : 'Added'}',
+                                          popOnSuccess: false,
+                                          successCallback: () {
+                                            print(
+                                              appStateProvider.userPref
+                                                  ?.toJson(),
+                                            );
 
-    // ✅ Only redirect when preferences are updated
-    if (widget.isEdit) {
-      context.pushReplacementNamed(RouteNames.home);
-    } else {
-      // Keep existing behavior for add
-      context.pushReplacementNamed(RouteNames.home);
-    }
-  },
-);
-
+                                            // ✅ Only redirect when preferences are updated
+                                            if (widget.isEdit) {
+                                              context.pushReplacementNamed(
+                                                RouteNames.home,
+                                              );
+                                            } else {
+                                              // Keep existing behavior for add
+                                              context.pushReplacementNamed(
+                                                RouteNames.home,
+                                              );
+                                            }
+                                          },
+                                        );
                                       },
                                     );
                                   }
@@ -555,86 +566,97 @@ String interest = interestMap[frontendInterest] ?? frontendInterest;
       ),
     );
   }
+
   Future<void> _fetchFromGoogleLocation() async {
-  try {
-
-    // 1. Request location permission
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      Toasts.showErrorToast(context, message: "Location services are disabled.");
-      return;
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        Toasts.showErrorToast(context, message: "Location permission denied.");
+    try {
+      // 1. Request location permission
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        Toasts.showErrorToast(
+          context,
+          message: "Location services are disabled.",
+        );
         return;
       }
-    }
 
-    if (permission == LocationPermission.deniedForever) {
-      Toasts.showErrorToast(context,
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          Toasts.showErrorToast(
+            context,
+            message: "Location permission denied.",
+          );
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        Toasts.showErrorToast(
+          context,
           message:
-              "Location permission permanently denied. Enable it from settings.");
-      return;
-    }
+              "Location permission permanently denied. Enable it from settings.",
+        );
+        return;
+      }
 
-    // 2. Fetch state and city using your LocationUtils
-    final place = await LocationUtils.getCurrentPlace();
+      // 2. Fetch state and city using your LocationUtils
+      final place = await LocationUtils.getCurrentPlace();
 
-    print("Fetched place: $place"); // Debug
+      print("Fetched place: $place"); // Debug
 
-    if (place == null ||
-        (place['state'] == null && place['city'] == null)) {
-      Toasts.showErrorToast(context,
-          message: "Could not detect state or city from Google.");
-      return;
-    }
+      if (place == null || (place['state'] == null && place['city'] == null)) {
+        Toasts.showErrorToast(
+          context,
+          message: "Could not detect state or city from Google.",
+        );
+        return;
+      }
 
-    final fetchedState = place['state'] ?? '';
-    final fetchedCity = place['city'] ?? '';
-    final fetchedArea = place['area'] ?? '';
-        final double? fetchedLat = place['latitude'] as double?;
+      final fetchedState = place['state'] ?? '';
+      final fetchedCity = place['city'] ?? '';
+      final fetchedArea = place['area'] ?? '';
+      final double? fetchedLat = place['latitude'] as double?;
       final double? fetchedLon = place['longitude'] as double?;
 
-    setState(() {
-      stateController.text = fetchedState;
-      selectedState = fetchedState;
-           _latitude = fetchedLat;
+      setState(() {
+        stateController.text = fetchedState;
+        selectedState = fetchedState;
+        _latitude = fetchedLat;
         _longitude = fetchedLon;
-      cityItems = StateCityAreaUtils.getCities(fetchedState);
+        cityItems = StateCityAreaUtils.getCities(fetchedState);
 
-      if (cityItems.contains(fetchedCity)) {
-        cityController.text = fetchedCity;
-        selectedCity = fetchedCity;
-        areaItems = StateCityAreaUtils.getAreas(fetchedCity);
-      } else if (cityItems.isNotEmpty) {
-        cityController.text = cityItems.first;
-        selectedCity = cityItems.first;
-        areaItems = StateCityAreaUtils.getAreas(cityItems.first);
-      }
-
-      if (areaItems.isNotEmpty) {
-        if (areaItems.contains(fetchedArea)) {
-          areaController.text = fetchedArea;
-          selectedArea = fetchedArea;
-        } else {
-          areaController.text = areaItems.first;
-          selectedArea = areaItems.first;
+        if (cityItems.contains(fetchedCity)) {
+          cityController.text = fetchedCity;
+          selectedCity = fetchedCity;
+          areaItems = StateCityAreaUtils.getAreas(fetchedCity);
+        } else if (cityItems.isNotEmpty) {
+          cityController.text = cityItems.first;
+          selectedCity = cityItems.first;
+          areaItems = StateCityAreaUtils.getAreas(cityItems.first);
         }
-      } else {
-        areaItems = defaultAreas;
-        areaController.text = defaultAreas.first;
-        selectedArea = defaultAreas.first;
-      }
-    });
 
-    Toasts.showSuccessToast(context, message: "Location fetched successfully.");
-  } catch (e) {
-    Toasts.showErrorToast(context, message: "Error fetching location: $e");
+        if (areaItems.isNotEmpty) {
+          if (areaItems.contains(fetchedArea)) {
+            areaController.text = fetchedArea;
+            selectedArea = fetchedArea;
+          } else {
+            areaController.text = areaItems.first;
+            selectedArea = areaItems.first;
+          }
+        } else {
+          areaItems = defaultAreas;
+          areaController.text = defaultAreas.first;
+          selectedArea = defaultAreas.first;
+        }
+      });
+
+      Toasts.showSuccessToast(
+        context,
+        message: "Location fetched successfully.",
+      );
+    } catch (e) {
+      Toasts.showErrorToast(context, message: "Error fetching location: $e");
+    }
   }
-}
-
 }

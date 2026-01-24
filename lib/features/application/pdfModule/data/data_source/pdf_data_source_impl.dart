@@ -41,7 +41,7 @@ class StudentPdfDataSourceImpl implements StudentPdfDataSource {
 
     try {
       final endpoint =
-          "${Endpoints.baseUrl}pdf/generate/$studId/$applicationId";
+          "${Endpoints.baseUrl}${Endpoints.users}/pdf/generate/$studId/$applicationId";
 
       final r = Request(method: RequestMethod.post, endpoint: endpoint);
 
@@ -71,7 +71,8 @@ class StudentPdfDataSourceImpl implements StudentPdfDataSource {
     }
 
     try {
-      final url = "${Endpoints.baseUrl}pdf/view/$studId/$applicationId";
+      final url =
+          "${Endpoints.baseUrl}${Endpoints.users}/pdf/view/$studId/$applicationId";
       final resp = await _dio.get<List<int>>(url);
       return Right(resp.data);
     } catch (e) {
@@ -92,7 +93,8 @@ class StudentPdfDataSourceImpl implements StudentPdfDataSource {
     }
 
     try {
-      final url = "${Endpoints.baseUrl}pdf/download/$studId/$applicationId";
+      final url =
+          "${Endpoints.baseUrl}${Endpoints.users}/pdf/download/$studId/$applicationId";
       final resp = await _dio.get<List<int>>(url);
       return Right(resp.data);
     } catch (e) {
