@@ -213,7 +213,6 @@ class _ApplicationFormViewState extends State<ApplicationFormView> {
   final _subcasteCtrl = TextEditingController();
   final _aadharCtrl = TextEditingController();
   final _bloodGroupCtrl = TextEditingController();
-  final _standardCtrl = TextEditingController();
 
   final _allergicToCtrl = TextEditingController();
   final _interestCtrl = TextEditingController();
@@ -301,7 +300,6 @@ class _ApplicationFormViewState extends State<ApplicationFormView> {
     _classCompletedCtrl.dispose();
     _lastAcademicYearCtrl.dispose();
     _reasonForLeavingCtrl.dispose();
-    _standardCtrl.dispose();
 
     _fatherNameCtrl.dispose();
     _fatherAgeCtrl.dispose();
@@ -426,7 +424,7 @@ class _ApplicationFormViewState extends State<ApplicationFormView> {
       dob: dob,
       gender: _gender,
       motherTongue: _motherTongueCtrl.text.trim(),
-      standard: _standardCtrl.text.trim(),
+      standard: _selectedStandard,
 
       placeOfBirth:
           _placeOfBirthCtrl.text.trim().isEmpty
@@ -730,16 +728,52 @@ class _ApplicationFormViewState extends State<ApplicationFormView> {
                                 ),
                                 items: const [
                                   DropdownMenuItem(
-                                    value: 'KGs',
-                                    child: Text('KGs'),
+                                    value: 'kg',
+                                    child: Text('KG'),
                                   ),
                                   DropdownMenuItem(
-                                    value: 'Grade 1 - 5',
-                                    child: Text('Grade 1 - 5'),
+                                    value: '1',
+                                    child: Text('1'),
                                   ),
                                   DropdownMenuItem(
-                                    value: 'Grade 6 - 10',
-                                    child: Text('Grade 6 - 10'),
+                                    value: '2',
+                                    child: Text('2'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: '3',
+                                    child: Text('3'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: '4',
+                                    child: Text('4'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: '5',
+                                    child: Text('5'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: '6',
+                                    child: Text('6'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: '7',
+                                    child: Text('7'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: '8',
+                                    child: Text('8'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: '9',
+                                    child: Text('9'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: '10',
+                                    child: Text('10'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: '11',
+                                    child: Text('11'),
                                   ),
                                 ],
                                 onChanged: (value) {

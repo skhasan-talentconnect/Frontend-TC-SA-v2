@@ -1,13 +1,13 @@
 // lib/features/application/pdfModule/presentation/student_pdf_screen.dart
-import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:provider/provider.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:tc_sa/common/index.dart'
     show SAppBar, SIcon, SColor, STextStyles, SLoadingIndicator;
 import 'package:tc_sa/core/index.dart'
     show ViewState, Toasts, getIt, AppStateProvider;
-
 import 'package:tc_sa/features/application/pdfModule/presentation/view_models/pdf_view_model.dart';
 
 class StudentPdfScreen extends StatefulWidget {
@@ -26,6 +26,7 @@ class StudentPdfScreen extends StatefulWidget {
 
 class _StudentPdfScreenState extends State<StudentPdfScreen> {
   final StudentPdfViewModel vm = StudentPdfViewModel();
+  final PdfViewerController _pdfController = PdfViewerController();
 
   String? get studId => getIt<AppStateProvider>().user?.sId;
 
@@ -33,11 +34,9 @@ class _StudentPdfScreenState extends State<StudentPdfScreen> {
   void initState() {
     super.initState();
 
-    // Pre-select this application if passed
     if (widget.applicationId != null) {
       vm.setSelectedApplicationId(widget.applicationId!);
 
-      // Auto-download if requested
       if (widget.download) {
         Future.microtask(() async {
           final err = await vm.download(
@@ -55,6 +54,7 @@ class _StudentPdfScreenState extends State<StudentPdfScreen> {
 
   @override
   void dispose() {
+    _pdfController.dispose();
     vm.dispose();
     super.dispose();
   }
@@ -76,7 +76,6 @@ class _StudentPdfScreenState extends State<StudentPdfScreen> {
                 onTap: () => Navigator.pop(context),
               ),
             ),
-
             body: Column(
               children: [
                 // ACTION BAR
@@ -87,22 +86,24 @@ class _StudentPdfScreenState extends State<StudentPdfScreen> {
                       // GENERATE
                       Expanded(
                         child: ElevatedButton.icon(
-                          onPressed: busy
-                              ? null
-                              : () async {
-                                  final err = await v.generate(
-                                    context: context,
-                                    studId: studId!,
-                                    applicationId:
-                                        v.selectedApplicationId ?? widget.applicationId!,
-                                  );
-                                  if (err != null) {
-                                    Toasts.showErrorToast(
-                                      context,
-                                      message: err.message ?? "Failed",
+                          onPressed:
+                              busy
+                                  ? null
+                                  : () async {
+                                    final err = await v.generate(
+                                      context: context,
+                                      studId: studId!,
+                                      applicationId:
+                                          v.selectedApplicationId ??
+                                          widget.applicationId!,
                                     );
-                                  }
-                                },
+                                    if (err != null) {
+                                      Toasts.showErrorToast(
+                                        context,
+                                        message: err.message ?? "Failed",
+                                      );
+                                    }
+                                  },
                           icon: const Icon(Icons.picture_as_pdf),
                           label: const Text("Generate"),
                           style: ElevatedButton.styleFrom(
@@ -117,22 +118,24 @@ class _StudentPdfScreenState extends State<StudentPdfScreen> {
                       // VIEW
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: busy
-                              ? null
-                              : () async {
-                                  final err = await v.view(
-                                    context: context,
-                                    studId: studId!,
-                                    applicationId:
-                                        v.selectedApplicationId ?? widget.applicationId!,
-                                  );
-                                  if (err != null) {
-                                    Toasts.showErrorToast(
-                                      context,
-                                      message: err.message ?? "Failed",
+                          onPressed:
+                              busy
+                                  ? null
+                                  : () async {
+                                    final err = await v.view(
+                                      context: context,
+                                      studId: studId!,
+                                      applicationId:
+                                          v.selectedApplicationId ??
+                                          widget.applicationId!,
                                     );
-                                  }
-                                },
+                                    if (err != null) {
+                                      Toasts.showErrorToast(
+                                        context,
+                                        message: err.message ?? "Failed",
+                                      );
+                                    }
+                                  },
                           icon: const Icon(Icons.visibility),
                           label: const Text("View"),
                         ),
@@ -143,24 +146,29 @@ class _StudentPdfScreenState extends State<StudentPdfScreen> {
                       // DOWNLOAD
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: busy
-                              ? null
-                              : () async {
-                                  final err = await v.download(
-                                    context: context,
-                                    studId: studId!,
-                                    applicationId:
-                                        v.selectedApplicationId ?? widget.applicationId!,
-                                  );
-                                  if (err != null) {
-                                    Toasts.showErrorToast(
-                                      context,
-                                      message: err.message ?? "Failed",
+                          onPressed:
+                              busy
+                                  ? null
+                                  : () async {
+                                    final err = await v.download(
+                                      context: context,
+                                      studId: studId!,
+                                      applicationId:
+                                          v.selectedApplicationId ??
+                                          widget.applicationId!,
                                     );
-                                  } else if (v.message != null) {
-                                    Toasts.showInfoToast(context, message: v.message!);
-                                  }
-                                },
+                                    if (err != null) {
+                                      Toasts.showErrorToast(
+                                        context,
+                                        message: err.message ?? "Failed",
+                                      );
+                                    } else if (v.message != null) {
+                                      Toasts.showInfoToast(
+                                        context,
+                                        message: v.message!,
+                                      );
+                                    }
+                                  },
                           icon: const Icon(Icons.download),
                           label: const Text("Download"),
                         ),
@@ -173,32 +181,37 @@ class _StudentPdfScreenState extends State<StudentPdfScreen> {
 
                 // PDF VIEWER
                 Expanded(
-                  child: busy
-                      ? const Center(child: SLoadingIndicator())
-                      : (v.localPdfPath == null)
+                  child:
+                      busy
+                          ? const Center(child: SLoadingIndicator())
+                          : (v.localPdfPath == null)
                           ? Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(24),
-                                child: Text(
-                                  "Tap View to display the PDF.\nOr Generate to regenerate it.",
-                                  textAlign: TextAlign.center,
-                                  style: STextStyles.s14W400.copyWith(
-                                    color: Colors.black54,
-                                  ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(24),
+                              child: Text(
+                                "Tap View to display the PDF.\nOr Generate to regenerate it.",
+                                textAlign: TextAlign.center,
+                                style: STextStyles.s14W400.copyWith(
+                                  color: Colors.black54,
                                 ),
                               ),
-                            )
-                          : PDFView(
-                              filePath: v.localPdfPath!,
-                              enableSwipe: true,
-                              swipeHorizontal: true,
-                              autoSpacing: true,
-                              pageFling: true,
-                              onError: (e) =>
-                                  Toasts.showErrorToast(context, message: "Error: $e"),
-                              onPageError: (page, err) =>
-                                  Toasts.showErrorToast(context, message: "Page $page: $err"),
                             ),
+                          )
+                          : SfPdfViewer.file(
+                            File(v.localPdfPath!),
+                            controller: _pdfController,
+                            canShowScrollHead: true,
+                            canShowScrollStatus: true,
+                            enableDoubleTapZooming: true,
+                            onDocumentLoadFailed: (
+                              PdfDocumentLoadFailedDetails details,
+                            ) {
+                              Toasts.showErrorToast(
+                                context,
+                                message: details.error,
+                              );
+                            },
+                          ),
                 ),
               ],
             ),
