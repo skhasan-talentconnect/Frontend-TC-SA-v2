@@ -113,6 +113,7 @@ class _AcademicsViewState extends State<AcademicsView> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             if (class10 != null)
+               _buildResultIndicator('Class 10', class10,colors.amberColor),
             if (class12 != null)
               _buildResultIndicator('Class 12', class12,colors.amberColor),
             if (class10 == null && class12 == null)
@@ -129,6 +130,8 @@ class _AcademicsViewState extends State<AcademicsView> {
         SizedBox(
           height: 90,
           width: 90,
+
+
           child: Stack(
             fit: StackFit.expand,
             children: [
