@@ -42,7 +42,7 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
 
   @override
   Widget build(BuildContext context) {
-        final colors = context.watch<ThemeProvider>().colors;
+    final colors = context.watch<ThemeProvider>().colors;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _feesVm),
@@ -66,10 +66,9 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
               return Center(
                 child: Text(
                   "No data found.",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(color: Colors.grey.shade600),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
                 ),
               );
             }
@@ -83,175 +82,171 @@ class _FeesAndScholarshipsViewState extends State<FeesAndScholarshipsView> {
                   /// 🟡 Fee Transparency
                   Text(
                     'Fee Details',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineSmall
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
 
                   (feeModel?.feesTransparency != null)
                       ? Card(
-                          color: Colors.white,
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            side: BorderSide(color: colors.borderColor),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      'Fee Transparency Score',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
+                        color: Colors.white,
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: BorderSide(color: colors.borderColor),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Fee Transparency Score',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                    Text(
-                                      '${feeModel!.feesTransparency!.toStringAsFixed(0)}%',
-                                      style:  TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        color: colors.amberColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: LinearProgressIndicator(
-                                    value: feeModel.feesTransparency! / 100,
-                                    minHeight: 12,
-                                    backgroundColor: Colors.yellow.shade100,
-                                    color: colors.topTextColor,
                                   ),
+                                  Text(
+                                    '${feeModel!.feesTransparency!.toStringAsFixed(0)}%',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: colors.amberColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: LinearProgressIndicator(
+                                  value: feeModel.feesTransparency! / 100,
+                                  minHeight: 12,
+                                  backgroundColor: Colors.yellow.shade100,
+                                  color: colors.topTextColor,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        )
+                        ),
+                      )
                       : const Text('Fee Transparency data not available.'),
 
                   const SizedBox(height: 20),
 
                   /// 🟡 Fee Table
-                  if (feeModel?.classFees.isNotEmpty ?? false)
-/// 🟡 Fee Table
+                /// 🟡 Fee Table
 if (feeModel?.classFees.isNotEmpty ?? false)
-  Card(
-    color: Colors.white,
-    elevation: 4,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-      side: BorderSide(color: colors.borderColor),
-    ),
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        decoration: BoxDecoration(
+  SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(
+        minWidth: 900, // 👈 ensures no column compression
+      ),
+      child: Card(
+        color: Colors.white,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              blurRadius: 4,
-              spreadRadius: 1,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          side: BorderSide(color: colors.borderColor),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Table header
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.yellow.shade50,
-                border: Border(
-                  bottom: BorderSide(color: colors.borderColor, width: 1),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // 🔹 Table header
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.yellow.shade50,
+                  border: Border(
+                    bottom: BorderSide(
+                      color: colors.borderColor,
+                      width: 1,
+                    ),
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12.0,
+                  horizontal: 16.0,
+                ),
                 child: Row(
                   children: const [
-                    Expanded(flex: 2, child: Text('Class', style: TextStyle(fontWeight: FontWeight.bold))),
-                    Expanded(flex: 2, child: Text('Tuition', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
-                    Expanded(flex: 2, child: Text('Activity', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
-                    Expanded(flex: 2, child: Text('Transport', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
-                    Expanded(flex: 2, child: Text('Hostel', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
-                    Expanded(flex: 2, child: Text('Misc', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
-                    Expanded(flex: 2, child: Text('Total', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
+                    SizedBox(width: 120, child: Text('Class', style: TextStyle(fontWeight: FontWeight.bold))),
+                    SizedBox(width: 120, child: Text('Tuition', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
+                    SizedBox(width: 120, child: Text('Activity', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
+                    SizedBox(width: 120, child: Text('Transport', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
+                    SizedBox(width: 120, child: Text('Hostel', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
+                    SizedBox(width: 120, child: Text('Misc', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
+                    SizedBox(width: 120, child: Text('Total', textAlign: TextAlign.right, style: TextStyle(fontWeight: FontWeight.bold))),
                   ],
                 ),
               ),
-            ),
 
-            // Table body
-            Column(
-              children: feeModel!.classFees.map((fee) {
+              // 🔹 Table body
+              ...feeModel!.classFees.map((fee) {
                 final tuition = fee.tuition ?? 0;
                 final activity = fee.activity ?? 0;
                 final transport = fee.transport ?? 0;
                 final hostel = fee.hostel ?? 0;
                 final misc = fee.misc ?? 0;
-                final total = tuition + activity + transport + hostel + misc;
+                final total =
+                    tuition + activity + transport + hostel + misc;
 
                 return Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10.0,
+                    horizontal: 16.0,
+                  ),
                   decoration: BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(color: colors.boxShadowColor, width: 1),
+                      bottom: BorderSide(
+                        color: colors.boxShadowColor,
+                        width: 1,
+                      ),
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
-                    child: Row(
-                      children: [
-                        Expanded(flex: 2, child: Text(fee.className ?? '-', style: const TextStyle(fontSize: 14))),
-                        Expanded(flex: 2, child: Text('₹$tuition', textAlign: TextAlign.right, style: const TextStyle(fontSize: 14))),
-                        Expanded(flex: 2, child: Text('₹$activity', textAlign: TextAlign.right, style: const TextStyle(fontSize: 14))),
-                        Expanded(flex: 2, child: Text('₹$transport', textAlign: TextAlign.right, style: const TextStyle(fontSize: 14))),
-                        Expanded(flex: 2, child: Text('₹$hostel', textAlign: TextAlign.right, style: const TextStyle(fontSize: 14))),
-                        Expanded(flex: 2, child: Text('₹$misc', textAlign: TextAlign.right, style: const TextStyle(fontSize: 14))),
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            '₹$total',
-                            textAlign: TextAlign.right,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 120, child: Text(fee.className ?? '-', style: const TextStyle(fontSize: 14))),
+                      SizedBox(width: 120, child: Text('₹$tuition', textAlign: TextAlign.right)),
+                      SizedBox(width: 120, child: Text('₹$activity', textAlign: TextAlign.right)),
+                      SizedBox(width: 120, child: Text('₹$transport', textAlign: TextAlign.right)),
+                      SizedBox(width: 120, child: Text('₹$hostel', textAlign: TextAlign.right)),
+                      SizedBox(width: 120, child: Text('₹$misc', textAlign: TextAlign.right)),
+                      SizedBox(
+                        width: 120,
+                        child: Text(
+                          '₹$total',
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
-              }).toList(),
-            ),
-          ],
+              }),
+            ],
+          ),
         ),
       ),
     ),
   ),
 
-               const SizedBox(height: 28),
+                  const SizedBox(height: 28),
 
                   /// 🟡 Scholarships & Concessions
                   Text(
                     'Scholarships & Concessions',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineSmall
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
 
@@ -271,12 +266,11 @@ if (feeModel?.classFees.isNotEmpty ?? false)
                     ),
 
                   const SizedBox(height: 2),
- Text(
+                  Text(
                     'Scholarship Diversity',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineSmall
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
 

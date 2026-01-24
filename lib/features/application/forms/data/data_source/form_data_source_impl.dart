@@ -66,13 +66,16 @@ class FormDataSourceImpl implements FormDataSource {
               item as Map,
             );
             // replace id strings by small maps so Form.fromJson won't try to cast String->Map
-            if (map.containsKey('schoolId'))
+            if (map.containsKey('schoolId')) {
               map['schoolId'] = _norm(map['schoolId']);
+            }
             if (map.containsKey('studId')) map['studId'] = _norm(map['studId']);
-            if (map.containsKey('applicationId'))
+            if (map.containsKey('applicationId')) {
               map['applicationId'] = _norm(map['applicationId']);
-            if (map.containsKey('applicationForm'))
+            }
+            if (map.containsKey('applicationForm')) {
               map['applicationForm'] = _norm(map['applicationForm']);
+            }
             // If backend returns top-level keys differently (data nested) handle above accordingly.
 
             try {
@@ -152,8 +155,9 @@ class FormDataSourceImpl implements FormDataSource {
             if (schoolObj != null) item['schoolId'] = schoolObj;
             if (studObj != null) item['studId'] = studObj;
             if (applicationObj != null) item['applicationId'] = applicationObj;
-            if (applicationFormObj != null)
+            if (applicationFormObj != null) {
               item['applicationForm'] = applicationFormObj;
+            }
 
             // Some fields may be strings (status) — fine.
             return Form.fromJson(item);
